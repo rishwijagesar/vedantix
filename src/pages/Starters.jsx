@@ -20,6 +20,17 @@ const PACKAGES = [
   { id: "premium", name: "Premium", price: 1499, pages: "Tot 10 pagina's", features: ["Tot 10 pagina's", "Custom design op maat", "Geavanceerde functies", "Hosting 1 jaar", "SSL", "Volledige SEO", "Blog / nieuws", "3x gratis aanpassingen", "48u levering"] },
 ];
 
+// Clean domain input — strip spaces, dots, extensions, special chars
+function cleanDomain(input) {
+  return input
+    .toLowerCase()
+    .trim()
+    .replace(/\.(nl|com|be|eu|net|org|io)$/gi, "") // strip extension
+    .replace(/^(www\.)/i, "")                        // strip www.
+    .replace(/[^a-z0-9-]/g, "")                      // only valid chars
+    .replace(/^-+|-+$/g, "");                         // strip leading/trailing dashes
+}
+
 export default function Starters() {
   const [step, setStep] = useState(1);
   const [domein, setDomein] = useState("");
@@ -32,16 +43,16 @@ export default function Starters() {
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ naam: "", email: "", telefoon: "", bericht: "" });
 
+  const cleanedDomain = cleanDomain(domein);
   const currentSuggestions = branche && SUGGESTIONS[branche] ? SUGGESTIONS[branche].suggestions : [];
 
   const checkDomain = async () => {
-    if (!domein.trim()) return;
+    if (!cleanedDomain) return;
     setChecking(true);
     setDomeinStatus(null);
-    await new Promise(r => setTimeout(r, 1200));
-    const clean = domein.toLowerCase().replace(/[^a-z0-9-]/g, "").replace(/^-+|-+$/g, "");
-    const taken = ["vedantix", "google", "facebook", "apple", "amazon", "microsoft"];
-    const isTaken = taken.some(t => clean.includes(t));
+    await new Promise(r => setTimeout(r, 1100));
+    const taken = ["vedantix", "google", "facebook", "apple", "amazon", "microsoft", "instagram", "youtube", "twitter", "bol", "coolblue"];
+    const isTaken = taken.some(t => cleanedDomain === t || cleanedDomain.startsWith(t));
     setDomeinStatus(isTaken ? "taken" : "available");
     setChecking(false);
   };
@@ -63,6 +74,7 @@ export default function Starters() {
           <p style={{ color: "#6b7280", marginBottom: 24 }}>We nemen binnen 24 uur contact op om jouw website te bespreken.</p>
           <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 12, padding: 20, marginBottom: 24 }}>
             <p style={{ fontWeight: 700, color: "#0369a1", marginBottom: 8 }}>Jouw samenvatting:</p>
+            {cleanedDomain && <p style={{ color: "#0c4a6e", fontSize: "0.9rem" }}>🌐 Domein: {cleanedDomain}.nl</p>}
             <p style={{ color: "#0c4a6e", fontSize: "0.9rem" }}>📦 {PACKAGES.find(p=>p.id===selectedPackage)?.name} pakket — €{basePrice}</p>
             {selectedFeatures.length > 0 && <p style={{ color: "#0c4a6e", fontSize: "0.9rem" }}>➕ {selectedFeatures.length} extra functies — €{totalExtras}</p>}
             <p style={{ color: "#0c4a6e", fontSize: "1rem", fontWeight: 800, marginTop: 8 }}>Totaal: €{totalPrice}</p>
@@ -81,9 +93,10 @@ export default function Starters() {
         input,textarea,select{font-family:inherit}
         .step-btn{background:#1a73e8;color:#fff;padding:13px 28px;border-radius:10px;font-weight:700;font-size:0.95rem;border:none;cursor:pointer;transition:all 0.2s}
         .step-btn:hover{background:#00c2ff;transform:translateY(-1px)}
-        .step-btn-out{background:transparent;color:#1a73e8;padding:13px 28px;border-radius:10px;font-weight:600;font-size:0.95rem;border:2px solid #1a73e8;cursor:pointer}
+        .step-btn:disabled{background:#9ca3af;cursor:not-allowed;transform:none}
+        .step-btn-out{background:transparent;color:#1a73e8;padding:13px 28px;border-radius:10px;font-weight:600;font-size:0.95rem;border:2px solid #1a73e8;cursor:pointer;transition:all 0.2s}
         .step-btn-out:hover{background:#1a73e8;color:#fff}
-        .domain-input{width:100%;padding:16px 20px;border:2px solid #e5e7eb;border-radius:12px;font-size:1.1rem;outline:none;background:#fff;transition:border-color 0.2s}
+        .domain-input{width:100%;padding:16px 20px;border:2px solid #e5e7eb;border-radius:12px;font-size:1.05rem;outline:none;background:#fff;transition:border-color 0.2s}
         .domain-input:focus{border-color:#1a73e8}
         .feat-chip{padding:10px 16px;border-radius:100px;font-size:0.88rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:2px solid #e5e7eb;background:#fff;color:#374151}
         .feat-chip.selected{background:#1a73e8;color:#fff;border-color:#1a73e8}
@@ -96,22 +109,35 @@ export default function Starters() {
         textarea{resize:vertical;min-height:100px}
       `}</style>
 
-      {/* Header */}
-      <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "80px 5% 60px" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
-          <a href="/" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: "0.9rem", display: "inline-block", marginBottom: 24 }}>← Terug naar Vedantix</a>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(0,194,255,0.1)", border: "1px solid rgba(0,194,255,0.3)", color: "#00c2ff", padding: "6px 18px", borderRadius: "100px", fontSize: "0.82rem", fontWeight: 600, marginBottom: 20 }}>🚀 Starters configurator</div>
-          <h1 style={{ fontSize: "clamp(2rem,5vw,3.2rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 16, letterSpacing: -1 }}>Bouw jouw website<br/><span style={{ color: "#00c2ff" }}>stap voor stap</span></h1>
-          <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "1.05rem" }}>Controleer je domeinnaam, kies je functies en ontvang een op maat gemaakte offerte.</p>
+      {/* Header — fixed spacing */}
+      <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "32px 5% 52px" }}>
+        <div style={{ maxWidth: 700, margin: "0 auto" }}>
+          {/* Back link separate, left-aligned */}
+          <a href="/" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 36 }}>
+            ← Terug naar Vedantix
+          </a>
+          {/* Badge + title centered below */}
+          <div style={{ textAlign: "center" }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(0,194,255,0.1)", border: "1px solid rgba(0,194,255,0.3)", color: "#00c2ff", padding: "7px 20px", borderRadius: "100px", fontSize: "0.82rem", fontWeight: 700, marginBottom: 24, letterSpacing: 0.3 }}>
+              🚀 Starters configurator
+            </div>
+            <h1 style={{ fontSize: "clamp(2rem,5vw,3.2rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 16, letterSpacing: -1 }}>
+              Bouw jouw website<br/><span style={{ color: "#00c2ff" }}>stap voor stap</span>
+            </h1>
+            <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "1.05rem", maxWidth: 520, margin: "0 auto" }}>
+              Controleer je domeinnaam, kies je functies en ontvang een op maat gemaakte offerte.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Progress */}
+      {/* Progress bar */}
       <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "0 5%" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto", display: "flex", gap: 0 }}>
-          {["Domein", "Jouw branche", "Functies & pakket", "Aanvraag"].map((s, i) => (
-            <div key={s} onClick={() => i+1 < step && setStep(i+1)} style={{ flex: 1, padding: "16px 8px", textAlign: "center", borderBottom: step === i+1 ? "3px solid #1a73e8" : "3px solid transparent", cursor: i+1 < step ? "pointer" : "default" }}>
-              <span style={{ fontSize: "0.8rem", fontWeight: 700, color: step === i+1 ? "#1a73e8" : step > i+1 ? "#10b981" : "#9ca3af" }}>
+        <div style={{ maxWidth: 700, margin: "0 auto", display: "flex" }}>
+          {["Domein", "Branche", "Functies & pakket", "Aanvraag"].map((s, i) => (
+            <div key={s} onClick={() => i+1 < step && setStep(i+1)}
+              style={{ flex: 1, padding: "15px 6px", textAlign: "center", borderBottom: step === i+1 ? "3px solid #1a73e8" : "3px solid transparent", cursor: i+1 < step ? "pointer" : "default" }}>
+              <span style={{ fontSize: "0.78rem", fontWeight: 700, color: step === i+1 ? "#1a73e8" : step > i+1 ? "#10b981" : "#9ca3af" }}>
                 {step > i+1 ? "✓ " : `${i+1}. `}{s}
               </span>
             </div>
@@ -119,38 +145,71 @@ export default function Starters() {
         </div>
       </div>
 
-      {/* Content */}
+      {/* Step content */}
       <div style={{ maxWidth: 700, margin: "0 auto", padding: "48px 20px" }}>
 
         {/* STEP 1: DOMEIN */}
         {step === 1 && (
           <div>
             <h2 style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 8 }}>🌐 Check jouw domeinnaam</h2>
-            <p style={{ color: "#6b7280", marginBottom: 32 }}>Voer de gewenste domeinnaam in (zonder www of .nl) om te checken of hij nog beschikbaar is.</p>
-            <div style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap" }}>
-              <input className="domain-input" style={{ flex: 1, minWidth: 200 }} placeholder="bijv. mijnkapperszaak" value={domein} onChange={e => { setDomein(e.target.value); setDomeinStatus(null); }} onKeyDown={e => e.key === "Enter" && checkDomain()} />
-              <button className="step-btn" onClick={checkDomain} disabled={checking} style={{ flexShrink: 0 }}>{checking ? "Checken..." : "Controleer"}</button>
+            <p style={{ color: "#6b7280", marginBottom: 32 }}>Voer de gewenste naam in voor je website. Wij checken of hij nog beschikbaar is.</p>
+
+            <div style={{ position: "relative", marginBottom: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", background: "#fff", border: "2px solid #e5e7eb", borderRadius: 12, overflow: "hidden", transition: "border-color 0.2s" }} onFocus={() => {}} >
+                <span style={{ padding: "0 14px", color: "#9ca3af", fontSize: "0.9rem", whiteSpace: "nowrap", borderRight: "1px solid #e5e7eb", height: 56, display: "flex", alignItems: "center", background: "#f9fafb" }}>www.</span>
+                <input
+                  className="domain-input"
+                  style={{ border: "none", borderRadius: 0, flex: 1, height: 56, padding: "0 16px" }}
+                  placeholder="jouwbedrijfsnaam"
+                  value={domein}
+                  onChange={e => { setDomein(e.target.value); setDomeinStatus(null); }}
+                  onKeyDown={e => e.key === "Enter" && checkDomain()}
+                />
+                <span style={{ padding: "0 14px", color: "#6b7280", fontSize: "0.9rem", fontWeight: 600, whiteSpace: "nowrap", borderLeft: "1px solid #e5e7eb", height: 56, display: "flex", alignItems: "center", background: "#f9fafb" }}>.nl</span>
+              </div>
             </div>
-            <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
-              {[".nl", ".com", ".be", ".eu"].map(ext => (
-                <span key={ext} style={{ background: "#f0f9ff", color: "#0369a1", padding: "4px 12px", borderRadius: 100, fontSize: "0.82rem", fontWeight: 600 }}>{domein || "jouwbedrijf"}{ext}</span>
-              ))}
+
+            {/* Show cleaned preview if input has extras */}
+            {domein && cleanedDomain !== domein.toLowerCase().trim() && (
+              <p style={{ color: "#6b7280", fontSize: "0.82rem", marginBottom: 12 }}>
+                💡 We checken: <strong>{cleanedDomain}.nl</strong>
+              </p>
+            )}
+
+            <div style={{ display: "flex", gap: 10, marginBottom: 24, flexWrap: "wrap" }}>
+              <button className="step-btn" onClick={checkDomain} disabled={!cleanedDomain || checking}>
+                {checking ? "⏳ Checken..." : "🔍 Controleer beschikbaarheid"}
+              </button>
             </div>
+
+            {/* Extensions preview */}
+            {cleanedDomain && (
+              <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
+                {[".nl", ".com", ".be", ".eu"].map(ext => (
+                  <span key={ext} style={{ background: "#f0f9ff", color: "#0369a1", padding: "5px 14px", borderRadius: 100, fontSize: "0.82rem", fontWeight: 600 }}>
+                    {cleanedDomain}{ext}
+                  </span>
+                ))}
+              </div>
+            )}
+
             {domeinStatus === "available" && (
               <div style={{ background: "#f0fdf4", border: "2px solid #10b981", borderRadius: 14, padding: 20, marginBottom: 24 }}>
-                <p style={{ color: "#065f46", fontWeight: 700, fontSize: "1.05rem" }}>✅ Gelukt! <strong>{domein}.nl</strong> lijkt beschikbaar te zijn.</p>
+                <p style={{ color: "#065f46", fontWeight: 700, fontSize: "1.05rem" }}>✅ Top! <strong>{cleanedDomain}.nl</strong> lijkt beschikbaar.</p>
                 <p style={{ color: "#047857", fontSize: "0.9rem", marginTop: 4 }}>Wij registreren de domeinnaam voor jou als onderdeel van jouw pakket.</p>
               </div>
             )}
             {domeinStatus === "taken" && (
               <div style={{ background: "#fef2f2", border: "2px solid #f87171", borderRadius: 14, padding: 20, marginBottom: 24 }}>
-                <p style={{ color: "#991b1b", fontWeight: 700 }}>❌ <strong>{domein}.nl</strong> is helaas al bezet.</p>
-                <p style={{ color: "#b91c1c", fontSize: "0.9rem", marginTop: 4 }}>Probeer een variatie zoals <strong>{domein}-nl.nl</strong> of <strong>de{domein}.nl</strong>.</p>
+                <p style={{ color: "#991b1b", fontWeight: 700 }}>❌ <strong>{cleanedDomain}.nl</strong> is helaas al bezet.</p>
+                <p style={{ color: "#b91c1c", fontSize: "0.9rem", marginTop: 4 }}>Probeer een variatie, bijv. <strong>de{cleanedDomain}.nl</strong> of <strong>{cleanedDomain}online.nl</strong>.</p>
               </div>
             )}
-            <div style={{ background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 12, padding: 16, marginBottom: 32 }}>
-              <p style={{ color: "#92400e", fontSize: "0.88rem" }}>💡 <strong>Tip:</strong> Heb je al een domeinnaam? Geen probleem, wij kunnen ook jouw bestaande domein koppelen.</p>
+
+            <div style={{ background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 12, padding: 16, marginBottom: 36 }}>
+              <p style={{ color: "#92400e", fontSize: "0.88rem" }}>💡 <strong>Heb je al een domein?</strong> Geen probleem — wij koppelen jouw bestaande domein aan de nieuwe website.</p>
             </div>
+
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <button className="step-btn" onClick={() => setStep(2)}>Volgende stap →</button>
             </div>
@@ -164,15 +223,16 @@ export default function Starters() {
             <p style={{ color: "#6b7280", marginBottom: 32 }}>Kies jouw branche zodat we slimme suggesties kunnen doen voor jouw website.</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(150px,1fr))", gap: 12, marginBottom: 32 }}>
               {Object.entries(SUGGESTIONS).map(([key, val]) => (
-                <div key={key} onClick={() => setBranche(key)} style={{ border: `2px solid ${branche===key?"#1a73e8":"#e5e7eb"}`, background: branche===key?"#eff6ff":"#fff", borderRadius: 14, padding: "18px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s" }}>
+                <div key={key} onClick={() => setBranche(key)}
+                  style={{ border: `2px solid ${branche===key?"#1a73e8":"#e5e7eb"}`, background: branche===key?"#eff6ff":"#fff", borderRadius: 14, padding: "18px 12px", textAlign: "center", cursor: "pointer", transition: "all 0.2s" }}>
                   <div style={{ fontSize: "1.8rem", marginBottom: 8 }}>{val.icon}</div>
                   <div style={{ fontSize: "0.83rem", fontWeight: 600, color: branche===key?"#1a73e8":"#374151" }}>{val.label}</div>
                 </div>
               ))}
             </div>
             <div style={{ marginBottom: 32 }}>
-              <label style={{ display: "block", fontWeight: 700, marginBottom: 8, fontSize: "0.9rem" }}>Bedrijfsnaam (optioneel)</label>
-              <input type="text" placeholder="bijv. Kapper Jan Amsterdam" value={bedrijfsnaam} onChange={e => setBedrijfsnaam(e.target.value)} style={{ width: "100%", padding: "13px 16px", border: "2px solid #e5e7eb", borderRadius: 10, fontSize: "0.93rem", outline: "none" }} />
+              <label style={{ display: "block", fontWeight: 700, marginBottom: 8, fontSize: "0.9rem" }}>Bedrijfsnaam <span style={{ fontWeight: 400, color: "#9ca3af" }}>(optioneel)</span></label>
+              <input type="text" placeholder="bijv. Kapper Jan Amsterdam" value={bedrijfsnaam} onChange={e => setBedrijfsnaam(e.target.value)} />
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <button className="step-btn-out" onClick={() => setStep(1)}>← Terug</button>
@@ -184,23 +244,25 @@ export default function Starters() {
         {/* STEP 3: FUNCTIES & PAKKET */}
         {step === 3 && (
           <div>
-            <h2 style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 8 }}>⚡ Kies jouw functies & pakket</h2>
-            <p style={{ color: "#6b7280", marginBottom: 24 }}>Op basis van jouw branche hebben wij slimme suggesties voor je.</p>
+            <h2 style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 8 }}>⚡ Kies functies & pakket</h2>
+            <p style={{ color: "#6b7280", marginBottom: 24 }}>Slimme suggesties op basis van jouw branche. Selecteer wat je wil.</p>
 
-            {/* Smart suggestions */}
             {currentSuggestions.length > 0 && (
               <div style={{ background: "#f0f9ff", border: "1px solid #bae6fd", borderRadius: 16, padding: 24, marginBottom: 32 }}>
-                <p style={{ fontWeight: 700, color: "#0369a1", marginBottom: 4 }}>💡 Slimme suggesties voor {SUGGESTIONS[branche]?.icon} {SUGGESTIONS[branche]?.label}</p>
-                <p style={{ color: "#0c4a6e", fontSize: "0.88rem", marginBottom: 16 }}>Selecteer de functies die je interessant vindt. Elke extra functie kost +€75.</p>
+                <p style={{ fontWeight: 700, color: "#0369a1", marginBottom: 4 }}>
+                  💡 Aanbevolen voor {SUGGESTIONS[branche]?.icon} {SUGGESTIONS[branche]?.label}
+                </p>
+                <p style={{ color: "#0c4a6e", fontSize: "0.85rem", marginBottom: 16 }}>Elke extra functie kost +€75. Klik aan wat je wil.</p>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
                   {currentSuggestions.map(f => (
-                    <button key={f} className={`feat-chip ${selectedFeatures.includes(f) ? "selected" : ""}`} onClick={() => toggleFeature(f)}>{selectedFeatures.includes(f) ? "✓ " : "+ "}{f}</button>
+                    <button key={f} className={`feat-chip ${selectedFeatures.includes(f) ? "selected" : ""}`} onClick={() => toggleFeature(f)}>
+                      {selectedFeatures.includes(f) ? "✓ " : "+ "}{f}
+                    </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Package selector */}
             <h3 style={{ fontWeight: 700, marginBottom: 16 }}>Kies je basispakket</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 32 }}>
               {PACKAGES.map(pkg => (
@@ -221,17 +283,16 @@ export default function Starters() {
 
             {/* Price summary */}
             <div style={{ background: "#0a1628", borderRadius: 16, padding: 24, marginBottom: 32, color: "#fff" }}>
-              <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.88rem", marginBottom: 8 }}>Jouw configuratie:</p>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", marginBottom: 12 }}>Jouw configuratie:</p>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
                 <span>{PACKAGES.find(p=>p.id===selectedPackage)?.name} pakket</span>
                 <span style={{ fontWeight: 700 }}>€{basePrice}</span>
               </div>
-              {selectedFeatures.length > 0 && (
-                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                  <span>{selectedFeatures.length}x extra functie(s)</span>
-                  <span style={{ fontWeight: 700 }}>+€{totalExtras}</span>
+              {selectedFeatures.map(f => (
+                <div key={f} style={{ display: "flex", justifyContent: "space-between", marginBottom: 4, fontSize: "0.88rem", color: "rgba(255,255,255,0.65)" }}>
+                  <span>+ {f}</span><span>€75</span>
                 </div>
-              )}
+              ))}
               <div style={{ borderTop: "1px solid rgba(255,255,255,0.15)", paddingTop: 12, marginTop: 8, display: "flex", justifyContent: "space-between", fontSize: "1.2rem", fontWeight: 900 }}>
                 <span>Totaal</span>
                 <span style={{ color: "#00c2ff" }}>€{totalPrice}</span>
@@ -251,10 +312,9 @@ export default function Starters() {
             <h2 style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 8 }}>📬 Verstuur jouw aanvraag</h2>
             <p style={{ color: "#6b7280", marginBottom: 24 }}>Bijna klaar! Vul je gegevens in en we nemen binnen 24 uur contact op.</p>
 
-            {/* Summary */}
             <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", borderRadius: 14, padding: 20, marginBottom: 28 }}>
               <p style={{ fontWeight: 700, color: "#1e40af", marginBottom: 8 }}>📋 Jouw samenvatting</p>
-              {domein && <p style={{ color: "#1e3a8a", fontSize: "0.9rem" }}>🌐 Domein: <strong>{domein}.nl</strong></p>}
+              {cleanedDomain && <p style={{ color: "#1e3a8a", fontSize: "0.9rem" }}>🌐 Domein: <strong>{cleanedDomain}.nl</strong></p>}
               {branche && <p style={{ color: "#1e3a8a", fontSize: "0.9rem" }}>🏢 Branche: <strong>{SUGGESTIONS[branche]?.label}</strong></p>}
               <p style={{ color: "#1e3a8a", fontSize: "0.9rem" }}>📦 Pakket: <strong>{PACKAGES.find(p=>p.id===selectedPackage)?.name} (€{basePrice})</strong></p>
               {selectedFeatures.length > 0 && <p style={{ color: "#1e3a8a", fontSize: "0.9rem" }}>➕ Extra's: <strong>{selectedFeatures.join(", ")}</strong></p>}
@@ -270,7 +330,9 @@ export default function Starters() {
               <textarea placeholder="Aanvullende wensen of vragen..." value={form.bericht} onChange={e => setForm({...form, bericht: e.target.value})} />
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, alignItems: "center" }}>
                 <button type="button" className="step-btn-out" onClick={() => setStep(3)}>← Terug</button>
-                <button type="submit" style={{ background: "#10b981", color: "#fff", padding: "14px 32px", borderRadius: 10, fontWeight: 700, fontSize: "1rem", border: "none", cursor: "pointer" }}>Aanvraag versturen 🚀</button>
+                <button type="submit" style={{ background: "#10b981", color: "#fff", padding: "14px 32px", borderRadius: 10, fontWeight: 700, fontSize: "1rem", border: "none", cursor: "pointer" }}>
+                  Aanvraag versturen 🚀
+                </button>
               </div>
             </form>
           </div>

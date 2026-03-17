@@ -109,8 +109,8 @@ export default function Home() {
         <a href="/" className="nav-logo">Vedantix</a>
         <ul className="nav-links">
           <li><a href="#hoe-het-werkt">Hoe het werkt</a></li>
-          <li><a href="#voor-wie">Voor wie</a></li>
-          <li><a href="#prijzen">Prijzen</a></li>
+          <li><a href="/VoorWie">Voor wie</a></li>
+          <li><a href="/Prijzen">Prijzen vergelijken</a></li>
           <li><a href="#waarom">Waarom wij</a></li>
           <li><a href="/Starters">🚀 Starters</a></li>
           <li><a href="/Planning">📅 Afspraak</a></li>
@@ -260,6 +260,8 @@ export default function Home() {
           <a href="/Privacy">Privacybeleid</a>
           <a href="/Voorwaarden">Algemene voorwaarden</a>
           <a href="/Planning">Afspraak plannen</a>
+          <a href="/VoorWie">Voor wie</a>
+          <a href="/Prijzen">Prijzen vergelijken</a>
           <a href="/Starters">Starters pagina</a>
         </div>
       </footer>

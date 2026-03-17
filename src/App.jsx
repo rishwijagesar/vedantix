@@ -5,6 +5,8 @@ import Planning from './pages/Planning';
 import Admin from './pages/Admin';
 import Privacy from './pages/Privacy';
 import Voorwaarden from './pages/Voorwaarden';
+import VoorWie from './pages/VoorWie';
+import Prijzen from './pages/Prijzen';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="/Admin" element={<Admin />} />
         <Route path="/Privacy" element={<Privacy />} />
         <Route path="/Voorwaarden" element={<Voorwaarden />} />
+        <Route path="/VoorWie" element={<VoorWie />} />
+        <Route path="/Prijzen" element={<Prijzen />} />
       </Routes>
     </BrowserRouter>
   )
