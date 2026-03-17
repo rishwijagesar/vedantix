@@ -1,26 +1,28 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Home from './pages/Home';
-import Starters from './pages/Starters';
-import Planning from './pages/Planning';
 import Admin from './pages/Admin';
-import Privacy from './pages/Privacy';
-import Voorwaarden from './pages/Voorwaarden';
-import VoorWie from './pages/VoorWie';
+import Home from './pages/Home';
+import Planning from './pages/Planning';
 import Prijzen from './pages/Prijzen';
+import Privacy from './pages/Privacy';
+import Starters from './pages/Starters';
+import VoorWie from './pages/VoorWie';
+import Voorwaarden from './pages/Voorwaarden';
+import Proces from './pages/Proces';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/Home" replace />} />
-        <Route path="/Home" element={<Home />} />
-        <Route path="/Starters" element={<Starters />} />
-        <Route path="/Planning" element={<Planning />} />
         <Route path="/Admin" element={<Admin />} />
-        <Route path="/Privacy" element={<Privacy />} />
-        <Route path="/Voorwaarden" element={<Voorwaarden />} />
-        <Route path="/VoorWie" element={<VoorWie />} />
+        <Route path="/Home" element={<Home />} />
+        <Route path="/Planning" element={<Planning />} />
         <Route path="/Prijzen" element={<Prijzen />} />
+        <Route path="/Privacy" element={<Privacy />} />
+        <Route path="/Starters" element={<Starters />} />
+        <Route path="/VoorWie" element={<VoorWie />} />
+        <Route path="/Voorwaarden" element={<Voorwaarden />} />
+        <Route path="/Proces" element={<Proces />} />
       </Routes>
     </BrowserRouter>
   )

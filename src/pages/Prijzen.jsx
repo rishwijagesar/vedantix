@@ -12,6 +12,8 @@ const FEATURES = [
   ]},
   { category: "Techniek & Hosting", items: [
     { label: "Hosting inbegrepen", starter: "1 jaar", business: "1 jaar", premium: "1 jaar" },
+    { label: "Database opslag", starter: "500 MB", business: "2 GB", premium: "10 GB" },
+    { label: "Extra opslag", starter: "€15/maand/GB", business: "€12/maand/GB", premium: "€10/maand/GB" },
     { label: "SSL-certificaat (HTTPS)", starter: true, business: true, premium: true },
     { label: "Domeinnaam registratie", starter: true, business: true, premium: true },
     { label: "Snelle laadtijden (geoptimaliseerd)", starter: true, business: true, premium: true },

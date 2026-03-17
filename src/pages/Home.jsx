@@ -108,7 +108,7 @@ export default function Home() {
       <nav className="nav">
         <a href="/" className="nav-logo">Vedantix</a>
         <ul className="nav-links">
-          <li><a href="#hoe-het-werkt">Hoe het werkt</a></li>
+          <li><a href="/Proces">Hoe het werkt</a></li>
           <li><a href="/VoorWie">Voor wie</a></li>
           <li><a href="/Prijzen">Prijzen vergelijken</a></li>
           <li><a href="#waarom">Waarom wij</a></li>
