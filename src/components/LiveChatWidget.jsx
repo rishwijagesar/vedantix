@@ -58,10 +58,10 @@ export default function LiveChatWidget() {
     if (!input.trim() || sending) return;
     setSending(true);
     await publicChat({
+      action: "send_message",
       session_id: sessionId,
       visitor_name: visitorName,
       message: input.trim(),
-      from: "visitor",
     });
     setInput("");
     await loadMessages();
