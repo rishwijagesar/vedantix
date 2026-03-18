@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { base44 } from "@/api/base44Client";
-
-const ChatMessage = base44.entities.ChatMessage;
+import { publicChat } from "@/functions/publicChat";
 
 function getSessionId() {
   let id = localStorage.getItem("chat_session_id");
@@ -22,16 +20,16 @@ export default function LiveChatWidget() {
   const [sending, setSending] = useState(false);
   const bottomRef = useRef(null);
   const sessionId = getSessionId();
+  const pollRef = useRef(null);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open) {
+      clearInterval(pollRef.current);
+      return;
+    }
     loadMessages();
-    const unsub = ChatMessage.subscribe((event) => {
-      if (event.data?.session_id === sessionId) {
-        loadMessages();
-      }
-    });
-    return unsub;
+    pollRef.current = setInterval(loadMessages, 4000);
+    return () => clearInterval(pollRef.current);
   }, [open]);
 
   useEffect(() => {
@@ -39,12 +37,14 @@ export default function LiveChatWidget() {
   }, [messages]);
 
   const loadMessages = async () => {
-    const msgs = await ChatMessage.filter({ session_id: sessionId }, "created_date", 100);
+    const res = await publicChat({ session_id: sessionId });
+    const msgs = res.data?.messages || [];
     setMessages(msgs);
     // Mark admin messages as read
-    msgs.filter(m => m.from === "admin" && !m.is_read).forEach(m =>
-      ChatMessage.update(m.id, { is_read: true })
-    );
+    const unread = msgs.filter(m => m.from === "admin" && !m.is_read).map(m => m.id);
+    if (unread.length > 0) {
+      await publicChat({ _method: "PATCH", message_ids: unread });
+    }
   };
 
   const setName = () => {
@@ -57,12 +57,11 @@ export default function LiveChatWidget() {
   const sendMessage = async () => {
     if (!input.trim() || sending) return;
     setSending(true);
-    await ChatMessage.create({
+    await publicChat({
       session_id: sessionId,
       visitor_name: visitorName,
       message: input.trim(),
       from: "visitor",
-      is_read: false,
     });
     setInput("");
     await loadMessages();
@@ -113,7 +112,7 @@ export default function LiveChatWidget() {
               <div style={{ padding: 20 }}>
                 <p style={{ fontWeight: 600, marginBottom: 12, fontSize: "0.9rem", color: "#374151" }}>Hoe mogen we je noemen?</p>
                 <input
-                  style={{ width: "100%", padding: "10px 14px", border: "2px solid #e5e7eb", borderRadius: 10, fontSize: "0.9rem", outline: "none", marginBottom: 10, fontFamily: "inherit" }}
+                  style={{ width: "100%", padding: "10px 14px", border: "2px solid #e5e7eb", borderRadius: 10, fontSize: "0.9rem", outline: "none", marginBottom: 10, fontFamily: "inherit", boxSizing: "border-box" }}
                   placeholder="Jouw naam"
                   value={nameInput}
                   onChange={e => setNameInput(e.target.value)}
