@@ -37,13 +37,13 @@ export default function LiveChatWidget() {
   }, [messages]);
 
   const loadMessages = async () => {
-    const res = await publicChat({ session_id: sessionId });
+    const res = await publicChat({ action: "get_messages", session_id: sessionId });
     const msgs = res.data?.messages || [];
     setMessages(msgs);
     // Mark admin messages as read
     const unread = msgs.filter(m => m.from === "admin" && !m.is_read).map(m => m.id);
     if (unread.length > 0) {
-      await publicChat({ _method: "PATCH", message_ids: unread });
+      await publicChat({ action: "mark_read", message_ids: unread });
     }
   };
 
