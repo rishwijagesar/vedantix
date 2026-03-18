@@ -346,7 +346,7 @@ export default function Home() {
       `}</style>
 
       <Nav />
-      <WAWidget />
+      <LiveChatWidget />
 
       {/* HERO */}
       <section className="hero">
