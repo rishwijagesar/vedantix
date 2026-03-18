@@ -324,7 +324,10 @@ export default function Admin() {
           <a href="/" style={{color:"rgba(255,255,255,0.5)",textDecoration:"none",fontSize:"0.8rem"}}>← Terug naar site</a>
           <h1 style={{color:"#fff",fontWeight:800,fontSize:"1.4rem",marginTop:4}}>⚙️ Vedantix Admin</h1>
         </div>
-        <span style={{background:"#00c2ff20",border:"1px solid #00c2ff40",borderRadius:8,padding:"5px 12px",color:"#00c2ff",fontSize:"0.8rem",fontWeight:700}}>Admin Panel</span>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <span style={{background:"#00c2ff20",border:"1px solid #00c2ff40",borderRadius:8,padding:"5px 12px",color:"#00c2ff",fontSize:"0.8rem",fontWeight:700}}>Admin Panel</span>
+          <button onClick={()=>base44.auth.logout("/")} style={{background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:8,padding:"5px 12px",color:"rgba(255,255,255,0.7)",fontSize:"0.8rem",fontWeight:600,cursor:"pointer"}}>Uitloggen</button>
+        </div>
       </div>
 
       <div style={{maxWidth:1060,margin:"0 auto",padding:"28px 20px"}}>
