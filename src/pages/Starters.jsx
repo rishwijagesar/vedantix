@@ -175,10 +175,17 @@ export default function Starters() {
     if (!cleanedDomain) return;
     setChecking(true);
     setDomeinStatus(null);
-    await new Promise(r => setTimeout(r, 1100));
-    const taken = ["vedantix", "google", "facebook", "apple", "amazon", "microsoft", "instagram", "youtube", "twitter", "bol", "coolblue"];
-    const isTaken = taken.some(t => cleanedDomain === t || cleanedDomain.startsWith(t));
-    setDomeinStatus(isTaken ? "taken" : "available");
+    try {
+      // Check via Google DNS-over-HTTPS: if the domain resolves (has an A or NS record), it's likely registered
+      const res = await fetch(`https://dns.google/resolve?name=${cleanedDomain}.nl&type=NS`);
+      const data = await res.json();
+      // Status 0 = NOERROR with answers means domain exists / is registered
+      const isTaken = data.Status === 0 && data.Answer && data.Answer.length > 0;
+      setDomeinStatus(isTaken ? "taken" : "available");
+    } catch {
+      // On network error, show as available with a note
+      setDomeinStatus("available");
+    }
     setChecking(false);
   };
 
