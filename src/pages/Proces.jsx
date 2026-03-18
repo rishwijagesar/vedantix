@@ -277,6 +277,7 @@ export default function Proces() {
         <p>© 2026 <strong style={{ color: "#fff" }}>Vedantix</strong> — <a href="/" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>Home</a> &nbsp;|&nbsp; <a href="/Prijzen" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>Prijzen</a> &nbsp;|&nbsp; <a href="/Privacy" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>Privacy</a></p>
       </footer>
     </div>
+    </>
   );
 }
 
