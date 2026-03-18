@@ -2,17 +2,17 @@ import { useState } from "react";
 
 const NAV_MENUS = [
   { label: "Diensten", items: [
-    { href: "/Starters", label: "Configurator", desc: "Stel zelf je pakket samen" },
-    { href: "/Templates", label: "Template gallery", desc: "Bekijk website voorbeelden" },
-    { href: "/VoorWie", label: "Voor wie", desc: "Alle branches & sectoren" },
+    { href: "/Starters", label: "Configurator" },
+    { href: "/Templates", label: "Template gallery" },
+    { href: "/VoorWie", label: "Voor wie" },
   ]},
   { label: "Informatie", items: [
-    { href: "/Prijzen", label: "Prijsvergelijker", desc: "Alle pakketten op een rij" },
-    { href: "/Proces", label: "Hoe het werkt", desc: "Stap voor stap uitgelegd" },
+    { href: "/Prijzen", label: "Prijsvergelijker" },
+    { href: "/Proces", label: "Hoe het werkt" },
   ]},
   { label: "Contact", items: [
-    { href: "/Planning", label: "Afspraak plannen", desc: "Gratis kennismakingsgesprek" },
-    { href: "#contact", label: "Offerte aanvragen", desc: "Vrijblijvend en gratis" },
+    { href: "/Planning", label: "Afspraak plannen" },
+    { href: "#contact", label: "Offerte aanvragen" },
   ]},
 ];
 
@@ -63,7 +63,6 @@ function Nav() {
                   {m.items.map(i => (
                     <a key={i.href} href={i.href} className="vd-dd-item">
                       <span className="vd-dd-label">{i.label}</span>
-                      <span className="vd-dd-desc">{i.desc}</span>
                     </a>
                   ))}
                 </div>
