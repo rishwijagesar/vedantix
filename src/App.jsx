@@ -11,6 +11,7 @@ import VoorWie from './pages/VoorWie';
 import Voorwaarden from './pages/Voorwaarden';
 import HomePage from './pages/HomePage';
 import VedantixHome from './pages/VedantixHome';
+import Test from './pages/Test';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
         <Route path="/Voorwaarden" element={<Voorwaarden />} />
         <Route path="/HomePage" element={<HomePage />} />
         <Route path="/VedantixHome" element={<VedantixHome />} />
+        <Route path="/Test" element={<Test />} />
       </Routes>
     </BrowserRouter>
   )
