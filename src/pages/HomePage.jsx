@@ -162,7 +162,7 @@ function WhatsApp({ phone = "310626219989", message = "Hallo! Ik heb een vraag o
 }
 
 // ── Main Page ─────────────────────────────────────────────────────────────────
-export default function Home() {
+export default function HomePage() {
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", color: "#1a1a2e", background: "#fff", lineHeight: 1.6 }}>
       <style>{`

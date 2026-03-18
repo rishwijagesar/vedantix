@@ -1,5 +1,8 @@
-// redirect-to-vedantixhome
+import { useEffect } from "react";
+
 export default function Home() {
-  if (typeof window !== "undefined") window.location.replace("/VedantixHome");
+  useEffect(() => {
+    window.location.replace("/VedantixHome");
+  }, []);
   return null;
 }
