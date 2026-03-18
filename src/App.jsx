@@ -9,6 +9,7 @@ import Starters from './pages/Starters';
 import Templates from './pages/Templates';
 import VoorWie from './pages/VoorWie';
 import Voorwaarden from './pages/Voorwaarden';
+import HomePage from './pages/HomePage';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/Templates" element={<Templates />} />
         <Route path="/VoorWie" element={<VoorWie />} />
         <Route path="/Voorwaarden" element={<Voorwaarden />} />
+        <Route path="/HomePage" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   )
