@@ -3,7 +3,7 @@ import { useState } from "react";
 const NAV_MENUS = [
   { label: "Diensten", items: [
     { href: "/Starters", label: "Configurator", desc: "Stel zelf je pakket samen" },
-    { href: "/Templates", label: "Template gallery", desc: "Bekijk website voorbeelden" },
+    { href: "/Starters", label: "Template gallery", desc: "Bekijk website voorbeelden" },
     { href: "/VoorWie", label: "Voor wie", desc: "Alle branches & sectoren" },
   ]},
   { label: "Informatie", items: [
@@ -48,7 +48,7 @@ function Nav() {
         @media(max-width:768px){.vd-menu{display:none}.vd-hbg{display:flex}}
       `}</style>
       <nav className="vd-nav">
-        <a href="/VedantixHome" className="vd-logo">Vedantix</a>
+        <a href="/Home" className="vd-logo">Vedantix</a>
         <ul className="vd-menu">
           {NAV_MENUS.map(m => (
             <li key={m.label} className="vd-menu-item"
@@ -273,7 +273,7 @@ export default function Home() {
           <p>Van kapper tot aannemer — wij bouwen jouw website snel, betaalbaar en volledig verzorgd. Inclusief hosting, domein en SSL.</p>
           <div className="hbtns">
             <a href="#contact" className="btn-p">Gratis offerte aanvragen</a>
-            <a href="/Templates" className="btn-g">Bekijk templates</a>
+            <a href="/Starters" className="btn-g">Bekijk templates</a>
           </div>
           <div className="hstats">
             <div className="stat"><strong>48u</strong><span>Gemiddelde levertijd</span></div>
@@ -426,7 +426,7 @@ export default function Home() {
           <a href="/Proces">Hoe het werkt</a>
           <a href="/Planning">Afspraak plannen</a>
           <a href="/Prijzen">Prijzen vergelijken</a>
-          <a href="/Templates">Templates</a>
+          <a href="/Starters">Templates</a>
         </div>
       </footer>
     </div>
