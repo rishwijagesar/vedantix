@@ -755,6 +755,14 @@ export default function Admin() {
           </div>
         )}
 
+        {/* ══════════ FINANCIËN TAB ══════════ */}
+        {tab === "financien" && (
+          <div>
+            <h2 style={{fontWeight:800,fontSize:"1.15rem",marginBottom:20}}>💶 Financiën & Statistieken</h2>
+            <FinanceStats />
+          </div>
+        )}
+
         {/* ══════════ EMAIL TEMPLATES TAB ══════════ */}
         {tab === "emails" && (
           <div>
