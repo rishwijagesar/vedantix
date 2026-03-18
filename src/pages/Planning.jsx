@@ -216,7 +216,7 @@ function incrementTime(time) {
 
 function WhatsAppWidget() {
   const [open, setOpen] = require('react').useState(false);
-  const url = 'https://wa.me/31600000000?text=' + encodeURIComponent('Hallo Vedantix! Ik heb een vraag.');
+  const url = 'https://wa.me/310626219989?text=' + encodeURIComponent('Hallo Vedantix! Ik heb een vraag.');
   return (
     <>
       <style>{`

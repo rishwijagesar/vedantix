@@ -105,7 +105,7 @@ function Nav() {
 }
 
 // ── WhatsApp Widget ───────────────────────────────────────────────────────────
-function WhatsApp({ phone = "31600000000", message = "Hallo! Ik heb een vraag over Vedantix." }) {
+function WhatsApp({ phone = "310626219989", message = "Hallo! Ik heb een vraag over Vedantix." }) {
   const [open, setOpen] = useState(false);
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
   return (
@@ -255,7 +255,7 @@ export default function Home() {
       `}</style>
 
       <Nav />
-      <WhatsApp phone="31600000000" message="Hallo Vedantix! Ik heb een vraag." />
+      <WhatsApp phone="310626219989" message="Hallo Vedantix! Ik heb een vraag." />
 
       {/* HERO */}
       <section className="hero">
