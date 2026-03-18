@@ -802,6 +802,14 @@ export default function Admin() {
           </div>
         )}
 
+        {/* ══════════ FACTUREN TAB ══════════ */}
+        {tab === "facturen" && (
+          <div>
+            <h2 style={{fontWeight:800,fontSize:"1.15rem",marginBottom:20}}>🧾 Facturen</h2>
+            <InvoiceOverview />
+          </div>
+        )}
+
         {/* ══════════ EMAIL TEMPLATES TAB ══════════ */}
         {tab === "emails" && (
           <div>
