@@ -1,4 +1,17 @@
 
+
+// Ensure mobile viewport
+if (typeof document !== "undefined") {
+  let vp = document.querySelector('meta[name="viewport"]');
+  if (!vp) {
+    vp = document.createElement("meta");
+    vp.name = "viewport";
+    vp.content = "width=device-width, initial-scale=1.0";
+    document.head.appendChild(vp);
+  }
+}
+
+
 function WAWidget() {
   const [open, setOpen] = useState(false);
   const [inputVal, setInputVal] = useState("");
@@ -48,6 +61,16 @@ function WAWidget() {
         .wa-wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;border-radius:10px;padding:10px;text-decoration:none;font-weight:700;font-size:0.85rem;margin-top:8px;transition:background 0.15s}
         .wa-wa-btn:hover{background:#1da851}
         @media(max-width:420px){.wa-popup{width:calc(100vw - 40px);right:-14px}}
+        @media(max-width:768px){
+          .sector-grid{grid-template-columns:1fr !important}
+          h1{font-size:2rem !important}
+          .hero-pad{padding:50px 5% 40px !important}
+        }
+        @media(max-width:480px){
+          h1{font-size:1.7rem !important}
+          .cta-btns{flex-direction:column !important;align-items:center}
+          .cta-btns a{width:100%;max-width:280px;text-align:center;box-sizing:border-box}
+        }
       `}</style>
       <div className="wa-fab">
         {open && (
@@ -127,7 +150,7 @@ export default function VoorWie() {
       {/* Header */}
       <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "70px 5% 60px" }}>
         <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
-          <a href="/" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-block", marginBottom: 28 }}>← Terug naar Vedantix</a>
+          <a href="/Home" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-block", marginBottom: 28 }}>← Terug naar Vedantix</a>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(0,194,255,0.1)", border: "1px solid rgba(0,194,255,0.3)", color: "#00c2ff", padding: "6px 18px", borderRadius: "100px", fontSize: "0.82rem", fontWeight: 700, marginBottom: 22 }}>🏢 Voor wie</div>
           <h1 style={{ fontSize: "clamp(2rem,5vw,3.2rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 18, letterSpacing: -1 }}>
             Een website voor<br/><span style={{ color: "#00c2ff" }}>elk type bedrijf</span>

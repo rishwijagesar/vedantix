@@ -1,6 +1,19 @@
 // v2-20260318-vedantix
 import { useState } from "react";
 
+// Ensure mobile viewport
+if (typeof document !== "undefined") {
+  let vp = document.querySelector('meta[name="viewport"]');
+  if (!vp) {
+    vp = document.createElement("meta");
+    vp.name = "viewport";
+    vp.content = "width=device-width, initial-scale=1.0";
+    document.head.appendChild(vp);
+  }
+}
+
+
+
 export default function Proces() {
   const [openFaq, setOpenFaq] = useState(null);
 
@@ -89,12 +102,25 @@ export default function Proces() {
         .faq-a{padding:0 20px 16px;color:#6b7280;font-size:0.88rem;line-height:1.7}
         .change-row{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid #f1f5f9}
         .change-row:last-child{border-bottom:none}
+        @media(max-width:768px){
+          .step-grid{grid-template-columns:1fr !important}
+          .pkg-grid{grid-template-columns:1fr !important}
+          h1{font-size:2rem !important}
+          .hero-section{padding:50px 5% 44px !important}
+          .inner-pad{padding:48px 5% !important}
+        }
+        @media(max-width:480px){
+          h1{font-size:1.7rem !important}
+          .step-card{padding:22px 18px !important}
+          .cta-flex{flex-direction:column !important;align-items:center !important}
+          .cta-flex a{width:100%;max-width:280px;text-align:center;box-sizing:border-box}
+        }
       `}</style>
 
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "70px 5% 60px" }}>
+      <div className="hero-section" style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "70px 5% 60px" }}>
         <div style={{ maxWidth: 820, margin: "0 auto", textAlign: "center" }}>
-          <a href="/" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-block", marginBottom: 28 }}>← Terug naar Vedantix</a>
+          <a href="/Home" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-block", marginBottom: 28 }}>← Terug naar Vedantix</a>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(0,194,255,0.1)", border: "1px solid rgba(0,194,255,0.3)", color: "#00c2ff", padding: "6px 18px", borderRadius: "100px", fontSize: "0.82rem", fontWeight: 700, marginBottom: 22 }}>📋 Hoe het werkt</div>
           <h1 style={{ fontSize: "clamp(2rem,5vw,3.2rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 18, letterSpacing: -1 }}>
             Van aanvraag tot live —<br/><span style={{ color: "#00c2ff" }}>alles uitgelegd</span>
@@ -146,7 +172,7 @@ export default function Proces() {
           </div>
 
           {/* Package wijzigingen overzicht */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 28 }}>
+          <div className="step-grid pkg-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 14, marginBottom: 28 }}>
             {[
               { name: "Starter", gratis: 0, color: "#6b7280", note: "Elke wijziging vanaf dag 1 is betaald" },
               { name: "Business", gratis: 1, color: "#1a73e8", note: "Wijziging 2 en verder is betaald" },
@@ -201,7 +227,7 @@ export default function Proces() {
           <span style={{ color: "#1a73e8", fontWeight: 700, fontSize: "0.78rem", letterSpacing: 1.5, textTransform: "uppercase" }}>Database & Opslag</span>
           <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginTop: 6, marginBottom: 8 }}>Opslagruimte per pakket</h2>
           <p style={{ color: "#6b7280", marginBottom: 24 }}>Elke website krijgt database-opslagruimte voor formulierinzendingen, klantgegevens en content. Dit is per pakket anders.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 16, marginBottom: 24 }}>
+          <div className="pkg-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 16, marginBottom: 24 }}>
             {[
               { name: "Starter", storage: "500 MB", color: "#6b7280", extra: "€15/maand per extra GB", icon: "💾" },
               { name: "Business", storage: "2 GB", color: "#1a73e8", extra: "€12/maand per extra GB", icon: "🗄️" },

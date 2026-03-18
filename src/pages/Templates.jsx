@@ -156,6 +156,19 @@ const PACKAGE_INFO = {
 };
 
 // Mini mockup SVG preview
+
+// Ensure mobile viewport
+if (typeof document !== "undefined") {
+  let vp = document.querySelector('meta[name="viewport"]');
+  if (!vp) {
+    vp = document.createElement("meta");
+    vp.name = "viewport";
+    vp.content = "width=device-width, initial-scale=1.0";
+    document.head.appendChild(vp);
+  }
+}
+
+
 function MockupPreview({ m, accent }) {
   return (
     <svg viewBox="0 0 280 180" style={{ width: "100%", borderRadius: "10px 10px 0 0", display: "block" }}>
@@ -254,6 +267,17 @@ function WAWidget() {
         .wa-wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;border-radius:10px;padding:10px;text-decoration:none;font-weight:700;font-size:0.85rem;margin-top:8px;transition:background 0.15s}
         .wa-wa-btn:hover{background:#1da851}
         @media(max-width:420px){.wa-popup{width:calc(100vw - 40px);right:-14px}}
+        @media(max-width:768px){
+          .tmpl-grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr)) !important}
+          .cat-tabs{flex-wrap:wrap !important;gap:6px !important}
+          .modal-inner{grid-template-columns:1fr !important;gap:20px !important}
+          .pkg-tabs{flex-wrap:wrap !important}
+          .hero-pad{padding:50px 5% 40px !important}
+        }
+        @media(max-width:480px){
+          .tmpl-grid{grid-template-columns:1fr !important}
+          h1{font-size:1.8rem !important}
+        }
       `}</style>
       <div className="wa-fab">
         {open && (

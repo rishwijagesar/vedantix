@@ -1,6 +1,19 @@
 // rebuild-trigger-v2
 import { useState } from "react";
 
+// Ensure mobile viewport
+if (typeof document !== "undefined") {
+  let vp = document.querySelector('meta[name="viewport"]');
+  if (!vp) {
+    vp = document.createElement("meta");
+    vp.name = "viewport";
+    vp.content = "width=device-width, initial-scale=1.0";
+    document.head.appendChild(vp);
+  }
+}
+
+
+
 const FEATURES = [
   { category: "Website", items: [
     { label: "Aantal pagina's", starter: "1 pagina", business: "Tot 5 pagina's", premium: "Tot 10 pagina's" },
@@ -172,12 +185,26 @@ export default function Prijzen() {
         .pkg-header{padding:20px 16px 16px;text-align:center;border-radius:16px 16px 0 0}
         .pkg-header.business{background:linear-gradient(135deg,rgba(26,115,232,0.1),rgba(0,194,255,0.08));border:2px solid #1a73e8;border-bottom:none}
         .pkg-header.starter,.pkg-header.premium{background:#fff;border:1px solid #e5e7eb;border-bottom:none}
+        @media(max-width:768px){
+          .price-table{font-size:0.78rem}
+          .price-table th,.price-table td{padding:10px 8px}
+          .price-table td:first-child{font-size:0.8rem;max-width:120px}
+          .pkg-cards{grid-template-columns:1fr !important}
+          h1{font-size:1.9rem !important}
+        }
+        @media(max-width:480px){
+          .price-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+          .price-table th,.price-table td{padding:8px 6px;font-size:0.72rem}
+          .faq-grid{grid-template-columns:1fr !important}
+          .cta-btns{flex-direction:column !important;align-items:center}
+          .cta-btns a{width:100%;max-width:280px;text-align:center}
+        }
       `}</style>
 
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "70px 5% 60px" }}>
+      <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "clamp(50px,8vw,70px) 5% 50px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "center" }}>
-          <a href="/" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-block", marginBottom: 28 }}>← Terug naar Vedantix</a>
+          <a href="/Home" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-block", marginBottom: 28 }}>← Terug naar Vedantix</a>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(0,194,255,0.1)", border: "1px solid rgba(0,194,255,0.3)", color: "#00c2ff", padding: "6px 18px", borderRadius: "100px", fontSize: "0.82rem", fontWeight: 700, marginBottom: 22 }}>💰 Prijsvergelijker</div>
           <h1 style={{ fontSize: "clamp(2rem,5vw,3.2rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 18, letterSpacing: -1 }}>
             Alles op een rij —<br/><span style={{ color: "#00c2ff" }}>transparante prijzen</span>
@@ -188,10 +215,10 @@ export default function Prijzen() {
         </div>
       </div>
 
-      <div style={{ maxWidth: 960, margin: "0 auto", padding: "60px 5%" }}>
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "clamp(32px,6vw,60px) 5%" }}>
 
         {/* Package cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, marginBottom: 48 }}>
+        <div className="pkg-cards" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 16, marginBottom: 48 }}>
           {[
             { id: "starter", name: "Starter", price: 399, color: "#374151", accent: "#6b7280", desc: "Ideaal voor starters & ZZP'ers met een kleine online aanwezigheid." },
             { id: "business", name: "Business", price: 799, color: "#1a73e8", accent: "#00c2ff", desc: "Het populairste pakket voor groeiende bedrijven die serieus online willen.", hot: true },
@@ -265,7 +292,7 @@ export default function Prijzen() {
         {/* FAQ */}
         <div style={{ marginTop: 60 }}>
           <h2 style={{ fontWeight: 900, fontSize: "1.8rem", marginBottom: 32, textAlign: "center", letterSpacing: -0.5 }}>Veelgestelde vragen</h2>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 20 }}>
+          <div className="faq-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 20 }}>
             {[
               ["Zijn er maandelijkse kosten?", "Nee. Je betaalt eenmalig. Na het eerste jaar ontvang je een verlengingsvoorstel voor hosting (~€50/jaar). Er zijn geen verborgen abonnementskosten."],
               ["Kan ik later upgraden?", "Ja! Begin je met Starter en wil je later meer pagina's of functies? Wij rekenen alleen het prijsverschil + eventuele aanpassingen."],
@@ -286,7 +313,7 @@ export default function Prijzen() {
         <div style={{ background: "#0a1628", borderRadius: 20, padding: "48px 40px", marginTop: 60, textAlign: "center" }}>
           <h2 style={{ color: "#fff", fontWeight: 900, fontSize: "clamp(1.6rem,3vw,2.2rem)", marginBottom: 14 }}>Twijfel je nog?</h2>
           <p style={{ color: "rgba(255,255,255,0.6)", marginBottom: 32 }}>Plan een gratis kennismakingsgesprek en we helpen je de juiste keuze maken.</p>
-          <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+          <div className="cta-btns" style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
             <a href="/Starters" style={{ background: "#1a73e8", color: "#fff", padding: "14px 32px", borderRadius: 10, fontWeight: 700, textDecoration: "none" }}>🚀 Direct starten</a>
             <a href="/Planning" style={{ background: "transparent", color: "#fff", padding: "14px 32px", borderRadius: 10, fontWeight: 600, textDecoration: "none", border: "2px solid rgba(255,255,255,0.3)" }}>📅 Gesprek inplannen</a>
           </div>

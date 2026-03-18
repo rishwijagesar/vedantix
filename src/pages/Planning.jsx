@@ -2,6 +2,19 @@
 import { useState, useEffect } from "react";
 import { Availability, Appointment } from "../api/entities";
 
+// Ensure mobile viewport
+if (typeof document !== "undefined") {
+  let vp = document.querySelector('meta[name="viewport"]');
+  if (!vp) {
+    vp = document.createElement("meta");
+    vp.name = "viewport";
+    vp.content = "width=device-width, initial-scale=1.0";
+    document.head.appendChild(vp);
+  }
+}
+
+
+
 export default function Planning() {
   const [availabilities, setAvailabilities] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -85,12 +98,24 @@ export default function Planning() {
         .btn-main:hover{background:#00c2ff}
         .btn-out{background:transparent;color:#1a73e8;padding:13px 28px;border-radius:10px;font-weight:600;font-size:0.95rem;border:2px solid #1a73e8;cursor:pointer}
         .btn-out:hover{background:#1a73e8;color:#fff}
+        @media(max-width:768px){
+          .date-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr)) !important}
+          .time-grid{grid-template-columns:repeat(auto-fill,minmax(90px,1fr)) !important}
+          .form-grid{grid-template-columns:1fr !important}
+          .inner-wrap{padding:clamp(24px,5vw,40px) 5% !important}
+        }
+        @media(max-width:480px){
+          h1{font-size:1.8rem !important}
+          .step-btns{flex-direction:column !important;gap:10px !important}
+          .step-btns button{width:100% !important}
+          .date-grid{grid-template-columns:1fr 1fr !important}
+        }
       `}</style>
 
       {/* Header */}
-      <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "80px 5% 60px" }}>
+      <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "clamp(50px,8vw,80px) 5% clamp(40px,6vw,60px)" }}>
         <div style={{ maxWidth: 680, margin: "0 auto", textAlign: "center" }}>
-          <a href="/" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: "0.9rem", display: "inline-block", marginBottom: 24 }}>← Terug naar Vedantix</a>
+          <a href="/Home" style={{ color: "rgba(255,255,255,0.6)", textDecoration: "none", fontSize: "0.9rem", display: "inline-block", marginBottom: 24 }}>← Terug naar Vedantix</a>
           <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(0,194,255,0.1)", border: "1px solid rgba(0,194,255,0.3)", color: "#00c2ff", padding: "6px 18px", borderRadius: "100px", fontSize: "0.82rem", fontWeight: 600, marginBottom: 20 }}>📅 Gratis kennismaking</div>
           <h1 style={{ fontSize: "clamp(2rem,5vw,3rem)", fontWeight: 900, color: "#fff", lineHeight: 1.1, marginBottom: 16, letterSpacing: -1 }}>Plan een <span style={{ color: "#00c2ff" }}>persoonlijk gesprek</span></h1>
           <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "1.05rem" }}>Heb je vragen of wil je meer weten? Plan een gratis kennismakingsgesprek van 30 minuten.</p>
@@ -156,7 +181,7 @@ export default function Planning() {
           <div>
             <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: 4 }}>🕐 Kies een tijdstip</h2>
             <p style={{ color: "#1a73e8", fontWeight: 600, marginBottom: 24, textTransform: "capitalize" }}>📅 {formatDate(selectedDate)}</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(110px,1fr))", gap: 10, marginBottom: 32 }}>
+            <div className="date-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(110px,1fr))", gap: 10, marginBottom: 32 }}>
               {availabilities.find(a => a.date === selectedDate)?.time_slots?.map(slot => (
                 <div key={slot} className={`time-slot ${selectedTime === slot ? "selected" : ""}`} onClick={() => setSelectedTime(slot)}>
                   <div style={{ fontWeight: 700 }}>{slot}</div>
@@ -182,7 +207,7 @@ export default function Planning() {
               <p style={{ color: "#1e40af", fontSize: "0.9rem" }}>📅 {formatDate(selectedDate)} &nbsp;•&nbsp; 🕐 {selectedTime} ({incrementTime(selectedTime)}) — 30 min</p>
             </div>
             <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              <div className="form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
                 <input className="form-input" type="text" placeholder="Voornaam & achternaam" required value={form.name} onChange={e => setForm({...form, name: e.target.value})} />
                 <input className="form-input" type="tel" placeholder="Telefoonnummer" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
               </div>

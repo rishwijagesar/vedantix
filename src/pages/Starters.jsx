@@ -21,6 +21,19 @@ const PACKAGES = [
 ];
 
 // Clean domain input — strip spaces, dots, extensions, special chars
+
+// Ensure mobile viewport
+if (typeof document !== "undefined") {
+  let vp = document.querySelector('meta[name="viewport"]');
+  if (!vp) {
+    vp = document.createElement("meta");
+    vp.name = "viewport";
+    vp.content = "width=device-width, initial-scale=1.0";
+    document.head.appendChild(vp);
+  }
+}
+
+
 function cleanDomain(input) {
   return input
     .toLowerCase()
@@ -81,6 +94,18 @@ function WAWidget() {
         .wa-wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;border-radius:10px;padding:10px;text-decoration:none;font-weight:700;font-size:0.85rem;margin-top:8px;transition:background 0.15s}
         .wa-wa-btn:hover{background:#1da851}
         @media(max-width:420px){.wa-popup{width:calc(100vw - 40px);right:-14px}}
+        @media(max-width:768px){
+          .branche-grid{grid-template-columns:repeat(3,1fr) !important}
+          .features-grid{grid-template-columns:1fr !important}
+          .pkg-grid{grid-template-columns:1fr !important}
+        }
+        @media(max-width:480px){
+          .branche-grid{grid-template-columns:repeat(2,1fr) !important}
+          .step-bar span{font-size:0.68rem !important}
+          .domain-row{flex-direction:column !important;gap:8px !important}
+          .domain-row input{border-radius:10px !important}
+          .domain-row button{width:100% !important;border-radius:10px !important}
+        }
       `}</style>
       <div className="wa-fab">
         {open && (
@@ -210,10 +235,10 @@ export default function Starters() {
       `}</style>
 
       {/* Header — fixed spacing */}
-      <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "32px 5% 52px" }}>
+      <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "clamp(28px,5vw,32px) 5% clamp(36px,6vw,52px)" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
           {/* Back link separate, left-aligned */}
-          <a href="/" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 36 }}>
+          <a href="/Home" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 36 }}>
             ← Terug naar Vedantix
           </a>
           {/* Badge + title centered below */}
@@ -246,7 +271,7 @@ export default function Starters() {
       </div>
 
       {/* Step content */}
-      <div style={{ maxWidth: 700, margin: "0 auto", padding: "48px 20px" }}>
+      <div style={{ maxWidth: 700, margin: "0 auto", padding: "clamp(24px,5vw,48px) 5%" }}>
 
         {/* STEP 1: DOMEIN */}
         {step === 1 && (

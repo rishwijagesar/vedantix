@@ -1,5 +1,18 @@
 import { useState } from "react";
 
+// Ensure mobile viewport
+if (typeof document !== "undefined") {
+  let vp = document.querySelector('meta[name="viewport"]');
+  if (!vp) {
+    vp = document.createElement("meta");
+    vp.name = "viewport";
+    vp.content = "width=device-width, initial-scale=1.0";
+    document.head.appendChild(vp);
+  }
+}
+
+
+
 const NAV_MENUS = [
   { label: "Diensten", items: [
     { href: "/Starters", label: "Configurator" },
@@ -254,10 +267,31 @@ export default function VedantixHome() {
         footer a:hover{color:#00c2ff}
         .flinks{display:flex;justify-content:center;gap:24px;margin-top:12px;flex-wrap:wrap}
         @media(max-width:768px){
-          .hero h1{font-size:2.1rem}
-          .cwrap{grid-template-columns:1fr;gap:36px}
-          .hstats{gap:20px}
-          section{padding:70px 5%}
+          .hero h1{font-size:2.2rem;letter-spacing:-0.5px}
+          .hero p{font-size:0.97rem}
+          .cwrap{grid-template-columns:1fr;gap:32px}
+          .hstats{gap:18px}
+          section{padding:64px 5%}
+          h2{font-size:1.7rem}
+          .pgrid{grid-template-columns:1fr}
+          .wgrid{grid-template-columns:1fr 1fr}
+          .steps{grid-template-columns:1fr}
+          .grid-who{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+          .hbtns{flex-direction:column;align-items:center}
+          .btn-p,.btn-g{width:100%;max-width:320px;text-align:center}
+          .stat strong{font-size:1.35rem}
+        }
+        @media(max-width:480px){
+          .hero{padding:90px 5% 60px}
+          .hero h1{font-size:1.8rem}
+          section{padding:52px 5%}
+          h2{font-size:1.5rem}
+          .pgrid{grid-template-columns:1fr}
+          .wgrid{grid-template-columns:1fr}
+          .hstats{gap:14px}
+          .stat strong{font-size:1.2rem}
+          .pc{padding:28px 20px}
+          .vd-cta{display:none}
         }
       `}</style>
 

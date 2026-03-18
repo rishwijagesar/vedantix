@@ -1,4 +1,17 @@
 export default function Voorwaarden() {
+
+// Ensure mobile viewport
+if (typeof document !== "undefined") {
+  let vp = document.querySelector('meta[name="viewport"]');
+  if (!vp) {
+    vp = document.createElement("meta");
+    vp.name = "viewport";
+    vp.content = "width=device-width, initial-scale=1.0";
+    document.head.appendChild(vp);
+  }
+}
+
+
   return (
     <div style={{ fontFamily: "'Inter',sans-serif", color: "#1a1a2e", minHeight: "100vh", background: "#f7f9fc" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');*{box-sizing:border-box;margin:0;padding:0}h2{font-size:1.3rem;font-weight:700;margin:32px 0 12px;color:#0a1628}p{color:#374151;line-height:1.7;margin-bottom:12px;font-size:0.95rem}ul{margin:0 0 12px 20px;color:#374151;font-size:0.95rem;line-height:1.7}`}</style>
