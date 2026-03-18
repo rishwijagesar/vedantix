@@ -1,3 +1,4 @@
+// v2-20260318-vedantix
 import { useState } from "react";
 
 // Template data — each template has pages per package
