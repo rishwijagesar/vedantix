@@ -6,6 +6,8 @@ import Prijzen from './pages/Prijzen';
 import Privacy from './pages/Privacy';
 import Proces from './pages/Proces';
 import Starters from './pages/Starters';
+import Templates from './pages/Templates';
+import VedantixHome from './pages/VedantixHome';
 import VoorWie from './pages/VoorWie';
 import Voorwaarden from './pages/Voorwaarden';
 
@@ -21,6 +23,8 @@ function App() {
         <Route path="/Privacy" element={<Privacy />} />
         <Route path="/Proces" element={<Proces />} />
         <Route path="/Starters" element={<Starters />} />
+        <Route path="/Templates" element={<Templates />} />
+        <Route path="/VedantixHome" element={<VedantixHome />} />
         <Route path="/VoorWie" element={<VoorWie />} />
         <Route path="/Voorwaarden" element={<Voorwaarden />} />
       </Routes>
