@@ -3,6 +3,7 @@ import { Availability, Appointment, Client, ChangeRequest, EmailTemplate, EmailL
 import { base44 } from "@/api/base44Client";
 import FinanceStats from "../components/admin/FinanceStats";
 import InvoiceOverview from "../components/admin/InvoiceOverview";
+import ChatInbox from "../components/admin/ChatInbox";
 
 const Invoice = base44.entities.Invoice;
 
