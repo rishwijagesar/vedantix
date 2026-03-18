@@ -76,6 +76,27 @@ export default function Admin() {
     );
   }
 
+  const [tab, setTab] = useState("planning");
+  const [subTab, setSubTab] = useState("single");
+  const [availabilities, setAvailabilities] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+  const [clients, setClients] = useState([]);
+  const [changeRequests, setChangeRequests] = useState([]);
+  const [emailTemplates, setEmailTemplates] = useState([]);
+  const [emailLogs, setEmailLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  if (!authChecked) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#0a1628", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ color: "#fff", fontFamily: "'Inter',sans-serif", textAlign: "center" }}>
+          <div style={{ fontSize: "2rem", marginBottom: 12 }}>🔐</div>
+          <p>Toegang controleren...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAdmin) {
     return (
       <div style={{ minHeight: "100vh", background: "#0a1628", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -88,16 +109,6 @@ export default function Admin() {
       </div>
     );
   }
-
-  const [tab, setTab] = useState("planning");
-  const [subTab, setSubTab] = useState("single");
-  const [availabilities, setAvailabilities] = useState([]);
-  const [appointments, setAppointments] = useState([]);
-  const [clients, setClients] = useState([]);
-  const [changeRequests, setChangeRequests] = useState([]);
-  const [emailTemplates, setEmailTemplates] = useState([]);
-  const [emailLogs, setEmailLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   // Planning state
   const [newDate, setNewDate] = useState("");
