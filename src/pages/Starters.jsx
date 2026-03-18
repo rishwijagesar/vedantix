@@ -1,4 +1,5 @@
 import { useState } from "react";
+import LiveChatWidget from "../components/LiveChatWidget";
 
 const SUGGESTIONS = {
   kapper: { label: "Kapperszaak", icon: "✂️", suggestions: ["Online afsprakensysteem / agenda", "Fotogalerij van jouw werk", "Prijslijst per behandeling", "Team & stylisten overzicht", "Google Maps integratie"] },
