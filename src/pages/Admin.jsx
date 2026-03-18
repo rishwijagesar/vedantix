@@ -319,6 +319,7 @@ export default function Admin() {
     { id: "emails", label: "📧 E-mail templates" },
     { id: "financien", label: "💶 Financiën" },
     { id: "facturen", label: "🧾 Facturen" },
+    { id: "chat", label: "💬 Live chat" },
   ];
 
   return (
