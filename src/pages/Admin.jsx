@@ -317,6 +317,7 @@ export default function Admin() {
     { id: "sites", label: "🌐 Sites" },
     { id: "emails", label: "📧 E-mail templates" },
     { id: "financien", label: "💶 Financiën" },
+    { id: "facturen", label: "🧾 Facturen" },
   ];
 
   return (
