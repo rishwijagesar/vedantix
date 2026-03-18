@@ -65,17 +65,6 @@ export default function Admin() {
     });
   }, []);
 
-  if (!authChecked) {
-    return (
-      <div style={{ minHeight: "100vh", background: "#0a1628", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ color: "#fff", fontFamily: "'Inter',sans-serif", textAlign: "center" }}>
-          <div style={{ fontSize: "2rem", marginBottom: 12 }}>🔐</div>
-          <p>Toegang controleren...</p>
-        </div>
-      </div>
-    );
-  }
-
   const [tab, setTab] = useState("planning");
   const [subTab, setSubTab] = useState("single");
   const [availabilities, setAvailabilities] = useState([]);
@@ -85,30 +74,6 @@ export default function Admin() {
   const [emailTemplates, setEmailTemplates] = useState([]);
   const [emailLogs, setEmailLogs] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  if (!authChecked) {
-    return (
-      <div style={{ minHeight: "100vh", background: "#0a1628", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ color: "#fff", fontFamily: "'Inter',sans-serif", textAlign: "center" }}>
-          <div style={{ fontSize: "2rem", marginBottom: 12 }}>🔐</div>
-          <p>Toegang controleren...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!isAdmin) {
-    return (
-      <div style={{ minHeight: "100vh", background: "#0a1628", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ background: "#fff", borderRadius: 20, padding: 40, textAlign: "center", maxWidth: 400, fontFamily: "'Inter',sans-serif" }}>
-          <div style={{ fontSize: "2.5rem", marginBottom: 16 }}>🚫</div>
-          <h2 style={{ fontWeight: 800, marginBottom: 12, color: "#0a1628" }}>Geen toegang</h2>
-          <p style={{ color: "#6b7280", marginBottom: 24 }}>Je hebt geen beheerdersrechten voor dit paneel.</p>
-          <a href="/" style={{ background: "#1a73e8", color: "#fff", padding: "11px 24px", borderRadius: 10, textDecoration: "none", fontWeight: 700 }}>Terug naar home</a>
-        </div>
-      </div>
-    );
-  }
 
   // Planning state
   const [newDate, setNewDate] = useState("");
