@@ -281,6 +281,7 @@ export default function Admin() {
     { id: "klanten", label: "👥 Klanten" },
     { id: "sites", label: "🌐 Sites" },
     { id: "emails", label: "📧 E-mail templates" },
+    { id: "financien", label: "💶 Financiën" },
   ];
 
   return (
