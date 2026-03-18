@@ -1,4 +1,5 @@
 import { useState } from "react";
+import LiveChatWidget from "../components/LiveChatWidget";
 
 // Ensure mobile viewport
 if (typeof document !== "undefined") {

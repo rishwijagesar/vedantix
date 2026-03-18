@@ -470,7 +470,7 @@ export default function Starters() {
           </div>
         )}
       </div>
-      <WAWidget />
+      <LiveChatWidget />
     </div>
   );
 }
