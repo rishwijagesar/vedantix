@@ -217,7 +217,39 @@ export default function Admin() {
     alert(isBillable ? `⚠️ Wijziging #${num} — Dit is een betaalde wijziging (€${cost})` : `✅ Gratis wijziging #${num} aangemaakt`);
   };
 
-  const updateChangeStatus = async (id, status) => { await ChangeRequest.update(id, { status }); await loadAll(); };
+  const updateChangeStatus = async (id, status) => {
+    await ChangeRequest.update(id, { status });
+    // Auto-generate concept invoice when a billable change request is marked as done
+    if (status === "done") {
+      const cr = changeRequests.find(c => c.id === id);
+      if (cr && cr.is_billable && cr.cost > 0) {
+        const client = clients.find(c => c.id === cr.client_id);
+        const issueDate = new Date().toISOString().split("T")[0];
+        const dueDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+        const existingCount = await Invoice.list("-created_date", 1);
+        const invoiceNum = `VDX-${new Date().getFullYear()}-${String((existingCount.length || 0) + 1).padStart(3, "0")}`;
+        const vatRate = 21;
+        const vatAmount = Math.round(cr.cost * vatRate) / 100;
+        const totalAmount = cr.cost + vatAmount;
+        await Invoice.create({
+          invoice_number: invoiceNum,
+          client_id: cr.client_id,
+          client_name: cr.client_name,
+          client_email: client?.email || "",
+          change_request_id: cr.id,
+          description: `Wijziging #${cr.change_number}: ${cr.description}`,
+          amount: cr.cost,
+          vat_rate: vatRate,
+          vat_amount: vatAmount,
+          total_amount: totalAmount,
+          status: "concept",
+          issue_date: issueDate,
+          due_date: dueDate,
+        });
+      }
+    }
+    await loadAll();
+  };
 
   // ── Email helpers ──
   const saveEmailTemplate = async () => {
