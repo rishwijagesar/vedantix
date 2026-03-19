@@ -390,15 +390,15 @@ export default function Home() {
       <section id="hoe-het-werkt" className="steps-sec">
         <div className="center" style={{ marginBottom: 0 }}>
           <span className="tag">Hoe het werkt</span>
-          <h2>Van idee naar live website in 4 stappen</h2>
-          <p className="sub center">Geen technische kennis nodig. Wij regelen alles.</p>
+          <h2>Klaar in 3 dagen. Geen gedoe.</h2>
+          <p className="sub center">We doen alles. Jij hoeft enkel "ja" te zeggen.</p>
         </div>
         <div className="steps">
           {[
-            ["1","Vertel ons over je bedrijf","Vul ons korte formulier in. Naam, branche, diensten — meer hebben we niet nodig."],
-            ["2","Wij bouwen jouw website","Ons team levert binnen 48 uur een professionele, mobielvriendelijke website op."],
-            ["3","Live — klaar voor klanten","Domein, hosting, SSL — volledig ingericht en klaar voor gebruik."],
-            ["4","Aanpassingen wanneer jij wil","Later iets aanpassen? Snel geregeld tegen een vaste lage prijs."],
+            ["1","Gesprekje van 15 min","Wat is jouw bedrijf? Wat willen je klanten zien? Dat is echt alles."],
+            ["2","Wij bouwen & testen","Je website is klaar. Domein, hosting, beveiliging — alles in orde."],
+            ["3","Je zet hem live","Klik. Klaar. Je bent nu online en klanten kunnen je vinden."],
+            ["4","We passen aan wanneer nodig","Je ziet wat werkt. We optimaliseren maandelijks."],
           ].map(([n, h, p]) => (
             <div key={n} className="step">
               <div className="step-n">{n}</div>
