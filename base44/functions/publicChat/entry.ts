@@ -3,20 +3,22 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
   const body = await req.json().catch(() => ({}));
-  const { action, session_id, visitor_name, message, from, message_ids } = body;
-
-  // action: "get_messages" | "send_message" | "mark_read"
+  const { action, session_id, visitor_name, message, message_ids } = body;
 
   if (action === "get_messages") {
     if (!session_id) {
       return Response.json({ error: "session_id required" }, { status: 400 });
     }
-    const messages = await base44.asServiceRole.entities.ChatMessage.filter(
-      { session_id },
-      "created_date",
-      100
-    );
-    return Response.json({ messages });
+    const [messages, availability] = await Promise.all([
+      base44.asServiceRole.entities.ChatMessage.filter({ session_id }, "created_date", 100),
+      base44.asServiceRole.entities.ChatAvailability.list(),
+    ]);
+    return Response.json({ messages, availability });
+  }
+
+  if (action === "get_availability") {
+    const availability = await base44.asServiceRole.entities.ChatAvailability.list();
+    return Response.json({ availability });
   }
 
   if (action === "send_message") {
