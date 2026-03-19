@@ -327,7 +327,7 @@ export default function Home() {
       <section className="pricing">
         <div className="section-container">
           <h2 style={{ textAlign: "center", marginBottom: 12 }}>Kies jouw pakket</h2>
-          <p className="section-intro" style={{ textAlign: "center", marginLeft: "auto", marginRight: "auto" }}>Transparante prijzen. Geen verborgen kosten. Opzeggen wanneer je wil.</p>
+          <p className="section-intro" style={{ textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: 20 }}>Alles wat je nodig hebt om online klanten te krijgen — geen gedoe, geen verborgen kosten.</p>
           <div className="pricing-cards">
             <div className="pricing-card">
               <div className="pricing-name">Starter</div>
