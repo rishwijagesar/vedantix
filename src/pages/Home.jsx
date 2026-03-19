@@ -158,9 +158,9 @@ export default function Home() {
         
         /* MOBILE */
         @media(max-width:1024px){
-          .hero-container{grid-template-columns:1fr;gap:40px;padding:40px 0}
-          .hero-content h1{font-size:2.6rem}
-          .hero-visual{min-height:400px}
+          .hero-container{grid-template-columns:1fr;gap:60px;padding:40px 0}
+          .hero-content h1{font-size:2.8rem}
+          .hero-visual{min-height:420px}
           .problem-grid{grid-template-columns:1fr}
           .results-grid{grid-template-columns:repeat(2,1fr)}
           .pricing-cards{grid-template-columns:1fr;max-width:500px}
