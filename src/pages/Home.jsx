@@ -68,9 +68,9 @@ export default function Home() {
         .solution-list-item:before{color:#2d73b1}
         
         /* RESULTS */
-        .results{background:#1a1a2e;color:#fff;text-align:center;padding:100px 5%}
-        .results h2{color:#fff;margin-bottom:20px}
-        .results-intro{font-size:1.05rem;color:rgba(255,255,255,0.8);margin-bottom:60px;max-width:700px;margin-left:auto;margin-right:auto}
+        .results{background:#1a1a2e;color:#fff;text-align:center;padding:90px 5%}
+        .results h2{color:#fff;margin-bottom:16px}
+        .results-intro{font-size:1.02rem;color:rgba(255,255,255,0.75);margin-bottom:60px;max-width:700px;margin-left:auto;margin-right:auto}
         .results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;max-width:900px;margin:0 auto}
         .result-item strong{display:block;font-size:2.6rem;color:#4db8ff;font-weight:900;margin-bottom:8px}
         .result-item span{font-size:0.9rem;color:rgba(255,255,255,0.7);font-weight:500}
