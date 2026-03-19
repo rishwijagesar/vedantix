@@ -344,18 +344,18 @@ export default function Home() {
               <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Start nu →</a>
             </div>
             <div className="pricing-card featured">
-              <div className="pricing-badge">Populair</div>
+              <div className="pricing-badge">Meest gekozen</div>
               <div className="pricing-name">Growth</div>
-              <div className="pricing-subtitle">Voor serieuze groei</div>
+              <div className="pricing-subtitle">Voor bedrijven die actief klanten willen krijgen</div>
               <div className="pricing-value">€149<sup>/m</sup></div>
               <div className="pricing-setup">+ €750 setup</div>
               <ul className="pricing-features">
                 <li>Tot 5 pagina's</li>
-                <li>Contactformulier + Maps</li>
-                <li>Hosting & domein</li>
+                <li>Contactformulier + locatie kaart</li>
+                <li>Hosting & domein inbegrepen</li>
                 <li>SEO basisoptimalisatie</li>
-                <li>Email & phone support</li>
                 <li>Maandelijks rapport</li>
+                <li>Email & telefoon support</li>
               </ul>
               <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Ga live met Growth →</a>
             </div>
