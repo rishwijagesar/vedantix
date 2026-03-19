@@ -65,7 +65,7 @@ export default function Home() {
         .solution-list-item:before{color:#2d73b1}
         
         /* RESULTS */
-        .results{background:#1a1a2e;color:#fff;text-align:center;padding:120px 5%}
+        .results{background:#1a1a2e;color:#fff;text-align:center;padding:100px 5%}
         .results h2{color:#fff;margin-bottom:20px}
         .results-intro{font-size:1.05rem;color:rgba(255,255,255,0.8);margin-bottom:60px;max-width:700px;margin-left:auto;margin-right:auto}
         .results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;max-width:900px;margin:0 auto}
