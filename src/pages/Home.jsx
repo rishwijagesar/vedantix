@@ -93,7 +93,7 @@ export default function Home() {
         .roi{background:#fff;padding:75px 5%}
         .roi-content{max-width:700px;margin:0 auto}
         .roi-content h2{margin-bottom:20px;text-align:center}
-        .roi-intro{text-align:center;color:#666;margin-bottom:52px;font-size:1rem;line-height:1.6}
+        .roi-intro{text-align:center;color:#666;margin-bottom:40px;font-size:1rem;line-height:1.6}
         .roi-compare{display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center;margin-bottom:48px;align-items:center}
         .roi-box{text-align:center}
         .roi-label{font-size:0.8rem;color:#aaa;font-weight:600;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.6px}
