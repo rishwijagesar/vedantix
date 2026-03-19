@@ -267,7 +267,7 @@ export default function Home() {
 
       {/* 2. PROBLEM */}
       <section className="problem">
-        <div className="section-container">
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
           <h2>Je verliest klanten zonder dat je het doorhebt</h2>
           <p className="section-intro">Elke dag zonder goede website kost je potentiële klanten. Je concurrenten pakken ze in.</p>
           <div className="problem-grid">
