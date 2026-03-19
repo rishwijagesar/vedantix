@@ -468,7 +468,7 @@ export default function Home() {
       </section>
 
       {/* 8. HOW IT WORKS */}
-      <section className="how">
+      <section id="how" className="how">
         <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
           <h2 style={{ textAlign: "center", marginBottom: 16 }}>Hoe het werkt</h2>
           <p className="section-intro" style={{ textAlign: "center", marginLeft: "auto", marginRight: "auto" }}>Vier eenvoudige stappen naar je website.</p>
