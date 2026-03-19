@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import LiveChatWidget from "../components/LiveChatWidget";
+import PortfolioSection from "../components/PortfolioSection";
 
 // Ensure mobile viewport
 if (typeof document !== "undefined") {
