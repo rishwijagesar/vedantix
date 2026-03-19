@@ -211,28 +211,62 @@ export default function Home() {
             </div>
           </div>
           <div className="hero-visual">
-            <div className="hero-visual-content">
-              <div className="hero-visual-mockup" style={{ background: "#fff", borderRadius: 12, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }}>
-                {/* Mockup: Realistic barber website */}
-                <div style={{ background: "linear-gradient(180deg,#0a1628,#0d2146)", padding: "24px", color: "#fff", textAlign: "center" }}>
-                  <div style={{ fontSize: "1.3rem", fontWeight: 900, marginBottom: 20 }}>✂️ BARBERSHOP</div>
-                  <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: 20 }}>Premium barbering seit 2015</div>
-                  <button style={{ background: "#2d73b1", color: "#fff", padding: "10px 24px", borderRadius: 8, border: "none", fontWeight: 700, fontSize: "0.85rem", cursor: "pointer", marginBottom: 8 }}>Afspraak maken</button>
-                </div>
-                <div style={{ padding: "20px", background: "#f9fafb", minHeight: 200 }}>
-                  <div style={{ background: "#fff", borderRadius: 10, padding: 16, marginBottom: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-                    <div style={{ height: 8, background: "#2d73b1", borderRadius: 4, marginBottom: 8, width: "70%" }}></div>
-                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 3, marginBottom: 6, width: "90%" }}></div>
-                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 3, width: "60%" }}></div>
-                  </div>
-                  <div style={{ background: "#fff", borderRadius: 10, padding: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-                    <div style={{ height: 8, background: "#2d73b1", borderRadius: 4, marginBottom: 8, width: "60%" }}></div>
-                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 3, marginBottom: 6, width: "85%" }}></div>
-                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 3, width: "55%" }}></div>
-                  </div>
-                </div>
+            <div className="hero-visual-content" style={{ position: "relative" }}>
+              <div style={{ position: "absolute", top: -28, left: "50%", transform: "translateX(-50%)", background: "rgba(45,115,177,0.1)", border: "1px solid rgba(45,115,177,0.2)", color: "#2d73b1", padding: "5px 16px", borderRadius: 100, fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, whiteSpace: "nowrap" }}>
+                ✨ Voorbeeld van jouw website
               </div>
-              <p style={{ marginTop: 16, fontSize: "0.82rem", color: "#94a3b8", textAlign: "center", fontWeight: 500 }}>Zo ziet jouw website eruit</p>
+              <div className="hero-visual-mockup" style={{ background: "#fff", borderRadius: 20, overflow: "hidden", boxShadow: "0 32px 80px rgba(10,22,40,0.15)", border: "1px solid rgba(0,0,0,0.04)" }}>
+                
+                {/* HEADER / TOP */}
+                <div style={{ background: "linear-gradient(135deg,#0a1628 0%,#0d2146 100%)", padding: "28px 24px", color: "#fff", textAlign: "center", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                  <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "rgba(255,255,255,0.6)", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 10 }}>Premium Service</div>
+                  <div style={{ fontSize: "1.5rem", fontWeight: 900, marginBottom: 6, letterSpacing: -0.5 }}>Barbershop Amsterdam</div>
+                  <div style={{ fontSize: "0.85rem", fontWeight: 500, color: "rgba(255,255,255,0.7)", marginBottom: 4 }}>Klassieke kapsel & scheer</div>
+                  <div style={{ display: "flex", justifyContent: "center", gap: 8, marginTop: 12, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.78rem", color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>⭐ 4.9 (87 reviews)</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "0.78rem", color: "rgba(255,255,255,0.85)", fontWeight: 600 }}>👥 500+ klanten</span>
+                  </div>
+                </div>
+
+                {/* SERVICES / MIDDLE */}
+                <div style={{ padding: "24px 20px", background: "#f9fafb" }}>
+                  <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#1a1a2e", marginBottom: 14 }}>Onze Services</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                    <div style={{ background: "#fff", padding: "12px 14px", borderRadius: 12, display: "flex", gap: 10, alignItems: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", borderLeft: "3px solid #2d73b1" }}>
+                      <span style={{ fontSize: "1.2rem" }}>✂️</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1a1a2e" }}>Klassieke Kapsel</div>
+                        <div style={{ fontSize: "0.7rem", color: "#6b7280" }}>€18 • 30 min</div>
+                      </div>
+                    </div>
+                    <div style={{ background: "#fff", padding: "12px 14px", borderRadius: 12, display: "flex", gap: 10, alignItems: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", borderLeft: "3px solid #2d73b1" }}>
+                      <span style={{ fontSize: "1.2rem" }}>🧔</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1a1a2e" }}>Baardverzorging</div>
+                        <div style={{ fontSize: "0.7rem", color: "#6b7280" }}>€12 • 15 min</div>
+                      </div>
+                    </div>
+                    <div style={{ background: "#fff", padding: "12px 14px", borderRadius: 12, display: "flex", gap: 10, alignItems: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", borderLeft: "3px solid #2d73b1" }}>
+                      <span style={{ fontSize: "1.2rem" }}>✨</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1a1a2e" }}>Compleet Package</div>
+                        <div style={{ fontSize: "0.7rem", color: "#6b7280" }}>€28 • 45 min</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* BOOKING / BOTTOM */}
+                <div style={{ padding: "16px 20px", background: "#fff", borderTop: "1px solid #e5e7eb" }}>
+                  <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#2d73b1", textTransform: "uppercase", letterSpacing: 0.6, marginBottom: 10 }}>⏰ Vandaag nog beschikbaar</div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button style={{ flex: 1, background: "#2d73b1", color: "#fff", padding: "10px 12px", borderRadius: 10, border: "none", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", transition: "all 0.2s" }}>📅 Afspraak</button>
+                    <button style={{ flex: 1, background: "#25d366", color: "#fff", padding: "10px 12px", borderRadius: 10, border: "none", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", transition: "all 0.2s" }}>💬 WhatsApp</button>
+                  </div>
+                </div>
+
+              </div>
+              <p style={{ marginTop: 20, fontSize: "0.8rem", color: "#6b7280", textAlign: "center", fontWeight: 500 }}>Jij kiest het design • We bouwen het in 48 uur</p>
             </div>
           </div>
         </div>
