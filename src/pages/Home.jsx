@@ -123,7 +123,7 @@ export default function Home() {
         .step p{font-size:0.9rem;color:#666;line-height:1.6}
         
         /* URGENCY */
-        .urgency{background:#1a1a2e;color:#fff;padding:60px 5%;text-align:center;margin:60px 5%;border-radius:12px;max-width:900px;margin-left:auto;margin-right:auto}
+        .urgency{background:#1a1a2e;color:#fff;padding:48px 40px;text-align:center;margin:0 0 32px;border-radius:12px;max-width:700px;margin-left:auto;margin-right:auto}
         .urgency h3{color:#fff;font-size:1.4rem;margin-bottom:12px}
         .urgency p{color:rgba(255,255,255,0.85);font-size:0.95rem;max-width:600px;margin:0 auto}
         
