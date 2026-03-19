@@ -90,8 +90,8 @@ export default function Home() {
         .pricing-features li:before{content:"✓";color:#2d73b1;font-weight:900;flex-shrink:0;margin-top:2px}
         
         /* ROI */
-        .roi{background:#f9fafb;padding:100px 5%}
-        .roi-content{max-width:680px;margin:0 auto}
+        .roi{background:#fff;padding:75px 5%}
+        .roi-content{max-width:700px;margin:0 auto}
         .roi-content h2{margin-bottom:20px;text-align:center}
         .roi-intro{text-align:center;color:#666;margin-bottom:52px;font-size:1rem;line-height:1.6}
         .roi-compare{display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center;margin-bottom:48px;align-items:center}
