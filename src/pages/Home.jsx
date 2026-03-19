@@ -145,10 +145,10 @@ export default function Home() {
         .cta-phone strong{color:#00c2ff;display:block;font-size:1.15rem;margin-top:10px;font-weight:700}
         
         /* FOOTER */
-        footer{background:#1a1a2e;color:rgba(255,255,255,0.6);padding:48px 5%;text-align:center;font-size:0.85rem;border-top:1px solid rgba(255,255,255,0.1)}
+        footer{background:#1a1a2e;color:rgba(255,255,255,0.55);padding:48px 5%;text-align:center;font-size:0.84rem;border-top:1px solid rgba(255,255,255,0.08)}
         footer strong{color:#fff}
-        footer a{color:rgba(255,255,255,0.6);text-decoration:none;margin:0 12px;transition:color 0.2s}
-        footer a:hover{color:#4db8ff}
+        footer a{color:rgba(255,255,255,0.55);text-decoration:none;margin:0 12px;transition:color 0.2s}
+        footer a:hover{color:#00c2ff}
         
         /* CHAT */
         .wa-fab{position:fixed;bottom:28px;right:28px;z-index:9999;font-family:'Inter',sans-serif}
