@@ -341,7 +341,7 @@ export default function Home() {
                 <li>Mobile-optimized</li>
                 <li>Email support</li>
               </ul>
-              <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Kies Starter</a>
+              <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Start nu →</a>
             </div>
             <div className="pricing-card featured">
               <div className="pricing-badge">Populair</div>
