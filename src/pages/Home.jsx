@@ -28,14 +28,15 @@ export default function Home() {
         .btn-secondary:hover{background:#1a1a2e;color:#fff}
         
         /* HERO */
-        .hero{background:#f9fafb;padding:100px 5%;min-height:100vh;display:flex;align-items:center}
-        .hero-container{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-        .hero-content h1{font-size:3.2rem;font-weight:900;line-height:1.2;color:#1a1a2e;margin-bottom:24px;letter-spacing:-0.5px}
-        .hero-content p{font-size:1.1rem;color:#555;line-height:1.7;margin-bottom:32px;max-width:560px}
-        .hero-bullets{margin-bottom:40px}
-        .hero-bullets span{display:flex;align-items:center;gap:10px;font-size:0.95rem;color:#555;margin-bottom:10px;font-weight:500}
-        .hero-bullets span:before{content:"✓";color:#2d73b1;font-weight:900;font-size:1.1rem}
-        .hero-ctas{display:flex;gap:16px;margin-bottom:0}
+        .hero{background:linear-gradient(180deg,#ffffff 0%,#f9fafb 100%);padding:120px 5% 80px;min-height:100vh;display:flex;align-items:center}
+        .hero-container{max-width:1400px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:center}
+        .hero-label{display:inline-block;background:rgba(26,115,232,0.1);color:#1a73e8;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:6px 14px;border-radius:100px;margin-bottom:24px}
+        .hero-content h1{font-size:3.6rem;font-weight:900;line-height:1.15;color:#1a1a2e;margin-bottom:28px;letter-spacing:-0.8px}
+        .hero-content p{font-size:1.15rem;color:#6b7280;line-height:1.7;margin-bottom:40px;max-width:520px;font-weight:500}
+        .hero-bullets{margin-bottom:44px}
+        .hero-bullets span{display:flex;align-items:center;gap:11px;font-size:0.95rem;color:#4b5563;margin-bottom:12px;font-weight:500}
+        .hero-bullets span:before{content:"✓";color:#1a73e8;font-weight:900;font-size:1.15rem}
+        .hero-ctas{display:flex;gap:18px;margin-bottom:44px}
         .hero-visual{background:#fff;border-radius:24px;padding:0;min-height:500px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden}
         .hero-visual-content{position:relative;z-index:1;text-align:center;width:100%}
         .hero-visual-mockup{width:100%;height:100%;background:#fff;border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
