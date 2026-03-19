@@ -53,7 +53,7 @@ export default function Home() {
         .problem-item p{color:#666;font-size:0.93rem;line-height:1.65;font-weight:500}
         
         /* SOLUTION */
-        .solution{background:#f9fafb}
+        .solution{background:#fff;padding:75px 5%}
         .solution-intro{max-width:700px;margin-bottom:50px}
         .solution-text{max-width:650px}
         .solution-text h3{margin-bottom:12px}
