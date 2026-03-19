@@ -136,13 +136,13 @@ export default function Home() {
         .guarantee p{color:#2c3e50;font-size:0.89rem;margin:0;line-height:1.6}
         
         /* FINAL CTA */
-        .cta{background:#1a1a2e;color:#fff;text-align:center;padding:90px 5%}
-        .cta h2{color:#fff;margin-bottom:20px}
-        .cta p{font-size:1rem;color:rgba(255,255,255,0.85);max-width:620px;margin:12px auto 40px}
-        .cta-buttons{display:flex;gap:16px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
-        .cta-buttons a{font-size:0.95rem}
-        .cta-phone{color:rgba(255,255,255,0.75);font-size:0.9rem;margin-top:32px}
-        .cta-phone strong{color:#4db8ff;display:block;font-size:1.1rem;margin-top:8px;font-weight:700}
+        .cta{background:#1a1a2e;color:#fff;text-align:center;padding:100px 5%;background:linear-gradient(135deg,#1a1a2e 0%,#0d1117 100%)}
+        .cta h2{color:#fff;margin-bottom:16px}
+        .cta p{font-size:0.99rem;color:rgba(255,255,255,0.8);max-width:640px;margin:12px auto 48px;line-height:1.65}
+        .cta-buttons{display:flex;gap:16px;justify-content:center;margin-bottom:48px;flex-wrap:wrap}
+        .cta-buttons a{font-size:0.94rem}
+        .cta-phone{color:rgba(255,255,255,0.7);font-size:0.89rem;margin-top:40px}
+        .cta-phone strong{color:#00c2ff;display:block;font-size:1.15rem;margin-top:10px;font-weight:700}
         
         /* FOOTER */
         footer{background:#1a1a2e;color:rgba(255,255,255,0.6);padding:48px 5%;text-align:center;font-size:0.85rem;border-top:1px solid rgba(255,255,255,0.1)}
