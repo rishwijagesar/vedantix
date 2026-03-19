@@ -1,4 +1,5 @@
 import { useState } from "react";
+import NavBar from "../components/NavBar";
 
 if (typeof document !== "undefined") {
   let vp = document.querySelector('meta[name="viewport"]');
