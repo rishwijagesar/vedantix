@@ -205,9 +205,9 @@ export default function Home() {
               <a href="#pricing" className="btn-primary">Start je website →</a>
               <a href="#cta" className="btn-secondary">Gratis kennismaking</a>
             </div>
-            <div style={{ marginTop: 20, paddingTop: 20, borderTop: "1px solid rgba(26,26,46,0.1)", display: "flex", gap: 20, fontSize: "0.82rem", color: "#666", fontWeight: 500 }}>
-              <span>✓ Al gebruikt door 50+ lokale bedrijven</span>
-              <span>✓ 7 dagen geld-terug garantie</span>
+            <div style={{ marginTop: 24, paddingTop: 16, borderTop: "1px solid rgba(26,26,46,0.08)", display: "flex", gap: 24, fontSize: "0.8rem", color: "#888", fontWeight: 500 }}>
+              <span>50+ lokale bedrijven vertrouwen ons</span>
+              <span>7 dagen geld-terug garantie</span>
             </div>
           </div>
           <div className="hero-visual">
