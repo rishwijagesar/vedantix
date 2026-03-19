@@ -28,6 +28,7 @@ function App() {
         <Route path="/VedantixHome" element={<VedantixHome />} />
         <Route path="/VoorWie" element={<VoorWie />} />
         <Route path="/Voorwaarden" element={<Voorwaarden />} />
+        <Route path="/FAQ" element={<FAQ />} />
       </Routes>
     </BrowserRouter>
   )
