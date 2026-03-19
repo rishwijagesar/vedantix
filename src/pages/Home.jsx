@@ -572,28 +572,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WAAROM */}
-      <section id="waarom" className="why-sec">
-        <div className="center">
-          <span className="tag">Waarom Vedantix</span>
-          <h2>Jij focust op je bedrijf.<br/>Wij zorgen voor je website.</h2>
-          <p className="sub">Terwijl andere bedrijven maanden wachten, ben jij al online en klanten aantrekken.</p>
-        </div>
-        <div className="wgrid">
-          {[
-            ["⚡","48 uur live","Maandag praten, donderdag online. Geen gedoe."],
-            ["🔓","Geen technisch gedoe","Jij hoeft niks met servers, updates of SSL. Wij doen alles."],
-            ["📱","Werkt op alles","Telefoon, tablet, computer. Perfect. Altijd."],
-            ["🎯","Klanten vinden jou","Ingericht voor conversie. Je website werkt voor je."],
-            ["💪","We groeien samen","Maandelijks zien we wat werkt. We optimaliseren samen."],
-            ["🤝","Direct contact","Geen callcenters. Je belt ons, we pikken op."],
-          ].map(([ic, h, p]) => (
-            <div key={h} className="wyc">
-              <span className="ic">{ic}</span>
-              <h3>{h}</h3>
-              <p>{p}</p>
-            </div>
-          ))}
+      {/* CAPACITY */}
+      <section style={{ padding: "90px 5%", background: "#fff7ed" }}>
+        <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(217,119,6,0.1)", border: "1px solid rgba(217,119,6,0.3)", color: "#d97706", padding: "7px 20px", borderRadius: "100px", fontSize: "0.82rem", fontWeight: 700, marginBottom: 24 }}>
+            ⚠️ LIMITED CAPACITY
+          </div>
+          <h2 style={{ fontSize: "1.8rem", fontWeight: 800, marginBottom: 16, color: "#92400e" }}>We nemen maar 5 klanten per week aan</h2>
+          <p style={{ color: "#b45309", fontSize: "1rem", marginBottom: 28, lineHeight: 1.6 }}>
+            We geven elk project 100% aandacht. Snelheid + kwaliteit. Niet beide tegelijk met meer klanten.
+          </p>
+          <p style={{ color: "#d97706", fontWeight: 700, fontSize: "1.1rem" }}>
+            Als je nu contact opneemt, krijg jij een plek.
+          </p>
         </div>
       </section>
 
