@@ -128,7 +128,7 @@ export default function Home() {
         .urgency p{color:rgba(255,255,255,0.85);font-size:0.95rem;max-width:600px;margin:0 auto}
         
         /* GUARANTEE */
-        .guarantee{background:#f0f6fb;border-left:4px solid #2d73b1;padding:28px 24px;border-radius:8px;margin:40px auto;max-width:600px;margin-left:auto;margin-right:auto}
+        .guarantee{background:#f0f6fb;border-left:4px solid #2d73b1;padding:28px 24px;border-radius:8px;margin:0 auto;max-width:700px;margin-left:auto;margin-right:auto}
         .guarantee strong{color:#1a5a7a;display:block;margin-bottom:6px;font-size:0.95rem}
         .guarantee p{color:#2c3e50;font-size:0.9rem;margin:0}
         
