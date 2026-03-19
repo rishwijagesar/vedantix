@@ -465,7 +465,7 @@ export default function Home() {
               <li>SSL-certificaat</li><li>Volledige SEO-optimalisatie</li>
               <li>Google Analytics koppeling</li><li>3x gratis aanpassingen achteraf</li>
             </ul>
-            <a href="#contact?pakket=Premium%20%E2%80%94%20%E2%82%AC1499" className="pb pb-out">Start configuratie</a>
+            <a href="#contact?pakket=Premium%20%E2%80%94%20%E2%82%AC1499" className="pb pb-out" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Premium%20%E2%80%94%20%E2%82%AC1499'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Start configuratie</a>
           </div>
         </div>
       </section>
