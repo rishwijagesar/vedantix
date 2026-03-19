@@ -49,14 +49,14 @@ export default function Home() {
         .section-intro{font-size:1.02rem;color:#666;margin-bottom:48px;max-width:680px;line-height:1.65}
         
         /* PROBLEM */
-        .problem{background:#fff;padding:75px 5%}
-        .problem-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px;margin-top:48px;max-width:900px;margin-left:auto;margin-right:auto}
-        .problem-item{padding-bottom:24px;border-bottom:1px solid #e8e8e8}
-        .problem-item h3{color:#1a1a2e;margin-bottom:12px;font-size:1.08rem;font-weight:700}
-        .problem-item p{color:#666;font-size:0.93rem;line-height:1.65;font-weight:500}
+        .problem{background:#fff;padding:70px 5%}
+        .problem-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px;margin-top:48px;max-width:820px;margin-left:auto;margin-right:auto}
+        .problem-item{padding-bottom:24px;border-bottom:1px solid #efefef}
+        .problem-item h3{color:#1a1a2e;margin-bottom:12px;font-size:1.05rem;font-weight:700}
+        .problem-item p{color:#666;font-size:0.92rem;line-height:1.65;font-weight:500}
         
         /* SOLUTION */
-        .solution{background:#fff;padding:75px 5%}
+        .solution{background:#f9fafb;padding:80px 5%}
         .solution-intro{max-width:700px;margin-bottom:50px}
         .solution-text{max-width:650px}
         .solution-text h3{margin-bottom:12px}
