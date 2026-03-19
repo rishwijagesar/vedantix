@@ -388,19 +388,65 @@ export default function Home() {
         </div>
       </section>
 
+      {/* PROBLEMS */}
+      <section style={{ padding: "90px 5%", background: "#fef2f2" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <h2 style={{ fontSize: "2.1rem", fontWeight: 800, marginBottom: 8, textAlign: "center", color: "#7f1d1d" }}>Je verliest klanten zonder een goede website</h2>
+          <p style={{ color: "#991b1b", fontSize: "1rem", textAlign: "center", marginBottom: 48 }}>Elke dag dat je geen website hebt, gaan potentiële klanten naar je concurrent.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20 }}>
+            {[
+              ["🔍","Mensen vinden je online niet","Je concurrenten zijn gemakkelijker te vinden"],
+              ["📞","Geen manier om direct contact op te nemen","Potentiële klanten geven het op"],
+              ["⌚","Je website ziet er verouderd uit","Of je hebt helemaal geen website"],
+              ["💼","Minder professioneel imago","Klanten kiezen liever je concurrent"],
+            ].map(([ic, title, desc]) => (
+              <div key={title} style={{ background: "#fff", padding: 24, borderRadius: 14, border: "1px solid #fca5a5" }}>
+                <div style={{ fontSize: "1.8rem", marginBottom: 10 }}>{ic}</div>
+                <h4 style={{ fontWeight: 700, fontSize: "1rem", marginBottom: 6, color: "#7f1d1d" }}>{title}</h4>
+                <p style={{ color: "#991b1b", fontSize: "0.9rem" }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WHAT YOU GET */}
+      <section style={{ padding: "90px 5%", background: "#f0fdf4" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <h2 style={{ fontSize: "2.1rem", fontWeight: 800, marginBottom: 8, textAlign: "center", color: "#065f46" }}>Wat krijg jij van ons?</h2>
+          <p style={{ color: "#047857", fontSize: "1rem", textAlign: "center", marginBottom: 48 }}>Website, hosting, updates, onderhoud — alles in één pakket.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20 }}>
+            {[
+              ["⚡","Website in 48 uur","Je bent snel online en klanten kunnen je vinden"],
+              ["📱","Perfect op mobiel","Werkt perfect op telefoon, tablet en computer"],
+              ["🌐","Alles gehost & beveiligd","Domein, hosting, SSL — wij regelen alles"],
+              ["🔄","Maandelijkse updates","Je website blijft actueel en geoptimaliseerd"],
+              ["📈","Meer klanten & aanvragen","Website ingericht voor conversie"],
+              ["🎯","Één partner. Klaar.","Geen gedoe met developers of technisch gedoe"],
+            ].map(([ic, title, desc]) => (
+              <div key={title} style={{ background: "#fff", padding: 24, borderRadius: 14, border: "1px solid #86efac" }}>
+                <div style={{ fontSize: "1.8rem", marginBottom: 10 }}>{ic}</div>
+                <h4 style={{ fontWeight: 700, fontSize: "1rem", marginBottom: 6, color: "#065f46" }}>{title}</h4>
+                <p style={{ color: "#047857", fontSize: "0.9rem" }}>{desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* HOE HET WERKT */}
       <section id="hoe-het-werkt" className="steps-sec">
         <div className="center" style={{ marginBottom: 0 }}>
           <span className="tag">Hoe het werkt</span>
-          <h2>Klaar in 3 dagen. Geen gedoe.</h2>
+          <h2>4 stappen. Klaar.</h2>
           <p className="sub center">We doen alles. Jij hoeft enkel "ja" te zeggen.</p>
         </div>
         <div className="steps">
           {[
-            ["1","Gesprekje van 15 min","Wat is jouw bedrijf? Wat willen je klanten zien? Dat is echt alles."],
-            ["2","Wij bouwen & testen","Je website is klaar. Domein, hosting, beveiliging — alles in orde."],
-            ["3","Je zet hem live","Klik. Klaar. Je bent nu online en klanten kunnen je vinden."],
-            ["4","We passen aan wanneer nodig","Je ziet wat werkt. We optimaliseren maandelijks."],
+            ["1","Gesprekje van 15 min","Jij vertelt wat je bedrijf is. Wij maken een plan."],
+            ["2","Wij bouwen je website","48 uur later: website klaar, getest, veilig."],
+            ["3","Je gaat live","Klik. Je bent online. Klanten kunnen je vinden."],
+            ["4","Wij onderhouden alles","Updates, optimalisaties, support — maandelijks."],
           ].map(([n, h, p]) => (
             <div key={n} className="step">
               <div className="step-n">{n}</div>
