@@ -293,7 +293,7 @@ export default function Home() {
 
       {/* 3. SOLUTION */}
       <section className="solution">
-        <div className="section-container">
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
           <h2>Wij zorgen dat jouw website klanten oplevert</h2>
           <p className="section-intro">Website + hosting + updates + onderhoud. Alles in één. Nul zorgen.</p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "start", maxWidth: 900, margin: "0 auto" }}>
