@@ -62,6 +62,7 @@ export default function Home() {
         .solution-list-item{display:flex;gap:16px;align-items:flex-start}
         .solution-list-item:before{content:"→";color:#2d73b1;font-weight:900;font-size:1.1rem;flex-shrink:0;margin-top:2px}
         .solution-list-item span{color:#555;font-size:0.95rem;line-height:1.6}
+        .solution-list-item:before{color:#2d73b1}
         
         /* RESULTS */
         .results{background:#1a1a2e;color:#fff;text-align:center;padding:120px 5%}
