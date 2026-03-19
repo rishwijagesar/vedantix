@@ -34,19 +34,9 @@ export default function Home() {
         .hero-bullets span{display:flex;align-items:center;gap:10px;font-size:0.95rem;color:#555;margin-bottom:10px;font-weight:500}
         .hero-bullets span:before{content:"✓";color:#2d73b1;font-weight:900;font-size:1.1rem}
         .hero-ctas{display:flex;gap:16px;margin-bottom:0}
-        .hero-visual{background:linear-gradient(135deg,#f0f6fb 0%,#e8f4ff 100%);border-radius:16px;padding:60px 40px;min-height:500px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden}
-        .hero-visual::before{content:'';position:absolute;width:300px;height:300px;background:radial-gradient(circle,rgba(45,115,177,0.1) 0%,transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
-        .hero-visual-content{position:relative;z-index:1;text-align:center}
-        .hero-visual-content h3{font-size:1.2rem;color:#1a1a2e;font-weight:700;margin-bottom:20px}
-        .hero-visual-mockup{width:100%;max-width:280px;background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.08);padding:8px;aspect-ratio:9/16}
-        .hero-visual-mockup-content{width:100%;height:100%;background:linear-gradient(180deg,#f0f6fb 0%,#e8f4ff 100%);border-radius:8px;display:flex;flex-direction:column;padding:20px;gap:12px}
-        .hero-visual-mockup-content > div{height:8px;background:rgba(45,115,177,0.2);border-radius:4px}
-        .hero-visual-mockup-content > div:nth-child(1){width:85%;height:18px;background:#2d73b1;border-radius:4px}
-        .hero-visual-mockup-content > div:nth-child(2){width:100%;height:2px;background:rgba(45,115,177,0.1)}
-        .hero-visual-mockup-content > div:nth-child(3){width:95%;height:14px;background:#2d73b1;border-radius:4px;margin-top:8px}
-        .hero-visual-mockup-content > div:nth-child(4){width:90%;height:10px;background:rgba(45,115,177,0.15);border-radius:4px}
-        .hero-visual-mockup-content > div:nth-child(5){width:100%;height:2px;background:rgba(45,115,177,0.1);margin-top:12px}
-        .hero-visual-mockup-content > div:nth-child(6){width:80%;height:12px;background:rgba(45,115,177,0.2);border-radius:4px}
+        .hero-visual{background:#fff;border-radius:24px;padding:0;min-height:500px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden}
+        .hero-visual-content{position:relative;z-index:1;text-align:center;width:100%}
+        .hero-visual-mockup{width:100%;height:100%;background:#fff;border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
         
         /* SECTIONS */
         section{padding:100px 5%}
