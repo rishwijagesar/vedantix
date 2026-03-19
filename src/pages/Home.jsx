@@ -82,15 +82,15 @@ export default function Home() {
         .pricing-card{border:1px solid #e5e7eb;border-radius:16px;padding:48px 36px;transition:all 0.25s;position:relative;background:#fff}
         .pricing-card:hover{border-color:#1a73e8;transform:translateY(-4px);box-shadow:0 12px 48px rgba(26,115,232,0.08)}
         .pricing-card.featured{border-color:#1a73e8;background:linear-gradient(135deg,#eff6ff 0%,#f0f9ff 100%);transform:scale(1.06);box-shadow:0 24px 64px rgba(26,115,232,0.12)}
-        .pricing-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#2d73b1;color:#fff;padding:5px 16px;border-radius:100px;font-weight:700;font-size:0.73rem;text-transform:uppercase;letter-spacing:0.6px;box-shadow:0 4px 12px rgba(45,115,177,0.25)}
-        .pricing-name{font-size:1.35rem;font-weight:900;color:#1a1a2e;margin-bottom:6px;letter-spacing:-0.3px}
-        .pricing-subtitle{font-size:0.82rem;color:#94a3b8;margin-bottom:20px;font-weight:600;line-height:1.4}
-        .pricing-value{font-size:2.9rem;font-weight:900;color:#1a1a2e;margin-bottom:2px;letter-spacing:-1px}
-        .pricing-value sup{font-size:1rem;font-weight:700}
-        .pricing-setup{font-size:0.8rem;color:#94a3b8;margin-bottom:32px;font-weight:500}
-        .pricing-features{list-style:none;padding:0;margin-bottom:36px;display:flex;flex-direction:column;gap:14px}
-        .pricing-features li{font-size:0.91rem;color:#555;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
-        .pricing-features li:before{content:"✓";color:#2d73b1;font-weight:900;flex-shrink:0;margin-top:2px}
+        .pricing-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#1a73e8;color:#fff;padding:5px 16px;border-radius:100px;font-weight:700;font-size:0.73rem;text-transform:uppercase;letter-spacing:0.6px;box-shadow:0 4px 12px rgba(26,115,232,0.25)}
+        .pricing-name{font-size:1.3rem;font-weight:900;color:#1a1a2e;margin-bottom:6px;letter-spacing:-0.3px}
+        .pricing-subtitle{font-size:0.81rem;color:#94a3b8;margin-bottom:20px;font-weight:600;line-height:1.4}
+        .pricing-value{font-size:2.8rem;font-weight:900;color:#1a1a2e;margin-bottom:2px;letter-spacing:-1px}
+        .pricing-value sup{font-size:0.95rem;font-weight:700}
+        .pricing-setup{font-size:0.79rem;color:#94a3b8;margin-bottom:32px;font-weight:500}
+        .pricing-features{list-style:none;padding:0;margin-bottom:36px;display:flex;flex-direction:column;gap:12px}
+        .pricing-features li{font-size:0.89rem;color:#555;display:flex;gap:10px;align-items:flex-start;line-height:1.55}
+        .pricing-features li:before{content:"✓";color:#1a73e8;font-weight:900;flex-shrink:0;margin-top:2px;font-size:0.95rem}
         
         /* ROI */
         .roi{background:#fff;padding:75px 5%}
