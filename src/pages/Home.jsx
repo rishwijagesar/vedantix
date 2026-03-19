@@ -217,11 +217,11 @@ export default function Home() {
             </div>
           </div>
           <div className="hero-visual">
-            <div className="hero-visual-content" style={{ position: "relative" }}>
-              <div style={{ position: "absolute", top: -28, left: "50%", transform: "translateX(-50%)", background: "rgba(45,115,177,0.1)", border: "1px solid rgba(45,115,177,0.2)", color: "#2d73b1", padding: "5px 16px", borderRadius: 100, fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, whiteSpace: "nowrap" }}>
-                ✨ Voorbeeld van jouw website
-              </div>
-              <div className="hero-visual-mockup" style={{ background: "#fff", borderRadius: 20, overflow: "hidden", boxShadow: "0 32px 80px rgba(10,22,40,0.15)", border: "1px solid rgba(0,0,0,0.04)" }}>
+            <div className="hero-visual-content">
+            <div style={{ marginBottom: 16, background: "rgba(45,115,177,0.1)", border: "1px solid rgba(45,115,177,0.2)", color: "#2d73b1", padding: "5px 16px", borderRadius: 100, fontSize: "0.75rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5, whiteSpace: "nowrap" }}>
+              ✨ Voorbeeld van jouw website
+            </div>
+            <div className="hero-visual-mockup" style={{ border: "1px solid rgba(0,0,0,0.04)" }}>
                 
                 {/* HEADER / TOP */}
                 <div style={{ background: "linear-gradient(135deg,#0a1628 0%,#0d2146 100%)", padding: "28px 24px", color: "#fff", textAlign: "center", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
