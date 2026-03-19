@@ -207,6 +207,24 @@ function WAWidget() {
 
 function ContactForm() {
   const [sent, setSent] = useState(false);
+  const [pakket, setPakket] = useState(() => {
+    // Read preselected package from URL hash, e.g. #contact?pakket=Starter
+    const hash = window.location.hash;
+    const match = hash.match(/pakket=([^&]+)/);
+    return match ? decodeURIComponent(match[1]) : "";
+  });
+
+  // Listen for hash changes (when user clicks a pricing button)
+  useEffect(() => {
+    const onHash = () => {
+      const hash = window.location.hash;
+      const match = hash.match(/pakket=([^&]+)/);
+      if (match) setPakket(decodeURIComponent(match[1]));
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
   if (sent) {
     return (
       <div style={{ background: "#f0fdf4", border: "2px solid #10b981", borderRadius: 12, padding: 32, textAlign: "center" }}>
@@ -224,12 +242,12 @@ function ContactForm() {
       </div>
       <input type="email" placeholder="E-mailadres" required style={iStyle} />
       <input type="tel" placeholder="Telefoonnummer" style={iStyle} />
-      <select style={iStyle}>
+      <select value={pakket} onChange={e => setPakket(e.target.value)} style={iStyle}>
         <option value="">Welk pakket interesseert u?</option>
-        <option>Starter — €399</option>
-        <option>Business — €799</option>
-        <option>Premium — €1499</option>
-        <option>Weet ik nog niet</option>
+        <option value="Starter — €399">Starter — €399</option>
+        <option value="Business — €799">Business — €799</option>
+        <option value="Premium — €1499">Premium — €1499</option>
+        <option value="Weet ik nog niet">Weet ik nog niet</option>
       </select>
       <textarea placeholder="Vertel kort over uw bedrijf en wat u zoekt..." rows={4} style={{ ...iStyle, resize: "vertical" }} />
       <button type="submit" style={{ background: "#1a73e8", color: "#fff", padding: "13px", borderRadius: 9, fontWeight: 700, fontSize: "0.93rem", border: "none", cursor: "pointer", width: "100%" }}>
