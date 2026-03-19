@@ -496,8 +496,8 @@ export default function Home() {
       </section>
 
       {/* 10. URGENCY + 11. GUARANTEE */}
-      <section style={{ background: "#fff", padding: "60px 5%" }}>
-        <div className="section-container">
+      <section style={{ background: "#f9fafb", padding: "60px 5%" }}>
+        <div className="section-container" style={{ maxWidth: "800px" }}>
           <div className="urgency">
             <h3>⚡ We nemen max 5 klanten per week aan</h3>
             <p>We geven elk project volle aandacht. Snelheid + kwaliteit. Als je nu belt, krijg jij een plek.</p>
