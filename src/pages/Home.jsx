@@ -222,17 +222,27 @@ export default function Home() {
           </div>
           <div className="hero-visual">
             <div className="hero-visual-content">
-              <h3>Je website in echt</h3>
-              <div className="hero-visual-mockup">
-                <div className="hero-visual-mockup-content">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
+              <div className="hero-visual-mockup" style={{ background: "#fff", borderRadius: 12, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.12)" }}>
+                {/* Mockup: Realistic barber website */}
+                <div style={{ background: "linear-gradient(180deg,#0a1628,#0d2146)", padding: "24px", color: "#fff", textAlign: "center" }}>
+                  <div style={{ fontSize: "1.3rem", fontWeight: 900, marginBottom: 20 }}>✂️ BARBERSHOP</div>
+                  <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "rgba(255,255,255,0.7)", marginBottom: 20 }}>Premium barbering seit 2015</div>
+                  <button style={{ background: "#2d73b1", color: "#fff", padding: "10px 24px", borderRadius: 8, border: "none", fontWeight: 700, fontSize: "0.85rem", cursor: "pointer", marginBottom: 8 }}>Afspraak maken</button>
+                </div>
+                <div style={{ padding: "20px", background: "#f9fafb", minHeight: 200 }}>
+                  <div style={{ background: "#fff", borderRadius: 10, padding: 16, marginBottom: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+                    <div style={{ height: 8, background: "#2d73b1", borderRadius: 4, marginBottom: 8, width: "70%" }}></div>
+                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 3, marginBottom: 6, width: "90%" }}></div>
+                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 3, width: "60%" }}></div>
+                  </div>
+                  <div style={{ background: "#fff", borderRadius: 10, padding: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
+                    <div style={{ height: 8, background: "#2d73b1", borderRadius: 4, marginBottom: 8, width: "60%" }}></div>
+                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 3, marginBottom: 6, width: "85%" }}></div>
+                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 3, width: "55%" }}></div>
+                  </div>
                 </div>
               </div>
+              <p style={{ marginTop: 16, fontSize: "0.82rem", color: "#94a3b8", textAlign: "center", fontWeight: 500 }}>Zo ziet jouw website eruit</p>
             </div>
           </div>
         </div>
