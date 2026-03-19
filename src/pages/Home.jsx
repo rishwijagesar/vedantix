@@ -1,5 +1,4 @@
 import { useState } from "react";
-import LiveChatWidget from "../components/LiveChatWidget";
 
 if (typeof document !== "undefined") {
   let vp = document.querySelector('meta[name="viewport"]');
