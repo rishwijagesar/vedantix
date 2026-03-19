@@ -372,18 +372,18 @@ export default function Home() {
       {/* HERO */}
       <section className="hero">
         <div className="hi">
-          <div className="hbadge">⚡ Website morgen live. Klanten volgen vanzelf.</div>
-          <h1>Stop met wachten op<br/><em>je online aanwezigheid</em></h1>
-          <p>Je concurrenten hebben al een website. Jij krijgt er een die werkelijk klanten binnenhaalt — alles inbegrepen, geen gedoe met hosting of updates.</p>
+          <div className="hbadge">⚡ 48 uur live. Klanten volgen.</div>
+          <h1>Meer klanten via<br/><em>jouw website</em></h1>
+          <p>Wij bouwen jouw website in 48 uur. Alles inbegrepen: hosting, domein, updates, onderhoud. Jij krijgt klanten. Wij zorgen voor de rest.</p>
           <div className="hbtns">
-            <a href="#contact" className="btn-p">Start nu — gratis intake</a>
-            <a href="/Templates" className="btn-g">Zie voorbeelden</a>
+            <a href="#contact" className="btn-p">Start jouw website</a>
+            <a href="#pricing" className="btn-g">Plan gratis gesprek</a>
           </div>
           <div className="hstats">
-            <div className="stat"><strong>48u</strong><span>Van idee naar online</span></div>
-            <div className="stat"><strong>0€</strong><span>Technische kosten</span></div>
-            <div className="stat"><strong>Unlimited</strong><span>Maandelijkse updates</span></div>
-            <div className="stat"><strong>∞</strong><span>Geen zorgen meer</span></div>
+            <div className="stat"><strong>48u</strong><span>Website live</span></div>
+            <div className="stat"><strong>€99/m</strong><span>All-in prijs</span></div>
+            <div className="stat"><strong>∞</strong><span>Updates included</span></div>
+            <div className="stat"><strong>1 partner</strong><span>Alles geregeld</span></div>
           </div>
         </div>
       </section>
