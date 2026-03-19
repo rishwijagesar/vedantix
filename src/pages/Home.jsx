@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LiveChatWidget from "../components/LiveChatWidget";
 
 // Ensure mobile viewport
@@ -440,7 +440,7 @@ export default function Home() {
               <li>Contactformulier</li><li>Hosting (1 jaar) + 500 MB opslag</li>
               <li>SSL-certificaat</li><li>Levering binnen 48 uur</li>
             </ul>
-            <a href="#contact" className="pb pb-out">Start configuratie</a>
+            <a href="#contact?pakket=Starter%20%E2%80%94%20%E2%82%AC399" className="pb pb-out">Start configuratie</a>
           </div>
           <div className="pc hot">
             <div className="hbadge2">MEEST GEKOZEN</div>
@@ -453,7 +453,7 @@ export default function Home() {
               <li>SSL-certificaat</li><li>SEO-basisoptimalisatie</li>
               <li>Levering binnen 48 uur</li><li>1x gratis aanpassing achteraf</li>
             </ul>
-            <a href="#contact" className="pb pb-fill">Start configuratie</a>
+            <a href="#contact?pakket=Business%20%E2%80%94%20%E2%82%AC799" className="pb pb-fill">Start configuratie</a>
           </div>
           <div className="pc">
             <div className="pn">Premium</div>
@@ -465,7 +465,7 @@ export default function Home() {
               <li>SSL-certificaat</li><li>Volledige SEO-optimalisatie</li>
               <li>Google Analytics koppeling</li><li>3x gratis aanpassingen achteraf</li>
             </ul>
-            <a href="#contact" className="pb pb-out">Start configuratie</a>
+            <a href="#contact?pakket=Premium%20%E2%80%94%20%E2%82%AC1499" className="pb pb-out">Start configuratie</a>
           </div>
         </div>
       </section>
