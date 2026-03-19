@@ -400,23 +400,23 @@ export default function Home() {
           <p className="section-intro" style={{ textAlign: "center", marginLeft: "auto", marginRight: "auto" }}>Geen grote upfront kosten. Alles inbegrepen. Eenvoudig opzeggen.</p>
           <div className="why-content">
             <div className="why-col">
-              <h3 className="old">❌ Eenmalig betalen</h3>
+              <h3 className="old">Eenmalig betalen (oud model)</h3>
               <ul className="why-list">
-                <li>€3000+ upfront</li>
-                <li>Hosting zelf betalen (€10-50/m)</li>
-                <li>Updates betalen per keer</li>
-                <li>Bug? €500+ reparatie</li>
-                <li>Jij bent verantwoordelijk</li>
+                <li>€3000+ upfront betalen</li>
+                <li>Hosting zelf zoeken & betalen</li>
+                <li>Updates betalen per update</li>
+                <li>Problemen? €500+ per reparatie</li>
+                <li>Jij bent volledig verantwoordelijk</li>
               </ul>
             </div>
-            <div className="why-col">
-              <h3 className="new">✅ Abonnement</h3>
+            <div className="why-col new">
+              <h3 className="new">Abonnement (slim model)</h3>
               <ul className="why-list">
                 <li>€99-249/m, alles inbegrepen</li>
                 <li>Hosting, domein, SSL erbij</li>
-                <li>Automatische updates</li>
-                <li>Bug? Wij fixen gratis</li>
-                <li>Jij focust op bedrijf</li>
+                <li>Automatische updates & optimalisaties</li>
+                <li>Problemen? Wij fixen gratis</li>
+                <li>Jij focust op je bedrijf</li>
               </ul>
             </div>
           </div>
