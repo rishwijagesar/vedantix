@@ -515,9 +515,9 @@ export default function Home() {
           <h2>Klaar om meer klanten te krijgen?</h2>
           <p>Geen gedoe. Geen verplichtingen. Gewoon een gesprek over jouw website.</p>
           <div className="cta-buttons">
-            <a href="#pricing" className="btn-primary">Ontdek jouw pakket →</a>
-            <a href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website." target="_blank" rel="noreferrer" className="btn-secondary">Chat via WhatsApp</a>
-          </div>
+             <a href="#pricing" className="btn-primary">Start je website →</a>
+             <a href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website." target="_blank" rel="noreferrer" className="btn-secondary">Plan gratis gesprek</a>
+           </div>
           <div className="cta-phone">
             Liever direct bellen?<br/>
             <strong>+31 6 26 21 99 89</strong>
