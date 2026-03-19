@@ -42,11 +42,11 @@ export default function Home() {
         .hero-visual-mockup{width:100%;max-width:440px;height:auto;background:#fff;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.12);animation:heroFloat 3s ease-in-out infinite}
         
         /* SECTIONS */
-        section{padding:75px 5%}
-        .section-container{max-width:1200px;margin:0 auto}
-        h2{font-size:2.8rem;font-weight:900;line-height:1.25;color:#1a1a2e;margin-bottom:16px;letter-spacing:-0.4px}
-        h3{font-size:1.15rem;font-weight:700;color:#1a1a2e;line-height:1.3}
-        .section-intro{font-size:1.05rem;color:#666;margin-bottom:48px;max-width:720px;line-height:1.6}
+        section{padding:70px 5%}
+        .section-container{margin:0 auto}
+        h2{font-size:2.9rem;font-weight:900;line-height:1.2;color:#1a1a2e;margin-bottom:14px;letter-spacing:-0.5px}
+        h3{font-size:1.1rem;font-weight:700;color:#1a1a2e;line-height:1.3}
+        .section-intro{font-size:1.02rem;color:#666;margin-bottom:48px;max-width:680px;line-height:1.65}
         
         /* PROBLEM */
         .problem{background:#fff;padding:75px 5%}
