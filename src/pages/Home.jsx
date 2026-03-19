@@ -26,7 +26,7 @@ export default function Home() {
         .btn-secondary:hover{background:#1a1a2e;color:#fff}
         
         /* HERO */
-        .hero{background:#f9fafb;padding:80px 5%;min-height:100vh;display:flex;align-items:center}
+        .hero{background:#f9fafb;padding:100px 5%;min-height:100vh;display:flex;align-items:center}
         .hero-container{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
         .hero-content h1{font-size:3.2rem;font-weight:900;line-height:1.2;color:#1a1a2e;margin-bottom:24px;letter-spacing:-0.5px}
         .hero-content p{font-size:1.1rem;color:#555;line-height:1.7;margin-bottom:32px;max-width:560px}
