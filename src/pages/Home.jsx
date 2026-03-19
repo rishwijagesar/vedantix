@@ -74,8 +74,8 @@ export default function Home() {
         .results-note{font-size:1rem;margin-top:60px;color:rgba(255,255,255,0.85);font-weight:600;color:#4db8ff}
         
         /* PRICING */
-        .pricing{background:#fff;padding:120px 5%}
-        .pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:60px;max-width:1000px;margin-left:auto;margin-right:auto}
+        .pricing{background:#f9fafb;padding:90px 5%}
+        .pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px;max-width:1000px;margin-left:auto;margin-right:auto}
         .pricing-card{border:1px solid #e8e8e8;border-radius:16px;padding:48px 36px;transition:all 0.3s;position:relative;background:#fff}
         .pricing-card:hover{border-color:#2d73b1;transform:translateY(-3px);box-shadow:0 12px 40px rgba(45,115,177,0.08)}
         .pricing-card.featured{border-color:#2d73b1;background:linear-gradient(135deg,#f0f6fb 0%,#f9fbfd 100%);transform:scale(1.05);box-shadow:0 20px 60px rgba(45,115,177,0.15)}
