@@ -453,7 +453,7 @@ export default function Home() {
               <li>SSL-certificaat</li><li>SEO-basisoptimalisatie</li>
               <li>Levering binnen 48 uur</li><li>1x gratis aanpassing achteraf</li>
             </ul>
-            <a href="#contact?pakket=Business%20%E2%80%94%20%E2%82%AC799" className="pb pb-fill">Start configuratie</a>
+            <a href="#contact?pakket=Business%20%E2%80%94%20%E2%82%AC799" className="pb pb-fill" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Business%20%E2%80%94%20%E2%82%AC799'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Start configuratie</a>
           </div>
           <div className="pc">
             <div className="pn">Premium</div>
