@@ -363,38 +363,50 @@ export default function Home() {
       <section id="pricing" className="pricing">
         <div className="section-container">
           <h2 style={{ textAlign: "center", marginBottom: 12 }}>Kies jouw pakket</h2>
-          <p className="section-intro" style={{ textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: 20 }}>Alles wat je nodig hebt om online klanten te krijgen — geen gedoe, geen verborgen kosten.</p>
+          <p className="section-intro" style={{ textAlign: "center", marginLeft: "auto", marginRight: "auto", marginBottom: 20 }}>Geen verborgen kosten. Alles inbegrepen. Opzeggen wanneer je wilt.</p>
+          
           <div className="pricing-cards">
+            {/* STARTER */}
             <div className="pricing-card">
               <div className="pricing-name">Starter</div>
-              <div className="pricing-subtitle">Voor starters die snel online willen</div>
+              <div className="pricing-subtitle">Voor ondernemers die gewoon online willen staan</div>
               <div className="pricing-value">€99<sup>/m</sup></div>
               <div className="pricing-setup">+ €500 setup</div>
               <ul className="pricing-features">
-                <li>1–2 pagina's</li>
-                <li>Contactformulier</li>
-                <li>Hosting & domein</li>
-                <li>Mobile-optimized</li>
-                <li>Basic support</li>
+                <li>1–2 pagina website</li>
+                <li>Mobielvriendelijk design</li>
+                <li>Contactformulier (leads direct naar jouw mail)</li>
+                <li>Hosting + domein koppeling</li>
+                <li>SSL beveiliging</li>
+                <li>Basis SEO setup</li>
+                <li>Support binnen 48 uur</li>
               </ul>
+              <p style={{ fontSize: "0.82rem", color: "#6b7280", marginBottom: 20, fontWeight: 500, fontStyle: "italic" }}>Perfect om snel online te zijn en gevonden te worden</p>
               <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Start met Starter →</a>
             </div>
+
+            {/* GROWTH - FEATURED */}
             <div className="pricing-card featured">
               <div className="pricing-badge">Meest gekozen</div>
               <div className="pricing-name">Growth</div>
-              <div className="pricing-subtitle">Voor bedrijven die actief klanten willen krijgen</div>
+              <div className="pricing-subtitle">Voor bedrijven die actief klanten willen binnenhalen</div>
               <div className="pricing-value">€149<sup>/m</sup></div>
               <div className="pricing-setup">+ €750 setup</div>
               <ul className="pricing-features">
                 <li>Tot 5 pagina's</li>
-                <li>Contactformulier + locatie kaart</li>
-                <li>Hosting & domein inbegrepen</li>
+                <li>Alles van Starter</li>
+                <li>Google Maps integratie</li>
+                <li>Conversiegerichte opbouw (meer aanvragen)</li>
                 <li>SEO basisoptimalisatie</li>
-                <li>Maandelijks rapport</li>
-                <li>Email & telefoon support</li>
+                <li>Maandelijkse performance check</li>
+                <li>Support binnen 24 uur</li>
+                <li>Kleine updates inbegrepen</li>
               </ul>
+              <p style={{ fontSize: "0.82rem", color: "#0369a1", marginBottom: 20, fontWeight: 600, fontStyle: "italic" }}>Voor bedrijven die hun website echt willen laten werken</p>
               <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Start met Growth →</a>
             </div>
+
+            {/* PRO */}
             <div className="pricing-card">
               <div className="pricing-name">Pro</div>
               <div className="pricing-subtitle">Voor bedrijven die serieus willen groeien</div>
@@ -403,13 +415,62 @@ export default function Home() {
               <ul className="pricing-features">
                 <li>Tot 10 pagina's</li>
                 <li>Custom design op maat</li>
-                <li>Geavanceerde functies</li>
-                <li>Hosting & domein inbegrepen</li>
+                <li>Geavanceerde functies (boekingen / formulieren)</li>
+                <li>Alles van Growth</li>
                 <li>Volledige SEO optimalisatie</li>
-                <li>Priority support</li>
+                <li>Priority support (binnen 12 uur)</li>
+                <li>Snelle aanpassingen (zelfde dag mogelijk)</li>
               </ul>
+              <p style={{ fontSize: "0.82rem", color: "#6b7280", marginBottom: 20, fontWeight: 500, fontStyle: "italic" }}>Maximale groei, minimale zorgen</p>
               <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Start met Pro →</a>
             </div>
+          </div>
+
+          {/* TRUST BLOCK */}
+          <div style={{ maxWidth: "900px", margin: "56px auto 0", padding: "32px 24px", background: "linear-gradient(135deg,#f0f9ff 0%,#f9fbfd 100%)", border: "1px solid #bae6fd", borderRadius: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 16, textAlign: "center" }}>
+              <div>
+                <span style={{ fontSize: "1.4rem", display: "block", marginBottom: 6 }}>✔</span>
+                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0369a1", lineHeight: 1.4 }}>Geen verborgen kosten</span>
+              </div>
+              <div>
+                <span style={{ fontSize: "1.4rem", display: "block", marginBottom: 6 }}>✔</span>
+                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0369a1", lineHeight: 1.4 }}>Maandelijks opzegbaar</span>
+              </div>
+              <div>
+                <span style={{ fontSize: "1.4rem", display: "block", marginBottom: 6 }}>✔</span>
+                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0369a1", lineHeight: 1.4 }}>Alles inbegrepen</span>
+              </div>
+              <div>
+                <span style={{ fontSize: "1.4rem", display: "block", marginBottom: 6 }}>✔</span>
+                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0369a1", lineHeight: 1.4 }}>Binnen 48 uur live</span>
+              </div>
+              <div>
+                <span style={{ fontSize: "1.4rem", display: "block", marginBottom: 6 }}>✔</span>
+                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0369a1", lineHeight: 1.4 }}>7 dagen geld-terug garantie</span>
+              </div>
+            </div>
+          </div>
+
+          {/* WHAT'S INCLUDED IN UPDATES */}
+          <div style={{ maxWidth: "900px", margin: "32px auto 0", padding: "0 24px" }}>
+            <details style={{ cursor: "pointer" }}>
+              <summary style={{ fontSize: "0.85rem", fontWeight: 600, color: "#475569", padding: "12px 0", userSelect: "none" }}>
+                💡 Wat valt onder kleine updates en wijzigingen?
+              </summary>
+              <div style={{ paddingTop: 8, paddingBottom: 12, fontSize: "0.85rem", color: "#6b7280" }}>
+                <ul style={{ marginLeft: 20, lineHeight: 1.6 }}>
+                  <li>Teksten aanpassen</li>
+                  <li>Foto's vervangen</li>
+                  <li>Kleine layout-wijzigingen</li>
+                  <li>Kleine secties toevoegen</li>
+                  <li>Contactgegevens updaten</li>
+                </ul>
+                <p style={{ marginTop: 12, fontStyle: "italic", color: "#9ca3af", fontSize: "0.8rem" }}>
+                  Grote wijzigingen (nieuwe pagina's, geavanceerde functies) worden vooraf besproken en hebben mogelijk extra kosten.
+                </p>
+              </div>
+            </details>
           </div>
         </div>
       </section>
