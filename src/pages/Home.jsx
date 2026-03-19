@@ -39,11 +39,11 @@ export default function Home() {
         .hero-visual-mockup{width:100%;height:100%;background:#fff;border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
         
         /* SECTIONS */
-        section{padding:100px 5%}
+        section{padding:75px 5%}
         .section-container{max-width:1200px;margin:0 auto}
-        h2{font-size:2.8rem;font-weight:900;line-height:1.25;color:#1a1a2e;margin-bottom:24px;letter-spacing:-0.4px}
+        h2{font-size:2.8rem;font-weight:900;line-height:1.25;color:#1a1a2e;margin-bottom:16px;letter-spacing:-0.4px}
         h3{font-size:1.15rem;font-weight:700;color:#1a1a2e;line-height:1.3}
-        .section-intro{font-size:1.05rem;color:#666;margin-bottom:56px;max-width:720px;line-height:1.6}
+        .section-intro{font-size:1.05rem;color:#666;margin-bottom:48px;max-width:720px;line-height:1.6}
         
         /* PROBLEM */
         .problem{background:#fff}
