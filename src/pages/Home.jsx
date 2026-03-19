@@ -118,12 +118,12 @@ export default function Home() {
         .why-list li:before{content:"✓";color:#1a73e8;font-weight:900;flex-shrink:0;margin-top:2px;font-size:0.9rem}
         
         /* HOW IT WORKS */
-        .how{background:#fff;padding:80px 5%}
-        .how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:56px;max-width:1000px;margin-left:auto;margin-right:auto}
+        .how{background:#f9fafb;padding:80px 5%}
+        .how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:56px;max-width:1000px;margin-left:auto;margin-right:auto}
         .step{text-align:center}
-        .step-number{width:50px;height:50px;background:#2d73b1;color:#fff;border-radius:50%;font-size:1.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
-        .step h3{margin-bottom:12px;font-size:1.05rem}
-        .step p{font-size:0.9rem;color:#666;line-height:1.6}
+        .step-number{width:50px;height:50px;background:#1a73e8;color:#fff;border-radius:50%;font-size:1.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 4px 12px rgba(26,115,232,0.2)}
+        .step h3{margin-bottom:12px;font-size:1.02rem;font-weight:800}
+        .step p{font-size:0.89rem;color:#666;line-height:1.65}
         
         /* URGENCY */
         .urgency{background:#1a1a2e;color:#fff;padding:48px 40px;text-align:center;margin:0 0 32px;border-radius:12px;max-width:700px;margin-left:auto;margin-right:auto}
