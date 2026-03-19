@@ -331,15 +331,15 @@ export default function Home() {
           <div className="pricing-cards">
             <div className="pricing-card">
               <div className="pricing-name">Starter</div>
-              <div className="pricing-subtitle">Perfect om te beginnen</div>
+              <div className="pricing-subtitle">Voor starters die snel online willen</div>
               <div className="pricing-value">€99<sup>/m</sup></div>
               <div className="pricing-setup">+ €500 setup</div>
               <ul className="pricing-features">
-                <li>1-2 pagina's</li>
+                <li>1–2 pagina's</li>
                 <li>Contactformulier</li>
                 <li>Hosting & domein</li>
                 <li>Mobile-optimized</li>
-                <li>Email support</li>
+                <li>Basic support</li>
               </ul>
               <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Start nu →</a>
             </div>
