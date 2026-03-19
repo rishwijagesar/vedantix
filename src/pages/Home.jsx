@@ -342,8 +342,9 @@ export default function Home() {
             <div className="pricing-card featured">
               <div className="pricing-badge">Populair</div>
               <div className="pricing-name">Growth</div>
+              <div className="pricing-subtitle">Voor serieuze groei</div>
               <div className="pricing-value">€149<sup>/m</sup></div>
-              <div className="pricing-setup">Setup: €750</div>
+              <div className="pricing-setup">+ €750 setup</div>
               <ul className="pricing-features">
                 <li>Tot 5 pagina's</li>
                 <li>Contactformulier + Maps</li>
