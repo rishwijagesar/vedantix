@@ -496,6 +496,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* PORTFOLIO */}
+      <PortfolioSection />
+
       {/* CONTACT */}
       <section id="contact" style={{ background: "#fff" }}>
         <div className="center" style={{ marginBottom: 52 }}>
