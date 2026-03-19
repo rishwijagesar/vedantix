@@ -249,11 +249,10 @@ export default function Home() {
                 </div>
 
                 {/* BOOKING / BOTTOM */}
-                <div style={{ padding: "16px 20px", background: "#fff", borderTop: "1px solid #e5e7eb" }}>
-                  <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#2d73b1", textTransform: "uppercase", letterSpacing: 0.6, marginBottom: 10 }}>⏰ Vandaag nog beschikbaar</div>
+                <div style={{ padding: "14px 20px", background: "#fff", borderTop: "1px solid #e5e7eb" }}>
                   <div style={{ display: "flex", gap: 8 }}>
-                    <button style={{ flex: 1, background: "#2d73b1", color: "#fff", padding: "10px 12px", borderRadius: 10, border: "none", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", transition: "all 0.2s" }}>📅 Afspraak</button>
-                    <button style={{ flex: 1, background: "#25d366", color: "#fff", padding: "10px 12px", borderRadius: 10, border: "none", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", transition: "all 0.2s" }}>💬 WhatsApp</button>
+                    <button style={{ flex: 1, background: "#2d73b1", color: "#fff", padding: "9px 12px", borderRadius: 10, border: "none", fontWeight: 700, fontSize: "0.78rem", cursor: "pointer", transition: "all 0.2s" }}>📅 Afspraak</button>
+                    <button style={{ flex: 1, background: "#25d366", color: "#fff", padding: "9px 12px", borderRadius: 10, border: "none", fontWeight: 700, fontSize: "0.78rem", cursor: "pointer", transition: "all 0.2s" }}>💬 WhatsApp</button>
                   </div>
                 </div>
 
