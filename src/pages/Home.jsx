@@ -440,7 +440,7 @@ export default function Home() {
               <li>Contactformulier</li><li>Hosting (1 jaar) + 500 MB opslag</li>
               <li>SSL-certificaat</li><li>Levering binnen 48 uur</li>
             </ul>
-            <a href="#contact?pakket=Starter%20%E2%80%94%20%E2%82%AC399" className="pb pb-out">Start configuratie</a>
+            <a href="#contact?pakket=Starter%20%E2%80%94%20%E2%82%AC399" className="pb pb-out" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Starter%20%E2%80%94%20%E2%82%AC399'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Start configuratie</a>
           </div>
           <div className="pc hot">
             <div className="hbadge2">MEEST GEKOZEN</div>
