@@ -59,8 +59,8 @@ export default function Home() {
         .problem{background:#fff}
         .problem-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px;margin-top:50px}
         .problem-item{padding-bottom:24px;border-bottom:1px solid #e8e8e8}
-        .problem-item h3{color:#1a1a2e;margin-bottom:10px;font-size:1.1rem}
-        .problem-item p{color:#666;font-size:0.95rem;line-height:1.6}
+        .problem-item h3{color:#1a1a2e;margin-bottom:12px;font-size:1.08rem;font-weight:700}
+        .problem-item p{color:#666;font-size:0.93rem;line-height:1.65;font-weight:500}
         
         /* SOLUTION */
         .solution{background:#f9fafb}
