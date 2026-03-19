@@ -229,28 +229,20 @@ export default function Home() {
                 </div>
 
                 {/* SERVICES / MIDDLE */}
-                <div style={{ padding: "24px 20px", background: "#f9fafb" }}>
-                  <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#1a1a2e", marginBottom: 14 }}>Onze Services</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                    <div style={{ background: "#fff", padding: "12px 14px", borderRadius: 12, display: "flex", gap: 10, alignItems: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", borderLeft: "3px solid #2d73b1" }}>
-                      <span style={{ fontSize: "1.2rem" }}>✂️</span>
+                <div style={{ padding: "22px 20px", background: "#f9fafb" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                    <div style={{ background: "#fff", padding: "11px 13px", borderRadius: 11, display: "flex", gap: 9, alignItems: "center", boxShadow: "0 1px 3px rgba(0,0,0,0.03)", borderLeft: "3px solid #2d73b1" }}>
+                      <span style={{ fontSize: "1.1rem" }}>✂️</span>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1a1a2e" }}>Klassieke Kapsel</div>
-                        <div style={{ fontSize: "0.7rem", color: "#6b7280" }}>€18 • 30 min</div>
+                        <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "#1a1a2e" }}>Klassieke Kapsel</div>
+                        <div style={{ fontSize: "0.7rem", color: "#6b7280" }}>€18</div>
                       </div>
                     </div>
-                    <div style={{ background: "#fff", padding: "12px 14px", borderRadius: 12, display: "flex", gap: 10, alignItems: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", borderLeft: "3px solid #2d73b1" }}>
-                      <span style={{ fontSize: "1.2rem" }}>🧔</span>
+                    <div style={{ background: "#fff", padding: "11px 13px", borderRadius: 11, display: "flex", gap: 9, alignItems: "center", boxShadow: "0 1px 3px rgba(0,0,0,0.03)", borderLeft: "3px solid #2d73b1" }}>
+                      <span style={{ fontSize: "1.1rem" }}>🧔</span>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1a1a2e" }}>Baardverzorging</div>
-                        <div style={{ fontSize: "0.7rem", color: "#6b7280" }}>€12 • 15 min</div>
-                      </div>
-                    </div>
-                    <div style={{ background: "#fff", padding: "12px 14px", borderRadius: 12, display: "flex", gap: 10, alignItems: "center", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", borderLeft: "3px solid #2d73b1" }}>
-                      <span style={{ fontSize: "1.2rem" }}>✨</span>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "#1a1a2e" }}>Compleet Package</div>
-                        <div style={{ fontSize: "0.7rem", color: "#6b7280" }}>€28 • 45 min</div>
+                        <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "#1a1a2e" }}>Baardverzorging</div>
+                        <div style={{ fontSize: "0.7rem", color: "#6b7280" }}>€12</div>
                       </div>
                     </div>
                   </div>
