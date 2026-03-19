@@ -370,18 +370,18 @@ export default function Home() {
       {/* HERO */}
       <section className="hero">
         <div className="hi">
-          <div className="hbadge">⚡ Website binnen 48 uur live</div>
-          <h1>Jouw bedrijf verdient een<br/><em>professionele website</em></h1>
-          <p>Van kapper tot aannemer — wij bouwen jouw website snel, betaalbaar en volledig verzorgd. Inclusief hosting, domein en SSL.</p>
+          <div className="hbadge">⚡ Website morgen live. Klanten volgen vanzelf.</div>
+          <h1>Stop met wachten op<br/><em>je online aanwezigheid</em></h1>
+          <p>Je concurrenten hebben al een website. Jij krijgt er een die werkelijk klanten binnenhaalt — alles inbegrepen, geen gedoe met hosting of updates.</p>
           <div className="hbtns">
-            <a href="#contact" className="btn-p">Gratis offerte aanvragen</a>
-            <a href="/Templates" className="btn-g">Bekijk templates</a>
+            <a href="#contact" className="btn-p">Start nu — gratis intake</a>
+            <a href="/Templates" className="btn-g">Zie voorbeelden</a>
           </div>
           <div className="hstats">
-            <div className="stat"><strong>48u</strong><span>Gemiddelde levertijd</span></div>
-            <div className="stat"><strong>€399</strong><span>Vanaf prijs</span></div>
-            <div className="stat"><strong>100%</strong><span>Inclusief hosting</span></div>
-            <div className="stat"><strong>24/7</strong><span>Online bereikbaar</span></div>
+            <div className="stat"><strong>48u</strong><span>Van idee naar online</span></div>
+            <div className="stat"><strong>0€</strong><span>Technische kosten</span></div>
+            <div className="stat"><strong>Unlimited</strong><span>Maandelijkse updates</span></div>
+            <div className="stat"><strong>∞</strong><span>Geen zorgen meer</span></div>
           </div>
         </div>
       </section>
