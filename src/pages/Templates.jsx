@@ -444,7 +444,7 @@ export default function Templates() {
                     </div>
                   </div>
                   <button
-                    onClick={e => { e.stopPropagation(); window.location.href = `/Starters`; }}
+                    onClick={e => { e.stopPropagation(); window.location.href = `/Starters?template=${encodeURIComponent(tpl.name)}&pakket=${selectedPkg}`; }}
                     style={{ width: "100%", background: tpl.accent, color: "#fff", padding: "11px", borderRadius: 9, fontWeight: 700, fontSize: "0.88rem", border: "none", cursor: "pointer", transition: "opacity 0.2s" }}
                     onMouseOver={e => e.target.style.opacity = "0.85"}
                     onMouseOut={e => e.target.style.opacity = "1"}>
