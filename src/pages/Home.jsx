@@ -167,30 +167,126 @@ export default function Home() {
           .why-content{grid-template-columns:1fr;gap:40px}
           .how-steps{grid-template-columns:repeat(2,1fr)}
           .roi-compare{grid-template-columns:1fr}
+          .solution-text{max-width:100%}
+          .solution-list{gap:10px}
         }
         @media(max-width:768px){
-          section{padding:70px 5%}
-          .hero{padding:60px 5%;min-height:auto}
-          .hero-content h1{font-size:2.1rem}
-          .hero-ctas{flex-direction:column;width:100%;max-width:300px}
-          .hero-ctas a{width:100%;text-align:center}
-          h2{font-size:2rem}
-          .results-grid{grid-template-columns:1fr 1fr;gap:24px}
+          section{padding:50px 5%}
+          .hero{padding:50px 5%;min-height:auto}
+          .hero-content h1{font-size:2.1rem;margin-bottom:20px}
+          .hero-content p{font-size:1rem;margin-bottom:24px}
+          .hero-ctas{flex-direction:column;width:100%;gap:10px}
+          .hero-ctas a{width:100%;text-align:center;padding:12px 20px;font-size:0.88rem}
+          .btn-primary,.btn-secondary{padding:12px 20px;font-size:0.88rem}
+          h2{font-size:1.8rem;margin-bottom:12px}
+          h3{font-size:1rem}
+          .section-intro{font-size:0.95rem;margin-bottom:32px;max-width:100%}
+          .problem-grid{grid-template-columns:1fr;gap:20px}
+          .problem-item{padding:16px 0;border-bottom:none}
+          .results-grid{grid-template-columns:1fr 1fr;gap:20px}
+          .result-item strong{font-size:2rem}
+          .pricing-cards{grid-template-columns:1fr;gap:18px}
+          .pricing-card{padding:32px 24px}
+          .pricing-name{font-size:1.1rem}
+          .pricing-value{font-size:2.2rem}
+          .pricing-setup{font-size:0.75rem;margin-bottom:20px}
+          .pricing-features{gap:10px;margin-bottom:20px}
+          .pricing-features li{font-size:0.82rem}
           .how-steps{grid-template-columns:1fr 1fr;gap:16px}
-          .pricing-cards{grid-template-columns:1fr}
-          .cta-buttons{flex-direction:column;align-items:center;width:100%}
-          .cta-buttons a{max-width:300px;width:100%;text-align:center}
+          .step{text-align:center}
+          .step-number{width:40px;height:40px;font-size:1.3rem}
+          .step h3{font-size:0.9rem}
+          .step p{font-size:0.8rem}
+          .roi-compare{grid-template-columns:1fr;gap:20px}
+          .roi-label{font-size:0.72rem}
+          .roi-value{font-size:2rem}
+          .why-content{grid-template-columns:1fr;gap:24px}
+          .why-col{padding:24px;border-radius:12px}
+          .why-col h3{font-size:0.95rem;margin-bottom:16px}
+          .why-list li{font-size:0.85rem}
+          .cta-buttons{flex-direction:column;align-items:center;width:100%;gap:10px}
+          .cta-buttons a{max-width:100%;width:100%;text-align:center;padding:12px 20px;font-size:0.88rem}
+          .urgency{padding:32px 20px;margin:0 0 20px;border-radius:12px}
+          .urgency h3{font-size:1.1rem}
+          .urgency p{font-size:0.82rem}
+          .guarantee{padding:20px 16px;margin:0}
         }
         @media(max-width:480px){
-          .hero{padding:50px 5%}
-          h1{font-size:1.8rem !important}
-          h2{font-size:1.5rem}
-          section{padding:60px 5%}
-          .hero-visual{min-height:300px;padding:40px 20px}
-          .results-grid{grid-template-columns:1fr}
-          .how-steps{grid-template-columns:1fr}
-          .problem-item{padding:16px 0;border-bottom:none}
-          .problem-grid{gap:20px}
+          *{margin:0;padding:0}
+          .hero{padding:40px 5%;min-height:auto}
+          .hero-content h1{font-size:1.6rem;margin-bottom:16px;line-height:1.2}
+          .hero-content p{font-size:0.9rem;margin-bottom:20px;line-height:1.6}
+          .hero-bullets{margin-bottom:24px}
+          .hero-bullets span{font-size:0.85rem;margin-bottom:8px}
+          .hero-ctas{flex-direction:column;gap:8px}
+          .hero-ctas a{width:100%;padding:11px 16px;font-size:0.8rem}
+          h1{font-size:1.6rem !important;margin-bottom:10px}
+          h2{font-size:1.4rem;margin-bottom:10px}
+          h3{font-size:0.9rem}
+          section{padding:40px 5%}
+          .section-container{width:100%}
+          .section-intro{font-size:0.9rem;margin-bottom:24px}
+          .problem-grid{grid-template-columns:1fr;gap:12px}
+          .problem-item{padding:12px 0}
+          .problem-item h3{font-size:0.95rem}
+          .problem-item p{font-size:0.85rem}
+          .solution{padding:40px 5%}
+          .solution-text{max-width:100%}
+          .solution-text h3{font-size:0.95rem;margin-bottom:10px}
+          .solution-text p{font-size:0.85rem;margin-bottom:12px}
+          .solution-list{gap:8px}
+          .solution-list-item span{font-size:0.85rem}
+          .results{padding:40px 5%}
+          .results-grid{grid-template-columns:1fr;gap:16px}
+          .result-item strong{font-size:1.8rem;margin-bottom:4px}
+          .result-item span{font-size:0.8rem}
+          .pricing{padding:40px 5%}
+          .pricing-cards{grid-template-columns:1fr;gap:14px}
+          .pricing-card{padding:20px 16px}
+          .pricing-name{font-size:1rem;margin-bottom:4px}
+          .pricing-subtitle{font-size:0.75rem;margin-bottom:12px}
+          .pricing-value{font-size:1.8rem;margin-bottom:2px}
+          .pricing-setup{font-size:0.7rem;margin-bottom:14px}
+          .pricing-features{gap:8px;margin-bottom:14px}
+          .pricing-features li{font-size:0.78rem}
+          .pricing-features li:before{font-size:0.8rem}
+          .btn-primary,.btn-secondary{padding:10px 16px;font-size:0.8rem;width:100%}
+          .trust-block{padding:20px 16px}
+          .trust-block div{flex:1;min-width:120px}
+          .trust-block span{font-size:1rem}
+          .trust-block span:nth-child(2){font-size:0.75rem}
+          .how{padding:40px 5%}
+          .how-steps{grid-template-columns:1fr;gap:16px}
+          .step-number{width:36px;height:36px;font-size:1.1rem}
+          .step h3{font-size:0.85rem;margin-bottom:8px}
+          .step p{font-size:0.78rem}
+          .roi{padding:40px 5%}
+          .roi-content{max-width:100%}
+          .roi-label{font-size:0.68rem}
+          .roi-value{font-size:1.8rem}
+          .why{padding:40px 5%}
+          .why-container{max-width:100%}
+          .why-content{grid-template-columns:1fr;gap:16px}
+          .why-col{padding:16px;border-radius:10px}
+          .why-col h3{font-size:0.9rem;margin-bottom:12px}
+          .why-list li{font-size:0.8rem;gap:8px}
+          .cta{padding:60px 5%}
+          .cta h2{margin-bottom:12px}
+          .cta p{font-size:0.9rem;margin:8px auto 24px}
+          .cta-buttons{gap:8px}
+          .cta-buttons a{padding:11px 16px;font-size:0.8rem}
+          .cta-phone{font-size:0.8rem;margin-top:24px}
+          .cta-phone strong{font-size:1rem;margin-top:8px}
+          footer{padding:32px 5%;font-size:0.78rem}
+          footer a{margin:0 8px;font-size:0.78rem}
+        }
+        @media(max-width:360px){
+          h1{font-size:1.4rem !important}
+          h2{font-size:1.2rem}
+          .pricing-value{font-size:1.6rem}
+          .hero-ctas a{padding:10px 12px;font-size:0.75rem}
+          .btn-primary,.btn-secondary{padding:10px 12px;font-size:0.75rem}
+          .section-intro{font-size:0.85rem}
         }
       `}</style>
 
