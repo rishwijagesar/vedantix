@@ -158,6 +158,10 @@ function WAWidget() {
 
 
 export default function Starters() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlPakket = urlParams.get("pakket");
+  const urlTemplate = urlParams.get("template");
+
   const [step, setStep] = useState(1);
   const [domein, setDomein] = useState("");
   const [domeinStatus, setDomeinStatus] = useState(null);
@@ -165,7 +169,7 @@ export default function Starters() {
   const [branche, setBranche] = useState("");
   const [bedrijfsnaam, setBedrijfsnaam] = useState("");
   const [selectedFeatures, setSelectedFeatures] = useState([]);
-  const [selectedPackage, setSelectedPackage] = useState("business");
+  const [selectedPackage, setSelectedPackage] = useState(urlPakket && PACKAGES.find(p => p.id === urlPakket) ? urlPakket : "business");
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ naam: "", email: "", telefoon: "", bericht: "" });
 
