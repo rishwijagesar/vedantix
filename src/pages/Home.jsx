@@ -530,14 +530,12 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer>
-        <p>© 2026 <strong>Vedantix</strong> — Professionele websites voor elk bedrijf.</p>
+        <p>© 2026 <strong>Vedantix</strong> — Website + onderhoud in één pakket. Start €149/maand.</p>
         <div className="flinks">
-          <a href="/Privacy">Privacybeleid</a>
-          <a href="/Voorwaarden">Algemene voorwaarden</a>
-          <a href="/Proces">Hoe het werkt</a>
-          <a href="/Planning">Afspraak plannen</a>
-          <a href="/Prijzen">Prijzen vergelijken</a>
-          <a href="/Templates">Templates</a>
+          <a href="/Privacy">Privacy</a>
+          <a href="/Voorwaarden">Voorwaarden</a>
+          <a href="#contact">Direct contact</a>
+          <a href="/Planning">Afspraak</a>
         </div>
       </footer>
     </div>
