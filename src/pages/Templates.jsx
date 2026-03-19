@@ -529,7 +529,7 @@ export default function Templates() {
               </div>
 
               <div style={{ marginTop: 24, display: "flex", gap: 12, flexWrap: "wrap" }}>
-                <a href="/Starters" style={{ flex: 1, background: activeTemplate.accent, color: "#fff", padding: "13px 24px", borderRadius: 10, fontWeight: 700, textDecoration: "none", textAlign: "center", fontSize: "0.92rem" }}>
+                <a href={`/Starters?template=${encodeURIComponent(activeTemplate.name)}&pakket=${selectedPkg}`} style={{ flex: 1, background: activeTemplate.accent, color: "#fff", padding: "13px 24px", borderRadius: 10, fontWeight: 700, textDecoration: "none", textAlign: "center", fontSize: "0.92rem" }}>
                   Dit template aanvragen
                 </a>
                 <button onClick={() => setActiveTemplate(null)} style={{ padding: "13px 24px", borderRadius: 10, fontWeight: 600, fontSize: "0.92rem", border: "2px solid #e5e7eb", background: "#fff", cursor: "pointer", color: "#475569" }}>
