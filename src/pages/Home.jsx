@@ -506,20 +506,20 @@ export default function Home() {
       {/* CONTACT */}
       <section id="contact" style={{ background: "#fff" }}>
         <div className="center" style={{ marginBottom: 52 }}>
-          <span className="tag">Contact</span>
-          <h2>Klaar om te starten?</h2>
-          <p className="sub">Vraag vrijblijvend een offerte aan of plan een gratis kennismakingsgesprek.</p>
+          <span className="tag">Volgende stap</span>
+          <h2>Laten we je online zetten.</h2>
+          <p className="sub">Geen verplichting. Gewoon een gesprek over wat je nodig hebt.</p>
         </div>
         <div className="cwrap">
           <div className="ci">
-            <h3>Neem contact op</h3>
-            <p>We reageren binnen 24 uur op elk bericht. Liever direct bellen? Dat kan ook!</p>
-            <div className="crow"><div className="cic">📧</div><span>info@vedantix.nl</span></div>
-            <div className="crow"><div className="cic">📱</div><span>+31 6 26 21 99 89</span></div>
-            <div className="crow"><div className="cic">📍</div><span>Nederland</span></div>
-            <div className="crow"><div className="cic">🕐</div><span>Ma–Vr: 09:00–18:00</span></div>
-            <div style={{ marginTop: 20 }}>
-              <a href="/Planning" style={{ color: "#1a73e8", fontWeight: 600, textDecoration: "none" }}>📅 Plan een afspraak in →</a>
+            <h3>Bel ons direct</h3>
+            <p>We pikken op en bespreken je website in 15 minuten. Klaar voor volgende stap?</p>
+            <div className="crow"><div className="cic">📞</div><span style={{fontWeight:700}}>+31 6 26 21 99 89</span></div>
+            <p style={{color:"#6b7280",fontSize:"0.9rem",marginTop:12}}>Of liever een afspraak?</p>
+            <div className="crow"><div className="cic">📅</div><span><a href="/Planning" style={{color:"#1a73e8",fontWeight:600,textDecoration:"none"}}>Agenda inzien →</a></span></div>
+            <div className="row" style={{marginTop:20}}>
+              <div className="cic" style={{background:"#f0fdf4"}}>💬</div>
+              <span style={{color:"#047857"}}>Antwoord meestal binnen 1 uur</span>
             </div>
           </div>
           <ContactForm />
