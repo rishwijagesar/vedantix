@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import LiveChatWidget from "../components/LiveChatWidget";
-import PortfolioSection from "../components/PortfolioSection";
 
 // Ensure mobile viewport
 if (typeof document !== "undefined") {
@@ -13,120 +12,9 @@ if (typeof document !== "undefined") {
   }
 }
 
-
-
-const NAV_MENUS = [
-  { label: "Diensten", items: [
-    { href: "/Starters", label: "Configurator" },
-    { href: "/Templates", label: "Template gallery" },
-    { href: "/VoorWie", label: "Voor wie" },
-  ]},
-  { label: "Informatie", items: [
-    { href: "/Prijzen", label: "Prijsvergelijker" },
-    { href: "/Proces", label: "Hoe het werkt" },
-  ]},
-  { label: "Contact", items: [
-    { href: "/Planning", label: "Afspraak plannen" },
-    { href: "#contact", label: "Offerte aanvragen" },
-  ]},
-];
-
-function Nav() {
-  const [open, setOpen] = useState(null);
-  const [mob, setMob] = useState(false);
-
-  return (
-    <>
-      <style>{`
-        .vd-nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(10,22,40,0.97);backdrop-filter:blur(12px);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:60px}
-        .vd-logo{color:#fff;font-weight:900;font-size:1.35rem;letter-spacing:-0.5px;text-decoration:none}
-        .vd-menu{display:flex;gap:4px;list-style:none;align-items:center}
-        .vd-menu-item{position:relative}
-        .vd-menu-btn{background:none;border:none;color:rgba(255,255,255,0.78);font-size:0.88rem;font-weight:600;cursor:pointer;padding:8px 12px;border-radius:7px;display:flex;align-items:center;gap:5px;font-family:inherit;transition:all 0.15s}
-        .vd-menu-btn:hover{background:rgba(255,255,255,0.08);color:#fff}
-        .vd-chev{font-size:0.6rem;opacity:0.6;transition:transform 0.2s;display:inline-block}
-        .vd-chev.open{transform:rotate(180deg)}
-        .vd-dropdown{position:absolute;top:calc(100% + 8px);left:0;background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,0.18);min-width:230px;padding:8px;z-index:300;animation:dropIn 0.15s ease}
-        @keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
-        .vd-dd-item{display:block;padding:9px 14px;border-radius:9px;text-decoration:none;transition:background 0.12s}
-        .vd-dd-item:hover{background:#f7f9fc}
-        .vd-dd-label{font-weight:700;font-size:0.88rem;color:#0a1628;display:block}
-        .vd-cta{background:#1a73e8;color:#fff;padding:9px 20px;border-radius:8px;font-weight:700;font-size:0.87rem;text-decoration:none;transition:background 0.2s;white-space:nowrap}
-        .vd-cta:hover{background:#00c2ff}
-        .vd-hbg{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:4px}
-        .vd-hbg span{display:block;width:22px;height:2px;background:#fff;border-radius:2px}
-        .vd-mob{position:fixed;top:60px;left:0;right:0;background:#0a1628;border-top:1px solid rgba(255,255,255,0.08);padding:16px 5% 20px;z-index:199;display:flex;flex-direction:column;gap:2px}
-        .vd-mob-sec{color:rgba(255,255,255,0.4);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:10px 8px 4px}
-        .vd-mob-lnk{color:rgba(255,255,255,0.85);text-decoration:none;font-size:0.9rem;font-weight:600;padding:10px 8px;border-radius:8px;display:block}
-        .vd-mob-lnk:hover{background:rgba(255,255,255,0.07)}
-        @media(max-width:768px){.vd-menu{display:none}.vd-hbg{display:flex}}
-      `}</style>
-      <nav className="vd-nav">
-        <a href="/Home" className="vd-logo">Vedantix</a>
-        <ul className="vd-menu">
-          {NAV_MENUS.map(m => (
-            <li key={m.label} className="vd-menu-item"
-                onMouseEnter={() => setOpen(m.label)}
-                onMouseLeave={() => setOpen(null)}>
-              <button className="vd-menu-btn">
-                {m.label}
-                <span className={`vd-chev${open === m.label ? " open" : ""}`}>▼</span>
-              </button>
-              {open === m.label && (
-                <div className="vd-dropdown">
-                  {m.items.map(i => (
-                    <a key={i.href} href={i.href} className="vd-dd-item">
-                      <span className="vd-dd-label">{i.label}</span>
-                    </a>
-                  ))}
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-          <a href="#contact" className="vd-cta">Offerte aanvragen</a>
-          <button className="vd-hbg" onClick={() => setMob(p => !p)} aria-label="Menu">
-            <span/><span/><span/>
-          </button>
-        </div>
-      </nav>
-      {mob && (
-        <div className="vd-mob">
-          {NAV_MENUS.map(m => (
-            <div key={m.label}>
-              <div className="vd-mob-sec">{m.label}</div>
-              {m.items.map(i => (
-                <a key={i.href} href={i.href} className="vd-mob-lnk" onClick={() => setMob(false)}>{i.label}</a>
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
-    </>
-  );
-}
-
 function WAWidget() {
   const [open, setOpen] = useState(false);
-  const [inputVal, setInputVal] = useState("");
-  const [messages, setMessages] = useState([
-    { from: "agent", text: "👋 Hoi! Welkom bij Vedantix. Heb je een vraag of wil je een offerte? Ik help je graag!" }
-  ]);
-  const url = "https://wa.me/310626219989";
-
-  const sendMessage = () => {
-    const trimmed = inputVal.trim();
-    if (!trimmed) return;
-    const updated = [...messages, { from: "user", text: trimmed }];
-    setMessages(updated);
-    setInputVal("");
-    setTimeout(() => {
-      setMessages(prev => [...prev, { from: "agent", text: "Bedankt voor je bericht! 🙏 Klik hieronder om verder te chatten op WhatsApp." }]);
-    }, 800);
-  };
-
-  const waLink = `${url}?text=${encodeURIComponent(inputVal || messages.filter(m => m.from === "user").map(m => m.text).join(" ") || "Hallo Vedantix!")}`;
+  const url = "https://wa.me/310626219989?text=" + encodeURIComponent("Hallo! Ik ben geïnteresseerd in een website.");
 
   return (
     <>
@@ -138,62 +26,36 @@ function WAWidget() {
         .wa-popup{position:absolute;bottom:74px;right:0;width:320px;background:#fff;border-radius:18px;box-shadow:0 12px 48px rgba(0,0,0,0.18);overflow:hidden;animation:waPop 0.22s cubic-bezier(.34,1.56,.64,1)}
         @keyframes waPop{from{opacity:0;transform:scale(0.88) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
         .wa-head{background:linear-gradient(135deg,#075e54,#128c7e);padding:16px 18px;display:flex;align-items:center;gap:12px}
-        .wa-avatar{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:#fff;flex-shrink:0}
-        .wa-info{flex:1}
-        .wa-name{color:#fff;font-weight:700;font-size:0.95rem}
-        .wa-status{color:rgba(255,255,255,0.7);font-size:0.73rem;margin-top:1px;display:flex;align-items:center;gap:4px}
-        .wa-dot{width:7px;height:7px;background:#4ade80;border-radius:50%;display:inline-block}
-        .wa-close{background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:1.1rem;padding:4px;line-height:1}
-        .wa-close:hover{color:#fff}
-        .wa-body{background:#e5ddd5;padding:14px 14px 8px;min-height:140px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
-        .wa-msg-agent{background:#fff;border-radius:0 10px 10px 10px;padding:9px 13px;font-size:0.84rem;color:#1a1a2e;line-height:1.5;max-width:85%;box-shadow:0 1px 2px rgba(0,0,0,0.08)}
-        .wa-msg-user{background:#dcf8c6;border-radius:10px 0 10px 10px;padding:9px 13px;font-size:0.84rem;color:#1a1a2e;line-height:1.5;max-width:85%;align-self:flex-end;box-shadow:0 1px 2px rgba(0,0,0,0.08)}
-        .wa-footer{padding:10px 12px;background:#f0f0f0;border-top:1px solid #e0e0e0}
-        .wa-input-row{display:flex;align-items:center;gap:8px;background:#fff;border-radius:24px;padding:6px 6px 6px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
-        .wa-input{border:none;outline:none;flex:1;font-size:0.85rem;background:transparent;color:#1a1a2e;font-family:inherit}
-        .wa-send{width:36px;height:36px;border-radius:50%;background:#25d366;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
-        .wa-send:hover{background:#1da851}
-        .wa-wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;border-radius:10px;padding:10px;text-decoration:none;font-weight:700;font-size:0.85rem;margin-top:8px;transition:background 0.15s}
-        .wa-wa-btn:hover{background:#1da851}
+        .wa-body{background:#e5ddd5;padding:14px;min-height:100px;max-height:180px;overflow-y:auto}
+        .wa-msg{background:#fff;border-radius:0 10px 10px 10px;padding:9px 13px;font-size:0.84rem;color:#1a1a2e;line-height:1.5;margin-bottom:8px;box-shadow:0 1px 2px rgba(0,0,0,0.08)}
+        .wa-footer{padding:10px 12px;background:#fff;border-top:1px solid #e0e0e0}
+        .wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;border-radius:10px;padding:10px;text-decoration:none;font-weight:700;font-size:0.85rem;transition:background 0.15s}
+        .wa-btn:hover{background:#1da851}
         @media(max-width:420px){.wa-popup{width:calc(100vw - 40px);right:-14px}}
       `}</style>
       <div className="wa-fab">
         {open && (
           <div className="wa-popup">
             <div className="wa-head">
-              <div className="wa-avatar">V</div>
-              <div className="wa-info">
-                <div className="wa-name">Vedantix Support</div>
-                <div className="wa-status"><span className="wa-dot"/> Online</div>
+              <div style={{width:40,height:40,borderRadius:"50%",background:"rgba(255,255,255,0.15)",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:900,fontSize:"1.1rem",color:"#fff"}}>V</div>
+              <div style={{flex:1}}>
+                <div style={{color:"#fff",fontWeight:700,fontSize:"0.95rem"}}>Vedantix</div>
+                <div style={{color:"rgba(255,255,255,0.7)",fontSize:"0.73rem"}}>Gemiddeld binnen 1 uur</div>
               </div>
-              <button className="wa-close" onClick={() => setOpen(false)}>✕</button>
+              <button onClick={() => setOpen(false)} style={{background:"none",border:"none",color:"rgba(255,255,255,0.6)",cursor:"pointer",fontSize:"1.1rem",padding:4}}>✕</button>
             </div>
             <div className="wa-body">
-              {messages.map((m, i) => (
-                <div key={i} className={m.from === "agent" ? "wa-msg-agent" : "wa-msg-user"}>{m.text}</div>
-              ))}
+              <div className="wa-msg">👋 Hallo! Heb je vragen of wil je een website? Laat een bericht achter.</div>
             </div>
             <div className="wa-footer">
-              <div className="wa-input-row">
-                <input
-                  className="wa-input"
-                  placeholder="Typ een bericht..."
-                  value={inputVal}
-                  onChange={e => setInputVal(e.target.value)}
-                  onKeyDown={e => e.key === "Enter" && sendMessage()}
-                />
-                <button className="wa-send" onClick={sendMessage}>
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-                </button>
-              </div>
-              <a href={waLink} target="_blank" rel="noreferrer" className="wa-wa-btn">
+              <a href={url} target="_blank" rel="noreferrer" className="wa-btn">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                Doorgaan op WhatsApp
+                Chat op WhatsApp
               </a>
             </div>
           </div>
         )}
-        <button className="wa-toggle" onClick={() => setOpen(p => !p)} aria-label="WhatsApp chat">
+        <button className="wa-toggle" onClick={() => setOpen(p => !p)} aria-label="WhatsApp">
           {!open && <div className="wa-badge">1</div>}
           {open
             ? <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
@@ -205,459 +67,363 @@ function WAWidget() {
   );
 }
 
-
-function ContactForm() {
-  const [sent, setSent] = useState(false);
-  const [pakket, setPakket] = useState(() => {
-    const hash = window.location.hash;
-    const match = hash.match(/pakket=([^&]+)/);
-    return match ? decodeURIComponent(match[1]) : "";
-  });
-
-  useEffect(() => {
-    const onHash = () => {
-      const hash = window.location.hash;
-      const match = hash.match(/pakket=([^&]+)/);
-      if (match) setPakket(decodeURIComponent(match[1]));
-    };
-    window.addEventListener("hashchange", onHash);
-    return () => window.removeEventListener("hashchange", onHash);
-  }, []);
-
-  if (sent) {
-    return (
-      <div style={{ background: "#f0fdf4", border: "2px solid #10b981", borderRadius: 12, padding: 32, textAlign: "center" }}>
-        <div style={{ fontSize: "2rem", marginBottom: 12 }}>✅</div>
-        <h3 style={{ color: "#065f46", marginBottom: 8 }}>Perfect! We bellen je.</h3>
-        <p style={{ color: "#047857", marginBottom: 12 }}>Binnen 1 uur nemen we contact op.</p>
-        <p style={{ color: "#047857", fontSize: "0.9rem", fontStyle: "italic" }}>Zorg dat je telefoon dichtbij ligt 📱</p>
-      </div>
-    );
-  }
-  return (
-    <form onSubmit={e => { e.preventDefault(); setSent(true); }} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      <div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:10,padding:12}}>
-        <p style={{fontSize:"0.82rem",color:"#0c4a6e",fontWeight:600}}>💬 Gegevens invullen, ik bel je met je quote</p>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-        <input type="text" placeholder="Voornaam" required style={iStyle} />
-        <input type="text" placeholder="Bedrijfsnaam" required style={iStyle} />
-      </div>
-      <input type="tel" placeholder="Telefoonnummer (ik bel je)" required style={iStyle} />
-      <input type="email" placeholder="E-mailadres" required style={iStyle} />
-      <select value={pakket} onChange={e => setPakket(e.target.value)} style={iStyle}>
-        <option value="">Welk pakket spreekt je aan?</option>
-        <option value="Basis — €149/mnd">Basis — €149/maand</option>
-        <option value="Professional — €249/mnd">Professional — €249/maand (populair)</option>
-        <option value="Premium — €399/mnd">Premium — €399/maand</option>
-        <option value="Weet ik nog niet">Weet ik nog niet</option>
-      </select>
-      <textarea placeholder="Kort: Wat voor bedrijf? Wat willen je klanten zien?" rows={3} style={{ ...iStyle, resize: "vertical" }} />
-      <button type="submit" style={{ background: "#1a73e8", color: "#fff", padding: "13px", borderRadius: 9, fontWeight: 700, fontSize: "0.95rem", border: "none", cursor: "pointer", width: "100%", transition: "background 0.2s" }} onMouseOver={e => e.target.style.background = "#00c2ff"} onMouseOut={e => e.target.style.background = "#1a73e8"}>
-        Ja, bel me met info 📞
-      </button>
-    </form>
-  );
-}
-
-const iStyle = { width: "100%", padding: "12px 15px", border: "2px solid #e5e7eb", borderRadius: 9, fontSize: "0.9rem", fontFamily: "inherit", outline: "none", background: "#f7f9fc" };
-
 export default function Home() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", color: "#1a1a2e", background: "#fff", lineHeight: 1.6 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
         *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-        :root{--navy:#0a1628;--blue:#1a73e8;--accent:#00c2ff;--gray:#f7f9fc;--muted:#6b7280}
         html{scroll-behavior:smooth}
-        section{padding:90px 5%}
-        .tag{display:inline-block;background:rgba(26,115,232,0.1);color:#1a73e8;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:4px 12px;border-radius:100px;margin-bottom:14px}
-        h2{font-size:2.1rem;font-weight:800;line-height:1.2;margin-bottom:12px}
-        .sub{color:#6b7280;font-size:1rem;max-width:560px}
-        .center{text-align:center}.center .sub{margin:0 auto}
-        .hero{min-height:100vh;background:linear-gradient(135deg,#0a1628 0%,#0d2146 60%,#0a1628 100%);display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 5% 80px;position:relative;overflow:hidden}
-        .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(0,194,255,0.08) 0%,transparent 60%)}
-        .hi{position:relative;z-index:1;max-width:780px}
-        .hbadge{display:inline-flex;align-items:center;gap:7px;background:rgba(0,194,255,0.12);border:1px solid rgba(0,194,255,0.25);color:#00c2ff;padding:6px 16px;border-radius:100px;font-size:0.8rem;font-weight:700;margin-bottom:28px}
-        .hero h1{font-size:3.2rem;color:#fff;font-weight:900;letter-spacing:-1.5px;line-height:1.08;margin-bottom:20px}
-        .hero h1 em{font-style:normal;color:#00c2ff}
-        .hero p{color:rgba(255,255,255,0.62);font-size:1.12rem;max-width:580px;margin:0 auto 38px;line-height:1.7}
-        .hbtns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
-        .btn-p{background:#1a73e8;color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;text-decoration:none;font-size:0.97rem;transition:all 0.2s;box-shadow:0 4px 18px rgba(26,115,232,0.4)}
-        .btn-p:hover{background:#00c2ff;transform:translateY(-1px)}
-        .btn-g{background:rgba(255,255,255,0.08);color:#fff;padding:14px 28px;border-radius:10px;font-weight:600;text-decoration:none;font-size:0.93rem;border:1px solid rgba(255,255,255,0.18);transition:all 0.2s}
-        .btn-g:hover{background:rgba(255,255,255,0.14)}
-        .hstats{display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
-        .stat strong{display:block;font-size:1.65rem;font-weight:900;color:#fff;line-height:1}
-        .stat span{font-size:0.78rem;color:rgba(255,255,255,0.45);margin-top:4px;display:block;text-transform:uppercase;letter-spacing:0.5px}
-        .steps-sec{background:#f7f9fc}
-        .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px;margin-top:52px}
-        .step{background:#fff;border-radius:16px;padding:30px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.05)}
-        .step-n{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#1a73e8,#00c2ff);color:#fff;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-        .step h3{font-size:1rem;font-weight:700;margin-bottom:8px}
-        .step p{color:#6b7280;font-size:0.9rem}
-        .grid-who{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px;margin-top:44px}
-        .wc{background:#fff;border:2px solid #e8eef5;border-radius:13px;padding:22px 14px;text-align:center;transition:all 0.2s;text-decoration:none;color:inherit;display:block}
-        .wc:hover{border-color:#1a73e8;transform:translateY(-2px)}
-        .wc .ic{font-size:1.9rem;margin-bottom:9px;display:block}
-        .wc span:last-child{font-size:0.85rem;font-weight:600}
-        .pricing-sec{background:#0a1628}
-        .pricing-sec .tag{background:rgba(0,194,255,0.12);color:#00c2ff}
-        .pricing-sec h2{color:#fff}
-        .pricing-sec .sub{color:rgba(255,255,255,0.45)}
-        .pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:22px;margin-top:52px}
-        .pc{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:38px 30px;color:#fff;position:relative;transition:transform 0.2s}
-        .pc:hover{transform:translateY(-4px);border-color:rgba(0,194,255,0.4)}
-        .pc.hot{background:linear-gradient(145deg,rgba(26,115,232,0.2),rgba(0,194,255,0.1));border-color:#00c2ff}
-        .hbadge2{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#00c2ff;color:#0a1628;padding:3px 16px;border-radius:100px;font-size:0.75rem;font-weight:800;white-space:nowrap}
-        .pn{font-size:0.82rem;font-weight:700;color:#00c2ff;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
-        .pp{font-size:2.9rem;font-weight:900;line-height:1;margin:10px 0 4px}
-        .pp sup{font-size:1rem;font-weight:500;opacity:0.6;vertical-align:super}
-        .pd{color:rgba(255,255,255,0.45);font-size:0.85rem;margin-bottom:26px}
-        .pl{list-style:none;margin-bottom:32px}
-        .pl li{padding:7px 0;font-size:0.9rem;color:rgba(255,255,255,0.8);border-bottom:1px solid rgba(255,255,255,0.07);display:flex;gap:9px}
-        .pl li::before{content:"✓";color:#00c2ff;font-weight:700;flex-shrink:0}
-        .pb{display:block;text-align:center;padding:13px;border-radius:10px;font-weight:700;text-decoration:none;font-size:0.93rem;transition:all 0.2s}
-        .pb-out{border:2px solid rgba(255,255,255,0.3);color:#fff}.pb-out:hover{border-color:#00c2ff;color:#00c2ff}
-        .pb-fill{background:#1a73e8;color:#fff}.pb-fill:hover{background:#00c2ff}
-        .why-sec{background:#f7f9fc}
-        .wgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;margin-top:44px}
-        .wyc{background:#fff;border-radius:15px;padding:30px 26px;box-shadow:0 2px 10px rgba(0,0,0,0.05)}
-        .wyc .ic{font-size:1.9rem;margin-bottom:14px;display:block}
-        .wyc h3{font-size:1rem;font-weight:700;margin-bottom:8px}
-        .wyc p{color:#6b7280;font-size:0.88rem}
-        .cwrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;max-width:940px;margin:0 auto}
-        .ci h3{font-size:1.35rem;font-weight:800;margin-bottom:14px}
-        .ci p{color:#6b7280;margin-bottom:22px;font-size:0.92rem}
-        .crow{display:flex;align-items:center;gap:12px;margin-bottom:13px}
-        .cic{width:38px;height:38px;background:#f7f9fc;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
-        .crow span{font-size:0.9rem;font-weight:500}
-        footer{background:#0a1628;color:rgba(255,255,255,0.45);padding:36px 5%;text-align:center;font-size:0.83rem}
+        body{margin:0;padding:0}
+        section{padding:clamp(60px,8vw,100px) 5%}
+        h1{font-size:clamp(2.2rem,5vw,4rem);font-weight:900;line-height:1.1;letter-spacing:-1px;margin-bottom:16px}
+        h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;line-height:1.15;margin-bottom:16px}
+        h3{font-size:clamp(1rem,2.5vw,1.3rem);font-weight:800;margin-bottom:12px}
+        p{font-size:clamp(0.95rem,1.2vw,1.05rem);line-height:1.65;margin-bottom:12px;color:#475569}
+        strong{font-weight:700}
+        em{font-style:normal;color:#ef4444}
+        .container{max-width:1100px;margin:0 auto}
+        .btn-primary{background:#1a1a2e;color:#fff;padding:clamp(12px,2vw,16px) clamp(24px,4vw,40px);border-radius:10px;font-weight:700;font-size:clamp(0.9rem,1vw,1rem);text-decoration:none;display:inline-block;transition:all 0.2s;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(26,26,46,0.3)}
+        .btn-primary:hover{background:#2d2d4e;transform:translateY(-2px)}
+        .btn-secondary{background:transparent;color:#1a1a2e;border:2px solid #1a1a2e;padding:clamp(12px,2vw,16px) clamp(24px,4vw,40px);border-radius:10px;font-weight:700;font-size:clamp(0.9rem,1vw,1rem);text-decoration:none;display:inline-block;transition:all 0.2s;cursor:pointer}
+        .btn-secondary:hover{background:#1a1a2e;color:#fff}
+        .hero{background:linear-gradient(135deg,#0a0a14 0%,#1a1a2e 100%);color:#fff;text-align:center;padding:clamp(80px,10vw,140px) 5% !important}
+        .hero h1{color:#fff;font-size:clamp(2.4rem,6vw,4.2rem)}
+        .hero h1 em{color:#ff6b35;font-style:normal}
+        .hero p{color:rgba(255,255,255,0.8);font-size:clamp(1rem,1.3vw,1.2rem);max-width:700px;margin:20px auto 32px}
+        .hero-ctas{display:flex;gap:16px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
+        .hero-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:24px;max-width:700px;margin:60px auto 0;text-align:center}
+        .stat-box{font-size:1.1rem}
+        .stat-box strong{display:block;font-size:clamp(1.8rem,3vw,2.2rem);color:#ff6b35;margin-bottom:4px}
+        .stat-box span{font-size:0.85rem;color:rgba(255,255,255,0.6)}
+        .pain-section{background:#fff3f0;padding:clamp(60px,8vw,100px) 5% !important}
+        .pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;margin-top:40px}
+        .pain-card{background:#fff;border:2px solid #ffccc7;border-radius:16px;padding:32px 24px;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+        .pain-card h3{color:#b71c1c;margin-bottom:12px}
+        .pain-card p{color:#424242;font-size:0.95rem}
+        .solution-section{background:#f5f5f5;padding:clamp(60px,8vw,100px) 5% !important}
+        .solution-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:40px}
+        .solution-card{background:#fff;border-radius:12px;padding:28px 20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border-left:4px solid #1a1a2e}
+        .solution-card h3{font-size:1rem;margin-bottom:10px}
+        .solution-card p{font-size:0.9rem;color:#666}
+        .results-section{background:#1a1a2e;color:#fff;padding:clamp(60px,8vw,100px) 5% !important;text-align:center}
+        .results-section h2{color:#fff}
+        .results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:30px;margin-top:50px;max-width:900px;margin-left:auto;margin-right:auto}
+        .result-item{font-size:1.1rem}
+        .result-item strong{display:block;font-size:clamp(2rem,3vw,2.5rem);color:#ff6b35;margin-bottom:8px}
+        .pricing-section{padding:clamp(60px,8vw,100px) 5% !important}
+        .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:50px;max-width:1000px;margin-left:auto;margin-right:auto}
+        .pricing-card{border:2px solid #e0e0e0;border-radius:16px;padding:40px 30px;position:relative;transition:all 0.2s}
+        .pricing-card:hover{border-color:#1a1a2e;transform:translateY(-4px)}
+        .pricing-card.featured{border-color:#ff6b35;background:#fff8f4;transform:scale(1.02)}
+        .pricing-card .price{font-size:2.8rem;font-weight:900;color:#1a1a2e;margin:20px 0 8px}
+        .pricing-card .price sup{font-size:1.2rem;font-weight:600}
+        .pricing-card .setup{color:#666;font-size:0.9rem;margin-bottom:24px}
+        .pricing-card ul{list-style:none;padding:0;margin-bottom:32px}
+        .pricing-card li{padding:10px 0;border-bottom:1px solid #e0e0e0;display:flex;gap:10px;font-size:0.95rem}
+        .pricing-card li:before{content:"✓";font-weight:900;color:#ff6b35;flex-shrink:0}
+        .pricing-card .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#ff6b35;color:#fff;padding:6px 20px;border-radius:100px;font-weight:700;font-size:0.8rem;text-transform:uppercase}
+        .why-section{background:#f5f5f5;padding:clamp(60px,8vw,100px) 5% !important}
+        .why-content{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;max-width:1000px;margin:0 auto}
+        .why-content ul{list-style:none;padding:0}
+        .why-content li{margin-bottom:16px;font-size:0.95rem;display:flex;gap:12px;align-items:flex-start}
+        .why-content li:before{content:"→";font-weight:900;color:#ff6b35;flex-shrink:0;margin-top:2px}
+        .how-it-works{padding:clamp(60px,8vw,100px) 5% !important;background:#fff}
+        .steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:50px}
+        .step{background:#f5f5f5;border-radius:12px;padding:32px 24px;text-align:center;position:relative}
+        .step-num{width:50px;height:50px;background:#1a1a2e;color:#fff;border-radius:50%;font-size:1.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+        .step h3{margin:12px 0 8px}
+        .step p{font-size:0.9rem;color:#666}
+        .urgency{background:linear-gradient(135deg,#ff6b35 0%,#ff8c59 100%);color:#fff;padding:clamp(40px,6vw,60px) 5%;text-align:center;border-radius:16px;margin:0 5%;max-width:1000px;margin-left:auto;margin-right:auto}
+        .urgency h3{color:#fff;font-size:clamp(1.4rem,2.5vw,2rem)}
+        .urgency p{color:rgba(255,255,255,0.95);font-size:0.95rem;margin-top:10px}
+        .guarantee{background:#e3f2fd;border-left:4px solid #1976d2;padding:24px 20px;border-radius:8px;margin:40px 0;max-width:600px;margin-left:auto;margin-right:auto}
+        .guarantee strong{color:#1565c0;display:block;margin-bottom:6px}
+        .cta-section{background:#1a1a2e;color:#fff;padding:clamp(60px,8vw,100px) 5%;text-align:center}
+        .cta-section h2{color:#fff;margin-bottom:24px}
+        .cta-buttons{display:flex;gap:16px;justify-content:center;margin-bottom:32px;flex-wrap:wrap}
+        .cta-buttons a{font-size:clamp(0.95rem,1.1vw,1rem)}
+        footer{background:#1a1a2e;color:rgba(255,255,255,0.5);padding:clamp(40px,6vw,60px) 5%;text-align:center;font-size:0.85rem;border-top:1px solid rgba(255,255,255,0.1)}
         footer strong{color:#fff}
-        footer a{color:rgba(255,255,255,0.45);text-decoration:none}
-        footer a:hover{color:#00c2ff}
-        .flinks{display:flex;justify-content:center;gap:24px;margin-top:12px;flex-wrap:wrap}
+        footer a{color:rgba(255,255,255,0.5);text-decoration:none;margin:0 12px}
+        footer a:hover{color:#ff6b35}
         @media(max-width:768px){
-          .hero h1{font-size:2.2rem;letter-spacing:-0.5px}
-          .hero p{font-size:0.97rem}
-          .cwrap{grid-template-columns:1fr;gap:32px}
-          .hstats{gap:18px}
-          section{padding:64px 5%}
-          h2{font-size:1.7rem}
-          .pgrid{grid-template-columns:1fr}
-          .wgrid{grid-template-columns:1fr 1fr}
-          .steps{grid-template-columns:1fr}
-          .grid-who{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
-          .hbtns{flex-direction:column;align-items:center}
-          .btn-p,.btn-g{width:100%;max-width:320px;text-align:center}
-          .stat strong{font-size:1.35rem}
+          .hero-ctas{flex-direction:column;align-items:center}
+          .hero-ctas .btn-primary,.hero-ctas .btn-secondary{width:100%;max-width:300px;text-align:center}
+          .pain-grid{grid-template-columns:1fr}
+          .solution-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr))}
+          .results-grid{grid-template-columns:repeat(2,1fr)}
+          .pricing-card.featured{transform:scale(1)}
+          .why-content{grid-template-columns:1fr;gap:40px}
+          .steps-grid{grid-template-columns:1fr 1fr}
+          .cta-buttons{flex-direction:column;align-items:center}
+          .cta-buttons a{width:100%;max-width:300px;text-align:center}
         }
         @media(max-width:480px){
-          .hero{padding:90px 5% 60px}
-          .hero h1{font-size:1.8rem}
-          section{padding:52px 5%}
+          section{padding:40px 5%}
+          h1{font-size:1.8rem}
           h2{font-size:1.5rem}
-          .pgrid{grid-template-columns:1fr}
-          .wgrid{grid-template-columns:1fr}
-          .hstats{gap:14px}
-          .stat strong{font-size:1.2rem}
-          .pc{padding:28px 20px}
-          .vd-cta{display:none}
+          .hero-stats{grid-template-columns:repeat(2,1fr);gap:16px}
+          .results-grid{grid-template-columns:1fr}
+          .pricing-grid{grid-template-columns:1fr}
+          .steps-grid{grid-template-columns:1fr}
+          .why-content li{font-size:0.9rem}
         }
       `}</style>
 
-      <Nav />
-      <LiveChatWidget />
-
-      {/* HERO */}
+      {/* 1. HERO */}
       <section className="hero">
-        <div className="hi">
-          <div className="hbadge">⚡ 48 uur live. Klanten volgen.</div>
-          <h1>Meer klanten via<br/><em>jouw website</em></h1>
-          <p>Wij bouwen jouw website in 48 uur. Alles inbegrepen: hosting, domein, updates, onderhoud. Jij krijgt klanten. Wij zorgen voor de rest.</p>
-          <div className="hbtns">
-            <a href="#contact" className="btn-p">Start jouw website</a>
-            <a href="#pricing" className="btn-g">Plan gratis gesprek</a>
+        <div className="container" style={{ textAlign: "center" }}>
+          <h1>Krijg meer klanten via je website — <em>binnen 48 uur live</em></h1>
+          <p>Geen gedoe. Geen technische problemen. Wij zorgen dat jouw website klanten oplevert. Alles inbegrepen. Maandelijks opzeggen.</p>
+          <div className="hero-ctas">
+            <a href="#contact" className="btn-primary">Start je website →</a>
+            <a href="#contact" className="btn-secondary">Plan gratis gesprek</a>
           </div>
-          <div className="hstats">
-            <div className="stat"><strong>48u</strong><span>Website live</span></div>
-            <div className="stat"><strong>€99/m</strong><span>All-in prijs</span></div>
-            <div className="stat"><strong>∞</strong><span>Updates included</span></div>
-            <div className="stat"><strong>1 partner</strong><span>Alles geregeld</span></div>
+          <div className="hero-stats">
+            <div className="stat-box"><strong>48u</strong><span>Live</span></div>
+            <div className="stat-box"><strong>€99/m</strong><span>All-in</span></div>
+            <div className="stat-box"><strong>∞</strong><span>Updates</span></div>
+            <div className="stat-box"><strong>1 partner</strong><span>Klaar</span></div>
           </div>
         </div>
       </section>
 
-      {/* PROBLEMS */}
-      <section style={{ padding: "90px 5%", background: "#fef2f2" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "2.1rem", fontWeight: 800, marginBottom: 8, textAlign: "center", color: "#7f1d1d" }}>Je verliest klanten zonder een goede website</h2>
-          <p style={{ color: "#991b1b", fontSize: "1rem", textAlign: "center", marginBottom: 48 }}>Elke dag dat je geen website hebt, gaan potentiële klanten naar je concurrent.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20 }}>
+      {/* 2. PROBLEM */}
+      <section className="pain-section">
+        <div className="container">
+          <h2 style={{ color: "#b71c1c", textAlign: "center" }}>Je verliest klanten zonder dat je het doorhebt</h2>
+          <p style={{ textAlign: "center", color: "#666", marginBottom: 40 }}>Elke dag dat je geen goede website hebt, gaan potentiële klanten naar je concurrent.</p>
+          <div className="pain-grid">
+            <div className="pain-card">
+              <h3>🔍 Mensen vinden je niet</h3>
+              <p>Ze zoeken online naar "kapperszaak Amsterdam" maar jij verschijnt niet. Je concurrent wel.</p>
+            </div>
+            <div className="pain-card">
+              <h3>📱 Website ziet er verouderd uit</h3>
+              <p>Of je hebt helemaal geen website. Klanten denken: "Dit bedrijf is niet meer actief."</p>
+            </div>
+            <div className="pain-card">
+              <h3>📞 Geen manier om direct contact op te nemen</h3>
+              <p>Potentiële klanten kunnen niet bellen, een afspraak plannen of een bericht sturen. Ze geven het op.</p>
+            </div>
+            <div className="pain-card">
+              <h3>⚖️ Minder professioneel</h3>
+              <p>Geen website = minder vertrouwen. Klanten kiezen liever een concurrent met een goede website.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. SOLUTION */}
+      <section className="solution-section">
+        <div className="container">
+          <h2 style={{ textAlign: "center" }}>Wij zorgen dat jouw website klanten oplevert</h2>
+          <p style={{ textAlign: "center", color: "#666", marginBottom: 40 }}>Alles wat je nodig hebt — website, hosting, onderhoud — in één pakket.</p>
+          <div className="solution-grid">
+            <div className="solution-card">
+              <h3>⚡ 48 uur live</h3>
+              <p>Je hebt niet maanden nodig. Wij bouwen en zetten je online. Klaar.</p>
+            </div>
+            <div className="solution-card">
+              <h3>📱 100% mobiel-vriendelijk</h3>
+              <p>Alles werkt perfect op telefoon, tablet en computer. Klanten boeken onderweg.</p>
+            </div>
+            <div className="solution-card">
+              <h3>🔧 Alles inbegrepen</h3>
+              <p>Hosting, domein, SSL, updates, onderhoud. Je hebt niemand anders nodig.</p>
+            </div>
+            <div className="solution-card">
+              <h3>📞 Klanten kunnen direct contact opnemen</h3>
+              <p>Telefoonnummer, contactformulier, WhatsApp link. Nul fricties.</p>
+            </div>
+            <div className="solution-card">
+              <h3>🔍 Google vindt je makkelijker</h3>
+              <p>Basisoptimalisatie inbegrepen. Jouw bedrijf verschijnt hoger in zoekresultaten.</p>
+            </div>
+            <div className="solution-card">
+              <h3>🎯 Ontworpen voor conversie</h3>
+              <p>Niet mooi, maar ineffectief. Alles is gericht op meer boekingen en aanvragen.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. RESULTS */}
+      <section className="results-section">
+        <div className="container">
+          <h2>Dit levert het jou op</h2>
+          <p style={{ fontSize: "1.05rem", maxWidth: 600, margin: "20px auto 40px", color: "rgba(255,255,255,0.9)" }}>Stop met klanten verliezen. Begin met klanten winnen.</p>
+          <div className="results-grid">
+            <div className="result-item">
+              <strong>+Afspraken</strong>
+              <span style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.7)" }}>Klanten boeken direct</span>
+            </div>
+            <div className="result-item">
+              <strong>+Aanvragen</strong>
+              <span style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.7)" }}>Contactformulieren vullen zich</span>
+            </div>
+            <div className="result-item">
+              <strong>+Omzet</strong>
+              <span style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.7)" }}>Extra klanten = extra inkomsten</span>
+            </div>
+            <div className="result-item">
+              <strong>0 Gedoe</strong>
+              <span style={{ fontSize: "0.9rem", color: "rgba(255,255,255,0.7)" }}>Wij regelen alles</span>
+            </div>
+          </div>
+          <p style={{ fontSize: "1rem", maxWidth: 700, margin: "50px auto 0", color: "rgba(255,255,255,0.85)" }}>
+            <strong>💰 Gemiddeld: 1–2 extra klanten per maand betaalt je hele website.</strong> Daarna is het puur winst.
+          </p>
+        </div>
+      </section>
+
+      {/* 5. PRICING */}
+      <section className="pricing-section">
+        <div className="container">
+          <h2 style={{ textAlign: "center" }}>Kies jouw pakket</h2>
+          <p style={{ textAlign: "center", color: "#666", marginBottom: 50 }}>Transparante prijzen. Geen verborgen kosten. Maandelijks opzeggen.</p>
+          <div className="pricing-grid">
             {[
-              ["🔍","Mensen vinden je online niet","Je concurrenten zijn gemakkelijker te vinden"],
-              ["📞","Geen manier om direct contact op te nemen","Potentiële klanten geven het op"],
-              ["⌚","Je website ziet er verouderd uit","Of je hebt helemaal geen website"],
-              ["💼","Minder professioneel imago","Klanten kiezen liever je concurrent"],
-            ].map(([ic, title, desc]) => (
-              <div key={title} style={{ background: "#fff", padding: 24, borderRadius: 14, border: "1px solid #fca5a5" }}>
-                <div style={{ fontSize: "1.8rem", marginBottom: 10 }}>{ic}</div>
-                <h4 style={{ fontWeight: 700, fontSize: "1rem", marginBottom: 6, color: "#7f1d1d" }}>{title}</h4>
-                <p style={{ color: "#991b1b", fontSize: "0.9rem" }}>{desc}</p>
+              { name: "Starter", price: "99", setup: "500", features: ["1-2 pagina's", "Contactformulier", "Hosting & domein", "Mobile-optimized", "Email support"] },
+              { name: "Growth", price: "149", setup: "750", features: ["Tot 5 pagina's", "Contactformulier + Maps", "Hosting & domein", "SEO basisoptimalisatie", "Email & phone support", "Maandelijks rapport"], featured: true },
+              { name: "Pro", price: "249", setup: "1000", features: ["Tot 10 pagina's", "Custom design", "Alle functies", "Hosting & domein", "Volledige SEO", "Priority support", "Maandelijkse optimalisatie"] }
+            ].map(pkg => (
+              <div key={pkg.name} className={`pricing-card ${pkg.featured ? "featured" : ""}`}>
+                {pkg.featured && <div className="badge">Populair</div>}
+                <h3 style={{ marginBottom: 8 }}>{pkg.name}</h3>
+                <div className="price">€{pkg.price}<sup>/m</sup></div>
+                <div className="setup">Setup: €{pkg.setup}</div>
+                <ul>
+                  {pkg.features.map(f => <li key={f}>{f}</li>)}
+                </ul>
+                <a href="#contact" className="btn-primary" style={{ width: "100%", textAlign: "center" }}>Kies {pkg.name}</a>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* WHAT YOU GET */}
-      <section style={{ padding: "90px 5%", background: "#f0fdf4" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "2.1rem", fontWeight: 800, marginBottom: 8, textAlign: "center", color: "#065f46" }}>Wat krijg jij van ons?</h2>
-          <p style={{ color: "#047857", fontSize: "1rem", textAlign: "center", marginBottom: 48 }}>Website, hosting, updates, onderhoud — alles in één pakket.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 20 }}>
-            {[
-              ["⚡","Website in 48 uur","Je bent snel online en klanten kunnen je vinden"],
-              ["📱","Perfect op mobiel","Werkt perfect op telefoon, tablet en computer"],
-              ["🌐","Alles gehost & beveiligd","Domein, hosting, SSL — wij regelen alles"],
-              ["🔄","Maandelijkse updates","Je website blijft actueel en geoptimaliseerd"],
-              ["📈","Meer klanten & aanvragen","Website ingericht voor conversie"],
-              ["🎯","Één partner. Klaar.","Geen gedoe met developers of technisch gedoe"],
-            ].map(([ic, title, desc]) => (
-              <div key={title} style={{ background: "#fff", padding: 24, borderRadius: 14, border: "1px solid #86efac" }}>
-                <div style={{ fontSize: "1.8rem", marginBottom: 10 }}>{ic}</div>
-                <h4 style={{ fontWeight: 700, fontSize: "1rem", marginBottom: 6, color: "#065f46" }}>{title}</h4>
-                <p style={{ color: "#047857", fontSize: "0.9rem" }}>{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* HOE HET WERKT */}
-      <section id="hoe-het-werkt" className="steps-sec">
-        <div className="center" style={{ marginBottom: 0 }}>
-          <span className="tag">Hoe het werkt</span>
-          <h2>4 stappen. Klaar.</h2>
-          <p className="sub center">We doen alles. Jij hoeft enkel "ja" te zeggen.</p>
-        </div>
-        <div className="steps">
-          {[
-            ["1","Gesprekje van 15 min","Jij vertelt wat je bedrijf is. Wij maken een plan."],
-            ["2","Wij bouwen je website","48 uur later: website klaar, getest, veilig."],
-            ["3","Je gaat live","Klik. Je bent online. Klanten kunnen je vinden."],
-            ["4","Wij onderhouden alles","Updates, optimalisaties, support — maandelijks."],
-          ].map(([n, h, p]) => (
-            <div key={n} className="step">
-              <div className="step-n">{n}</div>
-              <h3>{h}</h3>
-              <p>{p}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* PRICING */}
-      <section id="pricing" className="pricing-sec">
-        <div className="center">
-          <span className="tag">Simpel. Transparant. All-in.</span>
-          <h2>Kies jouw pakket.<br/>Geen verborgen kosten.</h2>
-          <p className="sub">Website + hosting + onderhoud + support. Alles in één prijs per maand.</p>
-        </div>
-        <div className="pgrid">
-          <div className="pc">
-            <div className="pn">Starter</div>
-            <div className="pp"><sup>€</sup>99<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
-            <div className="pd" style={{marginBottom:10}}>Setup: <strong>€500</strong></div>
-            <ul className="pl">
-              <li>1-2 pagina's</li>
-              <li>100% mobiel-vriendelijk</li>
-              <li>Contactformulier</li>
-              <li>Hosting & domein</li>
-              <li>Maandelijkse updates</li>
-              <li>Email support</li>
-            </ul>
-            <a href="#contact" className="pb pb-out">Start nu</a>
-          </div>
-          <div className="pc hot">
-            <div className="hbadge2">MEEST POPULAIR</div>
-            <div className="pn">Growth</div>
-            <div className="pp"><sup>€</sup>149<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
-            <div className="pd" style={{marginBottom:10}}>Setup: <strong>€750</strong></div>
-            <ul className="pl">
-              <li>Tot 5 pagina's</li>
-              <li>100% mobiel-vriendelijk</li>
-              <li>Contactformulier + Maps</li>
-              <li>Hosting & domein</li>
-              <li>Maandelijkse optimalisaties</li>
-              <li>SEO basisinstellingen</li>
-              <li>Phone & email support</li>
-              <li>Maandelijkse report</li>
-            </ul>
-            <a href="#contact" className="pb pb-fill">Dit willen de meesten</a>
-          </div>
-          <div className="pc">
-            <div className="pn">Pro</div>
-            <div className="pp"><sup>€</sup>249<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
-            <div className="pd" style={{marginBottom:10}}>Setup: <strong>€1000</strong></div>
-            <ul className="pl">
-              <li>Tot 10 pagina's</li>
-              <li>100% custom design</li>
-              <li>Geavanceerde functies</li>
-              <li>Hosting & domein</li>
-              <li>Wekelijkse optimalisaties</li>
-              <li>Volledige SEO setup</li>
-              <li>Prioriteit support</li>
-              <li>Maandelijkse strategie call</li>
-            </ul>
-            <a href="#contact" className="pb pb-out">Voor serieuze groei</a>
-          </div>
-        </div>
-        <div style={{textAlign:"center",marginTop:32,padding:"24px 20px",background:"rgba(0,194,255,0.08)",borderRadius:16,border:"1px solid rgba(0,194,255,0.2)",maxWidth:600,margin:"32px auto 0"}}>
-          <p style={{color:"#0369a1",fontWeight:700,marginBottom:8}}>💡 Waarom abonnement?</p>
-          <p style={{color:"#0c4a6e",fontSize:"0.9rem",marginBottom:6}}><strong>Geen grote upfront cost:</strong> Start met €99/maand. Geen €3000+ betalen.</p>
-          <p style={{color:"#0c4a6e",fontSize:"0.9rem",marginBottom:6}}><strong>Alles inbegrepen:</strong> Updates, onderhoud, support. Je hebt niet nog iemand nodig.</p>
-          <p style={{color:"#0c4a6e",fontSize:"0.9rem"}}><strong>Goedkoper dan developers:</strong> Freelancer developers kosten €100/uur. Wij doen alles voor €99-249/maand.</p>
-        </div>
-      </section>
-
-      {/* PRIJZEN */}
-      <section id="prijzen" className="pricing-sec">
-        <div className="center">
-          <span className="tag">Eenvoudig. Eerlijk. Alles inbegrepen.</span>
-          <h2>Geen verborgen kosten.<br/>Geen hosting gedoe.</h2>
-          <p className="sub">Één prijs per maand. Website, hosting, updates, optimalisaties — alles erin. Stoppen wanneer jij wil.</p>
-        </div>
-        <div className="pgrid">
-          <div className="pc">
-            <div className="pn">Basis</div>
-            <div className="pp"><sup>€</sup>149<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
-            <div className="pd">Perfect voor starters</div>
-            <ul className="pl">
-              <li>1-2 pagina's</li><li>100% mobielvriendelijk</li>
-              <li>Contactformulier</li><li>Maandelijkse optimalisaties</li>
-              <li>Alles gehost & beveiligd</li><li>Maandelijks nieuw ontwerp update</li>
-            </ul>
-            <a href="#contact?pakket=Basis%20%E2%80%94%20%E2%82%AC149" className="pb pb-out" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Basis%20%E2%80%94%20%E2%82%AC149'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Jij gaat online →</a>
-          </div>
-          <div className="pc hot">
-            <div className="hbadge2">POPULAIR</div>
-            <div className="pn">Professional</div>
-            <div className="pp"><sup>€</sup>249<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
-            <div className="pd">Meeste ondernemers kiezen dit</div>
-            <ul className="pl">
-              <li>Tot 5 pagina's</li><li>100% mobielvriendelijk</li>
-              <li>Contactformulier + Google Maps</li><li>Maandelijkse optimalisaties</li>
-              <li>Gratis updates & kleine aanpassingen</li><li>SEO basisoptimalisatie</li>
-              <li>Google Analytics instelling</li><li>Maandelijkse performance report</li>
-            </ul>
-            <a href="#contact?pakket=Professional%20%E2%80%94%20%E2%82%AC249" className="pb pb-fill" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Professional%20%E2%80%94%20%E2%82%AC249'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Dit willen we →</a>
-          </div>
-          <div className="pc">
-            <div className="pn">Premium</div>
-            <div className="pp"><sup>€</sup>399<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
-            <div className="pd">Voor serieuze groei</div>
-            <ul className="pl">
-              <li>Tot 10 pagina's</li><li>Custom design op maat</li>
-              <li>Geavanceerde functies</li><li>Maandelijkse optimalisaties</li>
-              <li>Prioriteit support</li><li>Volledige SEO optimalisatie</li>
-              <li>Conversie-tracking</li><li>Maandelijke strategie call</li>
-            </ul>
-            <a href="#contact?pakket=Premium%20%E2%80%94%20%E2%82%AC399" className="pb pb-out" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Premium%20%E2%80%94%20%E2%82%AC399'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Laten we groeien →</a>
-          </div>
-        </div>
-        <div style={{textAlign:"center",marginTop:32,padding:"24px 20px",background:"rgba(0,194,255,0.08)",borderRadius:16,border:"1px solid rgba(0,194,255,0.2)"}}>
-          <p style={{color:"#0369a1",fontWeight:700,marginBottom:6}}>💡 Waarom abonnement en niet eenmalig?</p>
-          <p style={{color:"#0c4a6e",fontSize:"0.9rem"}}>Een website is geen product — het's een zaak. Je ziet wat werkt, we optimaliseren maandelijks, je groeit. Stopzetten? Geen probleem, geen boetes.</p>
-        </div>
-      </section>
-
-      {/* CAPACITY */}
-      <section style={{ padding: "90px 5%", background: "#fff7ed" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(217,119,6,0.1)", border: "1px solid rgba(217,119,6,0.3)", color: "#d97706", padding: "7px 20px", borderRadius: "100px", fontSize: "0.82rem", fontWeight: 700, marginBottom: 24 }}>
-            ⚠️ LIMITED CAPACITY
-          </div>
-          <h2 style={{ fontSize: "1.8rem", fontWeight: 800, marginBottom: 16, color: "#92400e" }}>We nemen maar 5 klanten per week aan</h2>
-          <p style={{ color: "#b45309", fontSize: "1rem", marginBottom: 28, lineHeight: 1.6 }}>
-            We geven elk project 100% aandacht. Snelheid + kwaliteit. Niet beide tegelijk met meer klanten.
-          </p>
-          <p style={{ color: "#d97706", fontWeight: 700, fontSize: "1.1rem" }}>
-            Als je nu contact opneemt, krijg jij een plek.
-          </p>
-        </div>
-      </section>
-
-      {/* WHY SUBSCRIPTION */}
-      <section style={{ padding: "90px 5%", background: "#f3f4f6" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
-          <h2 style={{ fontSize: "2rem", fontWeight: 800, marginBottom: 12, textAlign: "center" }}>Waarom een abonnement werkt beter</h2>
-          <p style={{ color: "#6b7280", fontSize: "1rem", textAlign: "center", marginBottom: 48 }}>Eenmalig betalen is voorbij. Websites hebben onderhoud nodig. Dat doen wij voor je.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, alignItems: "start" }}>
+      {/* 6. WHY SUBSCRIPTION */}
+      <section className="why-section">
+        <div className="container">
+          <h2 style={{ textAlign: "center", marginBottom: 40 }}>Waarom een abonnement werkt beter</h2>
+          <div className="why-content">
             <div>
-              <h4 style={{ fontWeight: 700, marginBottom: 16, fontSize: "1.1rem", color: "#1f2937" }}>❌ Eenmalig betalen (oud model)</h4>
-              <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-                <li style={{ color: "#6b7280", fontSize: "0.95rem" }}>💸 €3000+ upfront</li>
-                <li style={{ color: "#6b7280", fontSize: "0.95rem" }}>🚫 Hosting zelf regelen (€10-50/m extra)</li>
-                <li style={{ color: "#6b7280", fontSize: "0.95rem" }}>⚠️ Updates zelf doen (of betalen per update)</li>
-                <li style={{ color: "#6b7280", fontSize: "0.95rem" }}>🔧 Iets kapot? Betaal weer €500+</li>
-                <li style={{ color: "#6b7280", fontSize: "0.95rem" }}>😰 Alles je eigen verantwoordelijkheid</li>
+              <h3 style={{ color: "#b71c1c", marginBottom: 20 }}>❌ Eenmalig betalen (oud model)</h3>
+              <ul>
+                <li>€3000+ upfront betalen</li>
+                <li>Hosting zelf zoeken en betalen (€10-50/m extra)</li>
+                <li>Updates? Betaal per update</li>
+                <li>Iets kapot? €500+ reparatie</li>
+                <li>Jij bent volledig zelf verantwoordelijk</li>
               </ul>
             </div>
             <div>
-              <h4 style={{ fontWeight: 700, marginBottom: 16, fontSize: "1.1rem", color: "#065f46" }}>✅ Maandelijks abonnement (smart)</h4>
-              <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
-                <li style={{ color: "#047857", fontSize: "0.95rem" }}>💚 €99-249/m all-in</li>
-                <li style={{ color: "#047857", fontSize: "0.95rem" }}>✅ Hosting, domein, SSL inbegrepen</li>
-                <li style={{ color: "#047857", fontSize: "0.95rem" }}>🔄 Automatische updates & optimalisaties</li>
-                <li style={{ color: "#047857", fontSize: "0.95rem" }}>🛡️ Iets kapot? Wij fixen het. Gratis.</li>
-                <li style={{ color: "#047857", fontSize: "0.95rem" }}>😎 Jij focust op je bedrijf. Wij op je website.</li>
+              <h3 style={{ color: "#1a7f34", marginBottom: 20 }}>✅ Abonnement (slim)</h3>
+              <ul>
+                <li>€99-249/m, alles inbegrepen</li>
+                <li>Hosting, domein, updates — allemaal in één prijs</li>
+                <li>Automatische updates & optimalisaties</li>
+                <li>Iets kapot? We fixen het gratis</li>
+                <li>Jij focust op je bedrijf. Wij op jouw website.</li>
               </ul>
             </div>
-          </div>
-          <div style={{ marginTop: 40, background: "#fff", border: "2px solid #10b981", borderRadius: 16, padding: 24, textAlign: "center" }}>
-            <p style={{ color: "#065f46", fontWeight: 700, marginBottom: 8 }}>💡 Gemiddeld bespaar je €1000+ per jaar</p>
-            <p style={{ color: "#047857", fontSize: "0.95rem" }}>Vergeleken met het huren van developers of het zelf doen.</p>
           </div>
         </div>
       </section>
 
-      {/* PORTFOLIO */}
-      <PortfolioSection />
-
-      {/* CONTACT */}
-      <section id="contact" style={{ background: "#fff" }}>
-        <div className="center" style={{ marginBottom: 52 }}>
-          <span className="tag">Klaar om meer klanten te krijgen?</span>
-          <h2>Laten we beginnen.</h2>
-          <p className="sub">Gratis gesprek. Geen verplichtingen. Geen sales pitch.</p>
+      {/* 7. ROI */}
+      <section style={{ background: "#e3f2fd", padding: "clamp(60px,8vw,100px) 5%", textAlign: "center" }}>
+        <div className="container">
+          <h2 style={{ color: "#1565c0", marginBottom: 20 }}>📊 Realistische ROI</h2>
+          <p style={{ fontSize: "1.05rem", color: "#1976d2", marginBottom: 30 }}>
+            Als je per maand <strong>slechts 1 extra klant</strong> binnenhaalt die gemiddeld €100+ uitgeeft...
+          </p>
+          <div style={{ background: "#fff", border: "2px solid #1976d2", borderRadius: 16, padding: "30px", maxWidth: 500, margin: "0 auto" }}>
+            <p style={{ color: "#1565c0", fontWeight: 700, fontSize: "0.9rem", marginBottom: 16 }}>Jij betaalt:</p>
+            <p style={{ color: "#333", fontSize: "1.5rem", fontWeight: 900, marginBottom: 20 }}>€149/m</p>
+            <p style={{ color: "#1565c0", fontWeight: 700, fontSize: "0.9rem", marginBottom: 8 }}>Jij verdient:</p>
+            <p style={{ color: "#1a7f34", fontSize: "1.5rem", fontWeight: 900 }}>€100–500+/m</p>
+          </div>
+          <p style={{ marginTop: 30, color: "#1565c0", fontWeight: 600 }}>Website betaalt zich zelf terug in de eerste maand. Daarna is het puur winst.</p>
         </div>
-        <div className="cwrap">
-          <div className="ci">
-            <h3>Bel ons direct</h3>
-            <p>We pikken op en bespreken je website in 15 minuten. Klaar voor volgende stap?</p>
-            <div className="crow"><div className="cic">📞</div><span style={{fontWeight:700}}>+31 6 26 21 99 89</span></div>
-            <p style={{color:"#6b7280",fontSize:"0.9rem",marginTop:12}}>Of liever een afspraak?</p>
-            <div className="crow"><div className="cic">📅</div><span><a href="/Planning" style={{color:"#1a73e8",fontWeight:600,textDecoration:"none"}}>Agenda inzien →</a></span></div>
-            <div className="row" style={{marginTop:20}}>
-              <div className="cic" style={{background:"#f0fdf4"}}>💬</div>
-              <span style={{color:"#047857"}}>Antwoord meestal binnen 1 uur</span>
+      </section>
+
+      {/* 8. HOW IT WORKS */}
+      <section className="how-it-works">
+        <div className="container">
+          <h2 style={{ textAlign: "center", marginBottom: 50 }}>Hoe het werkt</h2>
+          <div className="steps-grid">
+            <div className="step">
+              <div className="step-num">1</div>
+              <h3>Je belt of chatten</h3>
+              <p>Korte kennismaking. Jij vertelt wat je bedrijf is, wij maken een plan.</p>
+            </div>
+            <div className="step">
+              <div className="step-num">2</div>
+              <h3>Wij bouwen</h3>
+              <p>48 uur later: website klaar, getest, beveiligd, snel. Nul problemen.</p>
+            </div>
+            <div className="step">
+              <div className="step-num">3</div>
+              <h3>Je gaat live</h3>
+              <p>Klik. Website online. Klanten kunnen je vinden en contact opnemen.</p>
+            </div>
+            <div className="step">
+              <div className="step-num">4</div>
+              <h3>Wij zorgen ervoor</h3>
+              <p>Updates, optimalisaties, onderhoud — alles door ons. Maandelijks.</p>
             </div>
           </div>
-          <ContactForm />
+        </div>
+      </section>
+
+      {/* 10. URGENCY + GUARANTEE */}
+      <section style={{ padding: "clamp(60px,8vw,100px) 5%", textAlign: "center" }}>
+        <div className="container">
+          <div className="urgency">
+            <h3>⚡ We nemen max 5 klanten per week aan</h3>
+            <p>We geven elk project volle aandacht. Snelheid + kwaliteit. Niet beide tegelijk met meer klanten. Als je nu belt, krijg jij een plek.</p>
+          </div>
+          <div className="guarantee">
+            <strong>💰 7-daags geld-terug garantie</strong>
+            <p>Niet tevreden? We geven je geld terug, geen vragen. Nul risico.</p>
+          </div>
+        </div>
+      </section>
+
+      {/* 12. CTA */}
+      <section className="cta-section">
+        <div className="container">
+          <h2>Klaar om meer klanten te krijgen?</h2>
+          <p style={{ fontSize: "1.05rem", maxWidth: 600, margin: "20px auto 40px", color: "rgba(255,255,255,0.9)" }}>
+            Geen gedoe. Geen verplichtingen. Gewoon een gesprek over jouw website en hoe het je klanten oplevert.
+          </p>
+          <div className="cta-buttons">
+            <a href="#contact" className="btn-primary">Start je website nu →</a>
+            <a href="#contact" className="btn-secondary">Plan gratis gesprek</a>
+          </div>
+          <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.9rem" }}>
+            Liever direct met ons praten?<br/>
+            <strong style={{ color: "#fff", fontSize: "1rem" }}>+31 6 26 21 99 89</strong>
+          </p>
         </div>
       </section>
 
       {/* FOOTER */}
       <footer>
         <p>© 2026 <strong>Vedantix</strong> — Website + hosting + onderhoud + support. Start €99/maand.</p>
-        <div className="flinks">
+        <div>
           <a href="#pricing">Prijzen</a>
           <a href="#contact">Contact</a>
           <a href="/Privacy">Privacy</a>
           <a href="/Voorwaarden">Voorwaarden</a>
         </div>
       </footer>
+
+      <LiveChatWidget />
+      <WAWidget />
     </div>
   );
 }
