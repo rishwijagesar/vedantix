@@ -105,7 +105,7 @@ export default function Home() {
         .why-container{max-width:1000px;margin:0 auto}
         .why-intro{color:#666;margin-bottom:48px;max-width:720px;font-size:1rem;line-height:1.6}
         .why-content{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
-        .why-col{padding:40px;border-radius:12px;background:#f9fafb}
+        .why-col{padding:32px;border-radius:12px;background:#f3f7ff;border:1px solid rgba(45,115,177,0.08)}
         .why-col.new{background:linear-gradient(135deg,#f0f6fb 0%,#f9fbfd 100%);border:1px solid rgba(45,115,177,0.15)}
         .why-col h3{font-size:1.15rem;margin-bottom:28px;font-weight:800}
         .why-col h3.old{color:#1a1a2e}
