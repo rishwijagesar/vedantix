@@ -135,7 +135,7 @@ export default function Home() {
         /* FINAL CTA */
         .cta{background:#1a1a2e;color:#fff;text-align:center;padding:90px 5%}
         .cta h2{color:#fff;margin-bottom:20px}
-        .cta p{font-size:1rem;color:rgba(255,255,255,0.85);max-width:620px;margin:16px auto 48px}
+        .cta p{font-size:1rem;color:rgba(255,255,255,0.85);max-width:620px;margin:12px auto 40px}
         .cta-buttons{display:flex;gap:16px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
         .cta-buttons a{font-size:0.95rem}
         .cta-phone{color:rgba(255,255,255,0.75);font-size:0.9rem;margin-top:32px}
