@@ -412,8 +412,8 @@ export default function Home() {
       {/* VOOR WIE */}
       <section id="voor-wie">
         <span className="tag">Voor wie</span>
-        <h2>Voor elk bedrijf,<br/>groot of klein</h2>
-        <p className="sub">Of je nu net begint of al jaren actief bent — jij verdient een website die werkt.</p>
+        <h2>Perfect voor lokale<br/>ondernemers zonder IT-gedoe</h2>
+        <p className="sub">Geen webdesigner nodig. Geen hosting gedoe. Gewoon een website die klanten aantrekt.</p>
         <div className="grid-who">
           {[["✂️","Kapper"],["🍽️","Restaurant"],["📸","Fotograaf"],["🔨","Klusbedrijf"],["🎨","Schilder"],["💼","ZZP'er"],["🏪","Winkel"],["🚀","Starter"],["🏗️","Aannemer"],["💆","Schoonheidssalon"],["🎵","Muzikant"],["🏋️","Fitness coach"]].map(([ic, lb]) => (
             <a key={lb} href="#contact" className="wc">
