@@ -457,18 +457,67 @@ export default function Home() {
         </div>
       </section>
 
-      {/* VOOR WIE */}
-      <section id="voor-wie">
-        <span className="tag">Voor wie</span>
-        <h2>Perfect voor lokale<br/>ondernemers zonder IT-gedoe</h2>
-        <p className="sub">Geen webdesigner nodig. Geen hosting gedoe. Gewoon een website die klanten aantrekt.</p>
-        <div className="grid-who">
-          {[["✂️","Kapper"],["🍽️","Restaurant"],["📸","Fotograaf"],["🔨","Klusbedrijf"],["🎨","Schilder"],["💼","ZZP'er"],["🏪","Winkel"],["🚀","Starter"],["🏗️","Aannemer"],["💆","Schoonheidssalon"],["🎵","Muzikant"],["🏋️","Fitness coach"]].map(([ic, lb]) => (
-            <a key={lb} href="#contact" className="wc">
-              <span className="ic">{ic}</span>
-              <span>{lb}</span>
-            </a>
-          ))}
+      {/* PRICING */}
+      <section id="pricing" className="pricing-sec">
+        <div className="center">
+          <span className="tag">Simpel. Transparant. All-in.</span>
+          <h2>Kies jouw pakket.<br/>Geen verborgen kosten.</h2>
+          <p className="sub">Website + hosting + onderhoud + support. Alles in één prijs per maand.</p>
+        </div>
+        <div className="pgrid">
+          <div className="pc">
+            <div className="pn">Starter</div>
+            <div className="pp"><sup>€</sup>99<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
+            <div className="pd" style={{marginBottom:10}}>Setup: <strong>€500</strong></div>
+            <ul className="pl">
+              <li>1-2 pagina's</li>
+              <li>100% mobiel-vriendelijk</li>
+              <li>Contactformulier</li>
+              <li>Hosting & domein</li>
+              <li>Maandelijkse updates</li>
+              <li>Email support</li>
+            </ul>
+            <a href="#contact" className="pb pb-out">Start nu</a>
+          </div>
+          <div className="pc hot">
+            <div className="hbadge2">MEEST POPULAIR</div>
+            <div className="pn">Growth</div>
+            <div className="pp"><sup>€</sup>149<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
+            <div className="pd" style={{marginBottom:10}}>Setup: <strong>€750</strong></div>
+            <ul className="pl">
+              <li>Tot 5 pagina's</li>
+              <li>100% mobiel-vriendelijk</li>
+              <li>Contactformulier + Maps</li>
+              <li>Hosting & domein</li>
+              <li>Maandelijkse optimalisaties</li>
+              <li>SEO basisinstellingen</li>
+              <li>Phone & email support</li>
+              <li>Maandelijkse report</li>
+            </ul>
+            <a href="#contact" className="pb pb-fill">Dit willen de meesten</a>
+          </div>
+          <div className="pc">
+            <div className="pn">Pro</div>
+            <div className="pp"><sup>€</sup>249<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
+            <div className="pd" style={{marginBottom:10}}>Setup: <strong>€1000</strong></div>
+            <ul className="pl">
+              <li>Tot 10 pagina's</li>
+              <li>100% custom design</li>
+              <li>Geavanceerde functies</li>
+              <li>Hosting & domein</li>
+              <li>Wekelijkse optimalisaties</li>
+              <li>Volledige SEO setup</li>
+              <li>Prioriteit support</li>
+              <li>Maandelijkse strategie call</li>
+            </ul>
+            <a href="#contact" className="pb pb-out">Voor serieuze groei</a>
+          </div>
+        </div>
+        <div style={{textAlign:"center",marginTop:32,padding:"24px 20px",background:"rgba(0,194,255,0.08)",borderRadius:16,border:"1px solid rgba(0,194,255,0.2)",maxWidth:600,margin:"32px auto 0"}}>
+          <p style={{color:"#0369a1",fontWeight:700,marginBottom:8}}>💡 Waarom abonnement?</p>
+          <p style={{color:"#0c4a6e",fontSize:"0.9rem",marginBottom:6}}<strong>Geen grote upfront cost:</strong> Start met €99/maand. Geen €3000+ betalen.</p>
+          <p style={{color:"#0c4a6e",fontSize:"0.9rem",marginBottom:6}}><strong>Alles inbegrepen:</strong> Updates, onderhoud, support. Je hebt niet nog iemand nodig.</p>
+          <p style={{color:"#0c4a6e",fontSize:"0.9rem"}}><strong>Goedkoper dan developers:</strong> Freelancer developers kosten €100/uur. Wij doen alles voor €99-249/maand.</p>
         </div>
       </section>
 
