@@ -208,7 +208,7 @@ export default function Home() {
             </div>
             <div className="hero-ctas">
               <a href="#pricing" className="btn-primary">Start je website →</a>
-              <a href="#cta" className="btn-secondary">Plan gratis gesprek</a>
+              <a href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website." target="_blank" rel="noreferrer" className="btn-primary" style={{ background: "#25d366" }}>💬 Plan gratis gesprek</a>
             </div>
             <div style={{ marginTop: 0, paddingTop: 0, display: "flex", gap: 32, fontSize: "0.78rem", color: "#9ca3af", fontWeight: 500, letterSpacing: 0.4 }}>
               <span>⚡ Binnen 48 uur live</span>
