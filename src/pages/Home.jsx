@@ -57,14 +57,14 @@ export default function Home() {
         
         /* SOLUTION */
         .solution{background:#f9fafb;padding:80px 5%}
-        .solution-intro{max-width:700px;margin-bottom:50px}
-        .solution-text{max-width:650px}
-        .solution-text h3{margin-bottom:12px}
-        .solution-text p{color:#666;font-size:0.95rem;line-height:1.6;margin-bottom:24px}
-        .solution-list{display:flex;flex-direction:column;gap:16px;margin-top:32px}
-        .solution-list-item{display:flex;gap:16px;align-items:flex-start}
-        .solution-list-item:before{content:"→";color:#2d73b1;font-weight:900;font-size:1.1rem;flex-shrink:0;margin-top:2px}
-        .solution-list-item span{color:#555;font-size:0.95rem;line-height:1.6}
+        .solution-intro{max-width:720px;margin-bottom:50px}
+        .solution-text{max-width:680px}
+        .solution-text h3{margin-bottom:12px;font-size:1.08rem}
+        .solution-text p{color:#666;font-size:0.93rem;line-height:1.65;margin-bottom:20px}
+        .solution-list{display:flex;flex-direction:column;gap:14px;margin-top:32px}
+        .solution-list-item{display:flex;gap:12px;align-items:flex-start}
+        .solution-list-item:before{content:"→";color:#2d73b1;font-weight:900;font-size:1rem;flex-shrink:0;margin-top:3px}
+        .solution-list-item span{color:#555;font-size:0.93rem;line-height:1.65}
         .solution-list-item:before{color:#2d73b1}
         
         /* RESULTS */
