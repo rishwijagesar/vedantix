@@ -115,8 +115,8 @@ export default function Home() {
         .why-list li:before{content:"✓";color:#2d73b1;font-weight:900;flex-shrink:0;margin-top:1px}
         
         /* HOW IT WORKS */
-        .how{background:#f9fafb;padding:120px 5%}
-        .how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:60px;max-width:1000px;margin-left:auto;margin-right:auto}
+        .how{background:#fff;padding:80px 5%}
+        .how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:56px;max-width:1000px;margin-left:auto;margin-right:auto}
         .step{text-align:center}
         .step-number{width:50px;height:50px;background:#2d73b1;color:#fff;border-radius:50%;font-size:1.6rem;font-weight:900;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
         .step h3{margin-bottom:12px;font-size:1.05rem}
