@@ -37,9 +37,10 @@ export default function Home() {
         .hero-bullets span{display:flex;align-items:center;gap:11px;font-size:0.95rem;color:#4b5563;margin-bottom:12px;font-weight:500}
         .hero-bullets span:before{content:"✓";color:#1a73e8;font-weight:900;font-size:1.15rem}
         .hero-ctas{display:flex;gap:18px;margin-bottom:44px}
-        .hero-visual{background:#fff;border-radius:24px;padding:0;min-height:500px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden}
+        .hero-visual{background:#fff;border-radius:20px;padding:0;min-height:540px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.12);animation:heroFloat 3s ease-in-out infinite}
+        @keyframes heroFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
         .hero-visual-content{position:relative;z-index:1;text-align:center;width:100%}
-        .hero-visual-mockup{width:100%;height:100%;background:#fff;border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
+        .hero-visual-mockup{width:100%;height:100%;background:#fff;border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
         
         /* SECTIONS */
         section{padding:75px 5%}
