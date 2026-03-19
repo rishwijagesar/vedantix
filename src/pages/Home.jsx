@@ -515,7 +515,7 @@ export default function Home() {
         </div>
         <div style={{textAlign:"center",marginTop:32,padding:"24px 20px",background:"rgba(0,194,255,0.08)",borderRadius:16,border:"1px solid rgba(0,194,255,0.2)",maxWidth:600,margin:"32px auto 0"}}>
           <p style={{color:"#0369a1",fontWeight:700,marginBottom:8}}>💡 Waarom abonnement?</p>
-          <p style={{color:"#0c4a6e",fontSize:"0.9rem",marginBottom:6}}<strong>Geen grote upfront cost:</strong> Start met €99/maand. Geen €3000+ betalen.</p>
+          <p style={{color:"#0c4a6e",fontSize:"0.9rem",marginBottom:6}}><strong>Geen grote upfront cost:</strong> Start met €99/maand. Geen €3000+ betalen.</p>
           <p style={{color:"#0c4a6e",fontSize:"0.9rem",marginBottom:6}}><strong>Alles inbegrepen:</strong> Updates, onderhoud, support. Je hebt niet nog iemand nodig.</p>
           <p style={{color:"#0c4a6e",fontSize:"0.9rem"}}><strong>Goedkoper dan developers:</strong> Freelancer developers kosten €100/uur. Wij doen alles voor €99-249/maand.</p>
         </div>
