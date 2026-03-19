@@ -104,18 +104,18 @@ export default function Home() {
         .roi-conclusion{text-align:center;font-size:0.95rem;color:#666;line-height:1.7;font-weight:500}
         
         /* WHY SUBSCRIPTION */
-        .why{background:#f9fafb;padding:80px 5%}
-        .why-container{max-width:1000px;margin:0 auto}
-        .why-intro{color:#666;margin-bottom:48px;max-width:720px;font-size:1rem;line-height:1.6}
-        .why-content{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
-        .why-col{padding:32px;border-radius:12px;background:#f3f7ff;border:1px solid rgba(45,115,177,0.08)}
-        .why-col.new{background:linear-gradient(135deg,#f0f6fb 0%,#f9fbfd 100%);border:1px solid rgba(45,115,177,0.15)}
-        .why-col h3{font-size:1.15rem;margin-bottom:28px;font-weight:800}
+        .why{background:#fff;padding:80px 5%}
+        .why-container{max-width:980px;margin:0 auto}
+        .why-intro{color:#666;margin-bottom:48px;max-width:720px;font-size:0.99rem;line-height:1.65}
+        .why-content{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+        .why-col{padding:40px;border-radius:14px;background:#f9fafb;border:1px solid #f1f5f9}
+        .why-col.new{background:#f0f9ff;border:1px solid #bae6fd}
+        .why-col h3{font-size:1.1rem;margin-bottom:28px;font-weight:800}
         .why-col h3.old{color:#1a1a2e}
-        .why-col h3.new{color:#2d73b1}
-        .why-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:16px}
-        .why-list li{font-size:0.93rem;color:#555;display:flex;gap:12px;align-items:flex-start;line-height:1.65;font-weight:500}
-        .why-list li:before{content:"✓";color:#2d73b1;font-weight:900;flex-shrink:0;margin-top:1px}
+        .why-col h3.new{color:#0369a1}
+        .why-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:14px}
+        .why-list li{font-size:0.91rem;color:#555;display:flex;gap:12px;align-items:flex-start;line-height:1.65;font-weight:500}
+        .why-list li:before{content:"✓";color:#1a73e8;font-weight:900;flex-shrink:0;margin-top:2px;font-size:0.9rem}
         
         /* HOW IT WORKS */
         .how{background:#fff;padding:80px 5%}
