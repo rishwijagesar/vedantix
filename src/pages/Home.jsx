@@ -628,9 +628,9 @@ export default function Home() {
       {/* CONTACT */}
       <section id="contact" style={{ background: "#fff" }}>
         <div className="center" style={{ marginBottom: 52 }}>
-          <span className="tag">Volgende stap</span>
-          <h2>Laten we je online zetten.</h2>
-          <p className="sub">Geen verplichting. Gewoon een gesprek over wat je nodig hebt.</p>
+          <span className="tag">Klaar om meer klanten te krijgen?</span>
+          <h2>Laten we beginnen.</h2>
+          <p className="sub">Gratis gesprek. Geen verplichtingen. Geen sales pitch.</p>
         </div>
         <div className="cwrap">
           <div className="ci">
