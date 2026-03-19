@@ -588,6 +588,40 @@ export default function Home() {
         </div>
       </section>
 
+      {/* WHY SUBSCRIPTION */}
+      <section style={{ padding: "90px 5%", background: "#f3f4f6" }}>
+        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+          <h2 style={{ fontSize: "2rem", fontWeight: 800, marginBottom: 12, textAlign: "center" }}>Waarom een abonnement werkt beter</h2>
+          <p style={{ color: "#6b7280", fontSize: "1rem", textAlign: "center", marginBottom: 48 }}>Eenmalig betalen is voorbij. Websites hebben onderhoud nodig. Dat doen wij voor je.</p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, alignItems: "start" }}>
+            <div>
+              <h4 style={{ fontWeight: 700, marginBottom: 16, fontSize: "1.1rem", color: "#1f2937" }}>❌ Eenmalig betalen (oud model)</h4>
+              <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+                <li style={{ color: "#6b7280", fontSize: "0.95rem" }}>💸 €3000+ upfront</li>
+                <li style={{ color: "#6b7280", fontSize: "0.95rem" }}>🚫 Hosting zelf regelen (€10-50/m extra)</li>
+                <li style={{ color: "#6b7280", fontSize: "0.95rem" }}>⚠️ Updates zelf doen (of betalen per update)</li>
+                <li style={{ color: "#6b7280", fontSize: "0.95rem" }}>🔧 Iets kapot? Betaal weer €500+</li>
+                <li style={{ color: "#6b7280", fontSize: "0.95rem" }}>😰 Alles je eigen verantwoordelijkheid</li>
+              </ul>
+            </div>
+            <div>
+              <h4 style={{ fontWeight: 700, marginBottom: 16, fontSize: "1.1rem", color: "#065f46" }}>✅ Maandelijks abonnement (smart)</h4>
+              <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+                <li style={{ color: "#047857", fontSize: "0.95rem" }}>💚 €99-249/m all-in</li>
+                <li style={{ color: "#047857", fontSize: "0.95rem" }}>✅ Hosting, domein, SSL inbegrepen</li>
+                <li style={{ color: "#047857", fontSize: "0.95rem" }}>🔄 Automatische updates & optimalisaties</li>
+                <li style={{ color: "#047857", fontSize: "0.95rem" }}>🛡️ Iets kapot? Wij fixen het. Gratis.</li>
+                <li style={{ color: "#047857", fontSize: "0.95rem" }}>😎 Jij focust op je bedrijf. Wij op je website.</li>
+              </ul>
+            </div>
+          </div>
+          <div style={{ marginTop: 40, background: "#fff", border: "2px solid #10b981", borderRadius: 16, padding: 24, textAlign: "center" }}>
+            <p style={{ color: "#065f46", fontWeight: 700, marginBottom: 8 }}>💡 Gemiddeld bespaar je €1000+ per jaar</p>
+            <p style={{ color: "#047857", fontSize: "0.95rem" }}>Vergeleken met het huren van developers of het zelf doen.</p>
+          </div>
+        </div>
+      </section>
+
       {/* PORTFOLIO */}
       <PortfolioSection />
 
