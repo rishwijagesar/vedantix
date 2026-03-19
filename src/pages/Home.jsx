@@ -204,7 +204,7 @@ export default function Home() {
             </div>
             <div className="hero-ctas">
               <a href="#pricing" className="btn-primary">Start je website →</a>
-              <a href="#cta" className="btn-secondary">Gratis kennismaking</a>
+              <a href="#cta" className="btn-secondary">Plan gratis gesprek</a>
             </div>
             <div style={{ marginTop: 28, paddingTop: 0, display: "flex", gap: 32, fontSize: "0.75rem", color: "#94a3b8", fontWeight: 500, letterSpacing: 0.3 }}>
               <span>⚡ Binnen 48 uur live</span>
