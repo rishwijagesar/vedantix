@@ -112,14 +112,16 @@ export default function Home() {
         /* WHY SUBSCRIPTION */
         .why{background:#fff;padding:120px 5%}
         .why-container{max-width:1000px;margin:0 auto}
-        .why-intro{color:#666;margin-bottom:60px;max-width:700px}
-        .why-content{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
-        .why-col h3{font-size:1.2rem;margin-bottom:24px}
+        .why-intro{color:#666;margin-bottom:64px;max-width:720px;font-size:1rem;line-height:1.6}
+        .why-content{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+        .why-col{padding:40px;border-radius:12px;background:#f9fafb}
+        .why-col.new{background:linear-gradient(135deg,#f0f6fb 0%,#f9fbfd 100%);border:1px solid rgba(45,115,177,0.15)}
+        .why-col h3{font-size:1.15rem;margin-bottom:28px;font-weight:800}
         .why-col h3.old{color:#1a1a2e}
-        .why-col h3.new{color:#1a1a2e}
+        .why-col h3.new{color:#2d73b1}
         .why-list{list-style:none;padding:0;display:flex;flex-direction:column;gap:16px}
-        .why-list li{font-size:0.95rem;color:#555;display:flex;gap:14px;align-items:flex-start;line-height:1.6}
-        .why-list li:before{content:"→";color:#2d73b1;font-weight:900;flex-shrink:0}
+        .why-list li{font-size:0.93rem;color:#555;display:flex;gap:12px;align-items:flex-start;line-height:1.65;font-weight:500}
+        .why-list li:before{content:"✓";color:#2d73b1;font-weight:900;flex-shrink:0;margin-top:1px}
         
         /* HOW IT WORKS */
         .how{background:#f9fafb;padding:120px 5%}
