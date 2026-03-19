@@ -78,7 +78,7 @@ export default function Home() {
         .pricing-card{border:1px solid #e8e8e8;border-radius:16px;padding:48px 36px;transition:all 0.3s;position:relative;background:#fff}
         .pricing-card:hover{border-color:#2d73b1;transform:translateY(-3px);box-shadow:0 12px 40px rgba(45,115,177,0.08)}
         .pricing-card.featured{border-color:#2d73b1;background:linear-gradient(135deg,#f0f6fb 0%,#f9fbfd 100%);transform:scale(1.05);box-shadow:0 20px 60px rgba(45,115,177,0.15)}
-        .pricing-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#2d73b1;color:#fff;padding:6px 18px;border-radius:100px;font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px}
+        .pricing-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#2d73b1;color:#fff;padding:5px 16px;border-radius:100px;font-weight:700;font-size:0.73rem;text-transform:uppercase;letter-spacing:0.6px;box-shadow:0 4px 12px rgba(45,115,177,0.25)}
         .pricing-name{font-size:1.35rem;font-weight:900;color:#1a1a2e;margin-bottom:6px;letter-spacing:-0.3px}
         .pricing-subtitle{font-size:0.82rem;color:#94a3b8;margin-bottom:20px;font-weight:600;line-height:1.4}
         .pricing-value{font-size:2.9rem;font-weight:900;color:#1a1a2e;margin-bottom:2px;letter-spacing:-1px}
