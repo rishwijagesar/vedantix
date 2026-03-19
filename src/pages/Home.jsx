@@ -427,47 +427,51 @@ export default function Home() {
       {/* PRIJZEN */}
       <section id="prijzen" className="pricing-sec">
         <div className="center">
-          <span className="tag">Prijzen</span>
-          <h2>Transparante prijzen,<br/>geen verrassingen</h2>
-          <p className="sub">Eenmalige betaling. Geen maandelijkse verborgen kosten.</p>
+          <span className="tag">Eenvoudig. Eerlijk. Alles inbegrepen.</span>
+          <h2>Geen verborgen kosten.<br/>Geen hosting gedoe.</h2>
+          <p className="sub">Één prijs per maand. Website, hosting, updates, optimalisaties — alles erin. Stoppen wanneer jij wil.</p>
         </div>
         <div className="pgrid">
           <div className="pc">
-            <div className="pn">Starter</div>
-            <div className="pp"><sup>€</sup>399</div>
-            <div className="pd">Eenmalig — ideaal voor starters</div>
+            <div className="pn">Basis</div>
+            <div className="pp"><sup>€</sup>149<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
+            <div className="pd">Perfect voor starters</div>
             <ul className="pl">
-              <li>1-pagina professionele website</li><li>Mobielvriendelijk design</li>
-              <li>Contactformulier</li><li>Hosting (1 jaar) + 500 MB opslag</li>
-              <li>SSL-certificaat</li><li>Levering binnen 48 uur</li>
+              <li>1-2 pagina's</li><li>100% mobielvriendelijk</li>
+              <li>Contactformulier</li><li>Maandelijkse optimalisaties</li>
+              <li>Alles gehost & beveiligd</li><li>Maandelijks nieuw ontwerp update</li>
             </ul>
-            <a href="#contact?pakket=Starter%20%E2%80%94%20%E2%82%AC399" className="pb pb-out" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Starter%20%E2%80%94%20%E2%82%AC399'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Start configuratie</a>
+            <a href="#contact?pakket=Basis%20%E2%80%94%20%E2%82%AC149" className="pb pb-out" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Basis%20%E2%80%94%20%E2%82%AC149'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Jij gaat online →</a>
           </div>
           <div className="pc hot">
-            <div className="hbadge2">MEEST GEKOZEN</div>
-            <div className="pn">Business</div>
-            <div className="pp"><sup>€</sup>799</div>
-            <div className="pd">Eenmalig — voor groeiende bedrijven</div>
+            <div className="hbadge2">POPULAIR</div>
+            <div className="pn">Professional</div>
+            <div className="pp"><sup>€</sup>249<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
+            <div className="pd">Meeste ondernemers kiezen dit</div>
             <ul className="pl">
-              <li>Tot 5 pagina's</li><li>Mobielvriendelijk design</li>
-              <li>Contactformulier + Google Maps</li><li>Hosting (1 jaar) + 2 GB opslag</li>
-              <li>SSL-certificaat</li><li>SEO-basisoptimalisatie</li>
-              <li>Levering binnen 48 uur</li><li>1x gratis aanpassing achteraf</li>
+              <li>Tot 5 pagina's</li><li>100% mobielvriendelijk</li>
+              <li>Contactformulier + Google Maps</li><li>Maandelijkse optimalisaties</li>
+              <li>Gratis updates & kleine aanpassingen</li><li>SEO basisoptimalisatie</li>
+              <li>Google Analytics instelling</li><li>Maandelijkse performance report</li>
             </ul>
-            <a href="#contact?pakket=Business%20%E2%80%94%20%E2%82%AC799" className="pb pb-fill" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Business%20%E2%80%94%20%E2%82%AC799'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Start configuratie</a>
+            <a href="#contact?pakket=Professional%20%E2%80%94%20%E2%82%AC249" className="pb pb-fill" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Professional%20%E2%80%94%20%E2%82%AC249'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Dit willen we →</a>
           </div>
           <div className="pc">
             <div className="pn">Premium</div>
-            <div className="pp"><sup>€</sup>1499</div>
-            <div className="pd">Eenmalig — voor serieuze ondernemers</div>
+            <div className="pp"><sup>€</sup>399<sup style={{fontSize:"0.5em",opacity:0.6}}>/mnd</sup></div>
+            <div className="pd">Voor serieuze groei</div>
             <ul className="pl">
               <li>Tot 10 pagina's</li><li>Custom design op maat</li>
-              <li>Geavanceerde contactfuncties</li><li>Hosting (1 jaar) + 10 GB opslag</li>
-              <li>SSL-certificaat</li><li>Volledige SEO-optimalisatie</li>
-              <li>Google Analytics koppeling</li><li>3x gratis aanpassingen achteraf</li>
+              <li>Geavanceerde functies</li><li>Maandelijkse optimalisaties</li>
+              <li>Prioriteit support</li><li>Volledige SEO optimalisatie</li>
+              <li>Conversie-tracking</li><li>Maandelijke strategie call</li>
             </ul>
-            <a href="#contact?pakket=Premium%20%E2%80%94%20%E2%82%AC1499" className="pb pb-out" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Premium%20%E2%80%94%20%E2%82%AC1499'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Start configuratie</a>
+            <a href="#contact?pakket=Premium%20%E2%80%94%20%E2%82%AC399" className="pb pb-out" onClick={e => { e.preventDefault(); window.location.hash = 'contact?pakket=Premium%20%E2%80%94%20%E2%82%AC399'; document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }); }}>Laten we groeien →</a>
           </div>
+        </div>
+        <div style={{textAlign:"center",marginTop:32,padding:"24px 20px",background:"rgba(0,194,255,0.08)",borderRadius:16,border:"1px solid rgba(0,194,255,0.2)"}}>
+          <p style={{color:"#0369a1",fontWeight:700,marginBottom:6}}>💡 Waarom abonnement en niet eenmalig?</p>
+          <p style={{color:"#0c4a6e",fontSize:"0.9rem"}}>Een website is geen product — het's een zaak. Je ziet wat werkt, we optimaliseren maandelijks, je groeit. Stopzetten? Geen probleem, geen boetes.</p>
         </div>
       </section>
 
