@@ -209,13 +209,11 @@ function WAWidget() {
 function ContactForm() {
   const [sent, setSent] = useState(false);
   const [pakket, setPakket] = useState(() => {
-    // Read preselected package from URL hash, e.g. #contact?pakket=Starter
     const hash = window.location.hash;
     const match = hash.match(/pakket=([^&]+)/);
     return match ? decodeURIComponent(match[1]) : "";
   });
 
-  // Listen for hash changes (when user clicks a pricing button)
   useEffect(() => {
     const onHash = () => {
       const hash = window.location.hash;
@@ -230,29 +228,33 @@ function ContactForm() {
     return (
       <div style={{ background: "#f0fdf4", border: "2px solid #10b981", borderRadius: 12, padding: 32, textAlign: "center" }}>
         <div style={{ fontSize: "2rem", marginBottom: 12 }}>✅</div>
-        <h3 style={{ color: "#065f46", marginBottom: 8 }}>Verstuurd!</h3>
-        <p style={{ color: "#047857" }}>We nemen binnen 24 uur contact op.</p>
+        <h3 style={{ color: "#065f46", marginBottom: 8 }}>Perfect! We bellen je.</h3>
+        <p style={{ color: "#047857", marginBottom: 12 }}>Binnen 1 uur nemen we contact op.</p>
+        <p style={{ color: "#047857", fontSize: "0.9rem", fontStyle: "italic" }}>Zorg dat je telefoon dichtbij ligt 📱</p>
       </div>
     );
   }
   return (
     <form onSubmit={e => { e.preventDefault(); setSent(true); }} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-        <input type="text" placeholder="Naam" required style={iStyle} />
-        <input type="text" placeholder="Bedrijfsnaam" style={iStyle} />
+      <div style={{background:"#eff6ff",border:"1px solid #bfdbfe",borderRadius:10,padding:12}}>
+        <p style={{fontSize:"0.82rem",color:"#0c4a6e",fontWeight:600}}>💬 Gegevens invullen, ik bel je met je quote</p>
       </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        <input type="text" placeholder="Voornaam" required style={iStyle} />
+        <input type="text" placeholder="Bedrijfsnaam" required style={iStyle} />
+      </div>
+      <input type="tel" placeholder="Telefoonnummer (ik bel je)" required style={iStyle} />
       <input type="email" placeholder="E-mailadres" required style={iStyle} />
-      <input type="tel" placeholder="Telefoonnummer" style={iStyle} />
       <select value={pakket} onChange={e => setPakket(e.target.value)} style={iStyle}>
-        <option value="">Welk pakket interesseert u?</option>
-        <option value="Starter — €399">Starter — €399</option>
-        <option value="Business — €799">Business — €799</option>
-        <option value="Premium — €1499">Premium — €1499</option>
+        <option value="">Welk pakket spreekt je aan?</option>
+        <option value="Basis — €149/mnd">Basis — €149/maand</option>
+        <option value="Professional — €249/mnd">Professional — €249/maand (populair)</option>
+        <option value="Premium — €399/mnd">Premium — €399/maand</option>
         <option value="Weet ik nog niet">Weet ik nog niet</option>
       </select>
-      <textarea placeholder="Vertel kort over uw bedrijf en wat u zoekt..." rows={4} style={{ ...iStyle, resize: "vertical" }} />
-      <button type="submit" style={{ background: "#1a73e8", color: "#fff", padding: "13px", borderRadius: 9, fontWeight: 700, fontSize: "0.93rem", border: "none", cursor: "pointer", width: "100%" }}>
-        Offerte aanvragen →
+      <textarea placeholder="Kort: Wat voor bedrijf? Wat willen je klanten zien?" rows={3} style={{ ...iStyle, resize: "vertical" }} />
+      <button type="submit" style={{ background: "#1a73e8", color: "#fff", padding: "13px", borderRadius: 9, fontWeight: 700, fontSize: "0.95rem", border: "none", cursor: "pointer", width: "100%", transition: "background 0.2s" }} onMouseOver={e => e.target.style.background = "#00c2ff"} onMouseOut={e => e.target.style.background = "#1a73e8"}>
+        Ja, bel me met info 📞
       </button>
     </form>
   );
