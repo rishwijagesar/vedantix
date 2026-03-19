@@ -357,8 +357,9 @@ export default function Home() {
             </div>
             <div className="pricing-card">
               <div className="pricing-name">Pro</div>
+              <div className="pricing-subtitle">Premium alles-inbegrepen</div>
               <div className="pricing-value">€249<sup>/m</sup></div>
-              <div className="pricing-setup">Setup: €1000</div>
+              <div className="pricing-setup">+ €1000 setup</div>
               <ul className="pricing-features">
                 <li>Tot 10 pagina's</li>
                 <li>Custom design</li>
