@@ -10,6 +10,7 @@ import Templates from './pages/Templates';
 import VedantixHome from './pages/VedantixHome';
 import VoorWie from './pages/VoorWie';
 import Voorwaarden from './pages/Voorwaarden';
+import FAQ from './pages/FAQ';
 
 function App() {
   return (
