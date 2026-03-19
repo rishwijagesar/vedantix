@@ -101,7 +101,7 @@ export default function Home() {
         .roi-conclusion{text-align:center;font-size:0.96rem;color:#666;line-height:1.7;font-weight:500}
         
         /* WHY SUBSCRIPTION */
-        .why{background:#fff;padding:120px 5%}
+        .why{background:#f9fafb;padding:80px 5%}
         .why-container{max-width:1000px;margin:0 auto}
         .why-intro{color:#666;margin-bottom:64px;max-width:720px;font-size:1rem;line-height:1.6}
         .why-content{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
