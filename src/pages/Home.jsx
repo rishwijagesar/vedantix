@@ -126,14 +126,14 @@ export default function Home() {
         .step p{font-size:0.89rem;color:#666;line-height:1.65}
         
         /* URGENCY */
-        .urgency{background:#1a1a2e;color:#fff;padding:48px 40px;text-align:center;margin:0 0 32px;border-radius:12px;max-width:700px;margin-left:auto;margin-right:auto}
-        .urgency h3{color:#fff;font-size:1.4rem;margin-bottom:12px}
-        .urgency p{color:rgba(255,255,255,0.85);font-size:0.95rem;max-width:600px;margin:0 auto}
+        .urgency{background:#1a1a2e;color:#fff;padding:48px 40px;text-align:center;margin:0 0 32px;border-radius:14px;max-width:720px;margin-left:auto;margin-right:auto;box-shadow:0 8px 24px rgba(26,26,46,0.15)}
+        .urgency h3{color:#fff;font-size:1.35rem;margin-bottom:10px;font-weight:800}
+        .urgency p{color:rgba(255,255,255,0.8);font-size:0.93rem;max-width:620px;margin:0 auto;line-height:1.6}
         
         /* GUARANTEE */
-        .guarantee{background:#f0f6fb;border-left:4px solid #2d73b1;padding:28px 24px;border-radius:8px;margin:0 auto;max-width:700px;margin-left:auto;margin-right:auto}
-        .guarantee strong{color:#1a5a7a;display:block;margin-bottom:6px;font-size:0.95rem}
-        .guarantee p{color:#2c3e50;font-size:0.9rem;margin:0}
+        .guarantee{background:#f0f9ff;border-left:4px solid #1a73e8;padding:28px 24px;border-radius:12px;margin:0 auto;max-width:720px;margin-left:auto;margin-right:auto}
+        .guarantee strong{color:#0369a1;display:block;margin-bottom:6px;font-size:0.94rem}
+        .guarantee p{color:#2c3e50;font-size:0.89rem;margin:0;line-height:1.6}
         
         /* FINAL CTA */
         .cta{background:#1a1a2e;color:#fff;text-align:center;padding:90px 5%}
