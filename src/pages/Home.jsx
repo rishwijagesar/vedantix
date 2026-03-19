@@ -133,7 +133,7 @@ export default function Home() {
         .guarantee p{color:#2c3e50;font-size:0.9rem;margin:0}
         
         /* FINAL CTA */
-        .cta{background:#1a1a2e;color:#fff;text-align:center;padding:120px 5%}
+        .cta{background:#1a1a2e;color:#fff;text-align:center;padding:90px 5%}
         .cta h2{color:#fff;margin-bottom:20px}
         .cta p{font-size:1rem;color:rgba(255,255,255,0.85);max-width:620px;margin:16px auto 48px}
         .cta-buttons{display:flex;gap:16px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
