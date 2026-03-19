@@ -100,14 +100,14 @@ export default function Home() {
         
         /* ROI */
         .roi{background:#f9fafb;padding:100px 5%}
-        .roi-content{max-width:700px;margin:0 auto}
-        .roi-content h2{margin-bottom:24px;text-align:center}
-        .roi-intro{text-align:center;color:#666;margin-bottom:48px;font-size:1rem}
-        .roi-compare{display:grid;grid-template-columns:1fr 1fr;gap:32px;text-align:center;margin-bottom:40px}
-        .roi-box{padding:32px;border-radius:12px;background:#fff;border:1px solid #e8e8e8}
-        .roi-label{font-size:0.85rem;color:#999;font-weight:600;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px}
-        .roi-value{font-size:2.2rem;font-weight:900;color:#1a1a2e}
-        .roi-conclusion{text-align:center;font-size:0.95rem;color:#555;line-height:1.6}
+        .roi-content{max-width:680px;margin:0 auto}
+        .roi-content h2{margin-bottom:20px;text-align:center}
+        .roi-intro{text-align:center;color:#666;margin-bottom:52px;font-size:1rem;line-height:1.6}
+        .roi-compare{display:grid;grid-template-columns:1fr 1fr;gap:40px;text-align:center;margin-bottom:48px;align-items:center}
+        .roi-box{text-align:center}
+        .roi-label{font-size:0.8rem;color:#aaa;font-weight:600;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.6px}
+        .roi-value{font-size:2.6rem;font-weight:900;color:#1a1a2e;line-height:1}
+        .roi-conclusion{text-align:center;font-size:0.96rem;color:#666;line-height:1.7;font-weight:500}
         
         /* WHY SUBSCRIPTION */
         .why{background:#fff;padding:120px 5%}
