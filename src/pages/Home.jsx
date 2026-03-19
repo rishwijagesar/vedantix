@@ -22,8 +22,8 @@ export default function Home() {
         *{box-sizing:border-box;margin:0;padding:0}
         html{scroll-behavior:smooth}
         body{margin:0;padding:0}
-        .btn-primary{background:#1a1a2e;color:#fff;padding:14px 36px;border-radius:8px;font-weight:700;font-size:0.95rem;text-decoration:none;display:inline-block;transition:all 0.3s;border:none;cursor:pointer;box-shadow:0 2px 8px rgba(26,26,46,0.15)}
-        .btn-primary:hover{background:#2d2d4e;transform:translateY(-2px)}
+        .btn-primary{background:#1a1a2e;color:#fff;padding:13px 32px;border-radius:8px;font-weight:700;font-size:0.94rem;text-decoration:none;display:inline-block;transition:all 0.2s cubic-bezier(0.4,0,0.2,1);border:none;cursor:pointer;box-shadow:0 4px 12px rgba(26,26,46,0.15)}
+        .btn-primary:hover{background:#2d2d4e;transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,26,46,0.2)}
         .btn-secondary{background:transparent;color:#1a1a2e;border:2px solid #1a1a2e;padding:12px 34px;border-radius:8px;font-weight:700;font-size:0.95rem;text-decoration:none;display:inline-block;transition:all 0.3s;cursor:pointer}
         .btn-secondary:hover{background:#1a1a2e;color:#fff}
         
