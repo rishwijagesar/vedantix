@@ -79,14 +79,14 @@ export default function Home() {
         .pricing-card:hover{border-color:#2d73b1;transform:translateY(-3px);box-shadow:0 12px 40px rgba(45,115,177,0.08)}
         .pricing-card.featured{border-color:#2d73b1;background:linear-gradient(135deg,#f0f6fb 0%,#f9fbfd 100%);transform:scale(1.05);box-shadow:0 20px 60px rgba(45,115,177,0.15)}
         .pricing-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:#2d73b1;color:#fff;padding:6px 18px;border-radius:100px;font-weight:700;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px}
-        .pricing-name{font-size:1.3rem;font-weight:800;color:#1a1a2e;margin-bottom:4px}
-        .pricing-subtitle{font-size:0.85rem;color:#999;margin-bottom:16px;font-weight:500}
-        .pricing-value{font-size:2.8rem;font-weight:900;color:#1a1a2e;margin-bottom:4px}
-        .pricing-value sup{font-size:1rem;font-weight:600}
-        .pricing-setup{font-size:0.8rem;color:#aaa;margin-bottom:28px;font-weight:500}
-        .pricing-features{list-style:none;padding:0;margin-bottom:32px;display:flex;flex-direction:column;gap:12px}
-        .pricing-features li{font-size:0.9rem;color:#555;display:flex;gap:10px;align-items:flex-start}
-        .pricing-features li:before{content:"✓";color:#2d73b1;font-weight:900;flex-shrink:0}
+        .pricing-name{font-size:1.35rem;font-weight:900;color:#1a1a2e;margin-bottom:6px;letter-spacing:-0.3px}
+        .pricing-subtitle{font-size:0.82rem;color:#94a3b8;margin-bottom:20px;font-weight:600;line-height:1.4}
+        .pricing-value{font-size:2.9rem;font-weight:900;color:#1a1a2e;margin-bottom:2px;letter-spacing:-1px}
+        .pricing-value sup{font-size:1rem;font-weight:700}
+        .pricing-setup{font-size:0.8rem;color:#94a3b8;margin-bottom:32px;font-weight:500}
+        .pricing-features{list-style:none;padding:0;margin-bottom:36px;display:flex;flex-direction:column;gap:14px}
+        .pricing-features li{font-size:0.91rem;color:#555;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+        .pricing-features li:before{content:"✓";color:#2d73b1;font-weight:900;flex-shrink:0;margin-top:2px}
         
         /* ROI */
         .roi{background:#f9fafb;padding:100px 5%}
