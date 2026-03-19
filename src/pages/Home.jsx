@@ -361,15 +361,15 @@ export default function Home() {
             </div>
             <div className="pricing-card">
               <div className="pricing-name">Pro</div>
-              <div className="pricing-subtitle">Premium alles-inbegrepen</div>
+              <div className="pricing-subtitle">Voor bedrijven die serieus willen groeien</div>
               <div className="pricing-value">€249<sup>/m</sup></div>
               <div className="pricing-setup">+ €1000 setup</div>
               <ul className="pricing-features">
                 <li>Tot 10 pagina's</li>
-                <li>Custom design</li>
-                <li>Alle functies</li>
-                <li>Hosting & domein</li>
-                <li>Volledige SEO</li>
+                <li>Custom design op maat</li>
+                <li>Geavanceerde functies</li>
+                <li>Hosting & domein inbegrepen</li>
+                <li>Volledige SEO optimalisatie</li>
                 <li>Priority support</li>
               </ul>
               <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Start met Pro →</a>
