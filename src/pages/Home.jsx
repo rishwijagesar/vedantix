@@ -389,7 +389,7 @@ export default function Home() {
                 <li>Maandelijks rapport</li>
                 <li>Email & telefoon support</li>
               </ul>
-              <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Ga live met Growth →</a>
+              <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Start met Growth →</a>
             </div>
             <div className="pricing-card">
               <div className="pricing-name">Pro</div>
