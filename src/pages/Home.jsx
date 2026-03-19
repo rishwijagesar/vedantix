@@ -77,11 +77,11 @@ export default function Home() {
         .results-note{font-size:1rem;margin-top:60px;color:rgba(255,255,255,0.85);font-weight:600;color:#4db8ff}
         
         /* PRICING */
-        .pricing{background:#f9fafb;padding:90px 5%}
-        .pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px;max-width:1000px;margin-left:auto;margin-right:auto}
-        .pricing-card{border:1px solid #e8e8e8;border-radius:16px;padding:48px 36px;transition:all 0.3s;position:relative;background:#fff}
-        .pricing-card:hover{border-color:#2d73b1;transform:translateY(-3px);box-shadow:0 12px 40px rgba(45,115,177,0.08)}
-        .pricing-card.featured{border-color:#2d73b1;background:linear-gradient(135deg,#f0f6fb 0%,#f9fbfd 100%);transform:scale(1.05);box-shadow:0 20px 60px rgba(45,115,177,0.15)}
+        .pricing{background:#fff;padding:90px 5%}
+        .pricing-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:56px;max-width:1050px;margin-left:auto;margin-right:auto}
+        .pricing-card{border:1px solid #e5e7eb;border-radius:16px;padding:48px 36px;transition:all 0.25s;position:relative;background:#fff}
+        .pricing-card:hover{border-color:#1a73e8;transform:translateY(-4px);box-shadow:0 12px 48px rgba(26,115,232,0.08)}
+        .pricing-card.featured{border-color:#1a73e8;background:linear-gradient(135deg,#eff6ff 0%,#f0f9ff 100%);transform:scale(1.06);box-shadow:0 24px 64px rgba(26,115,232,0.12)}
         .pricing-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#2d73b1;color:#fff;padding:5px 16px;border-radius:100px;font-weight:700;font-size:0.73rem;text-transform:uppercase;letter-spacing:0.6px;box-shadow:0 4px 12px rgba(45,115,177,0.25)}
         .pricing-name{font-size:1.35rem;font-weight:900;color:#1a1a2e;margin-bottom:6px;letter-spacing:-0.3px}
         .pricing-subtitle{font-size:0.82rem;color:#94a3b8;margin-bottom:20px;font-weight:600;line-height:1.4}
