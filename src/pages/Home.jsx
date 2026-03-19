@@ -479,17 +479,17 @@ export default function Home() {
       <section id="waarom" className="why-sec">
         <div className="center">
           <span className="tag">Waarom Vedantix</span>
-          <h2>Snel, betaalbaar en professioneel</h2>
-          <p className="sub">Wij doen het anders dan grote bureaus.</p>
+          <h2>Jij focust op je bedrijf.<br/>Wij zorgen voor je website.</h2>
+          <p className="sub">Terwijl andere bedrijven maanden wachten, ben jij al online en klanten aantrekken.</p>
         </div>
         <div className="wgrid">
           {[
-            ["⚡","Levering binnen 48 uur","Geen weken wachten. Jouw website is live voordat jij het weet."],
-            ["💰","Eerlijke prijzen","Geen verborgen kosten of dure abonnementen. Eenmalig betalen, klaar."],
-            ["📱","100% mobielvriendelijk","Elke website werkt perfect op telefoon, tablet en computer."],
-            ["🔒","Hosting & SSL inbegrepen","Wij regelen domein, hosting en beveiliging. Jij hoeft niets te doen."],
-            ["🛠️","Aanpassingen op aanvraag","Wil je later iets veranderen? Snel en goedkoop geregeld."],
-            ["🤝","Persoonlijk contact","Je hebt altijd direct contact met ons team. Geen callcenters."],
+            ["⚡","48 uur live","Maandag praten, donderdag online. Geen gedoe."],
+            ["🔓","Geen technisch gedoe","Jij hoeft niks met servers, updates of SSL. Wij doen alles."],
+            ["📱","Werkt op alles","Telefoon, tablet, computer. Perfect. Altijd."],
+            ["🎯","Klanten vinden jou","Ingericht voor conversie. Je website werkt voor je."],
+            ["💪","We groeien samen","Maandelijks zien we wat werkt. We optimaliseren samen."],
+            ["🤝","Direct contact","Geen callcenters. Je belt ons, we pikken op."],
           ].map(([ic, h, p]) => (
             <div key={h} className="wyc">
               <span className="ic">{ic}</span>
