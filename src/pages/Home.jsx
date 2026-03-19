@@ -204,16 +204,20 @@ export default function Home() {
       <section className="hero">
         <div className="hero-container">
           <div className="hero-content">
-            <h1>Meer klanten via je website — binnen 48 uur</h1>
-            <p>Wij bouwen jouw website, zetten alles live en regelen hosting, updates en onderhoud. Jij focust op je bedrijf.</p>
+            <h1>Je website die klanten oplevert — binnen 48 uur live</h1>
+            <p>Wij bouwen, lanceren en onderhouden. Jij krijgt klanten. Geen gedoe, geen vervelende developers. Pure focus op je bedrijf.</p>
             <div className="hero-bullets">
-              <span>48 uur online</span>
-              <span>Alles inbegrepen</span>
+              <span>Online in 48 uur</span>
+              <span>Alles geregeld voor je</span>
               <span>Geen technisch gedoe</span>
             </div>
             <div className="hero-ctas">
               <a href="#pricing" className="btn-primary">Start je website →</a>
-              <a href="#cta" className="btn-secondary">Gratis gesprek</a>
+              <a href="#cta" className="btn-secondary">Gratis kennismaking</a>
+            </div>
+            <div style={{ marginTop: 20, paddingTop: 20, borderTop: "1px solid rgba(26,26,46,0.1)", display: "flex", gap: 20, fontSize: "0.82rem", color: "#666", fontWeight: 500 }}>
+              <span>✓ Al gebruikt door 50+ lokale bedrijven</span>
+              <span>✓ 7 dagen geld-terug garantie</span>
             </div>
           </div>
           <div className="hero-visual">
