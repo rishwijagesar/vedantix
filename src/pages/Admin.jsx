@@ -817,6 +817,9 @@ export default function Admin() {
         {tab === "chat" && (
           <div>
             <h2 style={{fontWeight:800,fontSize:"1.15rem",marginBottom:20}}>💬 Live chat inbox</h2>
+            <div style={{marginBottom:24}}>
+              <ChatAvailabilitySettings />
+            </div>
             <ChatInbox />
           </div>
         )}
