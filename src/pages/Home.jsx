@@ -61,7 +61,7 @@ function Nav() {
         @media(max-width:768px){.vd-menu{display:none}.vd-hbg{display:flex}}
       `}</style>
       <nav className="vd-nav">
-        <a href="/VedantixHome" className="vd-logo">Vedantix</a>
+        <a href="/Home" className="vd-logo">Vedantix</a>
         <ul className="vd-menu">
           {NAV_MENUS.map(m => (
             <li key={m.label} className="vd-menu-item"
