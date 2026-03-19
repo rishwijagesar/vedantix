@@ -294,9 +294,9 @@ export default function Home() {
         <div className="section-container">
           <h2>Wij zorgen dat jouw website klanten oplevert</h2>
           <p className="section-intro">Website + hosting + updates + onderhoud. Alles in één. Nul zorgen.</p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 60, alignItems: "start" }}>
-            <div className="solution-text">
-              <h3>Wat je krijgt</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64, alignItems: "start", maxWidth: 900, margin: "0 auto" }}>
+            <div style={{ padding: "40px", background: "#fff", borderRadius: 16, border: "1px solid #e5e7eb" }}>
+              <h3 style={{ color: "#2d73b1", marginBottom: 28, fontSize: "1.05rem" }}>✓ Wat je krijgt</h3>
               <div className="solution-list">
                 <div className="solution-list-item"><span>Website live in 48 uur</span></div>
                 <div className="solution-list-item"><span>100% mobiel-vriendelijk</span></div>
@@ -306,9 +306,9 @@ export default function Home() {
                 <div className="solution-list-item"><span>Alles gericht op meer klanten</span></div>
               </div>
             </div>
-            <div className="solution-text">
-              <h3>Wat je niet meer doet</h3>
-              <div className="solution-list">
+            <div style={{ padding: "40px", background: "#f0f6fb", borderRadius: 16, border: "1px solid rgba(45,115,177,0.15)" }}>
+              <h3 style={{ color: "#0d5a8f", marginBottom: 28, fontSize: "1.05rem" }}>👍 Wat je niet meer doet</h3>
+              <div className="solution-list" style={{ color: "#0c4a6e" }}>
                 <div className="solution-list-item"><span>Nooit meer naar developers bellen</span></div>
                 <div className="solution-list-item"><span>Geen technische problemen meer</span></div>
                 <div className="solution-list-item"><span>Geen gedoe met hosting</span></div>
