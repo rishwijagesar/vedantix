@@ -335,25 +335,30 @@ export default function Home() {
         <div className="section-container">
           <h2>Dit levert het jou op</h2>
           <p className="results-intro">Stop met klanten verliezen. Begin met klanten winnen.</p>
-          <div className="results-grid">
-            <div className="result-item">
-              <strong>+Afspraken</strong>
-              <span>Direct geboekt</span>
+          
+          {/* Top row: 3 main outcomes */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 40, maxWidth: 900, margin: "0 auto 56px", textAlign: "center" }}>
+            <div>
+              <strong style={{ display: "block", fontSize: "2.6rem", color: "#4db8ff", font: "weight 900", marginBottom: 8, letterSpacing: "-1px" }}>+Afspraken</strong>
+              <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.9rem", fontWeight: 500 }}>Direct geboekt</span>
             </div>
-            <div className="result-item">
-              <strong>+Aanvragen</strong>
-              <span>Via formulier</span>
+            <div>
+              <strong style={{ display: "block", fontSize: "2.6rem", color: "#4db8ff", fontWeight: 900, marginBottom: 8, letterSpacing: "-1px" }}>+Aanvragen</strong>
+              <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.9rem", fontWeight: 500 }}>Via formulier</span>
             </div>
-            <div className="result-item">
-              <strong>+Omzet</strong>
-              <span>Extra klanten</span>
-            </div>
-            <div className="result-item">
-              <strong>0 Gedoe</strong>
-              <span>Wij regelen het</span>
+            <div>
+              <strong style={{ display: "block", fontSize: "2.6rem", color: "#4db8ff", fontWeight: 900, marginBottom: 8, letterSpacing: "-1px" }}>+Klanten</strong>
+              <span style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.9rem", fontWeight: 500 }}>Extra klanten</span>
             </div>
           </div>
-          <p className="results-note">1–2 extra klanten per maand betaalt je hele website. Daarna is het puur winst.</p>
+
+          {/* Bottom row: secondary benefit */}
+          <div style={{ textAlign: "center", marginBottom: 40, paddingTop: 40, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
+            <strong style={{ display: "block", fontSize: "1.8rem", color: "#fff", fontWeight: 900, marginBottom: 6, letterSpacing: "-0.5px" }}>0 Gedoe</strong>
+            <span style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.9rem", fontWeight: 500 }}>Wij regelen alles</span>
+          </div>
+
+          <p className="results-note" style={{ marginTop: 20 }}>1–2 extra klanten per maand betaalt je hele website. Daarna is het puur winst.</p>
         </div>
       </section>
 
