@@ -411,19 +411,25 @@ export default function Home() {
       {/* 7. ROI */}
       <section className="roi">
         <div className="roi-content">
-          <h2>📊 Wat is de ROI?</h2>
+          <h2 style={{ marginBottom: 16 }}>💰 Dit is je ROI</h2>
           <p className="roi-intro">Je hebt maar 1–2 extra klanten per maand nodig om je website terug te verdienen.</p>
-          <div className="roi-compare">
-            <div className="roi-box">
-              <div className="roi-label">Jij betaalt:</div>
-              <div className="roi-value">€149</div>
-            </div>
-            <div className="roi-box">
-              <div className="roi-label">Jij verdient:</div>
-              <div className="roi-value">€100–500+</div>
+          <div style={{ background: "#fff", border: "2px solid #e5e7eb", borderRadius: 20, padding: "48px 40px", marginBottom: 40, textAlign: "center" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 40, alignItems: "center" }}>
+              <div>
+                <div className="roi-label" style={{ marginBottom: 16 }}>Je maandelijkse investering</div>
+                <div style={{ fontSize: "3.2rem", fontWeight: 900, color: "#1a1a2e", letterSpacing: "-1px" }}>€149<span style={{ fontSize: "1.2rem", fontWeight: 600, color: "#888" }}>/m</span></div>
+              </div>
+              <div style={{ textAlign: "center", position: "relative" }}>
+                <div style={{ fontSize: "2rem", fontWeight: 900, color: "#2d73b1" }}>→</div>
+              </div>
+              <div style={{ gridColumn: "2", textAlign: "center" }}>
+                <div className="roi-label" style={{ marginBottom: 16 }}>Je potentiële winst</div>
+                <div style={{ fontSize: "3.2rem", fontWeight: 900, color: "#10b981", letterSpacing: "-1px" }}>€500–2000+</div>
+                <div style={{ fontSize: "0.85rem", color: "#6b7280", fontWeight: 500, marginTop: 8 }}>per maand</div>
+              </div>
             </div>
           </div>
-          <p className="roi-conclusion">Website betaalt zich terug in maand 1. Daarna is het puur winst.</p>
+          <p className="roi-conclusion" style={{ fontSize: "1.05rem", fontWeight: 600 }}>Website betaalt zich terug in maand 1. Daarna is het puur winst.</p>
         </div>
       </section>
 
