@@ -372,7 +372,7 @@ export default function Home() {
                 <li>Volledige SEO</li>
                 <li>Priority support</li>
               </ul>
-              <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Kies Pro</a>
+              <a href="#cta" className="btn-primary" style={{ width: "100%", textAlign: "center", display: "block" }}>Start met Pro →</a>
             </div>
           </div>
         </div>
