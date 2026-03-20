@@ -1,8 +1,15 @@
 import { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import FinancieelItemModal from "./FinancieelItemModal";
 
 const Payment = base44.entities.Payment;
+const FinancieelItem = base44.entities.FinancieelItem;
+
+const HERHALING_DAGEN = {
+  dagelijks: 1, wekelijks: 7, maandelijks: 30,
+  kwartaal: 90, halfjaar: 180, jaarlijks: 365
+};
 
 const FILTERS = [
   { label: "Vandaag", value: "1d", days: 1 },
