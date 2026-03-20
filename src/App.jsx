@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Pages
 import Home from './pages/Home';
@@ -15,6 +15,14 @@ import Voorwaarden from './pages/Voorwaarden';
 import FAQ from './pages/FAQ';
 import AdminCRM from './pages/AdminCRM.jsx';
 import KlantenPortaal from './pages/KlantenPortaal.jsx';
+
+// SEO pages
+import WebsiteKapper from './pages/WebsiteKapper';
+import WebsiteSalon from './pages/WebsiteSalon';
+import WebsiteKlusbedrijf from './pages/WebsiteKlusbedrijf';
+import WebsiteRestaurant from './pages/WebsiteRestaurant';
+import WebsiteFotograaf from './pages/WebsiteFotograaf';
+import WebsiteSchoonmaakbedrijf from './pages/WebsiteSchoonmaakbedrijf';
 
 const queryClient = new QueryClient();
 
@@ -37,6 +45,14 @@ function App() {
           <Route path="/Voorwaarden" element={<Voorwaarden />} />
           <Route path="/FAQ" element={<FAQ />} />
 
+          {/* SEO landing pages */}
+          <Route path="/website-kapper" element={<WebsiteKapper />} />
+          <Route path="/website-salon" element={<WebsiteSalon />} />
+          <Route path="/website-klusbedrijf" element={<WebsiteKlusbedrijf />} />
+          <Route path="/website-restaurant" element={<WebsiteRestaurant />} />
+          <Route path="/website-fotograaf" element={<WebsiteFotograaf />} />
+          <Route path="/website-schoonmaakbedrijf" element={<WebsiteSchoonmaakbedrijf />} />
+
           {/* PROTECTED - auth handled inside each page */}
           <Route path="/admin" element={<AdminCRM />} />
           <Route path="/klantenportaal" element={<KlantenPortaal />} />
@@ -50,4 +66,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
