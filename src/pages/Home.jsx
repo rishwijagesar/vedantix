@@ -161,14 +161,21 @@ export default function Home() {
         .trust-icon{font-size:0.95rem}
 
         /* ROI */
-        .roi-section{padding:100px 5%;background:#fff}
-        .roi-box{background:linear-gradient(160deg,#0d1a3a,#111827);border-radius:24px;padding:64px;max-width:800px;margin:0 auto;text-align:center}
-        .roi-vs{display:grid;grid-template-columns:1fr auto 1fr;gap:32px;align-items:center;margin:40px 0}
-        .roi-col{text-align:center}
-        .roi-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.4);margin-bottom:12px}
-        .roi-num{font-size:2.8rem;font-weight:900;letter-spacing:-2px;line-height:1}
-        .roi-arrow{font-size:1.6rem;color:rgba(255,255,255,0.25)}
-        .roi-conclusion{font-size:0.88rem;color:rgba(255,255,255,0.5);line-height:1.7;max-width:480px;margin:0 auto}
+        .roi-section{padding:120px 5%;background:#fff}
+        .roi-inner{max-width:740px;margin:0 auto;text-align:center}
+        .roi-title{font-size:clamp(1.8rem,3vw,2.4rem);font-weight:900;color:#0f172a;letter-spacing:-1px;line-height:1.15;margin-bottom:16px}
+        .roi-subtitle{font-size:0.97rem;color:#6b7280;line-height:1.7;max-width:460px;margin:0 auto 64px}
+        .roi-comparison{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:48px}
+        .roi-block{flex:1;max-width:240px}
+        .roi-value{font-size:clamp(2.4rem,5vw,3.6rem);font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:10px}
+        .roi-value.invest{color:#0f172a}
+        .roi-value.gain{color:#16a34a}
+        .roi-block-label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:#9ca3af}
+        .roi-divider{display:flex;flex-direction:column;align-items:center;gap:4px;padding:0 32px;flex-shrink:0}
+        .roi-arrow-line{width:48px;height:2px;background:linear-gradient(90deg,#e5e7eb,#6366f1)}
+        .roi-arrow-head{width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:8px solid #6366f1;margin-left:-1px}
+        .roi-bottom-line{font-size:1rem;font-weight:700;color:#0f172a;margin-bottom:8px}
+        .roi-note{font-size:0.78rem;color:#d1d5db}
 
         /* WHY */
         .why-section{padding:100px 5%;background:#f9fafb}
