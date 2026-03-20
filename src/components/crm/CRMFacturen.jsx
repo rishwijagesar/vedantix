@@ -81,7 +81,10 @@ export default function CRMFacturen() {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
         <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0f172a" }}>Facturen</h1>
-        <button onClick={() => setShowNew(true)} style={{ background: "#1e3a5f", color: "#fff", border: "none", borderRadius: 10, padding: "11px 20px", fontWeight: 700, fontSize: "0.88rem", cursor: "pointer" }}>+ Nieuwe factuur</button>
+        <div style={{ display: "flex", gap: 10 }}>
+          <ExportButton onExportCSV={handleExportCSV} onExportPDF={handleExportPDF} />
+          <button onClick={() => setShowNew(true)} style={{ background: "#1e3a5f", color: "#fff", border: "none", borderRadius: 10, padding: "11px 20px", fontWeight: 700, fontSize: "0.88rem", cursor: "pointer" }}>+ Nieuwe factuur</button>
+        </div>
       </div>
 
       {/* Summary */}
