@@ -189,11 +189,12 @@ export default function CRMFinancien() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 14, marginBottom: 28 }}>
         <StatCard label="Omzet (incl. BTW)" value={fmt(omzet)} icon="💰" color="#10b981" sub="Betaalde facturen" />
         <StatCard label="Omzet (excl. BTW)" value={fmt(omzetExclBtw)} icon="📊" color="#3b82f6" sub="Netto ontvangen" />
+        <StatCard label="Extra inkomsten" value={fmt(extraInkomsten)} icon="➕" color="#06b6d4" sub="Handmatig toegevoegd" />
+        <StatCard label="Uitgaven" value={fmt(totaalUitgaven)} icon="💸" color="#ef4444" sub="Handmatig toegevoegd" />
         <StatCard label="Openstaand" value={fmt(openstaand)} icon="⏳" color="#f59e0b" sub={`${filtered.filter(f => f.status === "openstaand").length} facturen`} />
-        <StatCard label="Verlopen" value={fmt(verlopen)} icon="⚠️" color="#ef4444" sub="Niet betaald" />
         <StatCard label="BTW afdracht" value={fmt(btwAfdracht)} icon="🏛️" color="#8b5cf6" sub="Af te dragen aan Belastingdienst" />
-        <StatCard label="IB schatting" value={fmt(ibSchatting)} icon="📋" color="#f97316" sub="~36.85% over netto" />
-        <StatCard label="Netto winst" value={fmt(nettoWinst)} icon="✅" color="#10b981" sub="Na BTW & IB schatting" />
+        <StatCard label="IB schatting" value={fmt(ibSchatting)} icon="📋" color="#f97316" sub="~36.85% over winst" />
+        <StatCard label="Netto winst" value={fmt(nettoWinst)} icon="✅" color="#10b981" sub="Na BTW, uitgaven & IB" />
       </div>
 
       {/* Chart */}
