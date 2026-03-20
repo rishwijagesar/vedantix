@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import KlantModal from "./KlantModal";
+import ExportButton, { exportToCSV, exportToPDF } from "./ExportButton";
 
 const CustomerProfile = base44.entities.CustomerProfile;
 
