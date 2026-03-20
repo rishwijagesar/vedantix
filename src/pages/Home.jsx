@@ -452,15 +452,15 @@ export default function Home() {
       <section className="results-section">
         <div className="section-wrap">
           <div className="section-header">
-            <div className="section-label">Dit levert het op</div>
-            <h2 className="section-h2">Stop met klanten verliezen</h2>
-            <p className="section-p">1–2 extra klanten per maand betaalt je hele website. Daarna is het puur winst.</p>
+            <div className="section-label">Bewezen resultaten</div>
+            <h2 className="section-h2">Wat onze klanten gemiddeld zien</h2>
+            <p className="section-p">Concrete cijfers van lokale ondernemers die bij ons een website namen.</p>
           </div>
           <div className="results-row">
             {[
-              ["+Afspraken","Direct geboekt via jouw site"],
-              ["+Aanvragen","Via contactformulier"],
-              ["0 Gedoe","Wij regelen alles"],
+              ["+4","Extra afspraken per week"],
+              ["+€800","Extra omzet per maand"],
+              ["48u","Van gesprek naar live website"],
             ].map(([n, l]) => (
               <div key={n} className="result-item">
                 <div className="result-num">{n}</div>
