@@ -11,6 +11,8 @@ import VedantixHome from './pages/VedantixHome';
 import VoorWie from './pages/VoorWie';
 import Voorwaarden from './pages/Voorwaarden';
 import FAQ from './pages/FAQ';
+import CRM from './pages/CRM';
+import ClientPortal from './pages/ClientPortal';
 
 function App() {
   return (
