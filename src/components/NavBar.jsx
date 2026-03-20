@@ -190,7 +190,7 @@ export default function NavBar() {
       </nav>
 
       {/* Top spacing */}
-      <div style={{ height: 60 }} />
+      <div style={{ height: 0 }} />
     </>
   );
 }
