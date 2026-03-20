@@ -46,7 +46,7 @@ export default function VedantixLogo({
         <line
           x1="10" y1="11"
           x2="20" y2="29"
-          stroke="white"
+          stroke={c.iconStroke}
           strokeWidth="2.8"
           strokeLinecap="round"
         />
@@ -54,7 +54,7 @@ export default function VedantixLogo({
         <line
           x1="30" y1="11"
           x2="20" y2="29"
-          stroke="white"
+          stroke={c.iconStroke}
           strokeWidth="2.8"
           strokeLinecap="round"
         />
