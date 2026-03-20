@@ -440,12 +440,10 @@ export default function Home() {
 
       {/* ─── 5. TESTIMONIALS ─── */}
       <section className="testimonials-section">
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", maxWidth: 560, margin: "0 auto 48px" }}>
-            <div className="section-label" style={{ textAlign: "center" }}>Wat klanten zeggen</div>
-            <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "#111827", letterSpacing: "-0.5px" }}>
-              Ondernemers zoals jij gingen je voor
-            </h2>
+        <div className="section-wrap">
+          <div className="section-header centered">
+            <div className="section-label">Wat klanten zeggen</div>
+            <h2 className="section-h2">Ondernemers zoals jij gingen je voor</h2>
           </div>
           <div className="testimonials-grid">
             {[
