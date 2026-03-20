@@ -3,29 +3,31 @@ import NavBar from "../components/NavBar";
 import { niches, cities, blogPosts } from "../data/seoData";
 
 function prettyNicheLabel(key) {
-  return niches[key]?.label || key;
+  return niches[key]?.label ?? key;
 }
 
 export default function SeoCityPage() {
   const { niche, stad } = useParams();
 
   const nicheData = niches[niche];
-  const cityData = cities.find((c) => c.slug === stad);
+  const cityData = cities.find((city) => city.slug === stad);
 
   if (!nicheData || !cityData) {
-    return <Navigate to="/Home" replace />;
+    return <Navigate to="/" replace />;
   }
 
   const stadNaam = cityData.name;
-  const relatedCities = cities.filter((c) => c.slug !== stad).slice(0, 6);
-  const relatedBlogs = blogPosts.filter((p) => p.niche === niche).slice(0, 3);
+  const relatedCities = cities.filter((city) => city.slug !== stad).slice(0, 6);
+  const relatedBlogs = blogPosts.filter((post) => post.niche === niche).slice(0, 3);
 
   return (
     <div style={{ maxWidth: 980, margin: "0 auto", padding: "40px 20px" }}>
       <NavBar />
 
       <div style={{ marginBottom: 18, fontSize: 14, color: "#6b7280" }}>
-        <Link to="/Home" style={{ color: "#6b7280", textDecoration: "none" }}>Home</Link>
+        <Link to="/" style={{ color: "#6b7280", textDecoration: "none" }}>
+          Home
+        </Link>
         {" / "}
         <span>{prettyNicheLabel(niche)}</span>
         {" / "}
@@ -40,7 +42,9 @@ export default function SeoCityPage() {
         {nicheData.intro(stadNaam)}
       </p>
 
-      <h2 style={{ marginTop: 28, marginBottom: 12 }}>{nicheData.section1Title(stadNaam)}</h2>
+      <h2 style={{ marginTop: 28, marginBottom: 12 }}>
+        {nicheData.section1Title(stadNaam)}
+      </h2>
       <p style={{ color: "#4b5563", lineHeight: 1.8, marginBottom: 16 }}>
         {nicheData.section1Text(stadNaam)}
       </p>
@@ -51,7 +55,9 @@ export default function SeoCityPage() {
         ))}
       </ul>
 
-      <h2 style={{ marginTop: 28, marginBottom: 12 }}>{nicheData.section2Title(stadNaam)}</h2>
+      <h2 style={{ marginTop: 28, marginBottom: 12 }}>
+        {nicheData.section2Title(stadNaam)}
+      </h2>
       <p style={{ color: "#4b5563", lineHeight: 1.8, marginBottom: 16 }}>
         {nicheData.section2Text(stadNaam)}
       </p>
@@ -62,7 +68,9 @@ export default function SeoCityPage() {
         ))}
       </ul>
 
-      <h2 style={{ marginTop: 28, marginBottom: 12 }}>{nicheData.section3Title(stadNaam)}</h2>
+      <h2 style={{ marginTop: 28, marginBottom: 12 }}>
+        {nicheData.section3Title(stadNaam)}
+      </h2>
       <p style={{ color: "#4b5563", lineHeight: 1.8, marginBottom: 28 }}>
         {nicheData.section3Text(stadNaam)}
       </p>
@@ -129,7 +137,7 @@ export default function SeoCityPage() {
         </form>
 
         <p style={{ fontSize: 13, color: "#6b7280", marginTop: 10 }}>
-          ⚡ Reactie binnen 24 uur • 100% gratis
+          Reactie binnen 24 uur • 100% gratis
         </p>
 
         <div style={{ marginTop: 18 }}>
@@ -145,7 +153,7 @@ export default function SeoCityPage() {
               textDecoration: "none",
             }}
           >
-            💬 Of stuur direct een WhatsApp →
+            Of stuur direct een WhatsApp →
           </a>
         </div>
       </div>
@@ -191,7 +199,7 @@ export default function SeoCityPage() {
               }}
             >
               <strong style={{ display: "block", marginBottom: 6 }}>{post.title}</strong>
-              <span style={{ color: "#6b7280", lineHeight: 1.6 }}>{post.excerpt}</span>
+              <span style={{ color: "#6b7280", lineHeight: 1.6 }}>{post.intro}</span>
             </Link>
           ))}
         </div>

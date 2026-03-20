@@ -1,0 +1,66 @@
+import fs from "fs";
+import path from "path";
+import {
+  basePages,
+  nichePages,
+  blogPosts,
+  locationPages,
+} from "../src/data/seoRoutes.js";
+
+const DOMAIN = "https://vedantix.nl";
+const OUTPUT_FILE = path.resolve("./public/sitemap.xml");
+
+const rawUrls = [
+  ...basePages,
+  ...nichePages,
+  { path: "/blog", priority: "0.8" },
+  ...blogPosts.map((post) => ({
+    path: `/blog/${post.slug}`,
+    priority: post.priority ?? "0.7",
+  })),
+  ...locationPages.map((page) => ({
+    path: page.path,
+    priority: page.priority ?? "0.8",
+  })),
+];
+
+const urls = Array.from(
+  new Map(
+    rawUrls
+      .filter((item) => item?.path && typeof item.path === "string")
+      .map((item) => {
+        const normalizedPath =
+          item.path === "/"
+            ? "/"
+            : `/${item.path.replace(/^\/+/, "").replace(/\/+$/, "")}`;
+
+        return [
+          normalizedPath,
+          {
+            path: normalizedPath,
+            priority: item.priority ?? "0.7",
+          },
+        ];
+      })
+  ).values()
+);
+
+const today = new Date().toISOString().split("T")[0];
+
+const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(
+    ({ path, priority }) => `  <url>
+    <loc>${DOMAIN}${path}</loc>
+    <lastmod>${today}</lastmod>
+    <priority>${priority}</priority>
+  </url>`
+  )
+  .join("\n")}
+</urlset>
+`;
+
+fs.writeFileSync(OUTPUT_FILE, xml, "utf8");
+
+console.log(`sitemap.xml generated: ${urls.length} URLs written to ${OUTPUT_FILE}`);

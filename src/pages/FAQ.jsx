@@ -1,256 +1,525 @@
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
+
+const faqs = [
+  {
+    id: 1,
+    question: "Wat kost een website bij Vedantix?",
+    answer:
+      "De kosten hangen af van het gekozen pakket en de gewenste functionaliteiten. Vedantix werkt met een maandabonnement van €99 tot €249 per maand en een eenmalige opstartprijs van €399 tot €1000. In het abonnement zijn hosting, domein, SSL, updates en onderhoud inbegrepen."
+  },
+  {
+    id: 2,
+    question: "Hoe snel kan mijn website online staan?",
+    answer:
+      "In veel gevallen kan een website binnen 48 uur live staan. Dat hangt wel af van hoe snel teksten, foto’s, logo’s en feedback worden aangeleverd. Bij uitgebreidere websites of extra wensen kan de oplevering iets langer duren."
+  },
+  {
+    id: 3,
+    question: "Werkt mijn website ook goed op mobiel en tablet?",
+    answer:
+      "Ja. Alle websites van Vedantix worden responsive gebouwd. Dat betekent dat de website goed werkt op mobiel, tablet en desktop."
+  },
+  {
+    id: 4,
+    question: "Wat zit er in het maandabonnement?",
+    answer:
+      "Het maandabonnement bevat hosting, domeinregistratie, SSL-certificaat, technisch onderhoud, updates en support. Bij bepaalde pakketten zijn ook een aantal kleine wijzigingen per maand inbegrepen."
+  },
+  {
+    id: 5,
+    question: "Kan ik later nog iets laten aanpassen aan mijn website?",
+    answer:
+      "Ja. Je website kan later altijd worden uitgebreid of aangepast. Afhankelijk van je pakket zijn kleine wijzigingen inbegrepen. Grotere uitbreidingen of extra werkzaamheden worden apart geoffreerd."
+  },
+  {
+    id: 6,
+    question: "Zit ik vast aan een lang contract?",
+    answer:
+      "Nee. Vedantix werkt met een maandelijks opzegbaar abonnement met een opzegtermijn van 30 dagen. Zo blijf je flexibel en weet je waar je aan toe bent."
+  },
+  {
+    id: 7,
+    question: "Wat gebeurt er als ik stop met mijn abonnement?",
+    answer:
+      "Na beëindiging van het abonnement wordt de website offline gehaald na afloop van de opzegtermijn. Neem vooraf contact op als je de mogelijkheden wilt bespreken voor overdracht of overname van onderdelen van de website."
+  },
+  {
+    id: 8,
+    question: "Helpt Vedantix ook met meer klanten krijgen?",
+    answer:
+      "Vedantix bouwt websites die gericht zijn op duidelijkheid, vertrouwen en conversie. Denk aan een professionele uitstraling, goede mobiele weergave, snelle laadtijd, contactmogelijkheden en een logische opbouw. Dat helpt om bezoekers sneller om te zetten in aanvragen of afspraken."
+  },
+  {
+    id: 9,
+    question: "Moet ik zelf technisch zijn om met Vedantix te werken?",
+    answer:
+      "Nee. Technische kennis is niet nodig. Vedantix regelt de techniek, hosting, beveiliging en het onderhoud. Jij levert vooral de informatie over je bedrijf aan en geeft feedback op het ontwerp."
+  },
+  {
+    id: 10,
+    question: "Hoe kan ik starten met Vedantix?",
+    answer:
+      "Je kunt starten door contact op te nemen via WhatsApp of het contactformulier. Daarna worden je wensen besproken, ontvang je een voorstel en kan de bouw van je website snel worden gestart."
+  }
+];
 
 export default function FAQ() {
-  if (typeof document !== "undefined") {
-    let vp = document.querySelector('meta[name="viewport"]');
-    if (!vp) {
-      vp = document.createElement("meta");
-      vp.name = "viewport";
-      vp.content = "width=device-width, initial-scale=1.0";
-      document.head.appendChild(vp);
-    }
-  }
+  const [openId, setOpenId] = useState(1);
 
-  const [openId, setOpenId] = useState(null);
-
-  const faqs = [
-    {
-      id: 1,
-      q: "Wat kost een website bij Vedantix?",
-      a: "Websites bij Vedantix kosten €99–€249 per maand voor het abonnement. Daar komt eenmalig €399–€1000 setup bovenop (afhankelijk van het pakket). Alles is inclusief: hosting, domein, SSL, updates en onderhoud. Geen verborgen kosten."
-    },
-    {
-      id: 2,
-      q: "Hoe snel is mijn website klaar?",
-      a: "We streven ernaar je website binnen 48 uur live te zetten — maar dit hangt af van jou. Als jij snel je informatie, foto's en logo aanlevert en betaalt, gaat het snel. Vertraging? Geen probleem, maar het kan iets langer duren."
-    },
-    {
-      id: 3,
-      q: "Werkt mijn website ook op mobiel en tablet?",
-      a: "100% ja. Elke website die we bouwen is volledig mobielvriendelijk. Je site ziet er goed uit op telefoons, tablets en computers. Dit is standaard inbegrepen."
-    },
-    {
-      id: 4,
-      q: "Wat zit er precies in het abonnement?",
-      a: "Je maandelijkse abonnement bevat: hosting (servers waar je website op draait), domein, SSL (veiligheid), maandelijkse updates en onderhoud, e-mail support, en voor Growth en Pro ook gratis wijzigingen per maand."
-    },
-    {
-      id: 5,
-      q: "Kan ik later nog dingen aanpassen aan mijn website?",
-      a: "Ja, absoluut. Hoeveel wijzigingen je gratis krijgt, hangt van je pakket af. Growth: 1 gratis wijziging per maand. Pro: 3 gratis wijzigingen per maand. Wil je meer? Extra wijzigingen kosten €50–€150 per uur."
-    },
-    {
-      id: 6,
-      q: "Zit ik vast aan een contract?",
-      a: "Nee, je zit niet vast. Je abonnement loopt per maand en je kunt het altijd opzeggen — gewoon 30 dagen van tevoren per e-mail. Geen lange bindingsperiode, geen gedoe."
-    },
-    {
-      id: 7,
-      q: "Wat gebeurt er als ik stop met mijn abonnement?",
-      a: "Na 30 dagen gaat je website offline. Je domein blijft van jou, en je kunt al je bestanden downloaden. Wil je je website volledig overnemen? Dat kan — neem contact op voor de mogelijkheden."
-    },
-    {
-      id: 8,
-      q: "Helpt een website van Vedantix om meer klanten te krijgen?",
-      a: "Ja. We bouwen websites gericht op conversie — dus op het ontvangen van klanten en afspraken. Met contactformulieren, WhatsApp-integratie, Google Maps, en mobiel-optimalisatie. Meestal betaalt je website zich terug in maand 1."
-    },
-    {
-      id: 9,
-      q: "Moet ik technische kennis hebben?",
-      a: "Nee, helemaal niet. Wij regelen alles: hosting, updates, beveiliging, onderhoud. Jij kunt je focussen op je bedrijf. Als je iets wilt veranderen, laat het ons weten — we doen het voor je."
-    },
-    {
-      id: 10,
-      q: "Hoe starten we?",
-      a: "Makkelijk: bel ons, chat via WhatsApp, of vul ons contactformulier in. We maken een afspraak, bespreken jouw wensen, maken een offerte, en bouwen jouw website. Klaar."
-    }
-  ];
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer
+      }
+    }))
+  };
 
   return (
-    <div style={{ fontFamily: "'Inter',sans-serif", color: "#1a1a2e", minHeight: "100vh", background: "#f7f9fc" }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; letter-spacing: -1px; line-height: 1.1; }
-        h2 { font-size: 1.3rem; font-weight: 800; margin: 28px 0 12px; }
-        p { color: #6b7280; line-height: 1.65; }
-        a { color: #1a73e8; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-        
-        .faq-item {
-          background: #fff;
-          border: 1px solid #e5e7eb;
-          border-radius: 12px;
-          margin-bottom: 12px;
-          overflow: hidden;
-          transition: all 0.2s;
-        }
-        .faq-item:hover {
-          border-color: #1a73e8;
-          box-shadow: 0 4px 12px rgba(26,115,232,0.08);
-        }
-        
-        .faq-trigger {
-          width: 100%;
-          padding: 18px 20px;
-          background: #fff;
-          border: none;
-          cursor: pointer;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 12px;
-          text-align: left;
-          transition: background 0.15s;
-        }
-        .faq-trigger:hover {
-          background: #f9fafb;
-        }
-        
-        .faq-question {
-          font-weight: 700;
-          font-size: 1rem;
-          color: #1a1a2e;
-          flex: 1;
-        }
-        
-        .faq-icon {
-          flex-shrink: 0;
-          width: 24px;
-          height: 24px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #1a73e8;
-          transition: transform 0.2s;
-          font-weight: 800;
-        }
-        
-        .faq-item.open .faq-icon {
-          transform: rotate(180deg);
-        }
-        
-        .faq-content {
-          max-height: 0;
-          overflow: hidden;
-          transition: max-height 0.3s ease;
-        }
-        
-        .faq-item.open .faq-content {
-          max-height: 500px;
-        }
-        
-        .faq-answer {
-          padding: 0 20px 18px;
-          font-size: 0.95rem;
-          color: #374151;
-          line-height: 1.7;
-          border-top: 1px solid #f1f5f9;
-        }
-        
-        @media(max-width: 768px) {
-          .faq-trigger { padding: 14px 16px; }
-          .faq-question { font-size: 0.95rem; }
-          .faq-answer { padding: 0 16px 14px; font-size: 0.9rem; }
-        }
-      `}</style>
+    <>
+      <Helmet>
+        <html lang="nl" />
+        <title>FAQ | Veelgestelde vragen over websites | Vedantix</title>
+        <meta
+          name="description"
+          content="Bekijk de veelgestelde vragen van Vedantix over prijzen, abonnementen, oplevering, wijzigingen, support en het laten maken van een website."
+        />
+        <link rel="canonical" href="https://vedantix.nl/faq" />
+        <meta name="robots" content="index, follow" />
 
-      {/* Header */}
-      <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "70px 5% 50px" }}>
-        <div style={{ maxWidth: 760, margin: "0 auto" }}>
-          <a href="/Home" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 36 }}>
-            ← Terug naar Vedantix
-          </a>
-          <h1 style={{ color: "#fff", marginBottom: 16 }}>Veelgestelde vragen</h1>
-          <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "1rem" }}>Heb je vragen? Hieronder vind je antwoorden op veel gestelde vragen.</p>
-        </div>
-      </div>
+        <meta property="og:title" content="FAQ | Vedantix" />
+        <meta
+          property="og:description"
+          content="Antwoorden op veelgestelde vragen over websites, kosten, oplevering en support bij Vedantix."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://vedantix.nl/faq" />
+        <meta property="og:image" content="https://vedantix.nl/preview.png" />
 
-      {/* FAQ Content */}
-      <div style={{ maxWidth: 760, margin: "0 auto", padding: "48px 20px" }}>
-        
-        {/* FAQ List */}
-        <div style={{ marginBottom: 52 }}>
-          {faqs.map(faq => (
-            <div
-              key={faq.id}
-              className={`faq-item ${openId === faq.id ? 'open' : ''}`}
-            >
-              <button
-                className="faq-trigger"
-                onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
-                aria-expanded={openId === faq.id}
-              >
-                <span className="faq-question">{faq.q}</span>
-                <span className="faq-icon">▼</span>
-              </button>
-              <div className="faq-content">
-                <div className="faq-answer">{faq.a}</div>
-              </div>
-            </div>
-          ))}
-        </div>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="FAQ | Vedantix" />
+        <meta
+          name="twitter:description"
+          content="Antwoorden op veelgestelde vragen over websites, kosten, oplevering en support bij Vedantix."
+        />
+        <meta name="twitter:image" content="https://vedantix.nl/preview.png" />
 
-        {/* CTA Section */}
-        <div style={{ background: "#0a1628", color: "#fff", borderRadius: 16, padding: "40px", textAlign: "center" }}>
-          <h2 style={{ color: "#fff", marginTop: 0, marginBottom: 12 }}>Klaar om te starten?</h2>
-          <p style={{ color: "rgba(255,255,255,0.8)", marginBottom: 28, fontSize: "1rem" }}>
-            Geen verborgen kosten. 48-uur levering. 30-daags opzeggen. Gewoon doen.
-          </p>
-          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <a
-              href="/Starters"
-              style={{
-                background: "#1a73e8",
-                color: "#fff",
-                padding: "13px 32px",
-                borderRadius: 10,
-                fontWeight: 700,
-                textDecoration: "none",
-                fontSize: "0.95rem",
-                display: "inline-block",
-                transition: "background 0.2s"
-              }}
-              onMouseOver={e => e.currentTarget.style.background = "#00c2ff"}
-              onMouseOut={e => e.currentTarget.style.background = "#1a73e8"}
-            >
-              Start je website →
+        <script type="application/ld+json">
+          {JSON.stringify(faqSchema)}
+        </script>
+      </Helmet>
+
+      <div className="faq-page">
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+          * {
+            box-sizing: border-box;
+          }
+
+          html {
+            scroll-behavior: smooth;
+          }
+
+          body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: #f7f9fc;
+            color: #111827;
+          }
+
+          a {
+            text-decoration: none;
+          }
+
+          .faq-page {
+            min-height: 100vh;
+            background: #f7f9fc;
+            color: #111827;
+          }
+
+          .faq-shell {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 0 20px;
+          }
+
+          .faq-hero {
+            background: linear-gradient(135deg, #0a1628, #0d2146);
+            padding: 72px 0 56px;
+          }
+
+          .faq-back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 28px;
+            color: rgba(255,255,255,0.72);
+            font-size: 0.92rem;
+            transition: color 0.2s ease;
+          }
+
+          .faq-back-link:hover {
+            color: #ffffff;
+          }
+
+          .faq-title {
+            margin: 0 0 14px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+            font-weight: 900;
+            color: #ffffff;
+          }
+
+          .faq-subtitle {
+            margin: 0;
+            max-width: 620px;
+            color: rgba(255,255,255,0.78);
+            font-size: 1rem;
+            line-height: 1.7;
+          }
+
+          .faq-content {
+            padding: 48px 0 24px;
+          }
+
+          .faq-intro {
+            margin-bottom: 28px;
+          }
+
+          .faq-intro h2 {
+            margin: 0 0 10px;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            font-weight: 800;
+            color: #0f172a;
+          }
+
+          .faq-intro p {
+            margin: 0;
+            color: #4b5563;
+            line-height: 1.75;
+          }
+
+          .faq-list {
+            display: grid;
+            gap: 14px;
+            margin-bottom: 48px;
+          }
+
+          .faq-item {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+          }
+
+          .faq-item:hover {
+            border-color: #bfdbfe;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+            transform: translateY(-1px);
+          }
+
+          .faq-trigger {
+            width: 100%;
+            border: 0;
+            background: #ffffff;
+            padding: 20px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            cursor: pointer;
+            text-align: left;
+          }
+
+          .faq-trigger:focus-visible {
+            outline: 3px solid #93c5fd;
+            outline-offset: -3px;
+          }
+
+          .faq-question {
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.5;
+            color: #111827;
+            flex: 1;
+          }
+
+          .faq-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #eff6ff;
+            color: #1d4ed8;
+            font-size: 0.95rem;
+            font-weight: 800;
+            transition: transform 0.2s ease, background 0.2s ease;
+          }
+
+          .faq-item.open .faq-icon {
+            transform: rotate(180deg);
+            background: #dbeafe;
+          }
+
+          .faq-panel {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.28s ease;
+          }
+
+          .faq-item.open .faq-panel {
+            grid-template-rows: 1fr;
+          }
+
+          .faq-panel-inner {
+            overflow: hidden;
+          }
+
+          .faq-answer {
+            padding: 0 22px 20px;
+            border-top: 1px solid #f1f5f9;
+            color: #374151;
+            line-height: 1.8;
+            font-size: 0.97rem;
+          }
+
+          .faq-cta {
+            background: linear-gradient(135deg, #0a1628, #0d2146);
+            color: #ffffff;
+            border-radius: 20px;
+            padding: 36px 28px;
+            text-align: center;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+          }
+
+          .faq-cta h2 {
+            margin: 0 0 12px;
+            font-size: 1.6rem;
+            line-height: 1.15;
+            font-weight: 800;
+            color: #ffffff;
+          }
+
+          .faq-cta p {
+            max-width: 560px;
+            margin: 0 auto 24px;
+            color: rgba(255,255,255,0.82);
+            line-height: 1.75;
+          }
+
+          .faq-cta-actions {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+          }
+
+          .faq-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 190px;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+          }
+
+          .faq-btn:hover {
+            transform: translateY(-1px);
+          }
+
+          .faq-btn-primary {
+            background: #1d4ed8;
+            color: #ffffff;
+            box-shadow: 0 10px 20px rgba(29, 78, 216, 0.25);
+          }
+
+          .faq-btn-primary:hover {
+            background: #2563eb;
+          }
+
+          .faq-btn-secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid rgba(255,255,255,0.9);
+          }
+
+          .faq-btn-secondary:hover {
+            background: #ffffff;
+            color: #0a1628;
+          }
+
+          .faq-footer {
+            margin-top: 48px;
+            padding: 26px 20px 34px;
+            text-align: center;
+            background: #0a1628;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.86rem;
+          }
+
+          .faq-footer a {
+            color: rgba(255,255,255,0.78);
+            transition: color 0.2s ease;
+          }
+
+          .faq-footer a:hover {
+            color: #ffffff;
+          }
+
+          .faq-footer strong {
+            color: #ffffff;
+          }
+
+          @media (max-width: 768px) {
+            .faq-hero {
+              padding: 56px 0 42px;
+            }
+
+            .faq-content {
+              padding-top: 36px;
+            }
+
+            .faq-trigger {
+              padding: 16px 16px;
+            }
+
+            .faq-answer {
+              padding: 0 16px 16px;
+              font-size: 0.94rem;
+            }
+
+            .faq-cta {
+              padding: 28px 18px;
+            }
+
+            .faq-cta h2 {
+              font-size: 1.35rem;
+            }
+
+            .faq-btn {
+              width: 100%;
+              min-width: 0;
+            }
+          }
+        `}</style>
+
+        <header className="faq-hero">
+          <div className="faq-shell">
+            <a className="faq-back-link" href="/">
+              ← Terug naar Vedantix
             </a>
-            <a
-              href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website."
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                background: "transparent",
-                color: "#fff",
-                padding: "13px 32px",
-                borderRadius: 10,
-                fontWeight: 700,
-                textDecoration: "none",
-                fontSize: "0.95rem",
-                display: "inline-block",
-                border: "2px solid #fff",
-                transition: "all 0.2s"
-              }}
-              onMouseOver={e => {
-                e.currentTarget.style.background = "#fff";
-                e.currentTarget.style.color = "#0a1628";
-              }}
-              onMouseOut={e => {
-                e.currentTarget.style.background = "transparent";
-                e.currentTarget.style.color = "#fff";
-              }}
-            >
-              💬 Plan gratis gesprek
-            </a>
+
+            <h1 className="faq-title">Veelgestelde vragen</h1>
+            <p className="faq-subtitle">
+              Hier vind je duidelijke antwoorden op vragen over prijzen,
+              oplevering, abonnementen, support en het laten maken van een
+              website bij Vedantix.
+            </p>
           </div>
-        </div>
-      </div>
+        </header>
 
-      {/* Footer */}
-      <footer style={{ background: "#0a1628", color: "rgba(255,255,255,0.45)", padding: "28px 5%", textAlign: "center", fontSize: "0.83rem", marginTop: 48 }}>
-        <p>© 2026 <strong style={{ color: "#fff" }}>Vedantix</strong> — <a href="/Home" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>Home</a> • <a href="/Voorwaarden" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>Algemene voorwaarden</a> • <a href="/Privacy" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>Privacybeleid</a></p>
-      </footer>
-    </div>
+        <main className="faq-content">
+          <div className="faq-shell">
+            <section className="faq-intro" aria-labelledby="faq-overview-title">
+              <h2 id="faq-overview-title">Antwoorden op de belangrijkste vragen</h2>
+              <p>
+                Twijfel je nog over kosten, snelheid of hoe het traject werkt?
+                Hieronder staan de vragen die het vaakst worden gesteld door
+                ondernemers die een professionele website willen laten maken.
+              </p>
+            </section>
+
+            <section className="faq-list" aria-label="Veelgestelde vragen">
+              {faqs.map((faq) => {
+                const isOpen = openId === faq.id;
+                const buttonId = `faq-button-${faq.id}`;
+                const panelId = `faq-panel-${faq.id}`;
+
+                return (
+                  <article
+                    key={faq.id}
+                    className={`faq-item ${isOpen ? "open" : ""}`}
+                  >
+                    <button
+                      id={buttonId}
+                      className="faq-trigger"
+                      type="button"
+                      aria-expanded={isOpen}
+                      aria-controls={panelId}
+                      onClick={() => setOpenId(isOpen ? null : faq.id)}
+                    >
+                      <span className="faq-question">{faq.question}</span>
+                      <span className="faq-icon" aria-hidden="true">
+                        ▼
+                      </span>
+                    </button>
+
+                    <div
+                      id={panelId}
+                      className="faq-panel"
+                      role="region"
+                      aria-labelledby={buttonId}
+                    >
+                      <div className="faq-panel-inner">
+                        <div className="faq-answer">
+                          <p style={{ margin: 0 }}>{faq.answer}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </section>
+
+            <section className="faq-cta" aria-labelledby="faq-cta-title">
+              <h2 id="faq-cta-title">Klaar om je website te laten maken?</h2>
+              <p>
+                Wil je snel online met een professionele website voor jouw
+                bedrijf? Neem contact op en bespreek vrijblijvend wat er
+                mogelijk is voor jouw situatie.
+              </p>
+
+              <div className="faq-cta-actions">
+                <a className="faq-btn faq-btn-primary" href="/starters">
+                  Bekijk pakketten
+                </a>
+                <a
+                  className="faq-btn faq-btn-secondary"
+                  href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website."
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Plan een gesprek
+                </a>
+              </div>
+            </section>
+          </div>
+        </main>
+
+        <footer className="faq-footer">
+          <p style={{ margin: 0 }}>
+            © 2026 <strong>Vedantix</strong> — <a href="/">Home</a> •{" "}
+            <a href="/voorwaarden">Algemene voorwaarden</a> •{" "}
+            <a href="/privacy">Privacybeleid</a>
+          </p>
+        </footer>
+      </div>
+    </>
   );
 }
