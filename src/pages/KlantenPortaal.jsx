@@ -18,7 +18,7 @@ export default function KlantenPortaal() {
   useEffect(() => {
     base44.auth.me()
       .then(async u => {
-        if (!u) { base44.auth.redirectToLogin(window.location.href); return; }
+        if (!u) { base44.auth.redirectToLogin(); return; }
         if (u.role === "admin") { window.location.href = "/admin"; return; }
         setUser(u);
         const profiles = await CustomerProfile.filter({ user_id: u.id });
