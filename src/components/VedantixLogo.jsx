@@ -91,7 +91,7 @@ export default function VedantixLogo({
       <line
         x1={iconW * 0.25} y1={iconH * 0.275}
         x2={iconW * 0.5}  y2={iconH * 0.725}
-        stroke="white"
+        stroke={c.iconStroke}
         strokeWidth={iconH * 0.07}
         strokeLinecap="round"
       />
@@ -99,7 +99,7 @@ export default function VedantixLogo({
       <line
         x1={iconW * 0.75} y1={iconH * 0.275}
         x2={iconW * 0.5}  y2={iconH * 0.725}
-        stroke="white"
+        stroke={c.iconStroke}
         strokeWidth={iconH * 0.07}
         strokeLinecap="round"
       />
