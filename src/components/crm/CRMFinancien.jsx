@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { base44 } from "@/api/base44Client";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import FinancieelItemModal from "./FinancieelItemModal";
+import ExportButton, { exportToCSV, exportToPDF } from "./ExportButton";
 
 const Payment = base44.entities.Payment;
 const FinancieelItem = base44.entities.FinancieelItem;
