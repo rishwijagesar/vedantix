@@ -469,15 +469,11 @@ export default function Home() {
 
       {/* ─── 6. PRICING ─── */}
       <section id="pricing" className="pricing-section">
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", maxWidth: 560, margin: "0 auto 64px" }}>
-            <div className="section-label" style={{ textAlign: "center" }}>Tarieven</div>
-            <h2 style={{ fontSize: "clamp(1.8rem,3vw,2.6rem)", fontWeight: 900, color: "#111827", letterSpacing: "-0.8px", marginBottom: 14 }}>
-              Kies jouw pakket
-            </h2>
-            <p style={{ fontSize: "0.95rem", color: "#6b7280", lineHeight: 1.7 }}>
-              Geen verborgen kosten. Alles inbegrepen. Opzeggen wanneer je wilt.
-            </p>
+        <div className="section-wrap">
+          <div className="section-header centered">
+            <div className="section-label">Tarieven</div>
+            <h2 className="section-h2">Kies jouw pakket</h2>
+            <p className="section-p">Geen verborgen kosten. Alles inbegrepen. Opzeggen wanneer je wilt.</p>
           </div>
           <div className="pricing-grid">
             {/* STARTER */}
