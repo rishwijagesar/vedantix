@@ -74,15 +74,34 @@ function groupByPeriod(payments, days) {
 
 export default function CRMFinancien() {
   const [facturen, setFacturen] = useState([]);
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("1m");
+  const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    Payment.list("-factuurdatum", 500).then(data => {
-      setFacturen(data);
-      setLoading(false);
-    });
-  }, []);
+  const load = async () => {
+    const [f, i] = await Promise.all([
+      Payment.list("-factuurdatum", 500),
+      FinancieelItem.list("-datum", 500)
+    ]);
+    setFacturen(f);
+    setItems(i);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const handleSave = async (data) => {
+    await FinancieelItem.create(data);
+    setShowModal(false);
+    load();
+  };
+
+  const deleteItem = async (id) => {
+    if (!confirm("Item verwijderen?")) return;
+    await FinancieelItem.delete(id);
+    load();
+  };
 
   const { days } = FILTERS.find(f => f.value === filter);
   const startDate = getStartDate(days);
