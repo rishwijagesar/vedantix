@@ -67,7 +67,7 @@ export default function NavBar() {
           align-items: center;
         }
         .navbar-link {
-          color: #4b5563;
+          color: rgba(255,255,255,0.7);
           text-decoration: none;
           font-weight: 500;
           font-size: 0.9rem;
@@ -75,10 +75,10 @@ export default function NavBar() {
           cursor: pointer;
         }
         .navbar-link:hover {
-          color: #1a73e8;
+          color: #fff;
         }
         .navbar-cta {
-          background: #1a1a2e;
+          background: rgba(255,255,255,0.12);
           color: #fff;
           padding: 10px 20px;
           border-radius: 8px;
@@ -87,10 +87,10 @@ export default function NavBar() {
           font-size: 0.85rem;
           transition: all 0.2s ease;
           white-space: nowrap;
-          border: 1px solid #1a1a2e;
+          border: 1px solid rgba(255,255,255,0.2);
         }
         .navbar-cta:hover {
-          background: #2d2d4e;
+          background: rgba(255,255,255,0.2);
           transform: translateY(-1px);
         }
         .navbar-hamburger {
@@ -100,8 +100,26 @@ export default function NavBar() {
           cursor: pointer;
           padding: 8px;
           font-size: 1.4rem;
-          color: #1a1a2e;
+          color: rgba(255,255,255,0.8);
           transition: color 0.2s ease;
+        }
+        /* Scrolled overrides */
+        .navbar.scrolled .navbar-link {
+          color: #4b5563;
+        }
+        .navbar.scrolled .navbar-link:hover {
+          color: #1a73e8;
+        }
+        .navbar.scrolled .navbar-cta {
+          background: #1a1a2e;
+          color: #fff;
+          border-color: #1a1a2e;
+        }
+        .navbar.scrolled .navbar-cta:hover {
+          background: #2d2d4e;
+        }
+        .navbar.scrolled .navbar-hamburger {
+          color: #1a1a2e;
         }
         @media (max-width: 768px) {
           .navbar-center {
