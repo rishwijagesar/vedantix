@@ -17,7 +17,7 @@ export default function CRM() {
   useEffect(() => {
     base44.auth.me().then(u => {
       if (!u) { base44.auth.redirectToLogin(window.location.href); return; }
-      if (u.role !== "admin") { window.location.href = "/ClientPortal"; return; }
+      if (u.role !== "admin") { window.location.href = "/klantenportaal"; return; }
       setUser(u);
       setAuthChecked(true);
     }).catch(() => base44.auth.redirectToLogin(window.location.href));
