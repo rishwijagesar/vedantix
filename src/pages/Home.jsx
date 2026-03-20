@@ -21,13 +21,9 @@ export default function Home() {
         html{scroll-behavior:smooth}
         body{margin:0;padding:0}
 
-        /* BUTTONS */
-        .btn-primary{background:#111827;color:#fff;padding:14px 28px;border-radius:10px;font-weight:700;font-size:0.92rem;text-decoration:none;display:inline-block;transition:all 0.25s;border:none;cursor:pointer;letter-spacing:-0.1px}
-        .btn-primary:hover{background:#1d4ed8;transform:translateY(-1px);box-shadow:0 8px 24px rgba(29,78,216,0.22)}
-        .btn-ghost{background:transparent;color:#111827;border:1.5px solid #d1d5db;padding:13px 28px;border-radius:10px;font-weight:600;font-size:0.92rem;text-decoration:none;display:inline-block;transition:all 0.25s;cursor:pointer}
+        /* BUTTONS (non-hero — dark bg context) */
+        .btn-ghost{background:transparent;color:#111827;border:1.5px solid #d1d5db;padding:14px 28px;border-radius:10px;font-weight:600;font-size:0.92rem;text-decoration:none;display:inline-block;transition:all 0.25s;cursor:pointer}
         .btn-ghost:hover{border-color:#111827;background:#f9fafb}
-        .btn-wa{background:#25d366;color:#fff;padding:14px 28px;border-radius:10px;font-weight:700;font-size:0.92rem;text-decoration:none;display:inline-block;transition:all 0.25s;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(37,211,102,0.25)}
-        .btn-wa:hover{background:#22c55e;transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,211,102,0.3)}
 
         /* HERO */
         .hero{background:linear-gradient(150deg,#060c1a 0%,#0a1428 40%,#0d1f3c 70%,#0f1e38 100%);min-height:100vh;display:flex;align-items:center;padding:110px 5% 90px;position:relative;overflow:hidden}
