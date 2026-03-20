@@ -719,11 +719,18 @@ export default function Home() {
 
       {/* ─── 11. FINAL CTA ─── */}
       <section id="cta" className="cta-section">
-        <h2>Klaar om meer klanten te krijgen?</h2>
-        <p>Geen gedoe. Geen verplichtingen. Gewoon een gesprek over jouw website.</p>
+        <h2>Laat je website klanten opleveren</h2>
+        <p>Geen lange trajecten. Geen grote investering vooraf. Gewoon meer klanten — vanaf maand 1.</p>
         <div className="cta-btns">
-          <a href="#pricing" className="btn-primary">Start je website →</a>
+          <a href="#pricing" className="btn-primary">Krijg meer klanten →</a>
           <a href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website." target="_blank" rel="noreferrer" className="btn-wa">💬 Plan gratis gesprek</a>
+        </div>
+        <div style={{ marginTop: 32, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", position: "relative" }}>
+          {["7 dagen geld-terug","Geen contract","Live in 48 uur","Nog 2 plekken vrij"].map(t => (
+            <span key={t} style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ color: "#22c55e" }}>✓</span> {t}
+            </span>
+          ))}
         </div>
         <div className="cta-phone">
           Liever direct bellen?
