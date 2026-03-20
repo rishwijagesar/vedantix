@@ -101,7 +101,10 @@ export default function CRMTickets() {
       <div style={{ width: selected ? 400 : "100%", flexShrink: 0, display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
           <h1 style={{ fontSize: "1.5rem", fontWeight: 800, color: "#0f172a" }}>Tickets</h1>
-          <button onClick={() => setShowNew(true)} style={{ background: "#1e3a5f", color: "#fff", border: "none", borderRadius: 10, padding: "9px 16px", fontWeight: 700, fontSize: "0.85rem", cursor: "pointer" }}>+ Nieuw ticket</button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <ExportButton onExportCSV={handleExportCSV} onExportPDF={handleExportPDF} />
+            <button onClick={() => setShowNew(true)} style={{ background: "#1e3a5f", color: "#fff", border: "none", borderRadius: 10, padding: "9px 16px", fontWeight: 700, fontSize: "0.85rem", cursor: "pointer" }}>+ Nieuw ticket</button>
+          </div>
         </div>
 
         <div style={{ display: "flex", gap: 8, marginBottom: 14 }}>
