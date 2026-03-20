@@ -310,22 +310,22 @@ export default function Home() {
       <section className="hero">
         <div className="hero-container">
           <div className="hero-content">
-            <div className="hero-eyebrow">Voor lokale bedrijven</div>
+            <div className="hero-eyebrow">Voor kappers, salons & lokale bedrijven</div>
             <h1>
-              Website die klanten<br />
-              oplevert — <span>live in 48 uur</span>
+              Krijg meer klanten —<br />
+              <span>website live in 48 uur</span>
             </h1>
             <p className="hero-sub">
-              Wij bouwen, lanceren en onderhouden jouw website. Jij focust op je bedrijf. Geen gedoe, geen technische kennis nodig.
+              Wij bouwen een website die klanten oplevert. Geen technische kennis nodig. Jij focust op je bedrijf.
             </p>
             <div className="hero-checks">
+              <div className="hero-check">Gemiddeld 3–5 extra aanvragen per week</div>
               <div className="hero-check">Online in 48 uur — wij regelen alles</div>
-              <div className="hero-check">Hosting, domein en SSL inbegrepen</div>
-              <div className="hero-check">Maandelijks opzegbaar, geen risico</div>
+              <div className="hero-check">Maandelijks opzegbaar, 7 dagen geld-terug</div>
             </div>
             <div className="hero-ctas">
-              <a href="#pricing" className="btn-primary">Start je website →</a>
-              <a href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website." target="_blank" rel="noreferrer" className="btn-wa">💬 Plan gratis gesprek</a>
+              <a href="#pricing" className="btn-primary">Laat je website klanten opleveren →</a>
+              <a href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website." target="_blank" rel="noreferrer" className="btn-wa">💬 Gratis gesprek</a>
             </div>
             <div className="hero-social-proof">
               <div>
