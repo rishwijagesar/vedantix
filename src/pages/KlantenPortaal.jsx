@@ -25,7 +25,12 @@ export default function KlantenPortaal() {
         if (profiles.length > 0) setKlant(profiles[0]);
         setAuthChecked(true);
       })
-      .catch(() => base44.auth.redirectToLogin(window.location.href));
+      .catch((err) => {
+        console.error("Auth check failed:", err);
+        if (err?.status === 401) {
+          base44.auth.redirectToLogin(window.location.href);
+        }
+      });
   }, []);
 
   const reloadKlant = async () => {

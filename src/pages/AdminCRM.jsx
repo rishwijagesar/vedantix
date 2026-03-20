@@ -22,7 +22,13 @@ export default function AdminCRM() {
         setUser(u);
         setAuthChecked(true);
       })
-      .catch(() => base44.auth.redirectToLogin(window.location.href));
+      .catch((err) => {
+        console.error("Auth check failed:", err);
+        // Only redirect if clearly not authenticated, not on generic errors
+        if (err?.status === 401) {
+          base44.auth.redirectToLogin(window.location.href);
+        }
+      });
   }, []);
 
   if (!authChecked) {
