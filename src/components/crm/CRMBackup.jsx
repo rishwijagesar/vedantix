@@ -22,7 +22,7 @@ export default function CRMBackup() {
   const handleCreate = async () => {
     setCreating(true);
     setMsg(null);
-    const res = await createBackup({});
+    const res = await databaseBackup({ action: "create" });
     if (res.data?.success) {
       setMsg({ type: "success", text: "Backup succesvol aangemaakt!" });
       load();
