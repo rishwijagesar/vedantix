@@ -155,8 +155,8 @@ export default function NavBar() {
       <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
         <div className="navbar-container">
           {/* Logo */}
-          <a href="#" className="navbar-logo">
-            Vedantix
+          <a href="#" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+            <VedantixLogo variant="full" size="md" theme={scrolled ? "dark" : "dark"} />
           </a>
 
           {/* Desktop menu + CTA */}
