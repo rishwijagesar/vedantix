@@ -460,7 +460,366 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ... de rest van je bestaande JSX blijft exact hetzelfde ... */}
+      {/* ─── TRUSTED BY ─── */}
+      <div className="trusted">
+        <div className="trusted-inner">
+          <span className="trusted-label">Vertrouwd door</span>
+
+          {["Kappers","Restaurants","Klusbedrijven","Schoonheidssalons","Fotografen","ZZP'ers"].map(t => (
+            <span key={t} className="trusted-pill">{t}</span>
+          ))}
+        </div>
+      </div>
+
+      {/* ─── 2. PROBLEM ─── */}
+      <section className="problem-section">
+        <div className="section-wrap">
+          <div className="section-header">
+            <div className="section-label">Het probleem</div>
+            <h2 className="section-h2">Je verliest klanten zonder dat je het doorhebt</h2>
+            <p className="section-p">Elke dag zonder goede website kost je klanten. Je concurrent pakt ze.</p>
+          </div>
+          <div className="problem-grid">
+            {[
+              ["🔍","Mensen vinden je niet","Ze zoeken online naar jouw bedrijf maar jij verschijnt niet. Je concurrent wel."],
+              ["📱","Website ziet er verouderd uit","Of je hebt helemaal geen website. Klanten denken dat je niet meer actief bent."],
+              ["📞","Geen manier om te boeken","Klanten kunnen niet bellen, reserveren of een bericht sturen. Ze geven het op."],
+              ["⚖️","Minder vertrouwen","Geen website = minder geloofwaardig. Klanten kiezen liever een concurrent."],
+            ].map(([ic, h, p]) => (
+              <div key={h} className="problem-card">
+                <div className="problem-icon">{ic}</div>
+                <h3>{h}</h3>
+                <p>{p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 3. SOLUTION ─── */}
+      <section className="solution-section">
+        <div className="section-wrap">
+          <div className="section-header">
+            <div className="section-label light">De oplossing</div>
+            <h2 className="section-h2 light">Wij zorgen dat jouw website klanten oplevert</h2>
+            <p className="section-p light">Website + hosting + updates + onderhoud. Alles in één. Nul zorgen.</p>
+          </div>
+          <div className="solution-grid">
+            <div className="solution-col get">
+              <h3>✓ Wat je krijgt</h3>
+              {["Website live in 48 uur","100% mobielvriendelijk","Hosting, domein, SSL inbegrepen","Maandelijkse updates & onderhoud","Google vindt je makkelijker","Alles gericht op meer klanten"].map(i => (
+                <div key={i} className="sol-item"><span className="sol-check">✓</span><span>{i}</span></div>
+              ))}
+            </div>
+            <div className="solution-col skip">
+              <h3>👍 Wat je niet meer doet</h3>
+              {["Nooit meer naar developers bellen","Geen technische problemen meer","Geen gedoe met hosting","Geen verouderde website meer","Geen klanten meer verliezen","Pure focus op je bedrijf"].map(i => (
+                <div key={i} className="sol-item"><span className="sol-check">→</span><span>{i}</span></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 4. RESULTS ─── */}
+      <section className="results-section">
+        <div className="section-wrap">
+          <div className="section-header">
+            <div className="section-label">Bewezen resultaten</div>
+            <h2 className="section-h2">Wat onze klanten gemiddeld zien</h2>
+            <p className="section-p">Concrete cijfers van lokale ondernemers die bij ons een website namen.</p>
+          </div>
+          <div className="results-row">
+            {[
+              ["+4","Extra afspraken per week"],
+              ["+€800","Extra omzet per maand"],
+              ["48u","Van gesprek naar live website"],
+            ].map(([n, l]) => (
+              <div key={n} className="result-item">
+                <div className="result-num">{n}</div>
+                <div className="result-label">{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 5. TESTIMONIALS ─── */}
+      <section className="testimonials-section">
+        <div className="section-wrap">
+          <div className="section-header centered">
+            <div className="section-label">Wat klanten zeggen</div>
+            <h2 className="section-h2">Ondernemers zoals jij gingen je voor</h2>
+          </div>
+          <div className="testimonials-grid">
+            {[
+              { stars: "★★★★★", quote: "Binnen 2 dagen had ik een website die er echt professioneel uitziet. Sindsdien krijg ik elke week nieuwe klanten via de site.", name: "Sander K.", role: "Kapper, Amsterdam", color: "#6366f1" },
+              { stars: "★★★★★", quote: "Ik had verwacht dat het ingewikkeld zou zijn, maar Vedantix regelt alles. Ik hoef er zelf niks aan te doen.", name: "Fatima O.", role: "Schoonheidssalon, Rotterdam", color: "#8b5cf6" },
+              { stars: "★★★★★", quote: "Mijn oude website leverde niets op. Nu krijg ik gemiddeld 3-4 aanvragen per week via het contactformulier.", name: "Tom V.", role: "Klusbedrijf, Utrecht", color: "#6366f1" },
+            ].map((t, i) => (
+              <div key={i} className="testimonial-card">
+                <div className="t-stars">{t.stars}</div>
+                <p className="t-quote">"{t.quote}"</p>
+                <div className="t-author">
+                  <div className="t-avatar" style={{ background: t.color }}>{t.name[0]}</div>
+                  <div>
+                    <div className="t-name">{t.name}</div>
+                    <div className="t-role">{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 6. PRICING ─── */}
+      <section id="pricing" className="pricing-section">
+        <div className="section-wrap">
+          <div className="section-header centered">
+            <div className="section-label">Tarieven</div>
+            <h2 className="section-h2">Kies jouw pakket</h2>
+            <p className="section-p">Geen verborgen kosten. Alles inbegrepen. Opzeggen wanneer je wilt.</p>
+          </div>
+          <div className="pricing-grid">
+            {/* STARTER */}
+            <div className="pricing-card">
+              <div className="p-tier">Starter</div>
+              <div className="p-name">Online Aanwezig</div>
+              <div className="p-sub">Voor ondernemers die gewoon online willen staan</div>
+              <div className="p-price"><sup>€</sup>99<span>/m</span></div>
+              <div className="p-setup">+ €500 eenmalige setup</div>
+              <div className="p-divider" />
+              <ul className="p-features">
+                <li>1–2 pagina website</li>
+                <li>Mobielvriendelijk design</li>
+                <li>Contactformulier (leads naar jouw mail)</li>
+                <li>Hosting + domein koppeling</li>
+                <li>SSL beveiliging</li>
+                <li>Basis SEO setup</li>
+                <li>Support binnen 48 uur</li>
+              </ul>
+              <p className="p-note">Perfect om snel online te zijn en gevonden te worden</p>
+              <a href="#cta" className="p-cta default">Start met Starter →</a>
+            </div>
+
+            {/* GROWTH - FEATURED */}
+            <div className="pricing-card featured">
+              <div className="pricing-badge">Meest gekozen</div>
+              <div className="p-tier">Growth</div>
+              <div className="p-name">Klanten Winnen</div>
+              <div className="p-sub">Voor bedrijven die actief klanten willen binnenhalen</div>
+              <div className="p-price"><sup>€</sup>149<span>/m</span></div>
+              <div className="p-setup">+ €750 eenmalige setup</div>
+              <div className="p-divider" />
+              <ul className="p-features">
+                <li>Tot 5 pagina's</li>
+                <li>Alles van Starter</li>
+                <li>Google Maps integratie</li>
+                <li>Conversiegerichte opbouw</li>
+                <li>SEO basisoptimalisatie</li>
+                <li>Maandelijkse performance check</li>
+                <li>Support binnen 24 uur</li>
+                <li>Kleine updates inbegrepen</li>
+              </ul>
+              <p className="p-note" style={{ color: "#6366f1" }}>Voor bedrijven die hun website echt laten werken</p>
+              <a href="#cta" className="p-cta featured">Start met Growth →</a>
+            </div>
+
+            {/* PRO */}
+            <div className="pricing-card">
+              <div className="p-tier">Pro</div>
+              <div className="p-name">Serieus Groeien</div>
+              <div className="p-sub">Voor bedrijven die serieus willen groeien</div>
+              <div className="p-price"><sup>€</sup>249<span>/m</span></div>
+              <div className="p-setup">+ €1000 eenmalige setup</div>
+              <div className="p-divider" />
+              <ul className="p-features">
+                <li>Tot 10 pagina's</li>
+                <li>Custom design op maat</li>
+                <li>Geavanceerde functies (boekingen / formulieren)</li>
+                <li>Alles van Growth</li>
+                <li>Volledige SEO optimalisatie</li>
+                <li>Priority support (binnen 12 uur)</li>
+                <li>Snelle aanpassingen (zelfde dag mogelijk)</li>
+              </ul>
+              <p className="p-note">Maximale groei, minimale zorgen</p>
+              <a href="#cta" className="p-cta default">Start met Pro →</a>
+            </div>
+          </div>
+
+          {/* Updates clarification */}
+          <div style={{ marginTop: 32 }}>
+            <details style={{ cursor: "pointer" }}>
+              <summary style={{ fontSize: "0.8rem", fontWeight: 600, color: "#9ca3af", padding: "10px 0", userSelect: "none", listStyle: "none" }}>
+                💡 Wat valt onder kleine updates en wijzigingen?
+              </summary>
+              <div style={{ paddingTop: 8, paddingBottom: 12, fontSize: "0.82rem", color: "#9ca3af", lineHeight: 1.7 }}>
+                Teksten aanpassen, foto's vervangen, kleine layout-wijzigingen, contactgegevens updaten.
+                Grote wijzigingen (nieuwe pagina's, geavanceerde functies) worden vooraf besproken.
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── TRUST STRIP ─── */}
+      <div className="trust-strip">
+        <div className="trust-items">
+          {[["✔","Geen verborgen kosten"],["✔","Maandelijks opzegbaar"],["✔","48 uur levertijd"],["✔","7 dagen geld-terug"],["✔","Alles inbegrepen"]].map(([ic,t]) => (
+            <div key={t} className="trust-item"><span className="trust-icon">{ic}</span><span>{t}</span></div>
+          ))}
+        </div>
+      </div>
+
+      {/* ─── 7. ROI ─── */}
+      <section className="roi-section">
+        <div className="roi-inner">
+          <h2 className="roi-title">Dit betaalt zichzelf binnen 30 dagen terug</h2>
+          <p className="roi-subtitle">Je hebt maar 1–2 extra klanten per maand nodig om je website terug te verdienen.</p>
+
+          <div className="roi-comparison">
+            <div className="roi-block" style={{ textAlign: "right" }}>
+              <div className="roi-value invest">€149<span style={{ fontSize: "1.2rem", fontWeight: 700, color: "#9ca3af" }}>/m</span></div>
+              <div className="roi-block-label">Jouw investering</div>
+            </div>
+
+            <div className="roi-divider">
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div className="roi-arrow-line" />
+                <div className="roi-arrow-head" />
+              </div>
+            </div>
+
+            <div className="roi-block" style={{ textAlign: "left" }}>
+              <div className="roi-value gain">€500–2000+<span style={{ fontSize: "1.2rem", fontWeight: 700, color: "#86efac" }}>/m</span></div>
+              <div className="roi-block-label">Extra omzet</div>
+            </div>
+          </div>
+
+          <div style={{ borderTop: "1px solid #f3f4f6", paddingTop: 32 }}>
+            <div className="roi-bottom-line">Vanaf maand 1 winst. Daarna is het puur schaalbaar.</div>
+            <div className="roi-note">Gebaseerd op gemiddelde klantresultaten</div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 8. WHY SUBSCRIPTION ─── */}
+      <section className="why-section">
+        <div className="section-wrap">
+          <div className="section-header">
+            <div className="section-label">Waarom abonnement</div>
+            <h2 className="section-h2">Waarom een abonnement beter is</h2>
+            <p className="section-p">Geen grote upfront kosten. Alles inbegrepen. Eenvoudig opzeggen.</p>
+          </div>
+          <div className="why-grid">
+            <div className="why-col old">
+              <h3>Eenmalig betalen (oud model)</h3>
+              {["€3000+ upfront betalen","Hosting zelf zoeken & betalen","Updates betalen per update","Problemen? €500+ per reparatie","Jij bent volledig verantwoordelijk"].map(i => (
+                <div key={i} className="why-li"><span>{i}</span></div>
+              ))}
+            </div>
+            <div className="why-col new">
+              <h3>Abonnement bij Vedantix</h3>
+              {["€99–249/m, alles inbegrepen","Hosting, domein, SSL erbij","Automatische updates & optimalisaties","Problemen? Wij fixen gratis","Jij focust op je bedrijf"].map(i => (
+                <div key={i} className="why-li"><span>{i}</span></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 9. HOW IT WORKS ─── */}
+      <section id="how" className="how-section">
+        <div className="section-wrap">
+          <div className="section-header centered">
+            <div className="section-label">Werkwijze</div>
+            <h2 className="section-h2">Hoe het werkt</h2>
+            <p className="section-p">Vier eenvoudige stappen naar jouw nieuwe website.</p>
+          </div>
+          <div className="how-steps">
+            {[
+              ["1","Je belt ons","Korte kennismaking. Jij vertelt wat je bedrijf is, wij maken een plan."],
+              ["2","Wij bouwen","48 uur later: website klaar, getest, beveiligd, snel."],
+              ["3","Je gaat live","Website online. Klanten vinden en bellen jou."],
+              ["4","Wij zorgen ervoor","Updates, onderhoud, optimalisaties — alles door ons."],
+            ].map(([n, h, p]) => (
+              <div key={n} className="how-step">
+                <div className="step-num">{n}</div>
+                <h3>{h}</h3>
+                <p>{p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─── LEAD MAGNET ─── */}
+      <section className="lead-magnet-section">
+        <div className="lead-magnet-inner">
+          <div className="lead-magnet-text">
+            <div className="lead-magnet-badge">🎁 Gratis — geen verplichtingen</div>
+            <div className="lead-magnet-title">Ontdek waarom jij klanten misloopt</div>
+            <div className="lead-magnet-sub">We analyseren jouw online aanwezigheid gratis en laten zien wat je concurrent beter doet. Geen verkooppraatje — gewoon eerlijk advies.</div>
+          </div>
+          <div className="lead-magnet-cta">
+            <a href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20website%20analyse." target="_blank" rel="noreferrer" className="btn-lead">Gratis website analyse →</a>
+            <div className="lead-magnet-note">Reactie binnen 24 uur · Helemaal gratis</div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 10. URGENCY + GUARANTEE ─── */}
+      <section className="urgency-section">
+        <div className="urgency-inner">
+          <div className="urgency-box">
+            <div className="urgency-pulse">Live beschikbaarheid</div>
+            <h3>Nog 2 plekken beschikbaar deze week</h3>
+            <div className="urgency-spots">
+              {[1,2,3,4,5].map(i => <div key={i} className={`spot ${i <= 3 ? "taken" : "free"}`} />)}
+            </div>
+            <p>We nemen max 5 nieuwe klanten per week aan — zo garanderen we kwaliteit en snelheid voor iedereen.</p>
+          </div>
+          <div className="guarantee-box">
+            <div className="guarantee-icon">💰</div>
+            <div>
+              <strong>7-daags geld-terug garantie</strong>
+              <p>Niet tevreden? We geven je geld terug, geen vragen gesteld.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── 11. FINAL CTA ─── */}
+      <section id="cta" className="cta-section">
+        <h2>Laat je website klanten opleveren</h2>
+        <p>Geen lange trajecten. Geen grote investering vooraf. Gewoon meer klanten — vanaf maand 1.</p>
+        <div className="cta-btns">
+          <a href="#pricing" className="btn-primary">Krijg meer klanten →</a>
+          <a href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website." target="_blank" rel="noreferrer" className="btn-wa">💬 Plan gratis gesprek</a>
+        </div>
+        <div style={{ marginTop: 32, display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", position: "relative" }}>
+          {["7 dagen geld-terug","Geen contract","Live in 48 uur","Nog 2 plekken vrij"].map(t => (
+            <span key={t} style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.4)", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ color: "#22c55e" }}>✓</span> {t}
+            </span>
+          ))}
+        </div>
+        <div className="cta-phone">
+          Liever direct bellen?
+          <strong>+31 6 26 21 99 89</strong>
+        </div>
+      </section>
+
+      {/* ─── FOOTER ─── */}
+      <footer>
+        <p>© 2026 <strong>Vedantix</strong> — Website + hosting + onderhoud + support. Start €99/maand.</p>
+        <div style={{ marginTop: 14 }}>
+          <a href="#pricing">Prijzen</a>
+          <a href="/Privacy">Privacy</a>
+          <a href="/Voorwaarden">Voorwaarden</a>
+        </div>
+      </footer>
     </div>
   );
 }
