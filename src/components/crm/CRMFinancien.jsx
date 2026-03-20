@@ -226,6 +226,56 @@ export default function CRMFinancien() {
         )}
       </div>
 
+      {/* Inkomsten & Uitgaven lijst */}
+      <div style={{ background: "#fff", borderRadius: 14, border: "1px solid #e2e8f0", overflow: "hidden", marginBottom: 24 }}>
+        <div style={{ padding: "18px 22px", borderBottom: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h3 style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0f172a" }}>Inkomsten & Uitgaven</h3>
+          <button onClick={() => setShowModal(true)} style={{ background: "#1e3a5f", color: "#fff", border: "none", borderRadius: 9, padding: "8px 16px", fontSize: "0.82rem", fontWeight: 700, cursor: "pointer" }}>
+            + Toevoegen
+          </button>
+        </div>
+        {filteredItems.length === 0 ? (
+          <div style={{ padding: 32, textAlign: "center", color: "#94a3b8", fontSize: "0.88rem" }}>
+            Nog geen items toegevoegd. Klik op "+ Toevoegen" om te beginnen.
+          </div>
+        ) : (
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#f8fafc" }}>
+                {["Type", "Omschrijving", "Categorie", "Frequentie", "Bedrag", "In periode", ""].map(h => (
+                  <th key={h} style={{ padding: "10px 14px", textAlign: "left", fontSize: "0.72rem", fontWeight: 700, color: "#64748b", textTransform: "uppercase" }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredItems.map(item => (
+                <tr key={item.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
+                  <td style={{ padding: "11px 14px" }}>
+                    <span style={{ background: item.type === "inkomst" ? "#d1fae5" : "#fee2e2", color: item.type === "inkomst" ? "#065f46" : "#dc2626", padding: "3px 9px", borderRadius: 100, fontSize: "0.73rem", fontWeight: 700 }}>
+                      {item.type === "inkomst" ? "💰 Inkomst" : "💸 Uitgave"}
+                    </span>
+                  </td>
+                  <td style={{ padding: "11px 14px", fontSize: "0.85rem", fontWeight: 600, color: "#1e293b" }}>{item.omschrijving}</td>
+                  <td style={{ padding: "11px 14px", fontSize: "0.82rem", color: "#64748b" }}>{item.categorie || "–"}</td>
+                  <td style={{ padding: "11px 14px", fontSize: "0.82rem", color: "#64748b" }}>
+                    <span style={{ background: item.herhaling === "eenmalig" ? "#f1f5f9" : "#fef3c7", color: item.herhaling === "eenmalig" ? "#64748b" : "#92400e", padding: "2px 8px", borderRadius: 6, fontSize: "0.72rem", fontWeight: 600 }}>
+                      {item.herhaling}
+                    </span>
+                  </td>
+                  <td style={{ padding: "11px 14px", fontSize: "0.85rem", color: "#374151" }}>{fmt(item.bedrag)}</td>
+                  <td style={{ padding: "11px 14px", fontSize: "0.88rem", fontWeight: 700, color: item.type === "inkomst" ? "#10b981" : "#ef4444" }}>
+                    {item.type === "inkomst" ? "+" : "-"}{fmt(item.bedragInPeriode)}
+                  </td>
+                  <td style={{ padding: "11px 14px" }}>
+                    <button onClick={() => deleteItem(item.id)} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", fontSize: "1rem" }}>🗑</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
       {/* Belasting breakdown */}
       <div style={{ background: "#fff", borderRadius: 14, border: "1px solid #e2e8f0", padding: "22px 24px" }}>
         <h3 style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0f172a", marginBottom: 16 }}>Belastingoverzicht</h3>
