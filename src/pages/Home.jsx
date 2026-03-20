@@ -3,11 +3,14 @@ import NavBar from "../components/NavBar";
 
 if (typeof document !== "undefined") {
   let vp = document.querySelector('meta[name="viewport"]');
-  if (!vp) {
-    vp = document.createElement("meta");
-    vp.name = "viewport";
-    vp.content = "width=device-width, initial-scale=1.0";
-    document.head.appendChild(vp);
+
+  if (vp instanceof HTMLMetaElement) {
+    vp.setAttribute("content", "width=device-width, initial-scale=1.0");
+  } else {
+    const meta = document.createElement("meta");
+    meta.setAttribute("name", "viewport");
+    meta.setAttribute("content", "width=device-width, initial-scale=1.0");
+    document.head.appendChild(meta);
   }
 }
 
