@@ -49,6 +49,7 @@ export default function AdminCRM() {
     financien: <CRMFinancien />,
     abonnementen: <CRMAbonnementen />,
     documenten: <CRMDocumenten />,
+    backup: <CRMBackup />,
   };
 
   return (
