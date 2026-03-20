@@ -281,9 +281,12 @@ export default function CRMFinancien() {
         <h3 style={{ fontWeight: 700, fontSize: "0.95rem", color: "#0f172a", marginBottom: 16 }}>Belastingoverzicht</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
           {[
-            { label: "Omzet incl. BTW", value: omzet, color: "#10b981" },
+            { label: "Omzet incl. BTW (facturen)", value: omzet, color: "#10b981" },
             { label: "BTW (21%) — afdragen aan Belastingdienst", value: -btwAfdracht, color: "#ef4444" },
-            { label: "Omzet excl. BTW (netto)", value: omzetExclBtw, color: "#3b82f6" },
+            { label: "Omzet excl. BTW", value: omzetExclBtw, color: "#3b82f6" },
+            { label: "Extra inkomsten (handmatig)", value: extraInkomsten, color: "#06b6d4" },
+            { label: "Uitgaven (handmatig)", value: -totaalUitgaven, color: "#ef4444" },
+            { label: "Winst voor belasting", value: winst, color: "#3b82f6" },
             { label: "Inkomstenbelasting schatting (~36.85%)", value: -ibSchatting, color: "#f97316" },
             { label: "Netto over na belasting", value: nettoWinst, color: "#10b981", bold: true },
           ].map((row, i) => (
