@@ -17,12 +17,12 @@ import AdminCRM from './pages/AdminCRM.jsx';
 import KlantenPortaal from './pages/KlantenPortaal.jsx';
 
 // SEO pages
-import WebsiteKapper from './pages/WebsiteKapper';
-import WebsiteSalon from './pages/WebsiteSalon';
-import WebsiteKlusbedrijf from './pages/WebsiteKlusbedrijf';
-import WebsiteRestaurant from './pages/WebsiteRestaurant';
-import WebsiteFotograaf from './pages/WebsiteFotograaf';
-import WebsiteSchoonmaakbedrijf from './pages/WebsiteSchoonmaakbedrijf';
+import WebsiteKapper from './WebsiteKapper';
+import WebsiteSalon from './WebsiteSalon';
+import WebsiteKlusbedrijf from './WebsiteKlusbedrijf';
+import WebsiteRestaurant from './WebsiteRestaurant';
+import WebsiteFotograaf from './WebsiteFotograaf';
+import WebsiteSchoonmaakbedrijf from './WebsiteSchoonmaakbedrijf';
 
 const queryClient = new QueryClient();
 
