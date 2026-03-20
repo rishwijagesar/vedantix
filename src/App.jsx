@@ -13,8 +13,8 @@ import VedantixHome from './pages/VedantixHome';
 import VoorWie from './pages/VoorWie';
 import Voorwaarden from './pages/Voorwaarden';
 import FAQ from './pages/FAQ';
-import AdminCRM from './pages/AdminCRM';
-import KlantenPortaal from './pages/KlantenPortaal';
+import AdminCRM from './pages/AdminCRM.jsx';
+import KlantenPortaal from './pages/KlantenPortaal.jsx';
 
 const queryClient = new QueryClient();
 
