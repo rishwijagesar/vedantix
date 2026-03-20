@@ -35,6 +35,32 @@ export default function CRMFacturen() {
 
   const filtered = facturen.filter(f => !filterStatus || f.status === filterStatus);
 
+  const handleExportCSV = () => {
+    exportToCSV(filtered.map(f => ({
+      Factuurnummer: f.factuurnummer,
+      Klant: f.klant_naam || getKlant(f.customer_id)?.bedrijfsnaam || "",
+      Beschrijving: f.beschrijving || "",
+      "Bedrag (ex BTW)": f.bedrag || 0,
+      "BTW": f.btw_bedrag || 0,
+      Totaal: f.totaal_bedrag || f.bedrag || 0,
+      Factuurdatum: f.factuurdatum || "",
+      Vervaldatum: f.vervaldatum || "",
+      Status: f.status,
+    })), "facturen");
+  };
+
+  const handleExportPDF = () => {
+    exportToPDF("Facturenoverzicht", [
+      { header: "Factuurnr.", accessor: r => r.factuurnummer },
+      { header: "Klant", accessor: r => r.klant_naam || getKlant(r.customer_id)?.bedrijfsnaam || "" },
+      { header: "Omschrijving", accessor: r => r.beschrijving },
+      { header: "Totaal", accessor: r => `€${(r.totaal_bedrag || r.bedrag || 0).toFixed(2)}` },
+      { header: "Factuurdatum", accessor: r => r.factuurdatum ? new Date(r.factuurdatum).toLocaleDateString("nl-NL") : "" },
+      { header: "Vervaldatum", accessor: r => r.vervaldatum ? new Date(r.vervaldatum).toLocaleDateString("nl-NL") : "" },
+      { header: "Status", accessor: r => r.status },
+    ], filtered, "facturen");
+  };
+
   const createFactuur = async () => {
     const klant = getKlant(newFactuur.customer_id);
     await Payment.create({ ...newFactuur, bedrag: parseFloat(newFactuur.bedrag) || 0, btw_bedrag: parseFloat(newFactuur.btw_bedrag) || 0, totaal_bedrag: parseFloat(newFactuur.totaal_bedrag) || 0, klant_naam: klant?.bedrijfsnaam });
