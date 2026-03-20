@@ -36,7 +36,7 @@ export default function CRMBackup() {
     if (!confirm(`Weet je zeker dat je de backup van ${new Date(backup.created_at).toLocaleString("nl-NL")} wilt terugzetten? Huidige data wordt overschreven.`)) return;
     setRestoring(backup.id);
     setMsg(null);
-    const res = await restoreBackup({ backup_id: backup.id });
+    const res = await databaseBackup({ action: "restore", backup_id: backup.id });
     if (res.data?.success) {
       setMsg({ type: "success", text: "Database succesvol teruggezet!" });
     } else {
