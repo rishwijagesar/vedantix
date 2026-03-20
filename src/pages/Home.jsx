@@ -225,10 +225,10 @@ export default function Home() {
         @media(max-width:1024px){
           .hero-container{grid-template-columns:1fr;gap:60px}
           .hero-mockup-wrap{max-width:480px;margin:0 auto}
-          .pricing-grid{grid-template-columns:1fr;max-width:460px}
+          .pricing-grid{grid-template-columns:1fr;max-width:460px;margin:0 auto}
           .testimonials-grid{grid-template-columns:1fr}
-          .solution-grid{grid-template-columns:1fr;max-width:500px}
-          .why-grid{grid-template-columns:1fr;max-width:500px}
+          .solution-grid{grid-template-columns:1fr;max-width:520px}
+          .why-grid{grid-template-columns:1fr;max-width:520px}
           .results-row{grid-template-columns:1fr 1fr}
           .results-row .result-item:nth-child(2){border-right:none}
           .results-row .result-item:nth-child(3){border-right:none;border-top:1px solid #f3f4f6;grid-column:1/-1}
@@ -248,7 +248,6 @@ export default function Home() {
           .problem-card:nth-child(n){border-radius:0}
           .problem-card:first-child{border-radius:16px 16px 0 0}
           .problem-card:last-child{border-radius:0 0 16px 16px}
-          .pricing-section{padding:70px 5%}
           .pricing-card{padding:32px 24px}
           .p-price{font-size:2.4rem}
           .testimonials-grid{grid-template-columns:1fr}
@@ -259,6 +258,7 @@ export default function Home() {
           .results-row{grid-template-columns:1fr;border-radius:16px}
           .result-item{border-right:none;border-bottom:1px solid #f3f4f6;padding:28px}
           .result-item:last-child{border-bottom:none}
+          .problem-section,.solution-section,.results-section,.testimonials-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:80px 5%}
         }
         @media(max-width:480px){
           .hero h1{font-size:1.8rem;letter-spacing:-0.8px}
@@ -270,6 +270,7 @@ export default function Home() {
           .roi-num{font-size:2.2rem}
           .guarantee-box{flex-direction:column;gap:10px;padding:20px}
           .cta-section h2{font-size:1.8rem}
+          .section-header{margin-bottom:40px}
         }
       `}</style>
 
