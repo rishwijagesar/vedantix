@@ -681,12 +681,31 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── LEAD MAGNET ─── */}
+      <section className="lead-magnet-section">
+        <div className="lead-magnet-inner">
+          <div className="lead-magnet-text">
+            <div className="lead-magnet-badge">🎁 Gratis — geen verplichtingen</div>
+            <div className="lead-magnet-title">Ontdek waarom jij klanten misloopt</div>
+            <div className="lead-magnet-sub">We analyseren jouw online aanwezigheid gratis en laten zien wat je concurrent beter doet. Geen verkooppraatje — gewoon eerlijk advies.</div>
+          </div>
+          <div className="lead-magnet-cta">
+            <a href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20website%20analyse." target="_blank" rel="noreferrer" className="btn-lead">Gratis website analyse →</a>
+            <div className="lead-magnet-note">Reactie binnen 24 uur · Helemaal gratis</div>
+          </div>
+        </div>
+      </section>
+
       {/* ─── 10. URGENCY + GUARANTEE ─── */}
       <section className="urgency-section">
         <div className="urgency-inner">
           <div className="urgency-box">
-            <h3>⚡ We nemen max 5 klanten per week aan</h3>
-            <p>We geven elk project volle aandacht. Snelheid + kwaliteit. Als je nu belt, krijg jij een plek.</p>
+            <div className="urgency-pulse">Live beschikbaarheid</div>
+            <h3>Nog 2 plekken beschikbaar deze week</h3>
+            <div className="urgency-spots">
+              {[1,2,3,4,5].map(i => <div key={i} className={`spot ${i <= 3 ? "taken" : "free"}`} />)}
+            </div>
+            <p>We nemen max 5 nieuwe klanten per week aan — zo garanderen we kwaliteit en snelheid voor iedereen.</p>
           </div>
           <div className="guarantee-box">
             <div className="guarantee-icon">💰</div>
