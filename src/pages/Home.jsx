@@ -358,6 +358,7 @@ export default function Home() {
       <div className="trusted">
         <div className="trusted-inner">
           <span className="trusted-label">Vertrouwd door</span>
+
           {["Kappers","Restaurants","Klusbedrijven","Schoonheidssalons","Fotografen","ZZP'ers"].map(t => (
             <span key={t} className="trusted-pill">{t}</span>
           ))}
