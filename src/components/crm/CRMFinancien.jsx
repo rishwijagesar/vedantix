@@ -203,6 +203,9 @@ export default function CRMFinancien() {
           <p style={{ color: "#64748b", fontSize: "0.9rem", marginTop: 4 }}>Overzicht van inkomsten, winst en belasting</p>
         </div>
 
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+          <ExportButton onExportCSV={handleExportCSV} onExportPDF={handleExportPDF} />
+        </div>
         {/* Filter tabs */}
         <div style={{ display: "flex", gap: 6, background: "#f1f5f9", borderRadius: 12, padding: 4 }}>
           {FILTERS.map(f => (
