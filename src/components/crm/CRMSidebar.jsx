@@ -6,6 +6,7 @@ export default function CRMSidebar({ activeTab, onTabChange, user, isOpen, onTog
     { id: "klanten", icon: "👥", label: "Klanten" },
     { id: "tickets", icon: "🎫", label: "Tickets" },
     { id: "facturen", icon: "🧾", label: "Facturen" },
+    { id: "financien", icon: "💰", label: "Financiën" },
     { id: "abonnementen", icon: "📦", label: "Abonnementen" },
     { id: "documenten", icon: "📁", label: "Documenten" },
   ];

@@ -7,6 +7,7 @@ import CRMTickets from "../components/crm/CRMTickets";
 import CRMFacturen from "../components/crm/CRMFacturen";
 import CRMAbonnementen from "../components/crm/CRMAbonnementen";
 import CRMDocumenten from "../components/crm/CRMDocumenten";
+import CRMFinancien from "../components/crm/CRMFinancien";
 
 export default function AdminCRM() {
   const [user, setUser] = useState(null);
