@@ -417,15 +417,11 @@ export default function Home() {
 
       {/* ─── 4. RESULTS ─── */}
       <section className="results-section">
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ maxWidth: 600, marginBottom: 56 }}>
+        <div className="section-wrap">
+          <div className="section-header">
             <div className="section-label">Dit levert het op</div>
-            <h2 style={{ fontSize: "clamp(1.8rem,3vw,2.6rem)", fontWeight: 900, color: "#111827", letterSpacing: "-0.8px", lineHeight: 1.15, marginBottom: 14 }}>
-              Stop met klanten verliezen
-            </h2>
-            <p style={{ fontSize: "0.95rem", color: "#6b7280", lineHeight: 1.7 }}>
-              1–2 extra klanten per maand betaalt je hele website. Daarna is het puur winst.
-            </p>
+            <h2 className="section-h2">Stop met klanten verliezen</h2>
+            <p className="section-p">1–2 extra klanten per maand betaalt je hele website. Daarna is het puur winst.</p>
           </div>
           <div className="results-row">
             {[
