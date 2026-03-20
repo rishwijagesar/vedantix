@@ -9,6 +9,7 @@ export default function CRMSidebar({ activeTab, onTabChange, user, isOpen, onTog
     { id: "financien", icon: "💰", label: "Financiën" },
     { id: "abonnementen", icon: "📦", label: "Abonnementen" },
     { id: "documenten", icon: "📁", label: "Documenten" },
+    { id: "backup", icon: "💾", label: "Backup" },
   ];
 
   return (
