@@ -59,19 +59,28 @@ export default function Home() {
         .mockup-url{flex:1;background:rgba(255,255,255,0.06);border-radius:5px;height:20px;margin:0 14px;display:flex;align-items:center;padding:0 10px}
         .mockup-url span{font-size:0.6rem;color:rgba(255,255,255,0.35);font-weight:500}
 
-        /* TRUSTED BY */
-        .trusted{background:#f9fafb;padding:28px 5%;border-bottom:1px solid #f3f4f6}
-        .trusted-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:32px;justify-content:center;flex-wrap:wrap}
-        .trusted-label{font-size:0.75rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
-        .trusted-pill{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:8px 16px;font-size:0.78rem;font-weight:600;color:#6b7280}
+        /* ── LAYOUT SYSTEM ── */
+        .section-wrap{max-width:1100px;margin:0 auto;width:100%}
+        .section-header{max-width:580px;margin-bottom:56px}
+        .section-header.centered{margin-left:auto;margin-right:auto;text-align:center}
+        .section-h2{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#111827;letter-spacing:-0.8px;line-height:1.15;margin-bottom:14px}
+        .section-h2.light{color:#fff}
+        .section-p{font-size:0.95rem;color:#6b7280;line-height:1.7}
+        .section-p.light{color:rgba(255,255,255,0.5)}
 
-        /* SECTION STYLES */
+        /* TRUSTED BY */
+        .trusted{background:#f9fafb;padding:26px 5%;border-bottom:1px solid #f3f4f6}
+        .trusted-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+        .trusted-label{font-size:0.72rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;margin-right:8px}
+        .trusted-pill{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:7px 14px;font-size:0.78rem;font-weight:600;color:#6b7280}
+
+        /* SECTION LABEL */
         .section-label{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#6366f1;margin-bottom:14px}
         .section-label.light{color:#818cf8}
 
         /* PROBLEM */
         .problem-section{padding:100px 5%;background:#fff}
-        .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;max-width:880px}
+        .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
         .problem-card{padding:36px 32px;background:#fafafa;border:1px solid #f3f4f6;transition:all 0.25s}
         .problem-card:hover{background:#fff;box-shadow:0 8px 32px rgba(0,0,0,0.06);z-index:1;transform:translateY(-2px)}
         .problem-card:nth-child(1){border-radius:16px 0 0 0}
@@ -84,7 +93,7 @@ export default function Home() {
 
         /* SOLUTION */
         .solution-section{padding:100px 5%;background:linear-gradient(160deg,#0d1a3a,#111827)}
-        .solution-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:860px}
+        .solution-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
         .solution-col{padding:36px;border-radius:16px}
         .solution-col.get{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)}
         .solution-col.skip{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.15)}
@@ -99,15 +108,15 @@ export default function Home() {
 
         /* RESULTS */
         .results-section{padding:100px 5%;background:#fff}
-        .results-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0;max-width:800px;border:1px solid #f3f4f6;border-radius:20px;overflow:hidden}
+        .results-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #f3f4f6;border-radius:20px;overflow:hidden}
         .result-item{padding:40px 32px;text-align:center;border-right:1px solid #f3f4f6}
         .result-item:last-child{border-right:none}
         .result-num{font-size:2.4rem;font-weight:900;color:#111827;letter-spacing:-1px;margin-bottom:4px;line-height:1}
         .result-label{font-size:0.8rem;color:#9ca3af;font-weight:500}
 
         /* TESTIMONIALS */
-        .testimonials-section{padding:80px 5%;background:#f9fafb}
-        .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1000px;margin:0 auto}
+        .testimonials-section{padding:100px 5%;background:#f9fafb}
+        .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
         .testimonial-card{background:#fff;border-radius:14px;padding:28px;border:1px solid #f3f4f6;transition:box-shadow 0.25s}
         .testimonial-card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.07)}
         .t-stars{color:#fbbf24;font-size:0.85rem;margin-bottom:12px;letter-spacing:1px}
@@ -118,8 +127,8 @@ export default function Home() {
         .t-role{font-size:0.73rem;color:#9ca3af}
 
         /* PRICING */
-        .pricing-section{padding:110px 5%;background:#fff}
-        .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1020px;margin:0 auto}
+        .pricing-section{padding:100px 5%;background:#fff}
+        .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
         .pricing-card{border-radius:20px;padding:44px 36px;border:1.5px solid #f3f4f6;transition:all 0.3s;position:relative;background:#fff}
         .pricing-card:hover{border-color:#e0e7ff;box-shadow:0 20px 60px rgba(99,102,241,0.08);transform:translateY(-3px)}
         .pricing-card.featured{border-color:#6366f1;background:linear-gradient(160deg,#fafbff,#f0f1ff);box-shadow:0 24px 80px rgba(99,102,241,0.14)}
@@ -147,7 +156,7 @@ export default function Home() {
 
         /* TRUST STRIP */
         .trust-strip{background:#f9fafb;border-top:1px solid #f3f4f6;border-bottom:1px solid #f3f4f6;padding:24px 5%}
-        .trust-items{max-width:900px;margin:0 auto;display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+        .trust-items{max-width:1100px;margin:0 auto;display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
         .trust-item{display:flex;align-items:center;gap:8px;font-size:0.82rem;font-weight:600;color:#374151}
         .trust-icon{font-size:0.95rem}
 
@@ -163,7 +172,7 @@ export default function Home() {
 
         /* WHY */
         .why-section{padding:100px 5%;background:#f9fafb}
-        .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:860px}
+        .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
         .why-col{padding:40px;border-radius:18px}
         .why-col.old{background:#fff;border:1px solid #f3f4f6}
         .why-col.new{background:linear-gradient(135deg,#eef2ff,#f5f3ff);border:1px solid #e0e7ff}
@@ -179,7 +188,7 @@ export default function Home() {
 
         /* HOW */
         .how-section{padding:100px 5%;background:#fff}
-        .how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;max-width:1000px;margin:56px auto 0;position:relative}
+        .how-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:56px;position:relative}
         .how-steps::before{content:'';position:absolute;top:24px;left:calc(12.5% + 20px);right:calc(12.5% + 20px);height:1px;background:linear-gradient(90deg,#e0e7ff,#c7d2fe,#e0e7ff);z-index:0}
         .how-step{text-align:center;padding:0 20px;position:relative;z-index:1}
         .step-num{width:48px;height:48px;background:#fff;border:2px solid #e0e7ff;border-radius:50%;font-size:0.95rem;font-weight:900;color:#6366f1;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 4px 12px rgba(99,102,241,0.12)}
@@ -187,8 +196,8 @@ export default function Home() {
         .how-step p{font-size:0.78rem;color:#9ca3af;line-height:1.6}
 
         /* URGENCY */
-        .urgency-section{padding:60px 5%;background:#fff}
-        .urgency-inner{max-width:740px;margin:0 auto}
+        .urgency-section{padding:80px 5%;background:#fff}
+        .urgency-inner{max-width:800px;margin:0 auto}
         .urgency-box{background:#111827;border-radius:16px;padding:40px 48px;text-align:center;margin-bottom:20px}
         .urgency-box h3{color:#fff;font-size:1.2rem;font-weight:800;margin-bottom:10px;letter-spacing:-0.3px}
         .urgency-box p{color:rgba(255,255,255,0.55);font-size:0.85rem;line-height:1.65;max-width:520px;margin:0 auto}
