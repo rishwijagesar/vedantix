@@ -174,7 +174,7 @@ export default function NavBar() {
         <div className="navbar-container">
           {/* Logo */}
           <a href="#" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-            <VedantixLogo variant="full" size="md" theme={scrolled ? "dark" : "dark"} />
+            <VedantixLogo variant="full" size="md" theme={scrolled ? "dark" : "light"} />
           </a>
 
           {/* Desktop menu + CTA */}
