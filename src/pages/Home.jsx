@@ -593,15 +593,11 @@ export default function Home() {
 
       {/* ─── 8. WHY SUBSCRIPTION ─── */}
       <section className="why-section">
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ maxWidth: 600, marginBottom: 56 }}>
+        <div className="section-wrap">
+          <div className="section-header">
             <div className="section-label">Waarom abonnement</div>
-            <h2 style={{ fontSize: "clamp(1.8rem,3vw,2.6rem)", fontWeight: 900, color: "#111827", letterSpacing: "-0.8px", lineHeight: 1.15, marginBottom: 14 }}>
-              Waarom een abonnement beter is
-            </h2>
-            <p style={{ fontSize: "0.95rem", color: "#6b7280", lineHeight: 1.7 }}>
-              Geen grote upfront kosten. Alles inbegrepen. Eenvoudig opzeggen.
-            </p>
+            <h2 className="section-h2">Waarom een abonnement beter is</h2>
+            <p className="section-p">Geen grote upfront kosten. Alles inbegrepen. Eenvoudig opzeggen.</p>
           </div>
           <div className="why-grid">
             <div className="why-col old">
