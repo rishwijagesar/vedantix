@@ -40,6 +40,38 @@ export default function CRMKlanten() {
     return matchSearch && matchStatus;
   });
 
+  const handleExportCSV = () => {
+    const data = filtered.map(k => ({
+      Bedrijfsnaam: k.bedrijfsnaam,
+      Voornaam: k.voornaam || "",
+      Achternaam: k.achternaam || "",
+      Email: k.email,
+      Telefoon: k.telefoon || "",
+      Domeinnaam: k.domeinnaam || "",
+      Status: k.status,
+      Startdatum: k.startdatum || "",
+      Plaats: k.plaats || "",
+    }));
+    exportToCSV(data, "klanten");
+  };
+
+  const handleExportPDF = () => {
+    exportToPDF(
+      "Klantenlijst",
+      [
+        { header: "Bedrijf", accessor: r => r.bedrijfsnaam },
+        { header: "Contactpersoon", accessor: r => `${r.voornaam || ""} ${r.achternaam || ""}`.trim() },
+        { header: "E-mail", accessor: r => r.email },
+        { header: "Telefoon", accessor: r => r.telefoon },
+        { header: "Domein", accessor: r => r.domeinnaam },
+        { header: "Status", accessor: r => r.status },
+        { header: "Startdatum", accessor: r => r.startdatum ? new Date(r.startdatum).toLocaleDateString("nl-NL") : "" },
+      ],
+      filtered,
+      "klanten"
+    );
+  };
+
   const openNew = () => { setSelectedKlant(null); setIsNew(true); setShowModal(true); };
   const openEdit = (k) => { setSelectedKlant(k); setIsNew(false); setShowModal(true); };
 
