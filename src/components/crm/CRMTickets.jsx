@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 
+import ExportButton, { exportToCSV, exportToPDF } from "./ExportButton";
+
 const Ticket = base44.entities.Ticket;
 const TicketComment = base44.entities.TicketComment;
 const CustomerProfile = base44.entities.CustomerProfile;
