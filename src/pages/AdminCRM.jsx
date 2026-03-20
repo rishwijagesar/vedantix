@@ -45,6 +45,7 @@ export default function AdminCRM() {
     klanten: <CRMKlanten />,
     tickets: <CRMTickets />,
     facturen: <CRMFacturen />,
+    financien: <CRMFinancien />,
     abonnementen: <CRMAbonnementen />,
     documenten: <CRMDocumenten />,
   };
