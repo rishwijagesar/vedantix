@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { base44 } from "@/api/base44Client";
 import { exportToCSV } from "./ExportButton";
-import { createBackup, restoreBackup, listBackups } from "@/functions/databaseBackup";
+import { databaseBackup } from "@/functions/databaseBackup";
 
 export default function CRMBackup() {
   const [backups, setBackups] = useState([]);
