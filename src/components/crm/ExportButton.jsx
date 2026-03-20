@@ -1,6 +1,5 @@
 import { useState } from "react";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
 
 export function exportToCSV(data, filename) {
   if (!data || data.length === 0) return;
@@ -21,22 +20,49 @@ export function exportToCSV(data, filename) {
 
 export function exportToPDF(title, columns, rows, filename) {
   const doc = new jsPDF({ orientation: "landscape" });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 14;
+  const colWidth = (pageWidth - margin * 2) / columns.length;
+
+  // Header
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
-  doc.text(title, 14, 18);
+  doc.setTextColor(15, 23, 42);
+  doc.text(title, margin, 18);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(100);
-  doc.text(`Geëxporteerd op ${new Date().toLocaleDateString("nl-NL")}`, 14, 25);
+  doc.setTextColor(100, 116, 139);
+  doc.text(`Geëxporteerd op ${new Date().toLocaleDateString("nl-NL")}`, margin, 25);
 
-  doc.autoTable({
-    head: [columns.map(c => c.header)],
-    body: rows.map(row => columns.map(c => c.accessor(row) ?? "")),
-    startY: 30,
-    styles: { fontSize: 8, cellPadding: 3 },
-    headStyles: { fillColor: [30, 58, 95], textColor: 255, fontStyle: "bold" },
-    alternateRowStyles: { fillColor: [248, 250, 252] },
-    margin: { left: 14, right: 14 },
+  // Table header background
+  let y = 32;
+  doc.setFillColor(30, 58, 95);
+  doc.rect(margin, y, pageWidth - margin * 2, 8, "F");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  columns.forEach((col, i) => {
+    doc.text(String(col.header), margin + i * colWidth + 2, y + 5.5, { maxWidth: colWidth - 4 });
+  });
+
+  // Table rows
+  y += 8;
+  doc.setFont("helvetica", "normal");
+  rows.forEach((row, rowIdx) => {
+    if (y > doc.internal.pageSize.getHeight() - 20) {
+      doc.addPage();
+      y = 20;
+    }
+    if (rowIdx % 2 === 0) {
+      doc.setFillColor(248, 250, 252);
+      doc.rect(margin, y, pageWidth - margin * 2, 7, "F");
+    }
+    doc.setTextColor(55, 65, 81);
+    columns.forEach((col, i) => {
+      const val = String(col.accessor(row) ?? "");
+      doc.text(val, margin + i * colWidth + 2, y + 4.8, { maxWidth: colWidth - 4 });
+    });
+    y += 7;
   });
 
   doc.save(filename + ".pdf");
