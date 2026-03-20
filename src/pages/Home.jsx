@@ -392,15 +392,11 @@ export default function Home() {
 
       {/* ─── 3. SOLUTION ─── */}
       <section className="solution-section">
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ maxWidth: 600, marginBottom: 56 }}>
+        <div className="section-wrap">
+          <div className="section-header">
             <div className="section-label light">De oplossing</div>
-            <h2 style={{ fontSize: "clamp(1.8rem,3vw,2.6rem)", fontWeight: 900, color: "#fff", letterSpacing: "-0.8px", lineHeight: 1.15, marginBottom: 14 }}>
-              Wij zorgen dat jouw website klanten oplevert
-            </h2>
-            <p style={{ fontSize: "0.95rem", color: "rgba(255,255,255,0.5)", lineHeight: 1.7 }}>
-              Website + hosting + updates + onderhoud. Alles in één. Nul zorgen.
-            </p>
+            <h2 className="section-h2 light">Wij zorgen dat jouw website klanten oplevert</h2>
+            <p className="section-p light">Website + hosting + updates + onderhoud. Alles in één. Nul zorgen.</p>
           </div>
           <div className="solution-grid">
             <div className="solution-col get">
