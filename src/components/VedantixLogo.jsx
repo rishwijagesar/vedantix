@@ -22,9 +22,9 @@ export default function VedantixLogo({
   const h = typeof size === "number" ? size : (heights[size] || 36);
 
   const colors = {
-    dark:  { mark: "#0f172a", text: "#0f172a", accent: "#3b82f6" },
-    light: { mark: "#ffffff", text: "#ffffff", accent: "#93c5fd" },
-    white: { mark: "#ffffff", text: "#ffffff", accent: "#bfdbfe" },
+    dark:  { mark: "#0f172a", iconStroke: "white", text: "#0f172a", accent: "#3b82f6" },
+    light: { mark: "rgba(255,255,255,0.15)", iconStroke: "white", text: "#ffffff", accent: "#93c5fd" },
+    white: { mark: "rgba(255,255,255,0.15)", iconStroke: "white", text: "#ffffff", accent: "#bfdbfe" },
   };
   const c = colors[theme] || colors.dark;
 
