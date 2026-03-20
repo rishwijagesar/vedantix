@@ -1,3 +1,5 @@
+import VedantixLogo from "../VedantixLogo";
+
 export default function CRMSidebar({ activeTab, onTabChange, user, isOpen, onToggle }) {
   const navItems = [
     { id: "dashboard", icon: "⊞", label: "Dashboard" },

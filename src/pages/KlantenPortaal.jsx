@@ -6,6 +6,7 @@ import PortalFacturen from "../components/portal/PortalFacturen";
 import PortalTickets from "../components/portal/PortalTickets";
 import PortalGegevens from "../components/portal/PortalGegevens";
 import PortalDocumenten from "../components/portal/PortalDocumenten";
+import VedantixLogo from "../components/VedantixLogo";
 
 const CustomerProfile = base44.entities.CustomerProfile;
 
