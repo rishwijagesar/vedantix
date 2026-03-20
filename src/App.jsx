@@ -32,6 +32,7 @@ function App() {
         <Route path="/Voorwaarden" element={<Voorwaarden />} />
         <Route path="/FAQ" element={<FAQ />} />
         <Route path="/admin" element={<CRM />} />
+        <Route path="/CRM" element={<CRM />} />
         <Route path="/klantenportaal" element={<ClientPortal />} />
       </Routes>
     </BrowserRouter>
