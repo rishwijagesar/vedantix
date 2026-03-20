@@ -359,7 +359,7 @@ export default function Home() {
                 </div>
 
               </div>
-              <p style={{ marginTop: 20, fontSize: "0.8rem", color: "#6b7280", textAlign: "center", fontWeight: 500, maxWidth: 440 }}>Jij kiest het design • We bouwen het in 48 uur</p>
+              <p style={{ marginTop: 20, fontSize: "0.8rem", color: "#6b7280", textAlign: "center", fontWeight: 500, maxWidth: 440 }}>Jij kiest een stijl • Wij regelen de rest</p>
             </div>
           </div>
         </div>
