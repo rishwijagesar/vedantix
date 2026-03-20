@@ -618,15 +618,11 @@ export default function Home() {
 
       {/* ─── 9. HOW IT WORKS ─── */}
       <section id="how" className="how-section">
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ textAlign: "center", maxWidth: 520, margin: "0 auto" }}>
-            <div className="section-label" style={{ textAlign: "center" }}>Werkwijze</div>
-            <h2 style={{ fontSize: "clamp(1.8rem,3vw,2.6rem)", fontWeight: 900, color: "#111827", letterSpacing: "-0.8px", marginBottom: 14 }}>
-              Hoe het werkt
-            </h2>
-            <p style={{ fontSize: "0.95rem", color: "#6b7280", lineHeight: 1.7 }}>
-              Vier eenvoudige stappen naar jouw nieuwe website.
-            </p>
+        <div className="section-wrap">
+          <div className="section-header centered">
+            <div className="section-label">Werkwijze</div>
+            <h2 className="section-h2">Hoe het werkt</h2>
+            <p className="section-p">Vier eenvoudige stappen naar jouw nieuwe website.</p>
           </div>
           <div className="how-steps">
             {[
