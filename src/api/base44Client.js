@@ -1,6 +1,6 @@
 import { createClient } from '@base44/sdk';
 
 export const base44 = createClient({
-  appId: "69b985148a60d6c99267c3dd",
+  appId: "69b9b443c57eefc3d3bfafbf",
   requiresAuth: false,
 });
