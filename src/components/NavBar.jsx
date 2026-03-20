@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import VedantixLogo from "./VedantixLogo";
 
 export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
