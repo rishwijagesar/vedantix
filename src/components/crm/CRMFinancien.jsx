@@ -117,12 +117,44 @@ export default function CRMFinancien() {
   const openstaand = filtered.filter(f => f.status === "openstaand").reduce((s, f) => s + (f.totaal_bedrag || f.bedrag || 0), 0);
   const verlopen = filtered.filter(f => f.status === "verlopen").reduce((s, f) => s + (f.totaal_bedrag || f.bedrag || 0), 0);
 
+  // Bereken extra inkomsten/uitgaven uit FinancieelItem, rekening houdend met herhaling
+  const { extraInkomsten, extraUitgaven, filteredItems } = useMemo(() => {
+    let extraInkomsten = 0, extraUitgaven = 0;
+    const filteredItems = [];
+    items.forEach(item => {
+      const itemDatum = new Date(item.datum);
+      let telt = false;
+      if (item.herhaling === "eenmalig") {
+        telt = itemDatum >= startDate;
+      } else {
+        // Terugkerend: telt mee als datum vóór of binnen de periode valt
+        telt = itemDatum <= new Date();
+      }
+      if (!telt) return;
+
+      let bedragInPeriode = item.bedrag;
+      if (item.herhaling !== "eenmalig") {
+        const herhalingDagen = HERHALING_DAGEN[item.herhaling] || 1;
+        const aantalKeer = Math.max(1, Math.floor(days / herhalingDagen));
+        bedragInPeriode = item.bedrag * aantalKeer;
+      }
+
+      filteredItems.push({ ...item, bedragInPeriode });
+      if (item.type === "inkomst") extraInkomsten += bedragInPeriode;
+      else extraUitgaven += bedragInPeriode;
+    });
+    return { extraInkomsten, extraUitgaven, filteredItems };
+  }, [items, filter]);
+
   // BTW: omzet bevat 21% BTW (incl.), dus BTW = omzet - omzet/1.21
   const btwAfdracht = omzet - omzet / (1 + BTW_RATE);
   const omzetExclBtw = omzet / (1 + BTW_RATE);
+  const totaalInkomsten = omzetExclBtw + extraInkomsten;
+  const totaalUitgaven = extraUitgaven;
+  const winst = totaalInkomsten - totaalUitgaven;
   // Schatting inkomstenbelasting over netto winst (excl. BTW)
-  const ibSchatting = omzetExclBtw * IB_RATE;
-  const nettoWinst = omzetExclBtw - ibSchatting;
+  const ibSchatting = Math.max(0, winst * IB_RATE);
+  const nettoWinst = winst - ibSchatting;
 
   const chartData = useMemo(() => groupByPeriod(facturen, days), [facturen, filter]);
 
