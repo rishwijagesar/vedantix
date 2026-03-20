@@ -70,6 +70,29 @@ export default function CRMTickets() {
     return (!filterStatus || t.status === filterStatus) && (!filterPrio || t.prioriteit === filterPrio);
   });
 
+  const handleExportCSV = () => {
+    exportToCSV(filtered.map(t => ({
+      Titel: t.titel,
+      Klant: t.klant_naam || "",
+      Type: t.type,
+      Prioriteit: t.prioriteit,
+      Status: t.status,
+      Deadline: t.deadline || "",
+      Aangemaakt: t.created_date ? new Date(t.created_date).toLocaleDateString("nl-NL") : "",
+    })), "tickets");
+  };
+
+  const handleExportPDF = () => {
+    exportToPDF("Ticketoverzicht", [
+      { header: "Titel", accessor: r => r.titel },
+      { header: "Klant", accessor: r => r.klant_naam },
+      { header: "Type", accessor: r => r.type },
+      { header: "Prioriteit", accessor: r => r.prioriteit },
+      { header: "Status", accessor: r => r.status },
+      { header: "Deadline", accessor: r => r.deadline ? new Date(r.deadline).toLocaleDateString("nl-NL") : "" },
+    ], filtered, "tickets");
+  };
+
   const inputStyle = { width: "100%", padding: "10px 12px", border: "2px solid #e2e8f0", borderRadius: 8, fontSize: "0.88rem", outline: "none", background: "#fff", fontFamily: "inherit" };
 
   return (
