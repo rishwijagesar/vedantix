@@ -12,7 +12,7 @@ export default function CRMBackup() {
 
   const load = async () => {
     setLoading(true);
-    const res = await listBackups({});
+    const res = await databaseBackup({ action: "list" });
     setBackups(res.data?.backups || []);
     setLoading(false);
   };
