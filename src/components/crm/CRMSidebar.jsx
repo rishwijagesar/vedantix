@@ -20,12 +20,11 @@ export default function CRMSidebar({ activeTab, onTabChange, user, isOpen, onTog
       overflow: "hidden"
     }}>
       {/* Logo */}
-      <div style={{ padding: "20px 16px", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", gap: 12, minHeight: 70 }}>
-        <div style={{ width: 36, height: 36, background: "linear-gradient(135deg,#3b82f6,#6366f1)", borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: "1rem", flexShrink: 0 }}>V</div>
-        {isOpen && <div>
-          <div style={{ color: "#fff", fontWeight: 800, fontSize: "0.95rem", letterSpacing: -0.3 }}>Vedantix</div>
-          <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.7rem", fontWeight: 600 }}>Admin Panel</div>
-        </div>}
+      <div style={{ padding: "20px 16px", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", minHeight: 70 }}>
+        {isOpen
+          ? <VedantixLogo variant="full" size={34} theme="light" />
+          : <VedantixLogo variant="icon" size={34} theme="light" />
+        }
       </div>
 
       {/* Nav */}

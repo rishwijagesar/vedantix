@@ -96,12 +96,8 @@ export default function KlantenPortaal() {
 
       <div className="portal-sidebar" style={{ position: "fixed", top: 0, left: 0, bottom: 0, width: 240, background: "#0f172a", zIndex: 100, display: "flex", flexDirection: "column" }}>
         <div style={{ padding: "22px 18px", borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-            <div style={{ width: 34, height: 34, background: "linear-gradient(135deg,#3b82f6,#6366f1)", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: "0.9rem" }}>V</div>
-            <div>
-              <div style={{ color: "#fff", fontWeight: 800, fontSize: "0.88rem" }}>Vedantix</div>
-              <div style={{ color: "rgba(255,255,255,0.4)", fontSize: "0.68rem" }}>Klantportaal</div>
-            </div>
+          <div style={{ marginBottom: 16 }}>
+            <VedantixLogo variant="full" size={32} theme="light" />
           </div>
           <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 10, padding: "10px 12px" }}>
             <div style={{ color: "#fff", fontWeight: 700, fontSize: "0.85rem" }}>{klant.bedrijfsnaam}</div>
