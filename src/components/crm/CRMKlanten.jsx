@@ -108,7 +108,10 @@ export default function CRMKlanten() {
           <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0f172a" }}>Klanten</h1>
           <p style={{ color: "#64748b", fontSize: "0.9rem", marginTop: 4 }}>{klanten.length} klanten in totaal</p>
         </div>
-        <button onClick={openNew} style={{ background: "#1e3a5f", color: "#fff", border: "none", borderRadius: 10, padding: "11px 20px", fontWeight: 700, fontSize: "0.88rem", cursor: "pointer" }}>+ Nieuwe klant</button>
+        <div style={{ display: "flex", gap: 10 }}>
+          <ExportButton onExportCSV={handleExportCSV} onExportPDF={handleExportPDF} />
+          <button onClick={openNew} style={{ background: "#1e3a5f", color: "#fff", border: "none", borderRadius: 10, padding: "11px 20px", fontWeight: 700, fontSize: "0.88rem", cursor: "pointer" }}>+ Nieuwe klant</button>
+        </div>
       </div>
 
       {/* Filters */}
