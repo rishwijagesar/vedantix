@@ -300,6 +300,13 @@ export default function CRMFinancien() {
           * Schattingen zijn indicatief. Raadpleeg een boekhouder voor exacte belastingberekeningen. IB-tarief is gebaseerd op box 1 schijf 2 (2024).
         </p>
       </div>
+
+      {showModal && (
+        <FinancieelItemModal
+          onSave={handleSave}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }
