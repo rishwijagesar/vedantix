@@ -576,26 +576,33 @@ export default function Home() {
 
       {/* ─── 7. ROI ─── */}
       <section className="roi-section">
-        <div className="roi-box">
-          <div className="section-label light" style={{ textAlign: "center" }}>Jouw ROI</div>
-          <h2 style={{ fontSize: "clamp(1.6rem,3vw,2.2rem)", fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", marginBottom: 8, marginTop: 8 }}>
-            Dit is je investering vs. opbrengst
-          </h2>
-          <p style={{ fontSize: "0.88rem", color: "rgba(255,255,255,0.45)", marginBottom: 0 }}>
-            Je hebt maar 1–2 extra klanten per maand nodig om je website terug te verdienen.
-          </p>
-          <div className="roi-vs">
-            <div className="roi-col">
-              <div className="roi-label">Maandelijkse investering</div>
-              <div className="roi-num" style={{ color: "#fff" }}>€149<span style={{ fontSize: "1rem", fontWeight: 600, color: "rgba(255,255,255,0.4)" }}>/m</span></div>
+        <div className="roi-inner">
+          <h2 className="roi-title">Dit betaalt zichzelf binnen 30 dagen terug</h2>
+          <p className="roi-subtitle">Je hebt maar 1–2 extra klanten per maand nodig om je website terug te verdienen.</p>
+
+          <div className="roi-comparison">
+            <div className="roi-block" style={{ textAlign: "right" }}>
+              <div className="roi-value invest">€149<span style={{ fontSize: "1.2rem", fontWeight: 700, color: "#9ca3af" }}>/m</span></div>
+              <div className="roi-block-label">Jouw investering</div>
             </div>
-            <div className="roi-arrow">→</div>
-            <div className="roi-col">
-              <div className="roi-label">Potentiële extra omzet</div>
-              <div className="roi-num" style={{ color: "#22c55e" }}>€500–2000+<span style={{ fontSize: "0.9rem", fontWeight: 600, color: "rgba(255,255,255,0.4)" }}>/m</span></div>
+
+            <div className="roi-divider">
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div className="roi-arrow-line" />
+                <div className="roi-arrow-head" />
+              </div>
+            </div>
+
+            <div className="roi-block" style={{ textAlign: "left" }}>
+              <div className="roi-value gain">€500–2000+<span style={{ fontSize: "1.2rem", fontWeight: 700, color: "#86efac" }}>/m</span></div>
+              <div className="roi-block-label">Extra omzet</div>
             </div>
           </div>
-          <p className="roi-conclusion">Website betaalt zich terug in maand 1. Daarna is het puur winst.</p>
+
+          <div style={{ borderTop: "1px solid #f3f4f6", paddingTop: 32 }}>
+            <div className="roi-bottom-line">Vanaf maand 1 winst. Daarna is het puur schaalbaar.</div>
+            <div className="roi-note">Gebaseerd op gemiddelde klantresultaten</div>
+          </div>
         </div>
       </section>
 
