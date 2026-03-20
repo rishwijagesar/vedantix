@@ -16,13 +16,26 @@ import FAQ from './pages/FAQ';
 import AdminCRM from './pages/AdminCRM.jsx';
 import KlantenPortaal from './pages/KlantenPortaal.jsx';
 
-// SEO pages
-import WebsiteKapper from './WebsiteKapper';
-import WebsiteSalon from './WebsiteSalon';
-import WebsiteKlusbedrijf from './WebsiteKlusbedrijf';
-import WebsiteRestaurant from './WebsiteRestaurant';
-import WebsiteFotograaf from './WebsiteFotograaf';
-import WebsiteSchoonmaakbedrijf from './WebsiteSchoonmaakbedrijf';
+// SEO niche pages
+import WebsiteKapper from './pages/WebsiteKapper';
+import WebsiteSalon from './pages/WebsiteSalon';
+import WebsiteKlusbedrijf from './pages/WebsiteKlusbedrijf';
+import WebsiteRestaurant from './pages/WebsiteRestaurant';
+import WebsiteFotograaf from './pages/WebsiteFotograaf';
+import WebsiteSchoonmaakbedrijf from './pages/WebsiteSchoonmaakbedrijf';
+
+import MeerKlantenSalon from './pages/blog/MeerKlantenSalon';
+import MeerOffertesKlusbedrijf from './pages/blog/MeerOffertesKlusbedrijf';
+import MeerReserveringenRestaurant from './pages/blog/MeerReserveringenRestaurant';
+import MeerBoekingenFotograaf from './pages/blog/MeerBoekingenFotograaf';
+import MeerKlantenSchoonmaakbedrijf from './pages/blog/MeerKlantenSchoonmaakbedrijf';
+
+// Dynamic SEO city page
+import SeoCityPage from './pages/SeoCityPage';
+
+// Blog
+import Blog from './pages/Blog';
+import MeerKlantenKapper from './pages/blog/MeerKlantenKapper';
 
 const queryClient = new QueryClient();
 
@@ -31,7 +44,6 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          {/* PUBLIC - no auth required */}
           <Route path="/" element={<Navigate to="/Home" replace />} />
           <Route path="/Home" element={<Home />} />
           <Route path="/Planning" element={<Planning />} />
@@ -45,7 +57,6 @@ function App() {
           <Route path="/Voorwaarden" element={<Voorwaarden />} />
           <Route path="/FAQ" element={<FAQ />} />
 
-          {/* SEO landing pages */}
           <Route path="/website-kapper" element={<WebsiteKapper />} />
           <Route path="/website-salon" element={<WebsiteSalon />} />
           <Route path="/website-klusbedrijf" element={<WebsiteKlusbedrijf />} />
@@ -53,11 +64,21 @@ function App() {
           <Route path="/website-fotograaf" element={<WebsiteFotograaf />} />
           <Route path="/website-schoonmaakbedrijf" element={<WebsiteSchoonmaakbedrijf />} />
 
-          {/* PROTECTED - auth handled inside each page */}
+          <Route path="/blog/meer-klanten-salon" element={<MeerKlantenSalon />} />
+          <Route path="/blog/meer-offertes-klusbedrijf" element={<MeerOffertesKlusbedrijf />} />
+          <Route path="/blog/meer-reserveringen-restaurant" element={<MeerReserveringenRestaurant />} />
+          <Route path="/blog/meer-boekingen-fotograaf" element={<MeerBoekingenFotograaf />} />
+          <Route path="/blog/meer-klanten-schoonmaakbedrijf" element={<MeerKlantenSchoonmaakbedrijf />} />
+
+          {/* 1 component voor alle city SEO pages */}
+          <Route path="/website/:niche/:stad" element={<SeoCityPage />} />
+
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/meer-klanten-kapper" element={<MeerKlantenKapper />} />
+
           <Route path="/admin" element={<AdminCRM />} />
           <Route path="/klantenportaal" element={<KlantenPortaal />} />
 
-          {/* Legacy redirects */}
           <Route path="/CRM" element={<Navigate to="/admin" replace />} />
           <Route path="/ClientPortal" element={<Navigate to="/klantenportaal" replace />} />
         </Routes>

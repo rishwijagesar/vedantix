@@ -1,9 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Hoofdpagina's -->
   <url>
     <loc>https://vedantix.nl/</loc>
     <priority>1.0</priority>
   </url>
+  <url>
+    <loc>https://vedantix.nl/Home</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://vedantix.nl/Prijzen</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vedantix.nl/Proces</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vedantix.nl/FAQ</loc>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://vedantix.nl/Privacy</loc>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://vedantix.nl/Voorwaarden</loc>
+    <priority>0.4</priority>
+  </url>
+
+  <!-- Hoofd niche pagina's -->
   <url>
     <loc>https://vedantix.nl/website-kapper</loc>
     <priority>0.9</priority>
@@ -22,10 +50,153 @@
   </url>
   <url>
     <loc>https://vedantix.nl/website-fotograaf</loc>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://vedantix.nl/website-schoonmaakbedrijf</loc>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Blog -->
+  <url>
+    <loc>https://vedantix.nl/blog</loc>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://vedantix.nl/blog/meer-klanten-kapper</loc>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Kapper steden -->
+  <url><loc>https://vedantix.nl/website/kapper/amsterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/rotterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/utrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/den-haag</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/eindhoven</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/tilburg</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/breda</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/groningen</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/arnhem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/haarlem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/leiden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/delft</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/dordrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/amersfoort</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/apeldoorn</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/enschede</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/zwolle</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/maastricht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/leeuwarden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/kapper/nijmegen</loc><priority>0.8</priority></url>
+
+  <!-- Salon steden -->
+  <url><loc>https://vedantix.nl/website/salon/amsterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/rotterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/utrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/den-haag</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/eindhoven</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/tilburg</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/breda</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/groningen</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/arnhem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/haarlem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/leiden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/delft</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/dordrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/amersfoort</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/apeldoorn</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/enschede</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/zwolle</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/maastricht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/leeuwarden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/salon/nijmegen</loc><priority>0.8</priority></url>
+
+  <!-- Klusbedrijf steden -->
+  <url><loc>https://vedantix.nl/website/klusbedrijf/amsterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/rotterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/utrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/den-haag</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/eindhoven</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/tilburg</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/breda</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/groningen</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/arnhem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/haarlem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/leiden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/delft</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/dordrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/amersfoort</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/apeldoorn</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/enschede</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/zwolle</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/maastricht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/leeuwarden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/klusbedrijf/nijmegen</loc><priority>0.8</priority></url>
+
+  <!-- Restaurant steden -->
+  <url><loc>https://vedantix.nl/website/restaurant/amsterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/rotterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/utrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/den-haag</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/eindhoven</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/tilburg</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/breda</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/groningen</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/arnhem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/haarlem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/leiden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/delft</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/dordrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/amersfoort</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/apeldoorn</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/enschede</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/zwolle</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/maastricht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/leeuwarden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/restaurant/nijmegen</loc><priority>0.8</priority></url>
+
+  <!-- Fotograaf steden -->
+  <url><loc>https://vedantix.nl/website/fotograaf/amsterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/rotterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/utrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/den-haag</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/eindhoven</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/tilburg</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/breda</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/groningen</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/arnhem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/haarlem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/leiden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/delft</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/dordrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/amersfoort</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/apeldoorn</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/enschede</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/zwolle</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/maastricht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/leeuwarden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/fotograaf/nijmegen</loc><priority>0.8</priority></url>
+
+  <!-- Schoonmaakbedrijf steden -->
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/amsterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/rotterdam</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/utrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/den-haag</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/eindhoven</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/tilburg</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/breda</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/groningen</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/arnhem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/haarlem</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/leiden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/delft</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/dordrecht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/amersfoort</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/apeldoorn</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/enschede</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/zwolle</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/maastricht</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/leeuwarden</loc><priority>0.8</priority></url>
+  <url><loc>https://vedantix.nl/website/schoonmaakbedrijf/nijmegen</loc><priority>0.8</priority></url>
+
 </urlset>
