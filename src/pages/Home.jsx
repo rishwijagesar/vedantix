@@ -543,7 +543,7 @@ export default function Home() {
           </div>
 
           {/* Updates clarification */}
-          <div style={{ maxWidth: 860, margin: "32px auto 0", padding: "0 8px" }}>
+          <div style={{ marginTop: 32 }}>
             <details style={{ cursor: "pointer" }}>
               <summary style={{ fontSize: "0.8rem", fontWeight: 600, color: "#9ca3af", padding: "10px 0", userSelect: "none", listStyle: "none" }}>
                 💡 Wat valt onder kleine updates en wijzigingen?
