@@ -271,7 +271,7 @@ export default function Home() {
           .roi-box{padding:40px 24px}
         }
         @media(max-width:768px){
-          .hero{padding:80px 5% 60px;min-height:auto}
+          .hero{padding:100px 5% 70px;min-height:auto}
           .hero h1{font-size:2.2rem}
           .hero-ctas{flex-direction:column}
           .hero-ctas a{width:100%;text-align:center}
