@@ -159,6 +159,39 @@ export default function CRMFinancien() {
 
   const chartData = useMemo(() => groupByPeriod(facturen, days), [facturen, filter]);
 
+  const filterLabel = FILTERS.find(f => f.value === filter)?.label || filter;
+
+  const handleExportCSV = () => {
+    const data = filtered.map(f => ({
+      Factuurnummer: f.factuurnummer || "",
+      Klant: f.klant_naam || "",
+      Beschrijving: f.beschrijving || "",
+      Bedrag: f.bedrag || 0,
+      "BTW bedrag": f.btw_bedrag || 0,
+      Totaal: f.totaal_bedrag || f.bedrag || 0,
+      Factuurdatum: f.factuurdatum || "",
+      Vervaldatum: f.vervaldatum || "",
+      Status: f.status || "",
+    }));
+    exportToCSV(data, `financien-${filter}`);
+  };
+
+  const handleExportPDF = () => {
+    exportToPDF(
+      `Financiënoverzicht — ${filterLabel}`,
+      [
+        { header: "Factuurnr.", accessor: r => r.factuurnummer },
+        { header: "Klant", accessor: r => r.klant_naam },
+        { header: "Omschrijving", accessor: r => r.beschrijving },
+        { header: "Totaal", accessor: r => `€${(r.totaal_bedrag || r.bedrag || 0).toFixed(2)}` },
+        { header: "Datum", accessor: r => r.factuurdatum ? new Date(r.factuurdatum).toLocaleDateString("nl-NL") : "" },
+        { header: "Status", accessor: r => r.status },
+      ],
+      filtered,
+      `financien-${filter}`
+    );
+  };
+
   if (loading) return <div style={{ textAlign: "center", padding: 60, color: "#94a3b8" }}>Laden...</div>;
 
   return (
