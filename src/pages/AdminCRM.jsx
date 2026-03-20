@@ -17,13 +17,12 @@ export default function AdminCRM() {
   useEffect(() => {
     base44.auth.me()
       .then(u => {
-        setUser(u || { full_name: "Admin", role: "admin" });
+        if (!u) { base44.auth.redirectToLogin("/admin"); return; }
+        if (u.role !== "admin") { window.location.href = "/klantenportaal"; return; }
+        setUser(u);
         setAuthChecked(true);
       })
-      .catch(() => {
-        setUser({ full_name: "Admin", role: "admin" });
-        setAuthChecked(true);
-      });
+      .catch(() => base44.auth.redirectToLogin("/admin"));
   }, []);
 
   if (!authChecked) {

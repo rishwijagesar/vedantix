@@ -18,14 +18,14 @@ export default function KlantenPortaal() {
   useEffect(() => {
     base44.auth.me()
       .then(async u => {
-        setUser(u || {});
-        if (u) {
-          const profiles = await CustomerProfile.filter({ user_id: u.id });
-          if (profiles.length > 0) setKlant(profiles[0]);
-        }
+        if (!u) { base44.auth.redirectToLogin("/klantenportaal"); return; }
+        if (u.role === "admin") { window.location.href = "/admin"; return; }
+        setUser(u);
+        const profiles = await CustomerProfile.filter({ user_id: u.id });
+        if (profiles.length > 0) setKlant(profiles[0]);
         setAuthChecked(true);
       })
-      .catch(() => setAuthChecked(true));
+      .catch(() => base44.auth.redirectToLogin("/klantenportaal"));
   }, []);
 
   const reloadKlant = async () => {
