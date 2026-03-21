@@ -6,12 +6,26 @@ const FOOTER_STYLES = `
     color: rgba(255,255,255,0.72);
     border-top: 1px solid rgba(255,255,255,0.06);
     margin-top: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .big-footer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 0%, rgba(99,102,241,0.10), transparent 32%),
+      radial-gradient(circle at 85% 20%, rgba(59,130,246,0.08), transparent 30%);
+    pointer-events: none;
   }
 
   .big-footer__cta {
     max-width: 1200px;
     margin: 0 auto;
     padding: 72px 24px 40px;
+    position: relative;
+    z-index: 1;
   }
 
   .big-footer__cta-box {
@@ -24,6 +38,10 @@ const FOOTER_STYLES = `
     align-items: center;
     gap: 24px;
     flex-wrap: wrap;
+    box-shadow:
+      0 20px 60px rgba(0,0,0,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.05);
+    backdrop-filter: blur(6px);
   }
 
   .big-footer__cta-text {
@@ -84,7 +102,7 @@ const FOOTER_STYLES = `
     padding: 14px 20px;
     font-size: 0.9rem;
     font-weight: 700;
-    transition: all 0.2s ease;
+    transition: all 0.22s ease;
     white-space: nowrap;
   }
 
@@ -109,25 +127,31 @@ const FOOTER_STYLES = `
   .big-footer__btn-secondary:hover {
     background: rgba(255,255,255,0.04);
     border-color: rgba(255,255,255,0.28);
+    transform: translateY(-1px);
   }
 
   .big-footer__main {
     max-width: 1200px;
     margin: 0 auto;
     padding: 8px 24px 40px;
+    position: relative;
+    z-index: 1;
   }
 
   .big-footer__grid {
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
-    gap: 32px;
+    grid-template-columns: 1.45fr 1fr 1fr 1fr 1fr;
+    gap: 40px;
     padding-top: 28px;
     padding-bottom: 32px;
     border-bottom: 1px solid rgba(255,255,255,0.07);
+    text-align: left;
+    align-items: start;
   }
 
   .big-footer__brand {
     min-width: 0;
+    text-align: left;
   }
 
   .big-footer__brand-name {
@@ -144,12 +168,14 @@ const FOOTER_STYLES = `
     color: rgba(255,255,255,0.58);
     margin-bottom: 18px;
     max-width: 360px;
+    text-align: left;
   }
 
   .big-footer__badges {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    justify-content: flex-start;
   }
 
   .big-footer__badge {
@@ -164,6 +190,10 @@ const FOOTER_STYLES = `
     font-weight: 600;
   }
 
+  .big-footer__col {
+    text-align: left;
+  }
+
   .big-footer__col-title {
     font-size: 0.78rem;
     font-weight: 700;
@@ -171,6 +201,7 @@ const FOOTER_STYLES = `
     text-transform: uppercase;
     color: rgba(255,255,255,0.9);
     margin-bottom: 16px;
+    text-align: left;
   }
 
   .big-footer__links {
@@ -179,6 +210,7 @@ const FOOTER_STYLES = `
     margin: 0;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
   }
 
@@ -187,11 +219,13 @@ const FOOTER_STYLES = `
     text-decoration: none;
     font-size: 0.9rem;
     line-height: 1.5;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, transform 0.2s ease;
+    display: inline-block;
   }
 
   .big-footer__links a:hover {
     color: #93c5fd;
+    transform: translateX(2px);
   }
 
   .big-footer__contact-list {
@@ -201,12 +235,14 @@ const FOOTER_STYLES = `
     display: flex;
     flex-direction: column;
     gap: 12px;
+    text-align: left;
   }
 
   .big-footer__contact-item {
     font-size: 0.9rem;
     line-height: 1.6;
     color: rgba(255,255,255,0.62);
+    text-align: left;
   }
 
   .big-footer__contact-item strong {
@@ -219,6 +255,7 @@ const FOOTER_STYLES = `
   .big-footer__contact-item a {
     color: rgba(255,255,255,0.62);
     text-decoration: none;
+    transition: color 0.2s ease;
   }
 
   .big-footer__contact-item a:hover {
@@ -284,6 +321,15 @@ const FOOTER_STYLES = `
       flex-direction: column;
       align-items: flex-start;
     }
+
+    .big-footer__cta-actions {
+      width: 100%;
+    }
+
+    .big-footer__btn-primary,
+    .big-footer__btn-secondary {
+      width: 100%;
+    }
   }
 `;
 
@@ -339,7 +385,7 @@ export default function BigFooter() {
               </div>
             </div>
 
-            <div>
+            <div className="big-footer__col">
               <div className="big-footer__col-title">Navigatie</div>
               <ul className="big-footer__links">
                 <li><Link to="/">Home</Link></li>
@@ -350,7 +396,7 @@ export default function BigFooter() {
               </ul>
             </div>
 
-            <div>
+            <div className="big-footer__col">
               <div className="big-footer__col-title">Pagina&apos;s</div>
               <ul className="big-footer__links">
                 <li><Link to="/planning">Planning</Link></li>
@@ -361,7 +407,7 @@ export default function BigFooter() {
               </ul>
             </div>
 
-            <div>
+            <div className="big-footer__col">
               <div className="big-footer__col-title">Branches</div>
               <ul className="big-footer__links">
                 <li><Link to="/website-kapper">Website voor kappers</Link></li>
@@ -373,7 +419,7 @@ export default function BigFooter() {
               </ul>
             </div>
 
-            <div>
+            <div className="big-footer__col">
               <div className="big-footer__col-title">Contact & juridisch</div>
 
               <ul className="big-footer__contact-list">
