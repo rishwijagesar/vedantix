@@ -5,7 +5,7 @@ import {
   nichePages,
   blogPosts,
   locationPages,
-} from "../src/data/seoData.js";
+} from "../data/seoData.js";
 
 const DOMAIN = "https://vedantix.nl";
 const OUTPUT_FILE = path.resolve("./public/sitemap.xml");
