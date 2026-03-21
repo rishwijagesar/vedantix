@@ -40,18 +40,23 @@ const FOOTER_STYLES = `
   .big-footer__inner {
     max-width: 1140px;
     margin: 0 auto;
-    padding: 72px 24px 28px;
+    padding: 52px 24px 24px;
     position: relative;
     z-index: 1;
   }
 
   .big-footer__grid {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr 0.95fr 1.1fr;
+    grid-template-columns: 1.15fr 0.9fr 1fr 1.05fr;
     gap: 42px;
     align-items: start;
-    padding-bottom: 40px;
+    padding-bottom: 34px;
     border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .big-footer__brand {
+    max-width: 330px;
+    text-align: left;
   }
 
   .big-footer__brand-name {
@@ -59,21 +64,24 @@ const FOOTER_STYLES = `
     font-weight: 900;
     color: #fff;
     letter-spacing: -0.7px;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
+    text-align: left;
   }
 
   .big-footer__brand-text {
-    max-width: 320px;
     font-size: 0.92rem;
     line-height: 1.8;
     color: rgba(255,255,255,0.58);
     margin-bottom: 22px;
+    text-align: left;
   }
 
   .big-footer__socials {
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
   }
 
   .big-footer__social {
@@ -120,6 +128,10 @@ const FOOTER_STYLES = `
     fill: currentColor;
   }
 
+  .big-footer__col {
+    text-align: left;
+  }
+
   .big-footer__col-title {
     font-size: 0.78rem;
     font-weight: 700;
@@ -127,6 +139,7 @@ const FOOTER_STYLES = `
     text-transform: uppercase;
     color: rgba(255,255,255,0.9);
     margin-bottom: 16px;
+    text-align: left;
   }
 
   .big-footer__links {
@@ -135,16 +148,24 @@ const FOOTER_STYLES = `
     margin: 0;
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
   }
 
+  .big-footer__links li {
+    width: 100%;
+    text-align: left;
+  }
+
   .big-footer__links a {
+    display: block;
+    width: 100%;
     color: rgba(255,255,255,0.58);
     text-decoration: none;
     font-size: 0.92rem;
     line-height: 1.55;
+    text-align: left;
     transition: color 0.2s ease, transform 0.2s ease;
-    display: inline-block;
   }
 
   .big-footer__links a:hover {
@@ -159,28 +180,33 @@ const FOOTER_STYLES = `
     display: flex;
     flex-direction: column;
     gap: 14px;
+    align-items: flex-start;
   }
 
   .big-footer__contact-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    column-gap: 10px;
+    align-items: start;
     font-size: 0.92rem;
     line-height: 1.65;
     color: rgba(255,255,255,0.6);
+    text-align: left;
   }
 
   .big-footer__contact-icon {
     width: 16px;
-    min-width: 16px;
-    margin-top: 3px;
+    height: 16px;
     color: rgba(255,255,255,0.4);
+    margin-top: 4px;
   }
 
   .big-footer__contact-icon svg {
     width: 16px;
     height: 16px;
     fill: currentColor;
+    display: block;
   }
 
   .big-footer__contact-item a {
@@ -200,12 +226,14 @@ const FOOTER_STYLES = `
     display: flex;
     flex-direction: column;
     gap: 8px;
+    text-align: left;
   }
 
   .big-footer__company-line {
     font-size: 0.82rem;
     color: rgba(255,255,255,0.46);
     line-height: 1.6;
+    text-align: left;
   }
 
   .big-footer__company-line strong {
@@ -340,7 +368,7 @@ export default function BigFooter() {
       <footer className="big-footer">
         <div className="big-footer__inner">
           <div className="big-footer__grid">
-            <div>
+            <div className="big-footer__brand">
               <div className="big-footer__brand-name">Vedantix</div>
               <p className="big-footer__brand-text">
                 Websites voor lokale ondernemers, inclusief hosting, onderhoud en
@@ -378,7 +406,7 @@ export default function BigFooter() {
               </div>
             </div>
 
-            <div>
+            <div className="big-footer__col">
               <div className="big-footer__col-title">Snelle links</div>
               <ul className="big-footer__links">
                 <li><Link to="/">Home</Link></li>
@@ -390,7 +418,7 @@ export default function BigFooter() {
               </ul>
             </div>
 
-            <div>
+            <div className="big-footer__col">
               <div className="big-footer__col-title">Branches</div>
               <ul className="big-footer__links">
                 <li><Link to="/website-kapper">Website voor kappers</Link></li>
@@ -401,7 +429,7 @@ export default function BigFooter() {
               </ul>
             </div>
 
-            <div>
+            <div className="big-footer__col">
               <div className="big-footer__col-title">Contact & gegevens</div>
 
               <ul className="big-footer__contact-list">
