@@ -45,9 +45,15 @@ export default function CRMKlanten() {
 
   const load = async () => {
     setLoading(true);
-    const data = await CustomerProfile.list("-created_date", 200);
-    setKlanten(data);
-    setLoading(false);
+    try {
+      const data = await CustomerProfile.list("-created_date", 200);
+      setKlanten(data || []);
+    } catch (error) {
+      console.error("Laden van klanten mislukt", error);
+      setKlanten([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -55,12 +61,15 @@ export default function CRMKlanten() {
   }, []);
 
   const filtered = klanten.filter((k) => {
+    const searchValue = search.toLowerCase();
+
     const matchSearch =
       !search ||
-      k.bedrijfsnaam?.toLowerCase().includes(search.toLowerCase()) ||
-      k.email?.toLowerCase().includes(search.toLowerCase());
+      k.bedrijfsnaam?.toLowerCase().includes(searchValue) ||
+      k.email?.toLowerCase().includes(searchValue);
 
     const matchStatus = !filterStatus || k.status === filterStatus;
+
     return matchSearch && matchStatus;
   });
 
@@ -72,11 +81,13 @@ export default function CRMKlanten() {
       Email: k.email,
       Telefoon: k.telefoon || "",
       Domeinnaam: k.domeinnaam || "",
-      Abonnement: SUBSCRIPTION_LABELS[k.huidig_abonnement] || k.huidig_abonnement || "",
+      Abonnement:
+        SUBSCRIPTION_LABELS[k.huidig_abonnement] || k.huidig_abonnement || "",
       Status: STATUS_LABELS[k.status] || k.status,
       Startdatum: k.startdatum || "",
       Plaats: k.plaats || "",
     }));
+
     exportToCSV(data, "klanten");
   };
 
@@ -95,7 +106,9 @@ export default function CRMKlanten() {
         {
           header: "Abonnement",
           accessor: (r) =>
-            SUBSCRIPTION_LABELS[r.huidig_abonnement] || r.huidig_abonnement || "–",
+            SUBSCRIPTION_LABELS[r.huidig_abonnement] ||
+            r.huidig_abonnement ||
+            "–",
         },
         {
           header: "Status",
@@ -104,7 +117,9 @@ export default function CRMKlanten() {
         {
           header: "Startdatum",
           accessor: (r) =>
-            r.startdatum ? new Date(r.startdatum).toLocaleDateString("nl-NL") : "",
+            r.startdatum
+              ? new Date(r.startdatum).toLocaleDateString("nl-NL")
+              : "",
         },
       ],
       filtered,
@@ -118,33 +133,47 @@ export default function CRMKlanten() {
     setShowModal(true);
   };
 
-  const openEdit = (k) => {
-    setSelectedKlant(k);
+  const openEdit = (klant) => {
+    setSelectedKlant(klant);
     setIsNew(false);
     setShowModal(true);
   };
 
   const handleSave = async (data) => {
-    if (isNew) {
-      await CustomerProfile.create(data);
-    } else {
-      await CustomerProfile.update(selectedKlant.id, data);
+    try {
+      if (isNew) {
+        await CustomerProfile.create(data);
+      } else if (selectedKlant?.id) {
+        await CustomerProfile.update(selectedKlant.id, data);
+      }
+
+      setShowModal(false);
+      await load();
+    } catch (error) {
+      console.error("Opslaan mislukt", error);
+      alert("Opslaan mislukt.");
     }
-    setShowModal(false);
-    load();
   };
 
   const handleDelete = async (id) => {
     if (!confirm("Weet je zeker dat je deze klant wilt verwijderen?")) return;
-    await CustomerProfile.delete(id);
-    setShowModal(false);
-    load();
+
+    try {
+      await CustomerProfile.delete(id);
+      setShowModal(false);
+      await load();
+    } catch (error) {
+      console.error("Verwijderen van klant mislukt", error);
+      alert("Verwijderen mislukt.");
+    }
   };
 
   const berekenDuur = (startdatum) => {
     if (!startdatum) return "–";
+
     const start = new Date(startdatum);
     const now = new Date();
+
     const months =
       (now.getFullYear() - start.getFullYear()) * 12 +
       (now.getMonth() - start.getMonth());
@@ -154,6 +183,7 @@ export default function CRMKlanten() {
 
     const years = Math.floor(months / 12);
     const rem = months % 12;
+
     return rem ? `${years}j ${rem}m` : `${years} jaar`;
   };
 
@@ -168,7 +198,6 @@ export default function CRMKlanten() {
       setActionLoadingId(`${klant.id}-deploy`);
 
       // TODO: vervang dit later door echte backend/function call
-      // Bijvoorbeeld:
       // await base44.functions.invoke("deploy_customer_website", { customerId: klant.id });
 
       await updateDeploymentState(klant.id, "deploying");
@@ -192,7 +221,6 @@ export default function CRMKlanten() {
       setActionLoadingId(`${klant.id}-stop`);
 
       // TODO: vervang dit later door echte backend/function call
-      // Bijvoorbeeld:
       // await base44.functions.invoke("stop_customer_website", { customerId: klant.id });
 
       await updateDeploymentState(klant.id, "stopped");
@@ -211,7 +239,6 @@ export default function CRMKlanten() {
       setActionLoadingId(`${klant.id}-redeploy`);
 
       // TODO: vervang dit later door echte backend/function call
-      // Bijvoorbeeld:
       // await base44.functions.invoke("redeploy_customer_website", { customerId: klant.id });
 
       await updateDeploymentState(klant.id, "redeploying");
@@ -220,6 +247,38 @@ export default function CRMKlanten() {
     } catch (error) {
       console.error("Herdeploy mislukt", error);
       alert("Herdeploy mislukt.");
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
+
+  const handleDestroy = async (klant) => {
+    const confirmed = confirm(
+      `Weet je zeker dat je ALLES van ${klant.bedrijfsnaam} wilt verwijderen? Dit is bedoeld voor volledige teardown van website en infrastructuur.`
+    );
+    if (!confirmed) return;
+
+    const typed = prompt(
+      `Typ VERWIJDER om definitief alles van ${klant.bedrijfsnaam} te verwijderen.`
+    );
+
+    if (typed !== "VERWIJDER") {
+      alert("Verwijderen geannuleerd.");
+      return;
+    }
+
+    try {
+      setActionLoadingId(`${klant.id}-destroy`);
+
+      // TODO: vervang dit later door echte backend/function call
+      // await base44.functions.invoke("destroy_customer_website", { customerId: klant.id });
+
+      await updateDeploymentState(klant.id, "destroying");
+      alert(`Verwijderactie gestart voor ${klant.bedrijfsnaam}`);
+      await load();
+    } catch (error) {
+      console.error("Volledig verwijderen mislukt", error);
+      alert("Volledig verwijderen mislukt.");
     } finally {
       setActionLoadingId(null);
     }
@@ -278,7 +337,10 @@ export default function CRMKlanten() {
         </div>
 
         <div style={{ display: "flex", gap: 10 }}>
-          <ExportButton onExportCSV={handleExportCSV} onExportPDF={handleExportPDF} />
+          <ExportButton
+            onExportCSV={handleExportCSV}
+            onExportPDF={handleExportPDF}
+          />
           <button
             onClick={openNew}
             style={{
@@ -297,7 +359,14 @@ export default function CRMKlanten() {
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 12,
+          marginBottom: 20,
+          flexWrap: "wrap",
+        }}
+      >
         <input
           type="text"
           placeholder="Zoek op naam of e-mail..."
@@ -314,6 +383,7 @@ export default function CRMKlanten() {
             background: "#fff",
           }}
         />
+
         <select
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
@@ -327,9 +397,9 @@ export default function CRMKlanten() {
           }}
         >
           <option value="">Alle statussen</option>
-          {Object.entries(STATUS_LABELS).map(([k, v]) => (
-            <option key={k} value={k}>
-              {v}
+          {Object.entries(STATUS_LABELS).map(([key, value]) => (
+            <option key={key} value={key}>
+              {value}
             </option>
           ))}
         </select>
@@ -345,7 +415,12 @@ export default function CRMKlanten() {
       >
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
-            <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
+            <tr
+              style={{
+                background: "#f8fafc",
+                borderBottom: "1px solid #e2e8f0",
+              }}
+            >
               {[
                 "Bedrijf",
                 "Contactpersoon",
@@ -355,9 +430,9 @@ export default function CRMKlanten() {
                 "Status",
                 "Acties",
                 "",
-              ].map((h) => (
+              ].map((header) => (
                 <th
-                  key={h}
+                  key={header}
                   style={{
                     padding: "12px 16px",
                     textAlign: "left",
@@ -368,7 +443,7 @@ export default function CRMKlanten() {
                     letterSpacing: 0.5,
                   }}
                 >
-                  {h}
+                  {header}
                 </th>
               ))}
             </tr>
@@ -377,13 +452,27 @@ export default function CRMKlanten() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={8} style={{ padding: 40, textAlign: "center", color: "#94a3b8" }}>
+                <td
+                  colSpan={8}
+                  style={{
+                    padding: 40,
+                    textAlign: "center",
+                    color: "#94a3b8",
+                  }}
+                >
                   Laden...
                 </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>
-                <td colSpan={8} style={{ padding: 40, textAlign: "center", color: "#94a3b8" }}>
+                <td
+                  colSpan={8}
+                  style={{
+                    padding: 40,
+                    textAlign: "center",
+                    color: "#94a3b8",
+                  }}
+                >
                   Geen klanten gevonden
                 </td>
               </tr>
@@ -396,8 +485,12 @@ export default function CRMKlanten() {
                     cursor: "pointer",
                     transition: "background 0.15s",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "")}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "#f8fafc";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "";
+                  }}
                   onClick={() => openEdit(k)}
                 >
                   <td style={{ padding: "14px 16px" }}>
@@ -411,29 +504,68 @@ export default function CRMKlanten() {
                       {k.bedrijfsnaam}
                     </div>
                     {k.domeinnaam && (
-                      <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>{k.domeinnaam}</div>
+                      <div
+                        style={{
+                          fontSize: "0.75rem",
+                          color: "#94a3b8",
+                        }}
+                      >
+                        {k.domeinnaam}
+                      </div>
                     )}
                   </td>
 
-                  <td style={{ padding: "14px 16px", fontSize: "0.85rem", color: "#374151" }}>
+                  <td
+                    style={{
+                      padding: "14px 16px",
+                      fontSize: "0.85rem",
+                      color: "#374151",
+                    }}
+                  >
                     {k.voornaam} {k.achternaam}
                   </td>
 
-                  <td style={{ padding: "14px 16px", fontSize: "0.85rem", color: "#374151" }}>
+                  <td
+                    style={{
+                      padding: "14px 16px",
+                      fontSize: "0.85rem",
+                      color: "#374151",
+                    }}
+                  >
                     {k.email}
                   </td>
 
-                  <td style={{ padding: "14px 16px", fontSize: "0.85rem", color: "#374151" }}>
-                    {SUBSCRIPTION_LABELS[k.huidig_abonnement] || k.huidig_abonnement || (
-                      <span style={{ color: "#94a3b8" }}>–</span>
-                    )}
+                  <td
+                    style={{
+                      padding: "14px 16px",
+                      fontSize: "0.85rem",
+                      color: "#374151",
+                    }}
+                  >
+                    {SUBSCRIPTION_LABELS[k.huidig_abonnement] ||
+                      k.huidig_abonnement || (
+                        <span style={{ color: "#94a3b8" }}>–</span>
+                      )}
                   </td>
 
-                  <td style={{ padding: "14px 16px", fontSize: "0.83rem", color: "#374151" }}>
+                  <td
+                    style={{
+                      padding: "14px 16px",
+                      fontSize: "0.83rem",
+                      color: "#374151",
+                    }}
+                  >
                     {k.startdatum ? (
                       <div>
-                        <div>{new Date(k.startdatum).toLocaleDateString("nl-NL")}</div>
-                        <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>
+                        <div>
+                          {new Date(k.startdatum).toLocaleDateString("nl-NL")}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: "0.72rem",
+                            color: "#94a3b8",
+                          }}
+                        >
                           {berekenDuur(k.startdatum)}
                         </div>
                       </div>
@@ -445,7 +577,8 @@ export default function CRMKlanten() {
                   <td style={{ padding: "14px 16px" }}>
                     <span
                       style={{
-                        background: (STATUS_COLORS[k.status] || "#94a3b8") + "18",
+                        background:
+                          (STATUS_COLORS[k.status] || "#94a3b8") + "18",
                         color: STATUS_COLORS[k.status] || "#94a3b8",
                         padding: "4px 12px",
                         borderRadius: 100,
@@ -494,10 +627,24 @@ export default function CRMKlanten() {
                           color: "#1d4ed8",
                         }
                       )}
+
+                      {renderActionButton(
+                        "Verwijderen",
+                        () => handleDestroy(k),
+                        actionLoadingId === `${k.id}-destroy`,
+                        {
+                          background: "#fef2f2",
+                          border: "1px solid #fca5a5",
+                          color: "#b91c1c",
+                        }
+                      )}
                     </div>
                   </td>
 
-                  <td style={{ padding: "14px 16px" }} onClick={(e) => e.stopPropagation()}>
+                  <td
+                    style={{ padding: "14px 16px" }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     <button
                       onClick={() => openEdit(k)}
                       style={{
