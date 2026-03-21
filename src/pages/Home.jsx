@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
 
@@ -26,6 +27,8 @@ export default function Home() {
           *{box-sizing:border-box;margin:0;padding:0}
           html{scroll-behavior:smooth}
           body{margin:0;padding:0}
+
+          .anchor-section{scroll-margin-top:100px}
 
           /* BUTTONS (non-hero — dark bg context) */
           .btn-ghost{background:transparent;color:#111827;border:1.5px solid #d1d5db;padding:14px 28px;border-radius:10px;font-weight:600;font-size:0.92rem;text-decoration:none;display:inline-block;transition:all 0.25s;cursor:pointer}
@@ -181,7 +184,7 @@ export default function Home() {
           .roi-arrow-line{width:48px;height:2px;background:linear-gradient(90deg,#e5e7eb,#6366f1)}
           .roi-arrow-head{width:0;height:0;border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:8px solid #6366f1;margin-left:-1px}
           .roi-bottom-line{font-size:1rem;font-weight:700;color:#0f172a;margin-bottom:8px}
-          .roi-note{font-size:0.78rem;color:#d1d5db}
+          .roi-note{font-size:0.78rem;color:#9ca3af}
 
           /* WHY */
           .why-section{padding:100px 5%;background:#f9fafb}
@@ -272,9 +275,6 @@ export default function Home() {
             .results-row .result-item:nth-child(3){border-right:none;border-top:1px solid #f3f4f6;grid-column:1/-1}
             .how-steps{grid-template-columns:1fr 1fr;gap:32px}
             .how-steps::before{display:none}
-            .roi-vs{grid-template-columns:1fr;gap:20px}
-            .roi-arrow{transform:rotate(90deg);display:block}
-            .roi-box{padding:40px 24px}
           }
           @media(max-width:768px){
             .hero{padding:100px 5% 70px;min-height:auto}
@@ -304,8 +304,6 @@ export default function Home() {
             .hero-social-proof{flex-direction:column;align-items:flex-start;gap:8px}
             .problem-section,.solution-section,.results-section,.testimonials-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:60px 5%}
             .trusted-inner{gap:12px}
-            .roi-box{padding:32px 16px;border-radius:16px}
-            .roi-num{font-size:2.2rem}
             .guarantee-box{flex-direction:column;gap:10px;padding:20px}
             .cta-section h2{font-size:1.8rem}
             .section-header{margin-bottom:40px}
@@ -432,7 +430,6 @@ export default function Home() {
         <div className="trusted">
           <div className="trusted-inner">
             <span className="trusted-label">Vertrouwd door</span>
-
             {["Kappers", "Restaurants", "Klusbedrijven", "Schoonheidssalons", "Fotografen", "ZZP'ers"].map((t) => (
               <span key={t} className="trusted-pill">{t}</span>
             ))}
@@ -574,7 +571,7 @@ export default function Home() {
         </section>
 
         {/* ─── 6. PRICING ─── */}
-        <section id="pricing" className="pricing-section">
+        <section id="pricing" className="pricing-section anchor-section">
           <div className="section-wrap">
             <div className="section-header centered">
               <div className="section-label">Tarieven</div>
@@ -738,7 +735,7 @@ export default function Home() {
         </section>
 
         {/* ─── 9. HOW IT WORKS ─── */}
-        <section id="how" className="how-section">
+        <section id="how" className="how-section anchor-section">
           <div className="section-wrap">
             <div className="section-header centered">
               <div className="section-label">Werkwijze</div>
@@ -808,7 +805,7 @@ export default function Home() {
         </section>
 
         {/* ─── 11. FINAL CTA ─── */}
-        <section id="cta" className="cta-section">
+        <section id="cta" className="cta-section anchor-section">
           <h2>Laat je website klanten opleveren</h2>
           <p>Geen lange trajecten. Geen grote investering vooraf. Gewoon meer klanten — vanaf maand 1.</p>
           <div className="cta-btns">
@@ -840,8 +837,8 @@ export default function Home() {
           <p>© 2026 <strong>Vedantix</strong> — Website + hosting + onderhoud + support. Start €99/maand.</p>
           <div style={{ marginTop: 14 }}>
             <a href="#pricing">Prijzen</a>
-            <a href="/privacy">Privacy</a>
-            <a href="/voorwaarden">Voorwaarden</a>
+            <Link to="/privacy">Privacy</Link>
+            <Link to="/voorwaarden">Voorwaarden</Link>
           </div>
         </footer>
       </div>

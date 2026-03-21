@@ -5,24 +5,41 @@ import {
   nichePages,
   blogPosts,
   locationPages,
-} from "../src/data/seoRoutes.js";
+} from "../src/data/seoData.js";
 
 const DOMAIN = "https://vedantix.nl";
 const OUTPUT_FILE = path.resolve("./public/sitemap.xml");
 
+function escapeXml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
 const rawUrls = [
   ...basePages,
   ...nichePages,
-  { path: "/blog", priority: "0.8" },
+  { path: "/blog", priority: "0.8", changefreq: "weekly" },
   ...blogPosts.map((post) => ({
     path: `/blog/${post.slug}`,
     priority: post.priority ?? "0.7",
+    changefreq: "monthly",
   })),
   ...locationPages.map((page) => ({
     path: page.path,
     priority: page.priority ?? "0.8",
+    changefreq: "weekly",
   })),
 ];
+
+const excludedPaths = new Set([
+  "/admin",
+  "/klantenportaal",
+  "/home",
+]);
 
 const urls = Array.from(
   new Map(
@@ -39,9 +56,11 @@ const urls = Array.from(
           {
             path: normalizedPath,
             priority: item.priority ?? "0.7",
+            changefreq: item.changefreq ?? "monthly",
           },
         ];
       })
+      .filter(([normalizedPath]) => !excludedPaths.has(normalizedPath))
   ).values()
 );
 
@@ -51,9 +70,10 @@ const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls
   .map(
-    ({ path, priority }) => `  <url>
-    <loc>${DOMAIN}${path}</loc>
+    ({ path, priority, changefreq }) => `  <url>
+    <loc>${escapeXml(`${DOMAIN}${path}`)}</loc>
     <lastmod>${today}</lastmod>
+    <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
   </url>`
   )

@@ -1,22 +1,44 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import VedantixLogo from "./VedantixLogo";
 
 export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+
+  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
+
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { label: "Prijzen", href: "#pricing" },
-    { label: "Hoe het werkt", href: "#how" },
-    { label: "Contact", href: "#cta" },
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  const primaryLinks = isHomePage
+    ? [
+        { label: "Prijzen", href: "#pricing", type: "anchor" },
+        { label: "Hoe het werkt", href: "#how", type: "anchor" },
+        { label: "Contact", href: "#cta", type: "anchor" },
+      ]
+    : [
+        { label: "Prijzen", href: "/prijzen", type: "route" },
+        { label: "Blog", href: "/blog", type: "route" },
+        { label: "FAQ", href: "/faq", type: "route" },
+      ];
+
+  const seoLinks = [
+    { label: "Kappers", href: "/website-kapper" },
+    { label: "Salons", href: "/website-salon" },
+    { label: "Restaurants", href: "/website-restaurant" },
   ];
 
   return (
@@ -29,185 +51,165 @@ export default function NavBar() {
           right: 0;
           z-index: 1000;
           padding: 14px 5%;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.25s ease;
           background: transparent;
         }
-        .navbar.scrolled {
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(12px);
-          box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-          padding: 12px 5%;
+
+        .navbar.scrolled,
+        .navbar.solid {
+          background: rgba(255,255,255,0.95);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
+
         .navbar-container {
-          max-width: 1400px;
+          max-width: 1200px;
           margin: 0 auto;
           display: flex;
           justify-content: space-between;
           align-items: center;
-          gap: 40px;
         }
-        .navbar-logo {
-          font-size: 1.25rem;
-          font-weight: 900;
-          color: #1a1a2e;
-          text-decoration: none;
-          letter-spacing: -0.6px;
-          flex-shrink: 0;
-        }
+
         .navbar-center {
           display: flex;
-          gap: 40px;
           align-items: center;
-          flex: 1;
-          justify-content: flex-end;
+          gap: 24px;
         }
-        .navbar-links {
+
+        .navbar-links,
+        .navbar-seo-links {
           display: flex;
-          gap: 32px;
-          align-items: center;
+          gap: 18px;
         }
-        .navbar-link {
-          color: rgba(255,255,255,0.7);
+
+        .navbar-link,
+        .navbar-seo-link {
           text-decoration: none;
-          font-weight: 500;
           font-size: 0.9rem;
-          transition: color 0.2s ease;
-          cursor: pointer;
+          color: rgba(255,255,255,0.75);
         }
-        .navbar-link:hover {
-          color: #fff;
+
+        .navbar.scrolled .navbar-link,
+        .navbar.solid .navbar-link,
+        .navbar.scrolled .navbar-seo-link,
+        .navbar.solid .navbar-seo-link {
+          color: #374151;
         }
+
+        .navbar-link:hover,
+        .navbar-seo-link:hover {
+          color: #111827;
+        }
+
         .navbar-cta {
-          background: rgba(255,255,255,0.12);
-          color: #fff;
-          padding: 10px 20px;
+          background: rgba(255,255,255,0.15);
+          padding: 10px 18px;
           border-radius: 8px;
-          text-decoration: none;
           font-weight: 700;
-          font-size: 0.85rem;
-          transition: all 0.2s ease;
-          white-space: nowrap;
-          border: 1px solid rgba(255,255,255,0.2);
+          text-decoration: none;
+          color: white;
         }
-        .navbar-cta:hover {
-          background: rgba(255,255,255,0.2);
-          transform: translateY(-1px);
+
+        .navbar.scrolled .navbar-cta,
+        .navbar.solid .navbar-cta {
+          background: #111827;
+          color: white;
         }
+
         .navbar-hamburger {
           display: none;
-          background: none;
-          border: none;
-          cursor: pointer;
-          padding: 8px;
-          font-size: 1.4rem;
-          color: rgba(255,255,255,0.8);
-          transition: color 0.2s ease;
         }
-        /* Scrolled overrides */
-        .navbar.scrolled .navbar-link {
-          color: #4b5563;
-        }
-        .navbar.scrolled .navbar-link:hover {
-          color: #1a73e8;
-        }
-        .navbar.scrolled .navbar-cta {
-          background: #1a1a2e;
-          color: #fff;
-          border-color: #1a1a2e;
-        }
-        .navbar.scrolled .navbar-cta:hover {
-          background: #2d2d4e;
-        }
-        .navbar.scrolled .navbar-hamburger {
-          color: #1a1a2e;
-        }
+
         @media (max-width: 768px) {
           .navbar-center {
             display: none;
+            flex-direction: column;
             position: absolute;
             top: 100%;
             left: 0;
             right: 0;
-            flex-direction: column;
-            gap: 0;
-            background: #fff;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border-radius: 0;
-            z-index: 999;
-            margin-top: 8px;
-            flex: none;
-            justify-content: flex-start;
+            background: white;
           }
+
           .navbar-center.mobile-open {
             display: flex;
           }
-          .navbar-links {
-            flex-direction: column;
-            gap: 0;
+
+          .navbar-link,
+          .navbar-seo-link {
+            padding: 12px;
             width: 100%;
+            color: #374151 !important;
           }
-          .navbar-link {
-            padding: 14px 20px;
-            border-bottom: 1px solid #f1f5f9;
-            width: 100%;
-            text-align: left;
-          }
-          .navbar-link:last-of-type {
-            border-bottom: none;
-          }
+
           .navbar-hamburger {
             display: block;
-          }
-          .navbar-cta {
-            width: calc(100% - 40px);
-            text-align: center;
-            padding: 11px 20px;
-            margin: 12px 20px 12px 20px;
-            border-radius: 8px;
+            font-size: 1.4rem;
+            background: none;
+            border: none;
           }
         }
       `}</style>
 
-      <nav className={`navbar ${scrolled ? "scrolled" : ""}`}>
+      <nav
+        className={`navbar ${scrolled ? "scrolled" : ""} ${
+          !isHomePage ? "solid" : ""
+        }`}
+      >
         <div className="navbar-container">
-          {/* Logo */}
-          <a href="#" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
-            <VedantixLogo variant="full" size="md" theme={scrolled ? "dark" : "light"} />
-          </a>
+          {/* LOGO */}
+          <Link to="/" aria-label="Home">
+            <VedantixLogo
+              variant="full"
+              size="md"
+              theme={scrolled || !isHomePage ? "dark" : "light"}
+            />
+          </Link>
 
-          {/* Desktop menu + CTA */}
           <div className={`navbar-center ${mobileMenuOpen ? "mobile-open" : ""}`}>
+            {/* Primary links */}
             <div className="navbar-links">
-              {navLinks.map(link => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="navbar-link"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+              {primaryLinks.map((link) =>
+                link.type === "anchor" ? (
+                  <a key={link.label} href={link.href} className="navbar-link">
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link key={link.label} to={link.href} className="navbar-link">
+                    {link.label}
+                  </Link>
+                )
+              )}
+            </div>
+
+            {/* SEO links */}
+            <div className="navbar-seo-links">
+              {seoLinks.map((link) => (
+                <Link key={link.label} to={link.href} className="navbar-seo-link">
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
-            <a href="#pricing" className="navbar-cta" onClick={() => setMobileMenuOpen(false)}>
+
+            {/* CTA (BELANGRIJK: anchor voor homepage scroll) */}
+            <a
+              href={isHomePage ? "#pricing" : "/prijzen"}
+              className="navbar-cta"
+            >
               Start je website →
             </a>
           </div>
 
-          {/* Mobile hamburger */}
           <button
             className="navbar-hamburger"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Menu"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
           >
-            {mobileMenuOpen ? "✕" : "☰"}
+            ☰
           </button>
         </div>
       </nav>
 
-      {/* Top spacing */}
+      {/* spacing */}
       <div style={{ height: 0 }} />
     </>
   );

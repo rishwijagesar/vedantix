@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
 import { createServiceSchema, createBreadcrumbSchema } from "../utils/schema";
+import { cities, blogPosts } from "../data/seoData";
 
 export default function WebsiteSalon() {
   const canonical = "https://vedantix.nl/website-salon";
@@ -11,17 +13,22 @@ export default function WebsiteSalon() {
     description:
       "Vedantix maakt professionele, snelle en mobielvriendelijke websites voor salons die meer boekingen willen ontvangen en online meer vertrouwen willen opbouwen.",
     audienceType: "Salons",
-    serviceType: "Website development voor salons"
+    serviceType: "Website development voor salons",
   });
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://vedantix.nl/" },
-    { name: "Website Salon", url: canonical }
+    { name: "Website Salon", url: canonical },
   ]);
 
   const pageTitle = "Website laten maken voor salons | Vedantix";
   const pageDescription =
     "Professionele website laten maken voor een salon? Vedantix bouwt snelle websites waarmee je meer boekingen ontvangt, vertrouwen opbouwt en beter zichtbaar wordt.";
+
+  const relatedCities = cities.slice(0, 6);
+  const relatedBlogs = blogPosts
+    .filter((post) => post.niche === "salon")
+    .slice(0, 3);
 
   return (
     <>
@@ -36,22 +43,120 @@ export default function WebsiteSalon() {
         style={{
           background: "#f8fafc",
           minHeight: "100vh",
-          color: "#0f172a"
+          color: "#0f172a",
         }}
       >
-        <div style={{ maxWidth: 980, margin: "0 auto", padding: "32px 20px 60px" }}>
-          <NavBar />
+        <style>{`
+          * { box-sizing: border-box; }
 
-          <section
-            style={{
-              background: "linear-gradient(135deg, #0f172a, #1e293b)",
-              color: "#fff",
-              borderRadius: "20px",
-              padding: "48px 32px",
-              marginTop: "24px",
-              boxShadow: "0 20px 50px rgba(15, 23, 42, 0.18)"
-            }}
-          >
+          .salon-page-shell {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 110px 20px 60px;
+          }
+
+          .salon-hero {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #fff;
+            border-radius: 20px;
+            padding: 48px 32px;
+            margin-top: 24px;
+            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+          }
+
+          .salon-content-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 0.9fr;
+            gap: 28px;
+            margin-top: 32px;
+          }
+
+          .salon-card {
+            background: #fff;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+          }
+
+          .salon-cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+          }
+
+          .salon-pill-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+          }
+
+          .salon-bottom-cta {
+            margin-top: 28px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            border-radius: 18px;
+            padding: 28px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+          }
+
+          .salon-blog-grid {
+            display: grid;
+            gap: 14px;
+          }
+
+          @media (max-width: 900px) {
+            .salon-content-grid {
+              grid-template-columns: 1fr;
+            }
+          }
+
+          @media (max-width: 768px) {
+            .salon-page-shell {
+              padding: 96px 16px 48px;
+            }
+
+            .salon-hero,
+            .salon-card,
+            .salon-bottom-cta {
+              padding: 24px 20px;
+              border-radius: 16px;
+            }
+
+            .salon-cta-row a {
+              width: 100%;
+              text-align: center;
+            }
+
+            .salon-bottom-cta a {
+              width: 100%;
+              text-align: center;
+            }
+          }
+
+          @media (max-width: 480px) {
+            .salon-page-shell {
+              padding: 90px 14px 40px;
+            }
+
+            .salon-hero h1 {
+              font-size: 1.9rem !important;
+            }
+
+            .salon-card h2 {
+              font-size: 1.25rem !important;
+            }
+          }
+        `}</style>
+
+        <NavBar />
+
+        <div className="salon-page-shell">
+          <section className="salon-hero">
             <div style={{ maxWidth: 760 }}>
               <p
                 style={{
@@ -60,7 +165,7 @@ export default function WebsiteSalon() {
                   fontWeight: 700,
                   letterSpacing: "0.04em",
                   textTransform: "uppercase",
-                  color: "#93c5fd"
+                  color: "#93c5fd",
                 }}
               >
                 Websites voor salons
@@ -71,7 +176,7 @@ export default function WebsiteSalon() {
                   margin: "0 0 18px",
                   fontSize: "clamp(2rem, 5vw, 3.2rem)",
                   lineHeight: 1.05,
-                  fontWeight: 800
+                  fontWeight: 800,
                 }}
               >
                 Website laten maken voor salons
@@ -83,7 +188,7 @@ export default function WebsiteSalon() {
                   fontSize: "1.05rem",
                   lineHeight: 1.8,
                   color: "rgba(255,255,255,0.82)",
-                  maxWidth: 680
+                  maxWidth: 680,
                 }}
               >
                 Wil je meer boekingen voor jouw schoonheidssalon, nagelstudio of
@@ -92,14 +197,7 @@ export default function WebsiteSalon() {
                 eenvoudig laat contact opnemen of een afspraak aanvragen.
               </p>
 
-              <div
-                style={{
-                  display: "flex",
-                  gap: "14px",
-                  flexWrap: "wrap",
-                  marginTop: "28px"
-                }}
-              >
+              <div className="salon-cta-row">
                 <a
                   href="#analyse"
                   style={{
@@ -109,7 +207,7 @@ export default function WebsiteSalon() {
                     padding: "14px 20px",
                     borderRadius: "10px",
                     fontWeight: 700,
-                    textDecoration: "none"
+                    textDecoration: "none",
                   }}
                 >
                   Vraag gratis analyse aan
@@ -117,6 +215,8 @@ export default function WebsiteSalon() {
 
                 <a
                   href="https://wa.me/310626219989"
+                  target="_blank"
+                  rel="noreferrer"
                   style={{
                     display: "inline-block",
                     background: "transparent",
@@ -125,7 +225,7 @@ export default function WebsiteSalon() {
                     borderRadius: "10px",
                     fontWeight: 700,
                     textDecoration: "none",
-                    border: "1px solid rgba(255,255,255,0.25)"
+                    border: "1px solid rgba(255,255,255,0.25)",
                   }}
                 >
                   Stuur direct een WhatsApp
@@ -134,27 +234,13 @@ export default function WebsiteSalon() {
             </div>
           </section>
 
-          <section
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1.4fr 0.9fr",
-              gap: "28px",
-              marginTop: "32px"
-            }}
-          >
-            <div
-              style={{
-                background: "#fff",
-                borderRadius: "18px",
-                padding: "32px",
-                boxShadow: "0 10px 30px rgba(15, 23, 42, 0.06)"
-              }}
-            >
+          <section className="salon-content-grid">
+            <div className="salon-card">
               <h2
                 style={{
                   marginTop: 0,
                   marginBottom: "14px",
-                  fontSize: "1.6rem"
+                  fontSize: "1.6rem",
                 }}
               >
                 Meer boekingen via een professionele salonwebsite
@@ -179,7 +265,7 @@ export default function WebsiteSalon() {
                 style={{
                   marginTop: "30px",
                   marginBottom: "14px",
-                  fontSize: "1.35rem"
+                  fontSize: "1.35rem",
                 }}
               >
                 Wat jouw website minimaal moet bevatten
@@ -190,7 +276,7 @@ export default function WebsiteSalon() {
                   paddingLeft: "20px",
                   color: "#334155",
                   lineHeight: 1.9,
-                  marginBottom: 0
+                  marginBottom: 0,
                 }}
               >
                 <li>Een overzichtelijke pagina met behandelingen en tarieven</li>
@@ -202,20 +288,12 @@ export default function WebsiteSalon() {
               </ul>
             </div>
 
-            <div
-              style={{
-                background: "#fff",
-                borderRadius: "18px",
-                padding: "28px",
-                boxShadow: "0 10px 30px rgba(15, 23, 42, 0.06)",
-                alignSelf: "start"
-              }}
-            >
+            <div className="salon-card" style={{ alignSelf: "start" }}>
               <h2
                 style={{
                   marginTop: 0,
                   marginBottom: "12px",
-                  fontSize: "1.25rem"
+                  fontSize: "1.25rem",
                 }}
               >
                 Waarom een website belangrijk is voor salons
@@ -234,7 +312,7 @@ export default function WebsiteSalon() {
                   padding: "16px",
                   borderRadius: "12px",
                   background: "#eff6ff",
-                  border: "1px solid #dbeafe"
+                  border: "1px solid #dbeafe",
                 }}
               >
                 <strong style={{ display: "block", marginBottom: "8px" }}>
@@ -252,7 +330,7 @@ export default function WebsiteSalon() {
                   padding: "16px",
                   borderRadius: "12px",
                   background: "#f8fafc",
-                  border: "1px solid #e2e8f0"
+                  border: "1px solid #e2e8f0",
                 }}
               >
                 <strong style={{ display: "block", marginBottom: "8px" }}>
@@ -265,20 +343,12 @@ export default function WebsiteSalon() {
             </div>
           </section>
 
-          <section
-            style={{
-              background: "#fff",
-              borderRadius: "18px",
-              padding: "32px",
-              boxShadow: "0 10px 30px rgba(15, 23, 42, 0.06)",
-              marginTop: "28px"
-            }}
-          >
+          <section className="salon-card" style={{ marginTop: "28px" }}>
             <h2
               style={{
                 marginTop: 0,
                 marginBottom: "14px",
-                fontSize: "1.6rem"
+                fontSize: "1.6rem",
               }}
             >
               Wat wij bouwen voor salons
@@ -296,7 +366,7 @@ export default function WebsiteSalon() {
                 paddingLeft: "20px",
                 color: "#334155",
                 lineHeight: 1.9,
-                marginBottom: 0
+                marginBottom: 0,
               }}
             >
               <li>Mobielvriendelijke website</li>
@@ -310,19 +380,17 @@ export default function WebsiteSalon() {
 
           <section
             id="analyse"
+            className="salon-card"
             style={{
-              background: "#fff",
-              borderRadius: "18px",
-              padding: "32px",
-              boxShadow: "0 10px 30px rgba(15, 23, 42, 0.06)",
-              marginTop: "28px"
+              scrollMarginTop: "100px",
+              marginTop: "28px",
             }}
           >
             <h2
               style={{
                 marginTop: 0,
                 marginBottom: "12px",
-                fontSize: "1.6rem"
+                fontSize: "1.6rem",
               }}
             >
               Vraag gratis een website analyse aan
@@ -333,7 +401,7 @@ export default function WebsiteSalon() {
                 color: "#475569",
                 lineHeight: 1.8,
                 maxWidth: 720,
-                marginBottom: "24px"
+                marginBottom: "24px",
               }}
             >
               Wil je weten hoe jouw salon online meer boekingen kan krijgen?
@@ -348,7 +416,7 @@ export default function WebsiteSalon() {
               style={{
                 display: "grid",
                 gap: "12px",
-                maxWidth: "480px"
+                maxWidth: "480px",
               }}
             >
               <input
@@ -360,7 +428,7 @@ export default function WebsiteSalon() {
                   padding: "14px 16px",
                   borderRadius: "10px",
                   border: "1px solid #cbd5e1",
-                  fontSize: "0.95rem"
+                  fontSize: "0.95rem",
                 }}
               />
 
@@ -373,7 +441,7 @@ export default function WebsiteSalon() {
                   padding: "14px 16px",
                   borderRadius: "10px",
                   border: "1px solid #cbd5e1",
-                  fontSize: "0.95rem"
+                  fontSize: "0.95rem",
                 }}
               />
 
@@ -385,7 +453,7 @@ export default function WebsiteSalon() {
                   padding: "14px 16px",
                   borderRadius: "10px",
                   border: "1px solid #cbd5e1",
-                  fontSize: "0.95rem"
+                  fontSize: "0.95rem",
                 }}
               />
 
@@ -399,7 +467,7 @@ export default function WebsiteSalon() {
                   fontWeight: 700,
                   border: "none",
                   cursor: "pointer",
-                  fontSize: "0.95rem"
+                  fontSize: "0.95rem",
                 }}
               >
                 Gratis analyse aanvragen →
@@ -411,27 +479,76 @@ export default function WebsiteSalon() {
                 fontSize: "0.85rem",
                 color: "#64748b",
                 marginTop: "12px",
-                marginBottom: 0
+                marginBottom: 0,
               }}
             >
               Reactie binnen 24 uur • Vrijblijvend • 100% gratis
             </p>
           </section>
 
-          <section
-            style={{
-              marginTop: "28px",
-              background: "linear-gradient(135deg, #22c55e, #16a34a)",
-              color: "#fff",
-              borderRadius: "18px",
-              padding: "28px 32px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "20px",
-              flexWrap: "wrap"
-            }}
-          >
+          <section className="salon-card" style={{ marginTop: "32px" }}>
+            <h2 style={{ marginTop: 0, marginBottom: "16px", fontSize: "1.35rem" }}>
+              Salons per stad
+            </h2>
+
+            <p style={{ color: "#475569", lineHeight: 1.8, marginBottom: "18px" }}>
+              Zoek je een pagina gericht op jouw regio? Bekijk ook onze lokale
+              pagina’s voor salons in verschillende steden.
+            </p>
+
+            <div className="salon-pill-links">
+              {relatedCities.map((city) => (
+                <Link
+                  key={city.slug}
+                  to={`/website/salon/${city.slug}`}
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: 999,
+                    background: "#f3f4f6",
+                    color: "#111827",
+                    textDecoration: "none",
+                    fontSize: 14,
+                    fontWeight: 600,
+                  }}
+                >
+                  Salon in {city.name}
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <section className="salon-card" style={{ marginTop: "28px" }}>
+            <h2 style={{ marginTop: 0, marginBottom: "16px", fontSize: "1.35rem" }}>
+              Gerelateerde blogs
+            </h2>
+
+            <div className="salon-blog-grid">
+              {relatedBlogs.map((post) => (
+                <Link
+                  key={post.slug}
+                  to={`/blog/${post.slug}`}
+                  style={{
+                    display: "block",
+                    padding: 18,
+                    border: "1px solid #e5e7eb",
+                    borderRadius: 14,
+                    textDecoration: "none",
+                    color: "#111827",
+                    background: "#fff",
+                  }}
+                >
+                  <strong style={{ display: "block", marginBottom: 6 }}>
+                    {post.title}
+                  </strong>
+                  <span style={{ color: "#6b7280", lineHeight: 1.6 }}>
+                    {post.intro}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <section className="salon-bottom-cta">
             <div style={{ maxWidth: 620 }}>
               <h2 style={{ margin: "0 0 10px", fontSize: "1.4rem" }}>
                 Liever direct contact?
@@ -440,7 +557,7 @@ export default function WebsiteSalon() {
                 style={{
                   margin: 0,
                   color: "rgba(255,255,255,0.9)",
-                  lineHeight: 1.7
+                  lineHeight: 1.7,
                 }}
               >
                 Stuur direct een WhatsApp-bericht en bespreek jouw wensen voor
@@ -450,6 +567,8 @@ export default function WebsiteSalon() {
 
             <a
               href="https://wa.me/310626219989"
+              target="_blank"
+              rel="noreferrer"
               style={{
                 display: "inline-block",
                 background: "#fff",
@@ -458,7 +577,7 @@ export default function WebsiteSalon() {
                 borderRadius: "10px",
                 fontWeight: 700,
                 textDecoration: "none",
-                whiteSpace: "nowrap"
+                whiteSpace: "nowrap",
               }}
             >
               WhatsApp Vedantix →

@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
+import SEO from "../components/SEO";
+import NavBar from "../components/NavBar";
+import { createBreadcrumbSchema } from "../utils/schema";
 
 const faqs = [
   {
@@ -67,6 +70,8 @@ const faqs = [
 export default function FAQ() {
   const [openId, setOpenId] = useState(1);
 
+  const canonical = "https://vedantix.nl/faq";
+
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -80,39 +85,19 @@ export default function FAQ() {
     }))
   };
 
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://vedantix.nl/" },
+    { name: "FAQ", url: canonical }
+  ]);
+
   return (
     <>
-      <Helmet>
-        <html lang="nl" />
-        <title>FAQ | Veelgestelde vragen over websites | Vedantix</title>
-        <meta
-          name="description"
-          content="Bekijk de veelgestelde vragen van Vedantix over prijzen, abonnementen, oplevering, wijzigingen, support en het laten maken van een website."
-        />
-        <link rel="canonical" href="https://vedantix.nl/faq" />
-        <meta name="robots" content="index, follow" />
-
-        <meta property="og:title" content="FAQ | Vedantix" />
-        <meta
-          property="og:description"
-          content="Antwoorden op veelgestelde vragen over websites, kosten, oplevering en support bij Vedantix."
-        />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://vedantix.nl/faq" />
-        <meta property="og:image" content="https://vedantix.nl/preview.png" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="FAQ | Vedantix" />
-        <meta
-          name="twitter:description"
-          content="Antwoorden op veelgestelde vragen over websites, kosten, oplevering en support bij Vedantix."
-        />
-        <meta name="twitter:image" content="https://vedantix.nl/preview.png" />
-
-        <script type="application/ld+json">
-          {JSON.stringify(faqSchema)}
-        </script>
-      </Helmet>
+      <SEO
+        title="FAQ | Veelgestelde vragen over websites | Vedantix"
+        description="Bekijk de veelgestelde vragen van Vedantix over prijzen, abonnementen, oplevering, wijzigingen, support en het laten maken van een website."
+        canonical={canonical}
+        schemas={[faqSchema, breadcrumbSchema]}
+      />
 
       <div className="faq-page">
         <style>{`
@@ -151,7 +136,7 @@ export default function FAQ() {
 
           .faq-hero {
             background: linear-gradient(135deg, #0a1628, #0d2146);
-            padding: 72px 0 56px;
+            padding: 110px 0 56px;
           }
 
           .faq-back-link {
@@ -388,7 +373,7 @@ export default function FAQ() {
 
           @media (max-width: 768px) {
             .faq-hero {
-              padding: 56px 0 42px;
+              padding: 96px 0 42px;
             }
 
             .faq-content {
@@ -419,11 +404,13 @@ export default function FAQ() {
           }
         `}</style>
 
+        <NavBar />
+
         <header className="faq-hero">
           <div className="faq-shell">
-            <a className="faq-back-link" href="/">
+            <Link className="faq-back-link" to="/">
               ← Terug naar Vedantix
-            </a>
+            </Link>
 
             <h1 className="faq-title">Veelgestelde vragen</h1>
             <p className="faq-subtitle">
@@ -496,9 +483,9 @@ export default function FAQ() {
               </p>
 
               <div className="faq-cta-actions">
-                <a className="faq-btn faq-btn-primary" href="/starters">
+                <Link className="faq-btn faq-btn-primary" to="/starters">
                   Bekijk pakketten
-                </a>
+                </Link>
                 <a
                   className="faq-btn faq-btn-secondary"
                   href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website."
@@ -514,9 +501,9 @@ export default function FAQ() {
 
         <footer className="faq-footer">
           <p style={{ margin: 0 }}>
-            © 2026 <strong>Vedantix</strong> — <a href="/">Home</a> •{" "}
-            <a href="/voorwaarden">Algemene voorwaarden</a> •{" "}
-            <a href="/privacy">Privacybeleid</a>
+            © 2026 <strong>Vedantix</strong> — <Link to="/">Home</Link> •{" "}
+            <Link to="/voorwaarden">Algemene voorwaarden</Link> •{" "}
+            <Link to="/privacy">Privacybeleid</Link>
           </p>
         </footer>
       </div>
