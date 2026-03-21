@@ -149,6 +149,8 @@ const FOOTER_STYLES = `
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
+    text-align: left;
   }
 
   .big-footer__links li {
