@@ -3,16 +3,16 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
- "scripts": {
-  "dev": "vite",
-  "generate:sitemap": "node scripts/generate-sitemap.js",
-  "prebuild": "node scripts/generate-sitemap.js",
-  "build": "vite build",
-  "lint": "eslint . --quiet",
-  "lint:fix": "eslint . --fix",
-  "typecheck": "tsc -p ./jsconfig.json",
-  "preview": "vite preview"
-},
+  "scripts": {
+    "dev": "vite",
+    "generate:sitemap": "node scripts/generate-sitemap.js",
+    "prebuild": "node scripts/generate-sitemap.js",
+    "build": "vite build",
+    "lint": "eslint . --quiet",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc -p ./jsconfig.json",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@base44/sdk": "^0.8.0",
     "@base44/vite-plugin": "^1.0.0",
