@@ -16,13 +16,12 @@ const FOOTER_STYLES = `
     content: "";
     position: absolute;
     inset: 0;
-    background:
-      linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.015) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.015) 50%, transparent 100%);
     pointer-events: none;
   }
 
   .big-footer__inner {
-    max-width: 1140px;
+    max-width: 1160px;
     margin: 0 auto;
     padding: 0 24px;
     position: relative;
@@ -30,23 +29,29 @@ const FOOTER_STYLES = `
   }
 
   .big-footer__cta-wrap {
-    padding-top: 52px;
-    padding-bottom: 40px;
+    padding-top: 48px;
+    padding-bottom: 36px;
   }
 
   .big-footer__cta {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 24px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 28px 32px;
-    border-radius: 24px;
-    background: linear-gradient(135deg, rgba(17,24,39,0.88), rgba(30,41,59,0.72));
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 24px 28px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, rgba(17,24,39,0.9), rgba(30,41,59,0.76));
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow:
       0 20px 60px rgba(0,0,0,0.28),
       inset 0 1px 0 rgba(255,255,255,0.04);
     backdrop-filter: blur(10px);
+  }
+
+  .big-footer__cta-copy {
+    min-width: 260px;
+    flex: 1;
   }
 
   .big-footer__eyebrow {
@@ -71,18 +76,18 @@ const FOOTER_STYLES = `
   }
 
   .big-footer__cta-title {
-    font-size: clamp(1.45rem, 2.1vw, 2.05rem);
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
     line-height: 1.08;
     font-weight: 900;
     color: #fff;
-    letter-spacing: -0.8px;
-    margin-bottom: 10px;
-    max-width: 620px;
+    letter-spacing: -0.7px;
+    margin-bottom: 8px;
+    max-width: 640px;
   }
 
   .big-footer__cta-sub {
-    max-width: 560px;
-    font-size: 0.95rem;
+    max-width: 620px;
+    font-size: 0.94rem;
     line-height: 1.7;
     color: rgba(255,255,255,0.58);
   }
@@ -91,7 +96,6 @@ const FOOTER_STYLES = `
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
-    justify-content: flex-end;
   }
 
   .big-footer__btn-primary,
@@ -132,42 +136,41 @@ const FOOTER_STYLES = `
     transform: translateY(-1px);
   }
 
-  .big-footer__main {
+  .big-footer__body {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr 0.9fr 1.1fr;
-    gap: 44px;
-    padding: 8px 0 36px;
+    grid-template-columns: 1.15fr 0.95fr;
+    gap: 36px;
+    padding: 8px 0 34px;
     border-bottom: 1px solid rgba(255,255,255,0.07);
     align-items: start;
   }
 
-  .big-footer__brand {
-    text-align: left;
-    min-width: 0;
+  .big-footer__brand-panel {
+    padding: 8px 0;
   }
 
   .big-footer__brand-name {
-    font-size: 1.7rem;
+    font-size: 2rem;
     font-weight: 900;
     color: #fff;
-    letter-spacing: -0.8px;
-    margin-bottom: 14px;
+    letter-spacing: -0.9px;
+    margin-bottom: 16px;
   }
 
   .big-footer__brand-text {
-    max-width: 320px;
-    font-size: 0.95rem;
+    max-width: 420px;
+    font-size: 1rem;
     line-height: 1.8;
-    color: rgba(255,255,255,0.58);
+    color: rgba(255,255,255,0.6);
     margin-bottom: 16px;
   }
 
   .big-footer__brand-note {
-    max-width: 320px;
-    font-size: 0.82rem;
-    line-height: 1.7;
+    max-width: 420px;
+    font-size: 0.84rem;
+    line-height: 1.75;
     color: rgba(255,255,255,0.42);
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }
 
   .big-footer__badges {
@@ -188,9 +191,24 @@ const FOOTER_STYLES = `
     font-weight: 600;
   }
 
-  .big-footer__col {
-    text-align: left;
-    min-width: 0;
+  .big-footer__side {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .big-footer__panel {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    padding: 22px 22px 20px;
+  }
+
+  .big-footer__panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    align-items: start;
   }
 
   .big-footer__col-title {
@@ -199,7 +217,7 @@ const FOOTER_STYLES = `
     letter-spacing: 1.2px;
     text-transform: uppercase;
     color: rgba(255,255,255,0.88);
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
 
   .big-footer__links {
@@ -208,8 +226,8 @@ const FOOTER_STYLES = `
     margin: 0;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 10px;
+    align-items: flex-start;
   }
 
   .big-footer__links a {
@@ -229,7 +247,7 @@ const FOOTER_STYLES = `
   .big-footer__contact-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 18px;
+    margin: 0 0 16px;
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -290,44 +308,24 @@ const FOOTER_STYLES = `
     color: #93c5fd;
   }
 
-  @media (max-width: 1024px) {
-    .big-footer__cta {
+  @media (max-width: 980px) {
+    .big-footer__body {
       grid-template-columns: 1fr;
-    }
-
-    .big-footer__cta-actions {
-      justify-content: flex-start;
-    }
-
-    .big-footer__main {
-      grid-template-columns: 1fr 1fr;
-      gap: 36px;
     }
   }
 
-  @media (max-width: 680px) {
+  @media (max-width: 720px) {
     .big-footer__inner {
       padding: 0 20px;
     }
 
     .big-footer__cta-wrap {
       padding-top: 40px;
-      padding-bottom: 32px;
+      padding-bottom: 30px;
     }
 
     .big-footer__cta {
-      padding: 24px;
-    }
-
-    .big-footer__main {
-      grid-template-columns: 1fr;
-      gap: 32px;
-      padding-bottom: 28px;
-    }
-
-    .big-footer__bottom {
-      flex-direction: column;
-      align-items: flex-start;
+      padding: 22px;
     }
 
     .big-footer__cta-actions {
@@ -338,6 +336,16 @@ const FOOTER_STYLES = `
     .big-footer__btn-primary,
     .big-footer__btn-secondary {
       width: 100%;
+    }
+
+    .big-footer__panel-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .big-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 `;
@@ -351,7 +359,7 @@ export default function BigFooter() {
         <div className="big-footer__inner">
           <div className="big-footer__cta-wrap">
             <div className="big-footer__cta">
-              <div>
+              <div className="big-footer__cta-copy">
                 <div className="big-footer__eyebrow">Klaar voor een professionele website?</div>
                 <h2 className="big-footer__cta-title">
                   Professioneel online, zonder technisch gedoe.
@@ -377,8 +385,8 @@ export default function BigFooter() {
             </div>
           </div>
 
-          <div className="big-footer__main">
-            <div className="big-footer__brand">
+          <div className="big-footer__body">
+            <div className="big-footer__brand-panel">
               <div className="big-footer__brand-name">Vedantix</div>
               <p className="big-footer__brand-text">
                 Websites voor lokale ondernemers, inclusief hosting, onderhoud en
@@ -386,7 +394,7 @@ export default function BigFooter() {
               </p>
               <p className="big-footer__brand-note">
                 Geen losse leveranciers, geen technisch gedoe, geen website die na
-                oplevering blijft stilstaan.
+                oplevering blijft stilstaan. Wel een online basis die verzorgd blijft.
               </p>
 
               <div className="big-footer__badges">
@@ -396,51 +404,64 @@ export default function BigFooter() {
               </div>
             </div>
 
-            <div className="big-footer__col">
-              <div className="big-footer__col-title">Navigatie</div>
-              <ul className="big-footer__links">
-                <li><Link to="/">Home</Link></li>
-                <li><Link to="/prijzen">Prijzen</Link></li>
-                <li><Link to="/proces">Proces</Link></li>
-                <li><Link to="/voorwie">Voor wie</Link></li>
-                <li><Link to="/faq">FAQ</Link></li>
-                <li><Link to="/blog">Blog</Link></li>
-              </ul>
-            </div>
+            <div className="big-footer__side">
+              <div className="big-footer__panel">
+                <div className="big-footer__panel-grid">
+                  <div>
+                    <div className="big-footer__col-title">Navigatie</div>
+                    <ul className="big-footer__links">
+                      <li><Link to="/">Home</Link></li>
+                      <li><Link to="/prijzen">Prijzen</Link></li>
+                      <li><Link to="/proces">Proces</Link></li>
+                      <li><Link to="/voorwie">Voor wie</Link></li>
+                      <li><Link to="/faq">FAQ</Link></li>
+                      <li><Link to="/blog">Blog</Link></li>
+                    </ul>
+                  </div>
 
-            <div className="big-footer__col">
-              <div className="big-footer__col-title">Branches</div>
-              <ul className="big-footer__links">
-                <li><Link to="/website-kapper">Website voor kappers</Link></li>
-                <li><Link to="/website-salon">Website voor salons</Link></li>
-                <li><Link to="/website-restaurant">Website voor restaurants</Link></li>
-                <li><Link to="/website-klusbedrijf">Website voor klusbedrijven</Link></li>
-                <li><Link to="/website-fotograaf">Website voor fotografen</Link></li>
-              </ul>
-            </div>
+                  <div>
+                    <div className="big-footer__col-title">Branches</div>
+                    <ul className="big-footer__links">
+                      <li><Link to="/website-kapper">Website voor kappers</Link></li>
+                      <li><Link to="/website-salon">Website voor salons</Link></li>
+                      <li><Link to="/website-restaurant">Website voor restaurants</Link></li>
+                      <li><Link to="/website-klusbedrijf">Website voor klusbedrijven</Link></li>
+                      <li><Link to="/website-fotograaf">Website voor fotografen</Link></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
 
-            <div className="big-footer__col">
-              <div className="big-footer__col-title">Contact & juridisch</div>
+              <div className="big-footer__panel">
+                <div className="big-footer__panel-grid">
+                  <div>
+                    <div className="big-footer__col-title">Contact</div>
+                    <ul className="big-footer__contact-list">
+                      <li className="big-footer__contact-item">
+                        <strong>E-mail</strong>
+                        <a href="mailto:info@vedantix.nl">info@vedantix.nl</a>
+                      </li>
+                      <li className="big-footer__contact-item">
+                        <strong>Telefoon / WhatsApp</strong>
+                        <a href="tel:+31626219989">+31 6 26 21 99 89</a>
+                      </li>
+                      <li className="big-footer__contact-item">
+                        <strong>Werkgebied</strong>
+                        Nederland · Lokale ondernemers
+                      </li>
+                    </ul>
+                  </div>
 
-              <ul className="big-footer__contact-list">
-                <li className="big-footer__contact-item">
-                  <strong>E-mail</strong>
-                  <a href="mailto:info@vedantix.nl">info@vedantix.nl</a>
-                </li>
-                <li className="big-footer__contact-item">
-                  <strong>Telefoon / WhatsApp</strong>
-                  <a href="tel:+31626219989">+31 6 26 21 99 89</a>
-                </li>
-                <li className="big-footer__contact-item">
-                  <strong>Werkgebied</strong>
-                  Nederland · Lokale ondernemers
-                </li>
-              </ul>
-
-              <ul className="big-footer__links">
-                <li><Link to="/privacy">Privacyverklaring</Link></li>
-                <li><Link to="/voorwaarden">Algemene voorwaarden</Link></li>
-              </ul>
+                  <div>
+                    <div className="big-footer__col-title">Juridisch</div>
+                    <ul className="big-footer__links">
+                      <li><Link to="/privacy">Privacyverklaring</Link></li>
+                      <li><Link to="/voorwaarden">Algemene voorwaarden</Link></li>
+                      <li><Link to="/faq">Veelgestelde vragen</Link></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
