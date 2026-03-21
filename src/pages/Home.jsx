@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
+import BigFooter from "../components/BigFooter";
 
 const HOME_STYLES = `
   *{box-sizing:border-box;margin:0;padding:0}
@@ -1080,16 +1081,7 @@ export default function Home() {
           </section>
         </main>
 
-        <footer>
-          <p>
-            © 2026 <strong>Vedantix</strong> — Websites voor lokale ondernemers, inclusief hosting, onderhoud en ondersteuning.
-          </p>
-          <div style={FOOTER_LINK_ROW_STYLE}>
-            <a href="#pricing">Prijzen</a>
-            <Link to="/privacy">Privacy</Link>
-            <Link to="/voorwaarden">Voorwaarden</Link>
-          </div>
-        </footer>
+        <BigFooter />
       </div>
     </>
   );
