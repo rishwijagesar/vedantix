@@ -456,13 +456,6 @@ export default function BigFooter() {
                   <strong>BTW:</strong> NL123456789B01
                 </div>
               </div>
-
-              <div style={{ marginTop: 18 }}>
-                <ul className="big-footer__links">
-                  <li><Link to="/privacy">Privacyverklaring</Link></li>
-                  <li><Link to="/voorwaarden">Algemene voorwaarden</Link></li>
-                </ul>
-              </div>
             </div>
           </div>
 
