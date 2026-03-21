@@ -23,22 +23,32 @@ export default function NavBar() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const primaryLinks = isHomePage
-    ? [
-        { label: "Prijzen", href: "#pricing", type: "anchor" },
-        { label: "Hoe het werkt", href: "#how", type: "anchor" },
-        { label: "Contact", href: "#cta", type: "anchor" },
-      ]
-    : [
-        { label: "Prijzen", href: "/prijzen", type: "route" },
-        { label: "Blog", href: "/blog", type: "route" },
-        { label: "FAQ", href: "/faq", type: "route" },
-      ];
-
-  const seoLinks = [
-    { label: "Kappers", href: "/website-kapper" },
-    { label: "Salons", href: "/website-salon" },
-    { label: "Restaurants", href: "/website-restaurant" },
+  const primaryLinks = [
+    {
+      label: "Prijzen",
+      href: isHomePage ? "#pricing" : "/#pricing",
+      type: "anchor",
+    },
+    {
+      label: "Hoe het werkt",
+      href: isHomePage ? "#how" : "/#how",
+      type: "anchor",
+    },
+    {
+      label: "Contact",
+      href: isHomePage ? "#cta" : "/#cta",
+      type: "anchor",
+    },
+    {
+      label: "Blog",
+      href: "/blog",
+      type: "route",
+    },
+    {
+      label: "FAQ",
+      href: "/faq",
+      type: "route",
+    },
   ];
 
   return (
@@ -152,9 +162,8 @@ export default function NavBar() {
       `}</style>
 
       <nav
-        className={`navbar ${scrolled ? "scrolled" : ""} ${
-          !isHomePage ? "solid" : ""
-        }`}
+        className={`navbar ${scrolled ? "scrolled" : ""} ${!isHomePage ? "solid" : ""
+          }`}
       >
         <div className="navbar-container">
           {/* LOGO */}
@@ -183,17 +192,16 @@ export default function NavBar() {
             </div>
 
             {/* SEO links */}
-            <div className="navbar-seo-links">
-              {seoLinks.map((link) => (
-                <Link key={link.label} to={link.href} className="navbar-seo-link">
-                  {link.label}
-                </Link>
-              ))}
-            </div>
+            <a
+              href={isHomePage ? "#pricing" : "/#pricing"}
+              className="navbar-cta"
+            >
+              Start je website →
+            </a>
 
             {/* CTA (BELANGRIJK: anchor voor homepage scroll) */}
             <a
-              href={isHomePage ? "#pricing" : "/prijzen"}
+              href={isHomePage ? "#pricing" : "/#pricing"}
               className="navbar-cta"
             >
               Start je website →
