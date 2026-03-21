@@ -438,62 +438,81 @@ const CTA_META_CHECK_STYLE = { color: "#22c55e" };
 const FOOTER_LINK_ROW_STYLE = { marginTop: 14 };
 
 const HERO_CHECKS = [
-  "Gemiddeld 3–5 extra aanvragen per week",
-  "Online in 48 uur — wij regelen alles",
-  "Maandelijks opzegbaar, 7 dagen geld-terug",
+  "Professionele website, hosting en onderhoud in één abonnement",
+  "Snelle livegang zonder technisch gedoe",
+  "Updates, support en doorontwikkeling onder één vast aanspreekpunt",
 ];
 
 const TRUSTED_BY = ["Kappers", "Restaurants", "Klusbedrijven", "Schoonheidssalons", "Fotografen", "ZZP'ers"];
 
 const PROBLEMS = [
-  ["🔍", "Mensen vinden je niet", "Ze zoeken online naar jouw bedrijf maar jij verschijnt niet. Je concurrent wel."],
-  ["📱", "Website ziet er verouderd uit", "Of je hebt helemaal geen website. Klanten denken dat je niet meer actief bent."],
-  ["📞", "Geen manier om te boeken", "Klanten kunnen niet bellen, reserveren of een bericht sturen. Ze geven het op."],
-  ["⚖️", "Minder vertrouwen", "Geen website = minder geloofwaardig. Klanten kiezen liever een concurrent."],
+  [
+    "🔍",
+    "Je bedrijf oogt minder professioneel",
+    "Zonder sterke website missen bezoekers vaak het vertrouwen dat nodig is om contact op te nemen of een afspraak te maken.",
+  ],
+  [
+    "📱",
+    "Je online presentatie loopt achter",
+    "Een verouderde of ontbrekende website geeft al snel de indruk dat je minder actief of minder betrouwbaar bent dan je concurrent.",
+  ],
+  [
+    "📞",
+    "Klanten weten niet goed wat de volgende stap is",
+    "Als bellen, mailen, reserveren of aanvragen niet duidelijk geregeld is, haken bezoekers sneller af.",
+  ],
+  [
+    "🛠️",
+    "Alles blijft op jouw bord liggen",
+    "Hosting, updates, kleine aanpassingen en technische vragen kosten tijd die je liever in je bedrijf stopt.",
+  ],
 ];
 
 const SOLUTION_GET = [
-  "Website live in 48 uur",
-  "100% mobielvriendelijk",
-  "Hosting, domein, SSL inbegrepen",
-  "Maandelijkse updates & onderhoud",
-  "Google vindt je makkelijker",
-  "Alles gericht op meer klanten",
+  "Een professionele website die past bij jouw branche",
+  "Hosting, domein, SSL en technisch beheer onder één dak",
+  "Een duidelijke structuur gericht op contact, aanvragen of afspraken",
+  "Snelle hulp bij updates en kleine wijzigingen",
+  "Een website die netjes werkt op mobiel, tablet en desktop",
+  "Eén vast traject zonder losse technische puzzelstukjes",
 ];
 
 const SOLUTION_SKIP = [
-  "Nooit meer naar developers bellen",
-  "Geen technische problemen meer",
-  "Geen gedoe met hosting",
-  "Geen verouderde website meer",
-  "Geen klanten meer verliezen",
-  "Pure focus op je bedrijf",
+  "Zelf hosting en techniek uitzoeken",
+  "Steeds opnieuw offertes opvragen voor kleine aanpassingen",
+  "Onzekerheid over wie iets moet oplossen",
+  "Gedoe met verschillende partijen voor website, domein en onderhoud",
+  "Een site die na oplevering langzaam veroudert",
+  "Tijd verliezen aan technische zaken buiten je vakgebied",
 ];
 
 const RESULTS = [
-  ["+4", "Extra afspraken per week"],
-  ["+€800", "Extra omzet per maand"],
-  ["48u", "Van gesprek naar live website"],
+  ["Professioneel", "Sterkere eerste indruk"],
+  ["Duidelijk", "Meer rust en structuur voor bezoekers"],
+  ["Ontzorgd", "Beheer, updates en support op één plek"],
 ];
 
 const TESTIMONIALS = [
   {
     stars: "★★★★★",
-    quote: "Binnen 2 dagen had ik een website die er echt professioneel uitziet. Sindsdien krijg ik elke week nieuwe klanten via de site.",
+    quote:
+      "Prettige samenwerking en vooral fijn dat alles op één plek geregeld is. Ik hoef niet meer na te denken over hosting, updates of kleine aanpassingen.",
     name: "Sander K.",
     role: "Kapper, Amsterdam",
     color: "#6366f1",
   },
   {
     stars: "★★★★★",
-    quote: "Ik had verwacht dat het ingewikkeld zou zijn, maar Vedantix regelt alles. Ik hoef er zelf niks aan te doen.",
+    quote:
+      "De website ziet er verzorgd uit en past veel beter bij mijn salon dan wat ik eerst had. Het voelt professioneler en duidelijker voor klanten.",
     name: "Fatima O.",
     role: "Schoonheidssalon, Rotterdam",
     color: "#8b5cf6",
   },
   {
     stars: "★★★★★",
-    quote: "Mijn oude website leverde niets op. Nu krijg ik gemiddeld 3-4 aanvragen per week via het contactformulier.",
+    quote:
+      "Wat ik vooral waardeer is de rust: één partij die bouw, onderhoud en updates regelt. Dat werkt voor mij veel beter dan alles los organiseren.",
     name: "Tom V.",
     role: "Klusbedrijf, Utrecht",
     color: "#6366f1",
@@ -501,51 +520,67 @@ const TESTIMONIALS = [
 ];
 
 const MOCKUP_SERVICES = [
-  ["✂️", "Klassieke Kapsel", "€18"],
-  ["🧔", "Baardverzorging", "€12"],
-  ["💈", "Fade & Design", "€22"],
+  ["✂️", "Klassieke Kapsel", "vanaf €18"],
+  ["🧔", "Baardverzorging", "vanaf €12"],
+  ["💈", "Fade & Design", "vanaf €22"],
 ];
 
 const TRUST_ITEMS = [
-  ["✔", "Geen verborgen kosten"],
-  ["✔", "Maandelijks opzegbaar"],
-  ["✔", "48 uur levertijd"],
-  ["✔", "7 dagen geld-terug"],
-  ["✔", "Alles inbegrepen"],
+  ["✔", "Duidelijke vaste maandprijs"],
+  ["✔", "Hosting en onderhoud inbegrepen"],
+  ["✔", "Eén aanspreekpunt"],
+  ["✔", "Doorlopende ondersteuning"],
+  ["✔", "Gebouwd voor lokale ondernemers"],
 ];
 
 const WHY_OLD = [
-  "€3000+ upfront betalen",
-  "Hosting zelf zoeken & betalen",
-  "Updates betalen per update",
-  "Problemen? €500+ per reparatie",
-  "Jij bent volledig verantwoordelijk",
+  "Na oplevering zelf alles regelen",
+  "Los betalen voor hosting, onderhoud en wijzigingen",
+  "Technische zaken bij meerdere partijen onderbrengen",
+  "Onzekerheid over wie verantwoordelijk is bij problemen",
+  "Website veroudert sneller zonder doorlopend beheer",
 ];
 
 const WHY_NEW = [
-  "€99–249/m, alles inbegrepen",
-  "Hosting, domein, SSL erbij",
-  "Automatische updates & optimalisaties",
-  "Problemen? Wij fixen gratis",
-  "Jij focust op je bedrijf",
+  "Website, hosting en onderhoud in één abonnement",
+  "Duidelijke vaste kosten per maand",
+  "Snelle hulp bij kleine wijzigingen",
+  "Doorlopende technische zorg en beheer",
+  "Meer rust, continuïteit en een professionelere uitstraling",
 ];
 
 const HOW_STEPS = [
-  ["1", "Je belt ons", "Korte kennismaking. Jij vertelt wat je bedrijf is, wij maken een plan."],
-  ["2", "Wij bouwen", "48 uur later: website klaar, getest, beveiligd, snel."],
-  ["3", "Je gaat live", "Website online. Klanten vinden en bellen jou."],
-  ["4", "Wij zorgen ervoor", "Updates, onderhoud, optimalisaties — alles door ons."],
+  [
+    "1",
+    "Kennismaking",
+    "We bespreken kort je bedrijf, doelgroep en wat je website praktisch moet doen.",
+  ],
+  [
+    "2",
+    "Ontwerp & opbouw",
+    "Wij bouwen een professionele basis die past bij jouw branche en uitstraling.",
+  ],
+  [
+    "3",
+    "Livegang",
+    "We zetten je website netjes live en zorgen dat alles technisch goed staat.",
+  ],
+  [
+    "4",
+    "Onderhoud & updates",
+    "Na livegang blijven we betrokken voor beheer, kleine wijzigingen en doorontwikkeling.",
+  ],
 ];
 
 const URGENCY_SPOTS = [1, 2, 3, 4, 5];
-const CTA_META = ["7 dagen geld-terug", "Geen contract", "Live in 48 uur", "Nog 2 plekken vrij"];
+const CTA_META = ["Duidelijke maandprijs", "Onderhoud inbegrepen", "Vast aanspreekpunt", "Vrijblijvende kennismaking"];
 
 export default function Home() {
   return (
     <>
       <SEO
         title="Website laten maken voor kappers, salons en lokale bedrijven | Vedantix"
-        description="Website laten maken voor kappers, salons en lokale bedrijven. Binnen 48 uur live, inclusief hosting, onderhoud en support. Meer klanten zonder technisch gedoe."
+        description="Professionele websites voor kappers, salons, restaurants en lokale ondernemers. Inclusief hosting, onderhoud en doorlopende ondersteuning in één helder abonnement."
         canonical="https://vedantix.nl/"
       />
 
@@ -560,11 +595,11 @@ export default function Home() {
               <div className="hero-content">
                 <div className="hero-eyebrow">Voor kappers, salons & lokale bedrijven</div>
                 <h1>
-                  Krijg meer klanten —<br />
-                  <span>website live in 48 uur</span>
+                  Een professionele website —<br />
+                  <span>zonder technisch gedoe</span>
                 </h1>
                 <p className="hero-sub">
-                  Wij bouwen een website die klanten oplevert. Geen technische kennis nodig. Jij focust op je bedrijf.
+                  Vedantix bouwt en beheert websites voor lokale ondernemers. Jij focust op je bedrijf, wij regelen de techniek, updates en online presentatie.
                 </p>
                 <div className="hero-checks">
                   {HERO_CHECKS.map((item) => (
@@ -575,7 +610,7 @@ export default function Home() {
                 </div>
                 <div className="hero-ctas">
                   <a href="#pricing" className="btn-primary">
-                    Laat je website klanten opleveren →
+                    Bekijk de pakketten →
                   </a>
                   <a
                     href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website."
@@ -589,17 +624,17 @@ export default function Home() {
                 <div className="hero-social-proof">
                   <div>
                     <div className="hero-sp-stars">★★★★★</div>
-                    <div className="hero-sp-text">Beoordeeld met 5.0 door lokale ondernemers</div>
+                    <div className="hero-sp-text">Gebouwd voor lokale ondernemers die ontzorgd willen worden</div>
                   </div>
                   <div style={HERO_DIVIDER_STYLE} />
                   <div>
-                    <div style={HERO_VALUE_STYLE}>48 uur</div>
-                    <div className="hero-sp-text">Gemiddelde levertijd</div>
+                    <div style={HERO_VALUE_STYLE}>Snel</div>
+                    <div className="hero-sp-text">Snelle livegang mogelijk</div>
                   </div>
                   <div style={HERO_DIVIDER_STYLE} />
                   <div>
-                    <div style={HERO_VALUE_STYLE}>7 dagen</div>
-                    <div className="hero-sp-text">Geld-terug garantie</div>
+                    <div style={HERO_VALUE_STYLE}>Vrijblijvend</div>
+                    <div className="hero-sp-text">Kennismaking zonder verplichting</div>
                   </div>
                 </div>
               </div>
@@ -619,8 +654,8 @@ export default function Home() {
                     <div style={MOCKUP_TITLE_STYLE}>Barbershop Amsterdam</div>
                     <div style={MOCKUP_SUBTITLE_STYLE}>Klassieke kapsels & scheerbeurt</div>
                     <div style={MOCKUP_META_ROW_STYLE}>
-                      <span style={MOCKUP_META_TEXT_STYLE}>⭐ 4.9 (87 reviews)</span>
-                      <span style={MOCKUP_META_TEXT_STYLE}>👥 500+ klanten</span>
+                      <span style={MOCKUP_META_TEXT_STYLE}>⭐ Goede eerste indruk</span>
+                      <span style={MOCKUP_META_TEXT_STYLE}>📱 Mobielvriendelijk</span>
                     </div>
                   </div>
                   <div style={MOCKUP_LIST_WRAP_STYLE}>
@@ -654,7 +689,7 @@ export default function Home() {
 
           <div className="trusted">
             <div className="trusted-inner">
-              <span className="trusted-label">Vertrouwd door</span>
+              <span className="trusted-label">Gebouwd voor</span>
               {TRUSTED_BY.map((item) => (
                 <span key={item} className="trusted-pill">
                   {item}
@@ -667,8 +702,10 @@ export default function Home() {
             <div className="section-wrap">
               <div className="section-header">
                 <div className="section-label">Het probleem</div>
-                <h2 className="section-h2">Je verliest klanten zonder dat je het doorhebt</h2>
-                <p className="section-p">Elke dag zonder goede website kost je klanten. Je concurrent pakt ze.</p>
+                <h2 className="section-h2">Een goede website is geen luxe meer</h2>
+                <p className="section-p">
+                  Voor veel lokale ondernemers is de website het eerste serieuze contactmoment. Dan moet die professioneel, duidelijk en betrouwbaar aanvoelen.
+                </p>
               </div>
               <div className="problem-grid">
                 {PROBLEMS.map(([icon, title, text]) => (
@@ -686,8 +723,10 @@ export default function Home() {
             <div className="section-wrap">
               <div className="section-header">
                 <div className="section-label light">De oplossing</div>
-                <h2 className="section-h2 light">Wij zorgen dat jouw website klanten oplevert</h2>
-                <p className="section-p light">Website + hosting + updates + onderhoud. Alles in één. Nul zorgen.</p>
+                <h2 className="section-h2 light">Alles onder één dak geregeld</h2>
+                <p className="section-p light">
+                  Website, hosting, onderhoud en ondersteuning in één duidelijk abonnement. Geen losse partijen, geen technisch gedoe.
+                </p>
               </div>
               <div className="solution-grid">
                 <div className="solution-col get">
@@ -715,9 +754,11 @@ export default function Home() {
           <section className="results-section">
             <div className="section-wrap">
               <div className="section-header">
-                <div className="section-label">Bewezen resultaten</div>
-                <h2 className="section-h2">Wat onze klanten gemiddeld zien</h2>
-                <p className="section-p">Concrete cijfers van lokale ondernemers die bij ons een website namen.</p>
+                <div className="section-label">De meerwaarde</div>
+                <h2 className="section-h2">Wat een goed website-abonnement je oplevert</h2>
+                <p className="section-p">
+                  Niet alleen een mooie website, maar vooral continuïteit, duidelijkheid en een professionele online basis.
+                </p>
               </div>
               <div className="results-row">
                 {RESULTS.map(([number, label]) => (
@@ -761,13 +802,15 @@ export default function Home() {
               <div className="section-header centered">
                 <div className="section-label">Tarieven</div>
                 <h2 className="section-h2">Kies jouw pakket</h2>
-                <p className="section-p">Geen verborgen kosten. Alles inbegrepen. Opzeggen wanneer je wilt.</p>
+                <p className="section-p">
+                  Kies het pakket dat past bij jouw bedrijf. Heldere maandkosten, vaste ondersteuning en ruimte om later door te groeien.
+                </p>
               </div>
               <div className="pricing-grid">
                 <div className="pricing-card">
                   <div className="p-tier">Starter</div>
-                  <div className="p-name">Online Aanwezig</div>
-                  <div className="p-sub">Voor ondernemers die gewoon online willen staan</div>
+                  <div className="p-name">Sterke basis</div>
+                  <div className="p-sub">Voor ondernemers die professioneel online zichtbaar willen zijn</div>
                   <div className="p-price">
                     <sup>€</sup>99<span>/m</span>
                   </div>
@@ -776,23 +819,23 @@ export default function Home() {
                   <ul className="p-features">
                     <li>1–2 pagina website</li>
                     <li>Mobielvriendelijk design</li>
-                    <li>Contactformulier (leads naar jouw mail)</li>
+                    <li>Contactformulier</li>
                     <li>Hosting + domein koppeling</li>
                     <li>SSL beveiliging</li>
                     <li>Basis SEO setup</li>
                     <li>Support binnen 48 uur</li>
                   </ul>
-                  <p className="p-note">Perfect om snel online te zijn en gevonden te worden</p>
+                  <p className="p-note">Een nette, verzorgde basis waarmee je bedrijf professioneel online staat</p>
                   <a href="#cta" className="p-cta default">
-                    Start met Starter →
+                    Kies Starter →
                   </a>
                 </div>
 
                 <div className="pricing-card featured">
                   <div className="pricing-badge">Meest gekozen</div>
                   <div className="p-tier">Growth</div>
-                  <div className="p-name">Klanten Winnen</div>
-                  <div className="p-sub">Voor bedrijven die actief klanten willen binnenhalen</div>
+                  <div className="p-name">Groei & vertrouwen</div>
+                  <div className="p-sub">Voor bedrijven die meer structuur, inhoud en begeleiding willen</div>
                   <div className="p-price">
                     <sup>€</sup>149<span>/m</span>
                   </div>
@@ -809,17 +852,17 @@ export default function Home() {
                     <li>Kleine updates inbegrepen</li>
                   </ul>
                   <p className="p-note" style={{ color: "#6366f1" }}>
-                    Voor bedrijven die hun website echt laten werken
+                    Meer ruimte voor inhoud, doorontwikkeling en een sterkere online presentatie
                   </p>
                   <a href="#cta" className="p-cta featured">
-                    Start met Growth →
+                    Kies Growth →
                   </a>
                 </div>
 
                 <div className="pricing-card">
                   <div className="p-tier">Pro</div>
-                  <div className="p-name">Serieus Groeien</div>
-                  <div className="p-sub">Voor bedrijven die serieus willen groeien</div>
+                  <div className="p-name">Maatwerk & doorontwikkeling</div>
+                  <div className="p-sub">Voor bedrijven die meer functionaliteit en meer snelheid willen</div>
                   <div className="p-price">
                     <sup>€</sup>249<span>/m</span>
                   </div>
@@ -832,11 +875,11 @@ export default function Home() {
                     <li>Alles van Growth</li>
                     <li>Volledige SEO optimalisatie</li>
                     <li>Priority support (binnen 12 uur)</li>
-                    <li>Snelle aanpassingen (zelfde dag mogelijk)</li>
+                    <li>Snelle aanpassingen mogelijk</li>
                   </ul>
-                  <p className="p-note">Maximale groei, minimale zorgen</p>
+                  <p className="p-note">Voor ondernemers die hun website als serieus onderdeel van hun bedrijf zien</p>
                   <a href="#cta" className="p-cta default">
-                    Start met Pro →
+                    Kies Pro →
                   </a>
                 </div>
               </div>
@@ -848,7 +891,7 @@ export default function Home() {
                   </summary>
                   <div style={DETAILS_CONTENT_STYLE}>
                     Teksten aanpassen, foto&apos;s vervangen, kleine layout-wijzigingen, contactgegevens updaten.
-                    Grote wijzigingen (nieuwe pagina&apos;s, geavanceerde functies) worden vooraf besproken.
+                    Grote wijzigingen zoals nieuwe modules, extra pagina&apos;s of uitgebreid maatwerk bespreken we altijd vooraf.
                   </div>
                 </details>
               </div>
@@ -868,15 +911,17 @@ export default function Home() {
 
           <section className="roi-section">
             <div className="roi-inner">
-              <h2 className="roi-title">Dit betaalt zichzelf binnen 30 dagen terug</h2>
-              <p className="roi-subtitle">Je hebt maar 1–2 extra klanten per maand nodig om je website terug te verdienen.</p>
+              <h2 className="roi-title">Waarom een abonnement voor veel ondernemers beter werkt</h2>
+              <p className="roi-subtitle">
+                Je koopt niet alleen een website, maar ook rust, continuïteit en een partij die jouw online basis blijft beheren.
+              </p>
 
               <div className="roi-comparison">
                 <div className="roi-block" style={ROI_LEFT_STYLE}>
                   <div className="roi-value invest">
-                    €149<span style={ROI_INVEST_SUFFIX_STYLE}>/m</span>
+                    Vast<span style={ROI_INVEST_SUFFIX_STYLE}> per maand</span>
                   </div>
-                  <div className="roi-block-label">Jouw investering</div>
+                  <div className="roi-block-label">Duidelijke kosten</div>
                 </div>
 
                 <div className="roi-divider">
@@ -888,15 +933,19 @@ export default function Home() {
 
                 <div className="roi-block" style={ROI_RIGHT_STYLE}>
                   <div className="roi-value gain">
-                    €500–2000+<span style={ROI_GAIN_SUFFIX_STYLE}>/m</span>
+                    Rust<span style={ROI_GAIN_SUFFIX_STYLE}> & continuïteit</span>
                   </div>
-                  <div className="roi-block-label">Extra omzet</div>
+                  <div className="roi-block-label">Doorlopend geregeld</div>
                 </div>
               </div>
 
               <div style={ROI_BOTTOM_STYLE}>
-                <div className="roi-bottom-line">Vanaf maand 1 winst. Daarna is het puur schaalbaar.</div>
-                <div className="roi-note">Gebaseerd op gemiddelde klantresultaten</div>
+                <div className="roi-bottom-line">
+                  Geen losse kosten voor hosting, onderhoud en kleine updates bij verschillende partijen.
+                </div>
+                <div className="roi-note">
+                  Een helder abonnement werkt vaak prettiger dan een website die na oplevering aan je wordt overgedragen zonder vervolg.
+                </div>
               </div>
             </div>
           </section>
@@ -905,12 +954,14 @@ export default function Home() {
             <div className="section-wrap">
               <div className="section-header">
                 <div className="section-label">Waarom abonnement</div>
-                <h2 className="section-h2">Waarom een abonnement beter is</h2>
-                <p className="section-p">Geen grote upfront kosten. Alles inbegrepen. Eenvoudig opzeggen.</p>
+                <h2 className="section-h2">Waarom dit model prettig werkt</h2>
+                <p className="section-p">
+                  Voor veel ondernemers is een abonnement overzichtelijker: één partij, één maandprijs en doorlopende ondersteuning.
+                </p>
               </div>
               <div className="why-grid">
                 <div className="why-col old">
-                  <h3>Eenmalig betalen (oud model)</h3>
+                  <h3>Losse website zonder vervolg</h3>
                   {WHY_OLD.map((item) => (
                     <div key={item} className="why-li">
                       <span>{item}</span>
@@ -918,7 +969,7 @@ export default function Home() {
                   ))}
                 </div>
                 <div className="why-col new">
-                  <h3>Abonnement bij Vedantix</h3>
+                  <h3>Abonnement met doorlopende ondersteuning</h3>
                   {WHY_NEW.map((item) => (
                     <div key={item} className="why-li">
                       <span>{item}</span>
@@ -952,9 +1003,9 @@ export default function Home() {
             <div className="lead-magnet-inner">
               <div className="lead-magnet-text">
                 <div className="lead-magnet-badge">🎁 Gratis — geen verplichtingen</div>
-                <div className="lead-magnet-title">Ontdek waarom jij klanten misloopt</div>
+                <div className="lead-magnet-title">Ontvang een eerlijke blik op je huidige website</div>
                 <div className="lead-magnet-sub">
-                  We analyseren jouw online aanwezigheid gratis en laten zien wat je concurrent beter doet. Geen verkooppraatje — gewoon eerlijk advies.
+                  We kijken vrijblijvend naar je online presentatie en laten zien waar winst zit in duidelijkheid, uitstraling en gebruiksgemak.
                 </div>
               </div>
               <div className="lead-magnet-cta">
@@ -966,7 +1017,7 @@ export default function Home() {
                 >
                   Gratis website analyse →
                 </a>
-                <div className="lead-magnet-note">Reactie binnen 24 uur · Helemaal gratis</div>
+                <div className="lead-magnet-note">Reactie binnen 24 uur · Helemaal vrijblijvend</div>
               </div>
             </div>
           </section>
@@ -974,31 +1025,37 @@ export default function Home() {
           <section className="urgency-section">
             <div className="urgency-inner">
               <div className="urgency-box">
-                <div className="urgency-pulse">Live beschikbaarheid</div>
-                <h3>Nog 2 plekken beschikbaar deze week</h3>
+                <div className="urgency-pulse">Persoonlijke aanpak</div>
+                <h3>Wij werken bewust met een beperkt aantal trajecten tegelijk</h3>
                 <div className="urgency-spots">
                   {URGENCY_SPOTS.map((item) => (
                     <div key={item} className={`spot ${item <= 3 ? "taken" : "free"}`} />
                   ))}
                 </div>
-                <p>We nemen max 5 nieuwe klanten per week aan — zo garanderen we kwaliteit en snelheid voor iedereen.</p>
+                <p>
+                  Zo houden we ruimte voor kwaliteit, snelle communicatie en doorlopende aandacht na livegang.
+                </p>
               </div>
               <div className="guarantee-box">
-                <div className="guarantee-icon">💰</div>
+                <div className="guarantee-icon">🤝</div>
                 <div>
-                  <strong>7-daags geld-terug garantie</strong>
-                  <p>Niet tevreden? We geven je geld terug, geen vragen gesteld.</p>
+                  <strong>Vrijblijvend kennismaken</strong>
+                  <p>
+                    Eerst bespreken we rustig wat bij jouw bedrijf past. Pas daarna beslis je of je verder wilt.
+                  </p>
                 </div>
               </div>
             </div>
           </section>
 
           <section id="cta" className="cta-section anchor-section">
-            <h2>Laat je website klanten opleveren</h2>
-            <p>Geen lange trajecten. Geen grote investering vooraf. Gewoon meer klanten — vanaf maand 1.</p>
+            <h2>Laat je website professioneel voor je werken</h2>
+            <p>
+              Kies voor een website die niet alleen mooi oogt, maar ook goed onderhouden blijft en past bij hoe jij wilt ondernemen.
+            </p>
             <div className="cta-btns">
               <a href="#pricing" className="btn-primary">
-                Krijg meer klanten →
+                Bekijk jouw pakket →
               </a>
               <a
                 href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20ben%20geinteresseerd%20in%20een%20website."
@@ -1025,7 +1082,7 @@ export default function Home() {
 
         <footer>
           <p>
-            © 2026 <strong>Vedantix</strong> — Website + hosting + onderhoud + support. Start €99/maand.
+            © 2026 <strong>Vedantix</strong> — Websites voor lokale ondernemers, inclusief hosting, onderhoud en ondersteuning.
           </p>
           <div style={FOOTER_LINK_ROW_STYLE}>
             <a href="#pricing">Prijzen</a>
