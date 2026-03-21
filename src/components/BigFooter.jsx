@@ -2,63 +2,53 @@ import { Link } from "react-router-dom";
 
 const FOOTER_STYLES = `
   .big-footer {
-    background: linear-gradient(180deg, #0a0f1e 0%, #060b16 100%);
+    background:
+      radial-gradient(circle at 20% 0%, rgba(99,102,241,0.12), transparent 28%),
+      radial-gradient(circle at 85% 15%, rgba(59,130,246,0.08), transparent 24%),
+      linear-gradient(180deg, #060b16 0%, #040814 100%);
     color: rgba(255,255,255,0.72);
     border-top: 1px solid rgba(255,255,255,0.06);
-    margin-top: 0;
     position: relative;
     overflow: hidden;
   }
 
-  .big-footer::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at 15% 0%, rgba(99,102,241,0.10), transparent 32%),
-      radial-gradient(circle at 85% 20%, rgba(59,130,246,0.08), transparent 30%);
-    pointer-events: none;
+  .big-footer__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .big-footer__cta-wrap {
+    padding-top: 56px;
+    padding-bottom: 48px;
   }
 
   .big-footer__cta {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 72px 24px 40px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .big-footer__cta-box {
-    background: linear-gradient(135deg, rgba(99,102,241,0.16), rgba(59,130,246,0.08));
-    border: 1px solid rgba(99,102,241,0.22);
-    border-radius: 24px;
-    padding: 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1.4fr auto;
     gap: 24px;
-    flex-wrap: wrap;
+    align-items: center;
+    padding: 28px 32px;
+    border-radius: 24px;
+    background:
+      linear-gradient(135deg, rgba(17,24,39,0.88), rgba(30,41,59,0.72));
+    border: 1px solid rgba(255,255,255,0.08);
     box-shadow:
-      0 20px 60px rgba(0,0,0,0.18),
-      inset 0 1px 0 rgba(255,255,255,0.05);
-    backdrop-filter: blur(6px);
-  }
-
-  .big-footer__cta-text {
-    flex: 1;
-    min-width: 260px;
+      0 20px 60px rgba(0,0,0,0.28),
+      inset 0 1px 0 rgba(255,255,255,0.04);
+    backdrop-filter: blur(10px);
   }
 
   .big-footer__eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    margin-bottom: 10px;
     font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.4px;
     text-transform: uppercase;
     color: #a5b4fc;
-    margin-bottom: 12px;
   }
 
   .big-footer__eyebrow::before {
@@ -71,25 +61,27 @@ const FOOTER_STYLES = `
   }
 
   .big-footer__cta-title {
-    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
-    line-height: 1.15;
+    font-size: clamp(1.5rem, 2.2vw, 2.15rem);
+    line-height: 1.1;
     font-weight: 900;
     color: #fff;
     letter-spacing: -0.8px;
     margin-bottom: 10px;
+    max-width: 700px;
   }
 
   .big-footer__cta-sub {
-    font-size: 0.95rem;
+    max-width: 640px;
+    font-size: 0.96rem;
     line-height: 1.7;
-    color: rgba(255,255,255,0.62);
-    max-width: 620px;
+    color: rgba(255,255,255,0.58);
   }
 
   .big-footer__cta-actions {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
   .big-footer__btn-primary,
@@ -99,11 +91,11 @@ const FOOTER_STYLES = `
     justify-content: center;
     text-decoration: none;
     border-radius: 12px;
-    padding: 14px 20px;
+    padding: 14px 18px;
     font-size: 0.9rem;
     font-weight: 700;
-    transition: all 0.22s ease;
     white-space: nowrap;
+    transition: all 0.22s ease;
   }
 
   .big-footer__btn-primary {
@@ -121,61 +113,55 @@ const FOOTER_STYLES = `
   .big-footer__btn-secondary {
     background: transparent;
     color: #fff;
-    border: 1px solid rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.14);
   }
 
   .big-footer__btn-secondary:hover {
     background: rgba(255,255,255,0.04);
-    border-color: rgba(255,255,255,0.28);
+    border-color: rgba(255,255,255,0.24);
     transform: translateY(-1px);
   }
 
   .big-footer__main {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 8px 24px 40px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .big-footer__grid {
     display: grid;
-    grid-template-columns: 1.45fr 1fr 1fr 1fr 1fr;
-    gap: 40px;
-    padding-top: 28px;
-    padding-bottom: 32px;
+    grid-template-columns: 1.55fr 0.9fr 1fr 1fr;
+    gap: 48px;
+    padding: 8px 0 36px;
     border-bottom: 1px solid rgba(255,255,255,0.07);
-    text-align: left;
-    align-items: start;
   }
 
   .big-footer__brand {
-    min-width: 0;
     text-align: left;
   }
 
   .big-footer__brand-name {
-    font-size: 1.35rem;
+    font-size: 1.7rem;
     font-weight: 900;
     color: #fff;
-    letter-spacing: -0.6px;
-    margin-bottom: 12px;
+    letter-spacing: -0.8px;
+    margin-bottom: 14px;
   }
 
   .big-footer__brand-text {
-    font-size: 0.92rem;
-    line-height: 1.75;
+    max-width: 380px;
+    font-size: 0.95rem;
+    line-height: 1.8;
     color: rgba(255,255,255,0.58);
     margin-bottom: 18px;
+  }
+
+  .big-footer__brand-note {
     max-width: 360px;
-    text-align: left;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.42);
+    margin-bottom: 20px;
   }
 
   .big-footer__badges {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    justify-content: flex-start;
   }
 
   .big-footer__badge {
@@ -199,9 +185,8 @@ const FOOTER_STYLES = `
     font-weight: 700;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: rgba(255,255,255,0.9);
+    color: rgba(255,255,255,0.88);
     margin-bottom: 16px;
-    text-align: left;
   }
 
   .big-footer__links {
@@ -217,8 +202,8 @@ const FOOTER_STYLES = `
   .big-footer__links a {
     color: rgba(255,255,255,0.58);
     text-decoration: none;
-    font-size: 0.9rem;
-    line-height: 1.5;
+    font-size: 0.92rem;
+    line-height: 1.55;
     transition: color 0.2s ease, transform 0.2s ease;
     display: inline-block;
   }
@@ -231,25 +216,24 @@ const FOOTER_STYLES = `
   .big-footer__contact-list {
     list-style: none;
     padding: 0;
-    margin: 0 0 16px;
+    margin: 0 0 18px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    text-align: left;
+    gap: 14px;
   }
 
   .big-footer__contact-item {
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: rgba(255,255,255,0.62);
-    text-align: left;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: rgba(255,255,255,0.6);
   }
 
   .big-footer__contact-item strong {
     display: block;
     color: #fff;
-    font-size: 0.84rem;
-    margin-bottom: 2px;
+    font-size: 0.82rem;
+    margin-bottom: 3px;
+    letter-spacing: 0.2px;
   }
 
   .big-footer__contact-item a {
@@ -262,13 +246,13 @@ const FOOTER_STYLES = `
     color: #93c5fd;
   }
 
-  .big-footer__meta {
+  .big-footer__bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 18px;
     flex-wrap: wrap;
-    padding-top: 22px;
+    padding: 22px 0 28px;
   }
 
   .big-footer__copyright {
@@ -293,37 +277,48 @@ const FOOTER_STYLES = `
     color: #93c5fd;
   }
 
-  @media (max-width: 1100px) {
-    .big-footer__grid {
-      grid-template-columns: 1fr 1fr 1fr;
+  @media (max-width: 1024px) {
+    .big-footer__main {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .big-footer__cta {
+      grid-template-columns: 1fr;
+    }
+
+    .big-footer__cta-actions {
+      justify-content: flex-start;
     }
   }
 
-  @media (max-width: 760px) {
+  @media (max-width: 680px) {
+    .big-footer__inner {
+      padding: 0 20px;
+    }
+
+    .big-footer__cta-wrap {
+      padding-top: 44px;
+      padding-bottom: 36px;
+    }
+
     .big-footer__cta {
-      padding: 56px 20px 28px;
-    }
-
-    .big-footer__main {
-      padding: 0 20px 32px;
-    }
-
-    .big-footer__cta-box {
       padding: 24px;
     }
 
-    .big-footer__grid {
+    .big-footer__main {
       grid-template-columns: 1fr;
-      gap: 28px;
+      gap: 32px;
+      padding-bottom: 28px;
     }
 
-    .big-footer__meta {
+    .big-footer__bottom {
       flex-direction: column;
       align-items: flex-start;
     }
 
     .big-footer__cta-actions {
       width: 100%;
+      flex-direction: column;
     }
 
     .big-footer__btn-primary,
@@ -339,43 +334,46 @@ export default function BigFooter() {
       <style>{FOOTER_STYLES}</style>
 
       <footer className="big-footer">
-        <div className="big-footer__cta">
-          <div className="big-footer__cta-box">
-            <div className="big-footer__cta-text">
-              <div className="big-footer__eyebrow">Klaar voor een professionele website?</div>
-              <h2 className="big-footer__cta-title">
-                Eén partij voor je website, hosting, onderhoud en ondersteuning
-              </h2>
-              <p className="big-footer__cta-sub">
-                Vedantix helpt lokale ondernemers met een professionele online basis
-                die verzorgd blijft. Geen losse leveranciers, geen technisch gedoe.
-              </p>
-            </div>
+        <div className="big-footer__inner">
+          <div className="big-footer__cta-wrap">
+            <div className="big-footer__cta">
+              <div>
+                <div className="big-footer__eyebrow">Klaar voor een professionele website?</div>
+                <h2 className="big-footer__cta-title">
+                  Professioneel online, zonder technisch gedoe.
+                </h2>
+                <p className="big-footer__cta-sub">
+                  Website, hosting en onderhoud in één helder abonnement voor lokale ondernemers.
+                </p>
+              </div>
 
-            <div className="big-footer__cta-actions">
-              <Link to="/prijzen" className="big-footer__btn-primary">
-                Bekijk pakketten
-              </Link>
-              <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20meer%20informatie%20over%20een%20website."
-                target="_blank"
-                rel="noreferrer"
-                className="big-footer__btn-secondary"
-              >
-                Plan vrijblijvend gesprek
-              </a>
+              <div className="big-footer__cta-actions">
+                <Link to="/prijzen" className="big-footer__btn-primary">
+                  Bekijk pakketten
+                </Link>
+                <a
+                  href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20meer%20informatie%20over%20een%20website."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="big-footer__btn-secondary"
+                >
+                  Plan vrijblijvend gesprek
+                </a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="big-footer__main">
-          <div className="big-footer__grid">
+          <div className="big-footer__main">
             <div className="big-footer__brand">
               <div className="big-footer__brand-name">Vedantix</div>
               <p className="big-footer__brand-text">
                 Websites voor lokale ondernemers, inclusief hosting, onderhoud en
-                doorlopende ondersteuning. Gebouwd voor bedrijven die professioneel
-                online zichtbaar willen zijn zonder technisch gedoe.
+                doorlopende ondersteuning.
+              </p>
+              <p className="big-footer__brand-note">
+                Geen losse leveranciers, geen technisch gedoe, geen website die na
+                oplevering blijft stilstaan. Wel een professionele online basis die
+                verzorgd blijft.
               </p>
 
               <div className="big-footer__badges">
@@ -393,16 +391,6 @@ export default function BigFooter() {
                 <li><Link to="/proces">Proces</Link></li>
                 <li><Link to="/voorwie">Voor wie</Link></li>
                 <li><Link to="/faq">FAQ</Link></li>
-              </ul>
-            </div>
-
-            <div className="big-footer__col">
-              <div className="big-footer__col-title">Pagina&apos;s</div>
-              <ul className="big-footer__links">
-                <li><Link to="/planning">Planning</Link></li>
-                <li><Link to="/starters">Starters</Link></li>
-                <li><Link to="/templates">Templates</Link></li>
-                <li><Link to="/vedantixhome">Vedantix Home</Link></li>
                 <li><Link to="/blog">Blog</Link></li>
               </ul>
             </div>
@@ -412,10 +400,9 @@ export default function BigFooter() {
               <ul className="big-footer__links">
                 <li><Link to="/website-kapper">Website voor kappers</Link></li>
                 <li><Link to="/website-salon">Website voor salons</Link></li>
-                <li><Link to="/website-klusbedrijf">Website voor klusbedrijven</Link></li>
                 <li><Link to="/website-restaurant">Website voor restaurants</Link></li>
+                <li><Link to="/website-klusbedrijf">Website voor klusbedrijven</Link></li>
                 <li><Link to="/website-fotograaf">Website voor fotografen</Link></li>
-                <li><Link to="/website-schoonmaakbedrijf">Website voor schoonmaakbedrijven</Link></li>
               </ul>
             </div>
 
@@ -444,7 +431,7 @@ export default function BigFooter() {
             </div>
           </div>
 
-          <div className="big-footer__meta">
+          <div className="big-footer__bottom">
             <div className="big-footer__copyright">
               © 2026 Vedantix. Alle rechten voorbehouden.
             </div>
