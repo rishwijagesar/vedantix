@@ -149,7 +149,6 @@ const FOOTER_STYLES = `
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
   }
 
   .big-footer__links li {
