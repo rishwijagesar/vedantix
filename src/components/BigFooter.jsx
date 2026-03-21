@@ -12,26 +12,36 @@ const FOOTER_STYLES = `
     overflow: hidden;
   }
 
+  .big-footer::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.015) 50%, transparent 100%);
+    pointer-events: none;
+  }
+
   .big-footer__inner {
-    max-width: 1180px;
+    max-width: 1140px;
     margin: 0 auto;
     padding: 0 24px;
+    position: relative;
+    z-index: 1;
   }
 
   .big-footer__cta-wrap {
-    padding-top: 56px;
-    padding-bottom: 48px;
+    padding-top: 52px;
+    padding-bottom: 40px;
   }
 
   .big-footer__cta {
     display: grid;
-    grid-template-columns: 1.4fr auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 24px;
     align-items: center;
     padding: 28px 32px;
     border-radius: 24px;
-    background:
-      linear-gradient(135deg, rgba(17,24,39,0.88), rgba(30,41,59,0.72));
+    background: linear-gradient(135deg, rgba(17,24,39,0.88), rgba(30,41,59,0.72));
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow:
       0 20px 60px rgba(0,0,0,0.28),
@@ -61,18 +71,18 @@ const FOOTER_STYLES = `
   }
 
   .big-footer__cta-title {
-    font-size: clamp(1.5rem, 2.2vw, 2.15rem);
-    line-height: 1.1;
+    font-size: clamp(1.45rem, 2.1vw, 2.05rem);
+    line-height: 1.08;
     font-weight: 900;
     color: #fff;
     letter-spacing: -0.8px;
     margin-bottom: 10px;
-    max-width: 700px;
+    max-width: 620px;
   }
 
   .big-footer__cta-sub {
-    max-width: 640px;
-    font-size: 0.96rem;
+    max-width: 560px;
+    font-size: 0.95rem;
     line-height: 1.7;
     color: rgba(255,255,255,0.58);
   }
@@ -124,14 +134,16 @@ const FOOTER_STYLES = `
 
   .big-footer__main {
     display: grid;
-    grid-template-columns: 1.55fr 0.9fr 1fr 1fr;
-    gap: 48px;
+    grid-template-columns: 1.2fr 0.8fr 0.9fr 1.1fr;
+    gap: 44px;
     padding: 8px 0 36px;
     border-bottom: 1px solid rgba(255,255,255,0.07);
+    align-items: start;
   }
 
   .big-footer__brand {
     text-align: left;
+    min-width: 0;
   }
 
   .big-footer__brand-name {
@@ -143,15 +155,15 @@ const FOOTER_STYLES = `
   }
 
   .big-footer__brand-text {
-    max-width: 380px;
+    max-width: 320px;
     font-size: 0.95rem;
     line-height: 1.8;
     color: rgba(255,255,255,0.58);
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
 
   .big-footer__brand-note {
-    max-width: 360px;
+    max-width: 320px;
     font-size: 0.82rem;
     line-height: 1.7;
     color: rgba(255,255,255,0.42);
@@ -178,6 +190,7 @@ const FOOTER_STYLES = `
 
   .big-footer__col {
     text-align: left;
+    min-width: 0;
   }
 
   .big-footer__col-title {
@@ -278,16 +291,17 @@ const FOOTER_STYLES = `
   }
 
   @media (max-width: 1024px) {
-    .big-footer__main {
-      grid-template-columns: 1fr 1fr;
-    }
-
     .big-footer__cta {
       grid-template-columns: 1fr;
     }
 
     .big-footer__cta-actions {
       justify-content: flex-start;
+    }
+
+    .big-footer__main {
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
     }
   }
 
@@ -297,8 +311,8 @@ const FOOTER_STYLES = `
     }
 
     .big-footer__cta-wrap {
-      padding-top: 44px;
-      padding-bottom: 36px;
+      padding-top: 40px;
+      padding-bottom: 32px;
     }
 
     .big-footer__cta {
@@ -372,8 +386,7 @@ export default function BigFooter() {
               </p>
               <p className="big-footer__brand-note">
                 Geen losse leveranciers, geen technisch gedoe, geen website die na
-                oplevering blijft stilstaan. Wel een professionele online basis die
-                verzorgd blijft.
+                oplevering blijft stilstaan.
               </p>
 
               <div className="big-footer__badges">
