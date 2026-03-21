@@ -4,6 +4,300 @@ import SEO from "../components/SEO";
 import { createServiceSchema, createBreadcrumbSchema } from "../utils/schema";
 import { cities, blogPosts } from "../data/seoData";
 
+const PAGE_STYLES = `
+  * { box-sizing: border-box; }
+
+  .klus-page {
+    background: #f8fafc;
+    min-height: 100vh;
+    color: #0f172a;
+  }
+
+  .klus-page-shell {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 110px 20px 60px;
+  }
+
+  .klus-hero {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff;
+    border-radius: 20px;
+    padding: 48px 32px;
+    margin-top: 24px;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+  }
+
+  .klus-hero-inner {
+    max-width: 760px;
+  }
+
+  .klus-eyebrow {
+    margin: 0 0 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #93c5fd;
+  }
+
+  .klus-hero-title {
+    margin: 0 0 18px;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.05;
+    font-weight: 800;
+  }
+
+  .klus-hero-text {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.82);
+    max-width: 680px;
+  }
+
+  .klus-content-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.9fr;
+    gap: 28px;
+    margin-top: 32px;
+  }
+
+  .klus-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  }
+
+  .klus-card h2 {
+    color: #0f172a;
+  }
+
+  .klus-card p {
+    color: #475569;
+    line-height: 1.8;
+  }
+
+  .klus-card ul {
+    padding-left: 20px;
+    color: #334155;
+    line-height: 1.9;
+    margin-bottom: 0;
+  }
+
+  .klus-cta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+
+  .klus-btn {
+    display: inline-block;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .klus-btn-primary {
+    background: #2563eb;
+    color: #fff;
+  }
+
+  .klus-btn-secondary {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+
+  .klus-highlight-box {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+  }
+
+  .klus-highlight-box strong {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .klus-highlight-box p {
+    margin: 0;
+    color: #334155;
+    line-height: 1.7;
+  }
+
+  .klus-secondary-highlight-box {
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+
+  .klus-secondary-highlight-box strong {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .klus-secondary-highlight-box p {
+    margin: 0;
+    color: #334155;
+    line-height: 1.7;
+  }
+
+  .klus-form {
+    display: grid;
+    gap: 12px;
+    max-width: 480px;
+  }
+
+  .klus-form-input {
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.95rem;
+  }
+
+  .klus-form-button {
+    background: #111827;
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+
+  .klus-pill-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .klus-pill-link {
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: #111827;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .klus-blog-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .klus-blog-link {
+    display: block;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    text-decoration: none;
+    color: #111827;
+    background: #fff;
+  }
+
+  .klus-blog-link strong {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .klus-blog-link span {
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  .klus-bottom-cta {
+    margin-top: 28px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff;
+    border-radius: 18px;
+    padding: 28px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .klus-bottom-cta-inner {
+    max-width: 620px;
+  }
+
+  .klus-bottom-cta-title {
+    margin: 0 0 10px;
+    font-size: 1.4rem;
+  }
+
+  .klus-bottom-cta-text {
+    margin: 0;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.7;
+  }
+
+  .klus-bottom-cta-link {
+    display: inline-block;
+    background: #fff;
+    color: #15803d;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .klus-content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .klus-page-shell {
+      padding: 96px 16px 48px;
+    }
+
+    .klus-hero,
+    .klus-card,
+    .klus-bottom-cta {
+      padding: 24px 20px;
+      border-radius: 16px;
+    }
+
+    .klus-cta-row a {
+      width: 100%;
+      text-align: center;
+    }
+
+    .klus-bottom-cta a {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .klus-page-shell {
+      padding: 90px 14px 40px;
+    }
+
+    .klus-hero h1 {
+      font-size: 1.9rem !important;
+    }
+
+    .klus-card h2 {
+      font-size: 1.25rem !important;
+    }
+  }
+`;
+
 export default function WebsiteKlusbedrijf() {
   const canonical = "https://vedantix.nl/website-klusbedrijf";
 
@@ -39,158 +333,21 @@ export default function WebsiteKlusbedrijf() {
         schemas={[serviceSchema, breadcrumbSchema]}
       />
 
-      <div
-        style={{
-          background: "#f8fafc",
-          minHeight: "100vh",
-          color: "#0f172a",
-        }}
-      >
-        <style>{`
-          * { box-sizing: border-box; }
+      <style>{PAGE_STYLES}</style>
 
-          .klus-page-shell {
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 110px 20px 60px;
-          }
-
-          .klus-hero {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: #fff;
-            border-radius: 20px;
-            padding: 48px 32px;
-            margin-top: 24px;
-            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
-          }
-
-          .klus-content-grid {
-            display: grid;
-            grid-template-columns: 1.4fr 0.9fr;
-            gap: 28px;
-            margin-top: 32px;
-          }
-
-          .klus-card {
-            background: #fff;
-            border-radius: 18px;
-            padding: 32px;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-          }
-
-          .klus-cta-row {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-top: 28px;
-          }
-
-          .klus-pill-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-          }
-
-          .klus-bottom-cta {
-            margin-top: 28px;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #fff;
-            border-radius: 18px;
-            padding: 28px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-          }
-
-          .klus-blog-grid {
-            display: grid;
-            gap: 14px;
-          }
-
-          @media (max-width: 900px) {
-            .klus-content-grid {
-              grid-template-columns: 1fr;
-            }
-          }
-
-          @media (max-width: 768px) {
-            .klus-page-shell {
-              padding: 96px 16px 48px;
-            }
-
-            .klus-hero,
-            .klus-card,
-            .klus-bottom-cta {
-              padding: 24px 20px;
-              border-radius: 16px;
-            }
-
-            .klus-cta-row a {
-              width: 100%;
-              text-align: center;
-            }
-
-            .klus-bottom-cta a {
-              width: 100%;
-              text-align: center;
-            }
-          }
-
-          @media (max-width: 480px) {
-            .klus-page-shell {
-              padding: 90px 14px 40px;
-            }
-
-            .klus-hero h1 {
-              font-size: 1.9rem !important;
-            }
-
-            .klus-card h2 {
-              font-size: 1.25rem !important;
-            }
-          }
-        `}</style>
-
+      <div className="klus-page">
         <NavBar />
 
         <div className="klus-page-shell">
           <section className="klus-hero">
-            <div style={{ maxWidth: 760 }}>
-              <p
-                style={{
-                  margin: "0 0 12px",
-                  fontSize: "0.9rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                  color: "#93c5fd",
-                }}
-              >
-                Websites voor klusbedrijven
-              </p>
+            <div className="klus-hero-inner">
+              <p className="klus-eyebrow">Websites voor klusbedrijven</p>
 
-              <h1
-                style={{
-                  margin: "0 0 18px",
-                  fontSize: "clamp(2rem, 5vw, 3.2rem)",
-                  lineHeight: 1.05,
-                  fontWeight: 800,
-                }}
-              >
+              <h1 className="klus-hero-title">
                 Website laten maken voor klusbedrijven
               </h1>
 
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: "1.05rem",
-                  lineHeight: 1.8,
-                  color: "rgba(255,255,255,0.82)",
-                  maxWidth: 680,
-                }}
-              >
+              <p className="klus-hero-text">
                 Wil je als klusbedrijf meer opdrachten binnenhalen via Google en
                 professioneler overkomen op nieuwe klanten? Dan heb je een
                 website nodig die vertrouwen wekt, jouw werkzaamheden helder
@@ -198,18 +355,7 @@ export default function WebsiteKlusbedrijf() {
               </p>
 
               <div className="klus-cta-row">
-                <a
-                  href="#analyse"
-                  style={{
-                    display: "inline-block",
-                    background: "#2563eb",
-                    color: "#fff",
-                    padding: "14px 20px",
-                    borderRadius: "10px",
-                    fontWeight: 700,
-                    textDecoration: "none",
-                  }}
-                >
+                <a href="#analyse" className="klus-btn klus-btn-primary">
                   Vraag gratis analyse aan
                 </a>
 
@@ -217,16 +363,7 @@ export default function WebsiteKlusbedrijf() {
                   href="https://wa.me/310626219989"
                   target="_blank"
                   rel="noreferrer"
-                  style={{
-                    display: "inline-block",
-                    background: "transparent",
-                    color: "#fff",
-                    padding: "14px 20px",
-                    borderRadius: "10px",
-                    fontWeight: 700,
-                    textDecoration: "none",
-                    border: "1px solid rgba(255,255,255,0.25)",
-                  }}
+                  className="klus-btn klus-btn-secondary"
                 >
                   Stuur direct een WhatsApp
                 </a>
@@ -246,7 +383,7 @@ export default function WebsiteKlusbedrijf() {
                 Meer offerteaanvragen via een professionele website
               </h2>
 
-              <p style={{ color: "#475569", lineHeight: 1.8 }}>
+              <p>
                 Veel mensen zoeken online naar een klusbedrijf, aannemer of
                 vakman in de buurt. Op dat moment wil je direct een betrouwbare
                 indruk maken. Een goede website laat zien wat je doet, welke
@@ -254,7 +391,7 @@ export default function WebsiteKlusbedrijf() {
                 met je kunnen opnemen.
               </p>
 
-              <p style={{ color: "#475569", lineHeight: 1.8 }}>
+              <p>
                 Vedantix bouwt websites voor klusbedrijven die gericht zijn op
                 zichtbaarheid, vertrouwen en conversie. Geen simpele online
                 visitekaart, maar een website die helpt om nieuwe aanvragen
@@ -271,14 +408,7 @@ export default function WebsiteKlusbedrijf() {
                 Wat jouw website minimaal moet bevatten
               </h2>
 
-              <ul
-                style={{
-                  paddingLeft: "20px",
-                  color: "#334155",
-                  lineHeight: 1.9,
-                  marginBottom: 0,
-                }}
-              >
+              <ul>
                 <li>Een duidelijke pagina met jouw diensten en werkzaamheden</li>
                 <li>Een contactformulier voor offerteaanvragen</li>
                 <li>Projecten of afgeronde klussen als referentie</li>
@@ -299,44 +429,24 @@ export default function WebsiteKlusbedrijf() {
                 Waarom een website belangrijk is voor klusbedrijven
               </h2>
 
-              <p style={{ color: "#475569", lineHeight: 1.8 }}>
+              <p>
                 Klanten vergelijken vaak meerdere bedrijven voordat ze contact
                 opnemen. Zonder verzorgde website kiezen ze sneller voor een
                 concurrent die online betrouwbaarder oogt en duidelijker laat
                 zien wat hij doet.
               </p>
 
-              <div
-                style={{
-                  marginTop: "20px",
-                  padding: "16px",
-                  borderRadius: "12px",
-                  background: "#eff6ff",
-                  border: "1px solid #dbeafe",
-                }}
-              >
-                <strong style={{ display: "block", marginBottom: "8px" }}>
-                  Geschikt voor onder andere:
-                </strong>
-                <p style={{ margin: 0, color: "#334155", lineHeight: 1.7 }}>
+              <div className="klus-highlight-box">
+                <strong>Geschikt voor onder andere:</strong>
+                <p>
                   Allround klusbedrijven, renovatiespecialisten, timmermannen,
                   montagebedrijven, onderhoudsbedrijven en zelfstandige vakmannen.
                 </p>
               </div>
 
-              <div
-                style={{
-                  marginTop: "18px",
-                  padding: "16px",
-                  borderRadius: "12px",
-                  background: "#f8fafc",
-                  border: "1px solid #e2e8f0",
-                }}
-              >
-                <strong style={{ display: "block", marginBottom: "8px" }}>
-                  Vanaf
-                </strong>
-                <p style={{ margin: 0, color: "#334155", lineHeight: 1.7 }}>
+              <div className="klus-secondary-highlight-box">
+                <strong>Vanaf</strong>
+                <p>
                   Pakketten vanaf €99 per maand, inclusief hosting en support.
                 </p>
               </div>
@@ -354,21 +464,14 @@ export default function WebsiteKlusbedrijf() {
               Wat wij bouwen voor klusbedrijven
             </h2>
 
-            <p style={{ color: "#475569", lineHeight: 1.8 }}>
+            <p>
               Onze websites voor klusbedrijven zijn ontworpen om werk op te
               leveren. Ze combineren een professionele uitstraling met duidelijke
               informatie, snelle contactmogelijkheden en een sterke basis voor
               lokale zichtbaarheid.
             </p>
 
-            <ul
-              style={{
-                paddingLeft: "20px",
-                color: "#334155",
-                lineHeight: 1.9,
-                marginBottom: 0,
-              }}
-            >
+            <ul>
               <li>Contactformulier voor nieuwe aanvragen</li>
               <li>Project showcase of afgeronde klussen</li>
               <li>SEO basisoptimalisatie</li>
@@ -399,8 +502,6 @@ export default function WebsiteKlusbedrijf() {
 
             <p
               style={{
-                color: "#475569",
-                lineHeight: 1.8,
                 maxWidth: 720,
                 marginBottom: "24px",
               }}
@@ -414,23 +515,14 @@ export default function WebsiteKlusbedrijf() {
             <form
               action="https://formspree.io/f/mqeyjgna"
               method="POST"
-              style={{
-                display: "grid",
-                gap: "12px",
-                maxWidth: "480px",
-              }}
+              className="klus-form"
             >
               <input
                 type="text"
                 name="name"
                 placeholder="Naam"
                 required
-                style={{
-                  padding: "14px 16px",
-                  borderRadius: "10px",
-                  border: "1px solid #cbd5e1",
-                  fontSize: "0.95rem",
-                }}
+                className="klus-form-input"
               />
 
               <input
@@ -438,39 +530,17 @@ export default function WebsiteKlusbedrijf() {
                 name="email"
                 placeholder="E-mailadres"
                 required
-                style={{
-                  padding: "14px 16px",
-                  borderRadius: "10px",
-                  border: "1px solid #cbd5e1",
-                  fontSize: "0.95rem",
-                }}
+                className="klus-form-input"
               />
 
               <input
                 type="text"
                 name="business"
                 placeholder="Naam klusbedrijf"
-                style={{
-                  padding: "14px 16px",
-                  borderRadius: "10px",
-                  border: "1px solid #cbd5e1",
-                  fontSize: "0.95rem",
-                }}
+                className="klus-form-input"
               />
 
-              <button
-                type="submit"
-                style={{
-                  background: "#111827",
-                  color: "#fff",
-                  padding: "14px 18px",
-                  borderRadius: "10px",
-                  fontWeight: 700,
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: "0.95rem",
-                }}
-              >
+              <button type="submit" className="klus-form-button">
                 Gratis analyse aanvragen →
               </button>
             </form>
@@ -492,7 +562,7 @@ export default function WebsiteKlusbedrijf() {
               Klusbedrijven per stad
             </h2>
 
-            <p style={{ color: "#475569", lineHeight: 1.8, marginBottom: "18px" }}>
+            <p style={{ marginBottom: "18px" }}>
               Zoek je een pagina gericht op jouw regio? Bekijk ook onze lokale
               pagina’s voor klusbedrijven in verschillende steden.
             </p>
@@ -502,15 +572,7 @@ export default function WebsiteKlusbedrijf() {
                 <Link
                   key={city.slug}
                   to={`/website/klusbedrijf/${city.slug}`}
-                  style={{
-                    padding: "10px 14px",
-                    borderRadius: 999,
-                    background: "#f3f4f6",
-                    color: "#111827",
-                    textDecoration: "none",
-                    fontSize: 14,
-                    fontWeight: 600,
-                  }}
+                  className="klus-pill-link"
                 >
                   Klusbedrijf in {city.name}
                 </Link>
@@ -528,39 +590,21 @@ export default function WebsiteKlusbedrijf() {
                 <Link
                   key={post.slug}
                   to={`/blog/${post.slug}`}
-                  style={{
-                    display: "block",
-                    padding: 18,
-                    border: "1px solid #e5e7eb",
-                    borderRadius: 14,
-                    textDecoration: "none",
-                    color: "#111827",
-                    background: "#fff",
-                  }}
+                  className="klus-blog-link"
                 >
-                  <strong style={{ display: "block", marginBottom: 6 }}>
-                    {post.title}
-                  </strong>
-                  <span style={{ color: "#6b7280", lineHeight: 1.6 }}>
-                    {post.intro}
-                  </span>
+                  <strong>{post.title}</strong>
+                  <span>{post.intro}</span>
                 </Link>
               ))}
             </div>
           </section>
 
           <section className="klus-bottom-cta">
-            <div style={{ maxWidth: 620 }}>
-              <h2 style={{ margin: "0 0 10px", fontSize: "1.4rem" }}>
+            <div className="klus-bottom-cta-inner">
+              <h2 className="klus-bottom-cta-title">
                 Liever direct contact?
               </h2>
-              <p
-                style={{
-                  margin: 0,
-                  color: "rgba(255,255,255,0.9)",
-                  lineHeight: 1.7,
-                }}
-              >
+              <p className="klus-bottom-cta-text">
                 Stuur direct een WhatsApp-bericht en bespreek jouw wensen voor
                 een website voor je klusbedrijf.
               </p>
@@ -570,16 +614,7 @@ export default function WebsiteKlusbedrijf() {
               href="https://wa.me/310626219989"
               target="_blank"
               rel="noreferrer"
-              style={{
-                display: "inline-block",
-                background: "#fff",
-                color: "#15803d",
-                padding: "14px 20px",
-                borderRadius: "10px",
-                fontWeight: 700,
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-              }}
+              className="klus-bottom-cta-link"
             >
               WhatsApp Vedantix →
             </a>

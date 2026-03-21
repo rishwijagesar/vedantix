@@ -3,6 +3,153 @@ import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
 import { createBreadcrumbSchema } from "../utils/schema";
 
+const VOORWAARDEN_STYLES = `
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .voorwaarden-page {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1a1a2e;
+    min-height: 100vh;
+    background: #f7f9fc;
+  }
+
+  .voorwaarden-page h1 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.1;
+  }
+
+  .voorwaarden-page h2 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin: 32px 0 16px;
+    color: #0a1628;
+  }
+
+  .voorwaarden-page h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 20px 0 8px;
+    color: #1a1a2e;
+  }
+
+  .voorwaarden-page p {
+    color: #374151;
+    line-height: 1.7;
+    margin-bottom: 14px;
+    font-size: 0.95rem;
+  }
+
+  .voorwaarden-page ul,
+  .voorwaarden-page ol {
+    margin: 0 0 16px 20px;
+    color: #374151;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .voorwaarden-page li {
+    margin-bottom: 8px;
+  }
+
+  .voorwaarden-page strong {
+    color: #0a1628;
+    font-weight: 700;
+  }
+
+  .voorwaarden-page em {
+    color: #6b7280;
+  }
+
+  .voorwaarden-page a {
+    color: #1a73e8;
+    text-decoration: none;
+  }
+
+  .voorwaarden-page a:hover {
+    text-decoration: underline;
+  }
+
+  .voorwaarden-hero {
+    background: linear-gradient(135deg,#0a1628,#0d2146);
+    padding: 110px 5% 50px;
+  }
+
+  .voorwaarden-hero-inner {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .voorwaarden-back-link {
+    color: rgba(255,255,255,0.55);
+    text-decoration: none;
+    font-size: 0.88rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 36px;
+  }
+
+  .voorwaarden-hero-title {
+    color: #fff;
+    margin-bottom: 16px;
+  }
+
+  .voorwaarden-hero-text {
+    color: rgba(255,255,255,0.65);
+    font-size: 1rem;
+  }
+
+  .voorwaarden-content {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 20px;
+  }
+
+  .voorwaarden-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px 48px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    line-height: 1.8;
+  }
+
+  .voorwaarden-intro {
+    margin-bottom: 28px;
+    font-style: italic;
+    color: #6b7280;
+  }
+
+  .voorwaarden-footer {
+    background: #0a1628;
+    color: rgba(255,255,255,0.45);
+    padding: 28px 5%;
+    text-align: center;
+    font-size: 0.83rem;
+    margin-top: 48px;
+  }
+
+  .voorwaarden-footer strong {
+    color: #fff;
+  }
+
+  .voorwaarden-footer-link {
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+  }
+
+  @media (max-width: 768px) {
+    .voorwaarden-card {
+      padding: 28px 20px;
+    }
+
+    .voorwaarden-hero {
+      padding: 96px 5% 42px;
+    }
+  }
+`;
+
 export default function Voorwaarden() {
   const canonical = "https://vedantix.nl/voorwaarden";
 
@@ -20,81 +167,27 @@ export default function Voorwaarden() {
         schemas={[breadcrumbSchema]}
       />
 
-      <div
-        style={{
-          fontFamily: "'Inter',sans-serif",
-          color: "#1a1a2e",
-          minHeight: "100vh",
-          background: "#f7f9fc",
-        }}
-      >
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; letter-spacing: -1px; line-height: 1.1; }
-          h2 { font-size: 1.25rem; font-weight: 800; margin: 32px 0 16px; color: #0a1628; }
-          h3 { font-size: 1rem; font-weight: 700; margin: 20px 0 8px; color: #1a1a2e; }
-          p { color: #374151; line-height: 1.7; margin-bottom: 14px; font-size: 0.95rem; }
-          ul, ol { margin: 0 0 16px 20px; color: #374151; font-size: 0.95rem; line-height: 1.7; }
-          li { margin-bottom: 8px; }
-          strong { color: #0a1628; font-weight: 700; }
-          em { color: #6b7280; }
-          a { color: #1a73e8; text-decoration: none; }
-          a:hover { text-decoration: underline; }
-          @media (max-width: 768px) {
-            .voorwaarden-card {
-              padding: 28px 20px !important;
-            }
-            .voorwaarden-hero {
-              padding: 96px 5% 42px !important;
-            }
-          }
-        `}</style>
+      <style>{VOORWAARDEN_STYLES}</style>
 
+      <div className="voorwaarden-page">
         <NavBar />
 
-        <div
-          className="voorwaarden-hero"
-          style={{
-            background: "linear-gradient(135deg,#0a1628,#0d2146)",
-            padding: "110px 5% 50px",
-          }}
-        >
-          <div style={{ maxWidth: 760, margin: "0 auto" }}>
-            <Link
-              to="/"
-              style={{
-                color: "rgba(255,255,255,0.55)",
-                textDecoration: "none",
-                fontSize: "0.88rem",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                marginBottom: 36,
-              }}
-            >
+        <section className="voorwaarden-hero">
+          <div className="voorwaarden-hero-inner">
+            <Link to="/" className="voorwaarden-back-link">
               ← Terug naar Vedantix
             </Link>
 
-            <h1 style={{ color: "#fff", marginBottom: 16 }}>Algemene voorwaarden</h1>
-            <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "1rem" }}>
+            <h1 className="voorwaarden-hero-title">Algemene voorwaarden</h1>
+            <p className="voorwaarden-hero-text">
               Duidelijk en transparant. Geen verborgen voorwaarden.
             </p>
           </div>
-        </div>
+        </section>
 
-        <div style={{ maxWidth: 760, margin: "0 auto", padding: "48px 20px" }}>
-          <div
-            className="voorwaarden-card"
-            style={{
-              background: "#fff",
-              borderRadius: 16,
-              padding: "40px 48px",
-              boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-              lineHeight: 1.8,
-            }}
-          >
-            <p style={{ marginBottom: 28, fontStyle: "italic", color: "#6b7280" }}>
+        <main className="voorwaarden-content">
+          <article className="voorwaarden-card">
+            <p className="voorwaarden-intro">
               Deze voorwaarden zijn van toepassing op alle diensten die Vedantix aanbiedt.
               Door contact met ons op te nemen of een offerte te accepteren, ga je akkoord
               met deze voorwaarden.
@@ -307,36 +400,21 @@ export default function Voorwaarden() {
                 Chat met ons
               </a>
             </p>
-          </div>
-        </div>
+          </article>
+        </main>
 
-        <footer
-          style={{
-            background: "#0a1628",
-            color: "rgba(255,255,255,0.45)",
-            padding: "28px 5%",
-            textAlign: "center",
-            fontSize: "0.83rem",
-            marginTop: 48,
-          }}
-        >
+        <footer className="voorwaarden-footer">
           <p>
-            © 2026 <strong style={{ color: "#fff" }}>Vedantix</strong> —{" "}
-            <Link to="/" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>
+            © 2026 <strong>Vedantix</strong> —{" "}
+            <Link to="/" className="voorwaarden-footer-link">
               Home
             </Link>{" "}
             •{" "}
-            <Link
-              to="/privacy"
-              style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}
-            >
+            <Link to="/privacy" className="voorwaarden-footer-link">
               Privacybeleid
             </Link>{" "}
             •{" "}
-            <Link
-              to="/faq"
-              style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}
-            >
+            <Link to="/faq" className="voorwaarden-footer-link">
               Veelgestelde vragen
             </Link>
           </p>

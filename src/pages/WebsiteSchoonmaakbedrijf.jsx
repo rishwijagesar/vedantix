@@ -4,6 +4,281 @@ import SEO from "../components/SEO";
 import { createServiceSchema, createBreadcrumbSchema } from "../utils/schema";
 import { cities, blogPosts } from "../data/seoData";
 
+const PAGE_STYLES = `
+  * { box-sizing: border-box; }
+
+  .clean-page {
+    background: #f8fafc;
+    min-height: 100vh;
+    color: #0f172a;
+  }
+
+  .clean-page-shell {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 110px 20px 60px;
+  }
+
+  .clean-hero {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #fff;
+    border-radius: 20px;
+    padding: 48px 32px;
+    margin-top: 24px;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
+  }
+
+  .clean-hero-inner {
+    max-width: 720px;
+  }
+
+  .clean-eyebrow {
+    margin: 0 0 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #93c5fd;
+  }
+
+  .clean-hero-title {
+    margin: 0 0 18px;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.05;
+    font-weight: 800;
+  }
+
+  .clean-hero-text {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.82);
+    max-width: 640px;
+  }
+
+  .clean-content-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 0.9fr;
+    gap: 28px;
+    margin-top: 32px;
+  }
+
+  .clean-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  }
+
+  .clean-card h2 {
+    color: #0f172a;
+  }
+
+  .clean-card p {
+    color: #475569;
+    line-height: 1.8;
+  }
+
+  .clean-card ul {
+    padding-left: 20px;
+    color: #334155;
+    line-height: 1.9;
+    margin-bottom: 0;
+  }
+
+  .clean-cta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+
+  .clean-btn {
+    display: inline-block;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .clean-btn-primary {
+    background: #2563eb;
+    color: #fff;
+  }
+
+  .clean-btn-secondary {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+
+  .clean-highlight-box {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+  }
+
+  .clean-highlight-box strong {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .clean-highlight-box p {
+    margin: 0;
+    color: #334155;
+    line-height: 1.7;
+  }
+
+  .clean-form {
+    display: grid;
+    gap: 12px;
+    max-width: 480px;
+  }
+
+  .clean-form-input {
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 0.95rem;
+  }
+
+  .clean-form-button {
+    background: #111827;
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+
+  .clean-pill-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .clean-pill-link {
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: #111827;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .clean-blog-grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  .clean-blog-link {
+    display: block;
+    padding: 18px;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    text-decoration: none;
+    color: #111827;
+    background: #fff;
+  }
+
+  .clean-blog-link strong {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .clean-blog-link span {
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  .clean-bottom-cta {
+    margin-top: 28px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff;
+    border-radius: 18px;
+    padding: 28px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .clean-bottom-cta-inner {
+    max-width: 620px;
+  }
+
+  .clean-bottom-cta-title {
+    margin: 0 0 10px;
+    font-size: 1.4rem;
+  }
+
+  .clean-bottom-cta-text {
+    margin: 0;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.7;
+  }
+
+  .clean-bottom-cta-link {
+    display: inline-block;
+    background: #fff;
+    color: #15803d;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 900px) {
+    .clean-content-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .clean-page-shell {
+      padding: 96px 16px 48px;
+    }
+
+    .clean-hero,
+    .clean-card,
+    .clean-bottom-cta {
+      padding: 24px 20px;
+      border-radius: 16px;
+    }
+
+    .clean-cta-row a {
+      width: 100%;
+      text-align: center;
+    }
+
+    .clean-bottom-cta a {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .clean-page-shell {
+      padding: 90px 14px 40px;
+    }
+
+    .clean-hero h1 {
+      font-size: 1.9rem !important;
+    }
+
+    .clean-card h2 {
+      font-size: 1.25rem !important;
+    }
+  }
+`;
+
 export default function WebsiteSchoonmaakbedrijf() {
   const canonical = "https://vedantix.nl/website-schoonmaakbedrijf";
 
@@ -38,158 +313,21 @@ export default function WebsiteSchoonmaakbedrijf() {
         schemas={[serviceSchema, breadcrumbSchema]}
       />
 
-      <div
-        style={{
-          background: "#f8fafc",
-          minHeight: "100vh",
-          color: "#0f172a",
-        }}
-      >
-        <style>{`
-          * { box-sizing: border-box; }
+      <style>{PAGE_STYLES}</style>
 
-          .clean-page-shell {
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 110px 20px 60px;
-          }
-
-          .clean-hero {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            color: #fff;
-            border-radius: 20px;
-            padding: 48px 32px;
-            margin-top: 24px;
-            box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18);
-          }
-
-          .clean-content-grid {
-            display: grid;
-            grid-template-columns: 1.4fr 0.9fr;
-            gap: 28px;
-            margin-top: 32px;
-          }
-
-          .clean-card {
-            background: #fff;
-            border-radius: 18px;
-            padding: 32px;
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-          }
-
-          .clean-cta-row {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-top: 28px;
-          }
-
-          .clean-pill-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-          }
-
-          .clean-bottom-cta {
-            margin-top: 28px;
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #fff;
-            border-radius: 18px;
-            padding: 28px 32px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-          }
-
-          .clean-blog-grid {
-            display: grid;
-            gap: 14px;
-          }
-
-          @media (max-width: 900px) {
-            .clean-content-grid {
-              grid-template-columns: 1fr;
-            }
-          }
-
-          @media (max-width: 768px) {
-            .clean-page-shell {
-              padding: 96px 16px 48px;
-            }
-
-            .clean-hero,
-            .clean-card,
-            .clean-bottom-cta {
-              padding: 24px 20px;
-              border-radius: 16px;
-            }
-
-            .clean-cta-row a {
-              width: 100%;
-              text-align: center;
-            }
-
-            .clean-bottom-cta a {
-              width: 100%;
-              text-align: center;
-            }
-          }
-
-          @media (max-width: 480px) {
-            .clean-page-shell {
-              padding: 90px 14px 40px;
-            }
-
-            .clean-hero h1 {
-              font-size: 1.9rem !important;
-            }
-
-            .clean-card h2 {
-              font-size: 1.25rem !important;
-            }
-          }
-        `}</style>
-
+      <div className="clean-page">
         <NavBar />
 
         <div className="clean-page-shell">
           <section className="clean-hero">
-            <div style={{ maxWidth: 720 }}>
-              <p
-                style={{
-                  margin: "0 0 12px",
-                  fontSize: "0.9rem",
-                  fontWeight: 700,
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
-                  color: "#93c5fd",
-                }}
-              >
-                Websites voor schoonmaakbedrijven
-              </p>
+            <div className="clean-hero-inner">
+              <p className="clean-eyebrow">Websites voor schoonmaakbedrijven</p>
 
-              <h1
-                style={{
-                  margin: "0 0 18px",
-                  fontSize: "clamp(2rem, 5vw, 3.2rem)",
-                  lineHeight: 1.05,
-                  fontWeight: 800,
-                }}
-              >
+              <h1 className="clean-hero-title">
                 Website laten maken voor schoonmaakbedrijven
               </h1>
 
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: "1.05rem",
-                  lineHeight: 1.8,
-                  color: "rgba(255,255,255,0.82)",
-                  maxWidth: 640,
-                }}
-              >
+              <p className="clean-hero-text">
                 Wil je als schoonmaakbedrijf meer aanvragen ontvangen en
                 professioneler overkomen? Dan is een sterke website onmisbaar.
                 Veel klanten zoeken online naar een betrouwbaar
@@ -197,18 +335,7 @@ export default function WebsiteSchoonmaakbedrijf() {
               </p>
 
               <div className="clean-cta-row">
-                <a
-                  href="#analyse"
-                  style={{
-                    display: "inline-block",
-                    background: "#2563eb",
-                    color: "#fff",
-                    padding: "14px 20px",
-                    borderRadius: "10px",
-                    fontWeight: 700,
-                    textDecoration: "none",
-                  }}
-                >
+                <a href="#analyse" className="clean-btn clean-btn-primary">
                   Vraag gratis analyse aan
                 </a>
 
@@ -216,16 +343,7 @@ export default function WebsiteSchoonmaakbedrijf() {
                   href="https://wa.me/310626219989"
                   target="_blank"
                   rel="noreferrer"
-                  style={{
-                    display: "inline-block",
-                    background: "transparent",
-                    color: "#fff",
-                    padding: "14px 20px",
-                    borderRadius: "10px",
-                    fontWeight: 700,
-                    textDecoration: "none",
-                    border: "1px solid rgba(255,255,255,0.25)",
-                  }}
+                  className="clean-btn clean-btn-secondary"
                 >
                   Stuur direct een WhatsApp
                 </a>
@@ -245,14 +363,14 @@ export default function WebsiteSchoonmaakbedrijf() {
                 Meer aanvragen via een professionele website
               </h2>
 
-              <p style={{ color: "#475569", lineHeight: 1.8 }}>
+              <p>
                 Een goede website maakt direct duidelijk welke
                 schoonmaakdiensten je aanbiedt, voor welke klanten je werkt en
                 hoe eenvoudig contact kan worden opgenomen. Zo verlaag je de
                 drempel voor nieuwe aanvragen.
               </p>
 
-              <p style={{ color: "#475569", lineHeight: 1.8 }}>
+              <p>
                 Vedantix bouwt websites voor schoonmaakbedrijven die gericht
                 zijn op vertrouwen, duidelijkheid en conversie. Niet alleen een
                 nette uitstraling, maar ook een website die helpt om meer
@@ -269,14 +387,7 @@ export default function WebsiteSchoonmaakbedrijf() {
                 Wat jouw website minimaal moet bevatten
               </h2>
 
-              <ul
-                style={{
-                  paddingLeft: "20px",
-                  color: "#334155",
-                  lineHeight: 1.9,
-                  marginBottom: 0,
-                }}
-              >
+              <ul>
                 <li>Duidelijk overzicht van jouw schoonmaakdiensten</li>
                 <li>Professionele uitstraling en vertrouwen</li>
                 <li>Contactformulier voor aanvragen</li>
@@ -297,26 +408,16 @@ export default function WebsiteSchoonmaakbedrijf() {
                 Waarom een website belangrijk is voor schoonmaakbedrijven
               </h2>
 
-              <p style={{ color: "#475569", lineHeight: 1.8 }}>
+              <p>
                 Klanten willen snel weten wat je doet, in welke regio je werkt
                 en hoe ze je kunnen bereiken. Een verzorgde website helpt je
                 betrouwbaarder en professioneler over te komen dan alleen een
                 telefoonnummer of social media pagina.
               </p>
 
-              <div
-                style={{
-                  marginTop: "20px",
-                  padding: "16px",
-                  borderRadius: "12px",
-                  background: "#eff6ff",
-                  border: "1px solid #dbeafe",
-                }}
-              >
-                <strong style={{ display: "block", marginBottom: "8px" }}>
-                  Geschikt voor onder andere:
-                </strong>
-                <p style={{ margin: 0, color: "#334155", lineHeight: 1.7 }}>
+              <div className="clean-highlight-box">
+                <strong>Geschikt voor onder andere:</strong>
+                <p>
                   Interieurreiniging, kantoorreiniging, glasbewassing,
                   opleverschoonmaak, specialistische reiniging en lokale
                   schoonmaakdiensten.
@@ -345,8 +446,6 @@ export default function WebsiteSchoonmaakbedrijf() {
 
             <p
               style={{
-                color: "#475569",
-                lineHeight: 1.8,
                 maxWidth: 720,
                 marginBottom: "24px",
               }}
@@ -359,23 +458,14 @@ export default function WebsiteSchoonmaakbedrijf() {
             <form
               action="https://formspree.io/f/mqeyjgna"
               method="POST"
-              style={{
-                display: "grid",
-                gap: "12px",
-                maxWidth: "480px",
-              }}
+              className="clean-form"
             >
               <input
                 type="text"
                 name="name"
                 placeholder="Naam"
                 required
-                style={{
-                  padding: "14px 16px",
-                  borderRadius: "10px",
-                  border: "1px solid #cbd5e1",
-                  fontSize: "0.95rem",
-                }}
+                className="clean-form-input"
               />
 
               <input
@@ -383,39 +473,17 @@ export default function WebsiteSchoonmaakbedrijf() {
                 name="email"
                 placeholder="E-mailadres"
                 required
-                style={{
-                  padding: "14px 16px",
-                  borderRadius: "10px",
-                  border: "1px solid #cbd5e1",
-                  fontSize: "0.95rem",
-                }}
+                className="clean-form-input"
               />
 
               <input
                 type="text"
                 name="business"
                 placeholder="Bedrijfsnaam of type schoonmaak"
-                style={{
-                  padding: "14px 16px",
-                  borderRadius: "10px",
-                  border: "1px solid #cbd5e1",
-                  fontSize: "0.95rem",
-                }}
+                className="clean-form-input"
               />
 
-              <button
-                type="submit"
-                style={{
-                  background: "#111827",
-                  color: "#fff",
-                  padding: "14px 18px",
-                  borderRadius: "10px",
-                  fontWeight: 700,
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: "0.95rem",
-                }}
-              >
+              <button type="submit" className="clean-form-button">
                 Gratis analyse aanvragen →
               </button>
             </form>
@@ -437,7 +505,7 @@ export default function WebsiteSchoonmaakbedrijf() {
               Schoonmaakbedrijven per stad
             </h2>
 
-            <p style={{ color: "#475569", lineHeight: 1.8, marginBottom: "18px" }}>
+            <p style={{ marginBottom: "18px" }}>
               Zoek je een pagina gericht op jouw regio? Bekijk ook onze lokale
               pagina’s voor schoonmaakbedrijven in verschillende steden.
             </p>
@@ -447,15 +515,7 @@ export default function WebsiteSchoonmaakbedrijf() {
                 <Link
                   key={city.slug}
                   to={`/website/schoonmaakbedrijf/${city.slug}`}
-                  style={{
-                    padding: "10px 14px",
-                    borderRadius: 999,
-                    background: "#f3f4f6",
-                    color: "#111827",
-                    textDecoration: "none",
-                    fontSize: 14,
-                    fontWeight: 600,
-                  }}
+                  className="clean-pill-link"
                 >
                   Schoonmaakbedrijf in {city.name}
                 </Link>
@@ -473,39 +533,21 @@ export default function WebsiteSchoonmaakbedrijf() {
                 <Link
                   key={post.slug}
                   to={`/blog/${post.slug}`}
-                  style={{
-                    display: "block",
-                    padding: 18,
-                    border: "1px solid #e5e7eb",
-                    borderRadius: 14,
-                    textDecoration: "none",
-                    color: "#111827",
-                    background: "#fff",
-                  }}
+                  className="clean-blog-link"
                 >
-                  <strong style={{ display: "block", marginBottom: 6 }}>
-                    {post.title}
-                  </strong>
-                  <span style={{ color: "#6b7280", lineHeight: 1.6 }}>
-                    {post.intro}
-                  </span>
+                  <strong>{post.title}</strong>
+                  <span>{post.intro}</span>
                 </Link>
               ))}
             </div>
           </section>
 
           <section className="clean-bottom-cta">
-            <div style={{ maxWidth: 620 }}>
-              <h2 style={{ margin: "0 0 10px", fontSize: "1.4rem" }}>
+            <div className="clean-bottom-cta-inner">
+              <h2 className="clean-bottom-cta-title">
                 Liever direct contact?
               </h2>
-              <p
-                style={{
-                  margin: 0,
-                  color: "rgba(255,255,255,0.9)",
-                  lineHeight: 1.7,
-                }}
-              >
+              <p className="clean-bottom-cta-text">
                 Stuur direct een WhatsApp-bericht en bespreek jouw wensen voor
                 een website voor je schoonmaakbedrijf.
               </p>
@@ -515,16 +557,7 @@ export default function WebsiteSchoonmaakbedrijf() {
               href="https://wa.me/310626219989"
               target="_blank"
               rel="noreferrer"
-              style={{
-                display: "inline-block",
-                background: "#fff",
-                color: "#15803d",
-                padding: "14px 20px",
-                borderRadius: "10px",
-                fontWeight: 700,
-                textDecoration: "none",
-                whiteSpace: "nowrap",
-              }}
+              className="clean-bottom-cta-link"
             >
               WhatsApp Vedantix →
             </a>

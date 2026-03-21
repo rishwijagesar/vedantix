@@ -4,68 +4,373 @@ import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
 import { createBreadcrumbSchema } from "../utils/schema";
 
-const faqs = [
+const FAQS = [
   {
     id: 1,
     question: "Wat kost een website bij Vedantix?",
     answer:
-      "De kosten hangen af van het gekozen pakket en de gewenste functionaliteiten. Vedantix werkt met een maandabonnement van €99 tot €249 per maand en een eenmalige opstartprijs van €399 tot €1000. In het abonnement zijn hosting, domein, SSL, updates en onderhoud inbegrepen."
+      "De kosten hangen af van het gekozen pakket en de gewenste functionaliteiten. Vedantix werkt met een maandabonnement van €99 tot €249 per maand en een eenmalige opstartprijs van €399 tot €1000. In het abonnement zijn hosting, domein, SSL, updates en onderhoud inbegrepen.",
   },
   {
     id: 2,
     question: "Hoe snel kan mijn website online staan?",
     answer:
-      "In veel gevallen kan een website binnen 48 uur live staan. Dat hangt wel af van hoe snel teksten, foto’s, logo’s en feedback worden aangeleverd. Bij uitgebreidere websites of extra wensen kan de oplevering iets langer duren."
+      "In veel gevallen kan een website binnen 48 uur live staan. Dat hangt wel af van hoe snel teksten, foto’s, logo’s en feedback worden aangeleverd. Bij uitgebreidere websites of extra wensen kan de oplevering iets langer duren.",
   },
   {
     id: 3,
     question: "Werkt mijn website ook goed op mobiel en tablet?",
     answer:
-      "Ja. Alle websites van Vedantix worden responsive gebouwd. Dat betekent dat de website goed werkt op mobiel, tablet en desktop."
+      "Ja. Alle websites van Vedantix worden responsive gebouwd. Dat betekent dat de website goed werkt op mobiel, tablet en desktop.",
   },
   {
     id: 4,
     question: "Wat zit er in het maandabonnement?",
     answer:
-      "Het maandabonnement bevat hosting, domeinregistratie, SSL-certificaat, technisch onderhoud, updates en support. Bij bepaalde pakketten zijn ook een aantal kleine wijzigingen per maand inbegrepen."
+      "Het maandabonnement bevat hosting, domeinregistratie, SSL-certificaat, technisch onderhoud, updates en support. Bij bepaalde pakketten zijn ook een aantal kleine wijzigingen per maand inbegrepen.",
   },
   {
     id: 5,
     question: "Kan ik later nog iets laten aanpassen aan mijn website?",
     answer:
-      "Ja. Je website kan later altijd worden uitgebreid of aangepast. Afhankelijk van je pakket zijn kleine wijzigingen inbegrepen. Grotere uitbreidingen of extra werkzaamheden worden apart geoffreerd."
+      "Ja. Je website kan later altijd worden uitgebreid of aangepast. Afhankelijk van je pakket zijn kleine wijzigingen inbegrepen. Grotere uitbreidingen of extra werkzaamheden worden apart geoffreerd.",
   },
   {
     id: 6,
     question: "Zit ik vast aan een lang contract?",
     answer:
-      "Nee. Vedantix werkt met een maandelijks opzegbaar abonnement met een opzegtermijn van 30 dagen. Zo blijf je flexibel en weet je waar je aan toe bent."
+      "Nee. Vedantix werkt met een maandelijks opzegbaar abonnement met een opzegtermijn van 30 dagen. Zo blijf je flexibel en weet je waar je aan toe bent.",
   },
   {
     id: 7,
     question: "Wat gebeurt er als ik stop met mijn abonnement?",
     answer:
-      "Na beëindiging van het abonnement wordt de website offline gehaald na afloop van de opzegtermijn. Neem vooraf contact op als je de mogelijkheden wilt bespreken voor overdracht of overname van onderdelen van de website."
+      "Na beëindiging van het abonnement wordt de website offline gehaald na afloop van de opzegtermijn. Neem vooraf contact op als je de mogelijkheden wilt bespreken voor overdracht of overname van onderdelen van de website.",
   },
   {
     id: 8,
     question: "Helpt Vedantix ook met meer klanten krijgen?",
     answer:
-      "Vedantix bouwt websites die gericht zijn op duidelijkheid, vertrouwen en conversie. Denk aan een professionele uitstraling, goede mobiele weergave, snelle laadtijd, contactmogelijkheden en een logische opbouw. Dat helpt om bezoekers sneller om te zetten in aanvragen of afspraken."
+      "Vedantix bouwt websites die gericht zijn op duidelijkheid, vertrouwen en conversie. Denk aan een professionele uitstraling, goede mobiele weergave, snelle laadtijd, contactmogelijkheden en een logische opbouw. Dat helpt om bezoekers sneller om te zetten in aanvragen of afspraken.",
   },
   {
     id: 9,
     question: "Moet ik zelf technisch zijn om met Vedantix te werken?",
     answer:
-      "Nee. Technische kennis is niet nodig. Vedantix regelt de techniek, hosting, beveiliging en het onderhoud. Jij levert vooral de informatie over je bedrijf aan en geeft feedback op het ontwerp."
+      "Nee. Technische kennis is niet nodig. Vedantix regelt de techniek, hosting, beveiliging en het onderhoud. Jij levert vooral de informatie over je bedrijf aan en geeft feedback op het ontwerp.",
   },
   {
     id: 10,
     question: "Hoe kan ik starten met Vedantix?",
     answer:
-      "Je kunt starten door contact op te nemen via WhatsApp of het contactformulier. Daarna worden je wensen besproken, ontvang je een voorstel en kan de bouw van je website snel worden gestart."
-  }
+      "Je kunt starten door contact op te nemen via WhatsApp of het contactformulier. Daarna worden je wensen besproken, ontvang je een voorstel en kan de bouw van je website snel worden gestart.",
+  },
 ];
+
+const FAQ_STYLES = `
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: #f7f9fc;
+  }
+
+  .faq-page {
+    min-height: 100vh;
+    background: #f7f9fc;
+    color: #111827;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .faq-page a {
+    text-decoration: none;
+  }
+
+  .faq-shell {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .faq-hero {
+    background: linear-gradient(135deg, #0a1628, #0d2146);
+    padding: 110px 0 56px;
+  }
+
+  .faq-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 28px;
+    color: rgba(255,255,255,0.72);
+    font-size: 0.92rem;
+    transition: color 0.2s ease;
+  }
+
+  .faq-back-link:hover {
+    color: #ffffff;
+  }
+
+  .faq-title {
+    margin: 0 0 14px;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    font-weight: 900;
+    color: #ffffff;
+  }
+
+  .faq-subtitle {
+    margin: 0;
+    max-width: 620px;
+    color: rgba(255,255,255,0.78);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .faq-content {
+    padding: 48px 0 24px;
+  }
+
+  .faq-intro {
+    margin-bottom: 28px;
+  }
+
+  .faq-intro h2 {
+    margin: 0 0 10px;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  .faq-intro p {
+    margin: 0;
+    color: #4b5563;
+    line-height: 1.75;
+  }
+
+  .faq-list {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+
+  .faq-item {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .faq-item:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .faq-trigger {
+    width: 100%;
+    border: 0;
+    background: #ffffff;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .faq-trigger:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: -3px;
+  }
+
+  .faq-question {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #111827;
+    flex: 1;
+  }
+
+  .faq-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 0.95rem;
+    font-weight: 800;
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .faq-item.open .faq-icon {
+    transform: rotate(180deg);
+    background: #dbeafe;
+  }
+
+  .faq-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.28s ease;
+  }
+
+  .faq-item.open .faq-panel {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-panel-inner {
+    overflow: hidden;
+  }
+
+  .faq-answer {
+    padding: 0 22px 20px;
+    border-top: 1px solid #f1f5f9;
+    color: #374151;
+    line-height: 1.8;
+    font-size: 0.97rem;
+  }
+
+  .faq-answer p {
+    margin: 0;
+  }
+
+  .faq-cta {
+    background: linear-gradient(135deg, #0a1628, #0d2146);
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 36px 28px;
+    text-align: center;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+  }
+
+  .faq-cta h2 {
+    margin: 0 0 12px;
+    font-size: 1.6rem;
+    line-height: 1.15;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .faq-cta p {
+    max-width: 560px;
+    margin: 0 auto 24px;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.75;
+  }
+
+  .faq-cta-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .faq-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 190px;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .faq-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .faq-btn-primary {
+    background: #1d4ed8;
+    color: #ffffff;
+    box-shadow: 0 10px 20px rgba(29, 78, 216, 0.25);
+  }
+
+  .faq-btn-primary:hover {
+    background: #2563eb;
+  }
+
+  .faq-btn-secondary {
+    background: transparent;
+    color: #ffffff;
+    border: 2px solid rgba(255,255,255,0.9);
+  }
+
+  .faq-btn-secondary:hover {
+    background: #ffffff;
+    color: #0a1628;
+  }
+
+  .faq-footer {
+    margin-top: 48px;
+    padding: 26px 20px 34px;
+    text-align: center;
+    background: #0a1628;
+    color: rgba(255,255,255,0.6);
+    font-size: 0.86rem;
+  }
+
+  .faq-footer a {
+    color: rgba(255,255,255,0.78);
+    transition: color 0.2s ease;
+  }
+
+  .faq-footer a:hover {
+    color: #ffffff;
+  }
+
+  .faq-footer strong {
+    color: #ffffff;
+  }
+
+  @media (max-width: 768px) {
+    .faq-hero {
+      padding: 96px 0 42px;
+    }
+
+    .faq-content {
+      padding-top: 36px;
+    }
+
+    .faq-trigger {
+      padding: 16px 16px;
+    }
+
+    .faq-answer {
+      padding: 0 16px 16px;
+      font-size: 0.94rem;
+    }
+
+    .faq-cta {
+      padding: 28px 18px;
+    }
+
+    .faq-cta h2 {
+      font-size: 1.35rem;
+    }
+
+    .faq-btn {
+      width: 100%;
+      min-width: 0;
+    }
+  }
+`;
 
 export default function FAQ() {
   const [openId, setOpenId] = useState(1);
@@ -75,19 +380,19 @@ export default function FAQ() {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: faqs.map((faq) => ({
+    mainEntity: FAQS.map((faq) => ({
       "@type": "Question",
       name: faq.question,
       acceptedAnswer: {
         "@type": "Answer",
-        text: faq.answer
-      }
-    }))
+        text: faq.answer,
+      },
+    })),
   };
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://vedantix.nl/" },
-    { name: "FAQ", url: canonical }
+    { name: "FAQ", url: canonical },
   ]);
 
   return (
@@ -99,311 +404,9 @@ export default function FAQ() {
         schemas={[faqSchema, breadcrumbSchema]}
       />
 
+      <style>{FAQ_STYLES}</style>
+
       <div className="faq-page">
-        <style>{`
-          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
-          * {
-            box-sizing: border-box;
-          }
-
-          html {
-            scroll-behavior: smooth;
-          }
-
-          body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: #f7f9fc;
-            color: #111827;
-          }
-
-          a {
-            text-decoration: none;
-          }
-
-          .faq-page {
-            min-height: 100vh;
-            background: #f7f9fc;
-            color: #111827;
-          }
-
-          .faq-shell {
-            max-width: 760px;
-            margin: 0 auto;
-            padding: 0 20px;
-          }
-
-          .faq-hero {
-            background: linear-gradient(135deg, #0a1628, #0d2146);
-            padding: 110px 0 56px;
-          }
-
-          .faq-back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 28px;
-            color: rgba(255,255,255,0.72);
-            font-size: 0.92rem;
-            transition: color 0.2s ease;
-          }
-
-          .faq-back-link:hover {
-            color: #ffffff;
-          }
-
-          .faq-title {
-            margin: 0 0 14px;
-            font-size: clamp(2rem, 4vw, 3rem);
-            line-height: 1.08;
-            letter-spacing: -0.03em;
-            font-weight: 900;
-            color: #ffffff;
-          }
-
-          .faq-subtitle {
-            margin: 0;
-            max-width: 620px;
-            color: rgba(255,255,255,0.78);
-            font-size: 1rem;
-            line-height: 1.7;
-          }
-
-          .faq-content {
-            padding: 48px 0 24px;
-          }
-
-          .faq-intro {
-            margin-bottom: 28px;
-          }
-
-          .faq-intro h2 {
-            margin: 0 0 10px;
-            font-size: 1.4rem;
-            line-height: 1.2;
-            font-weight: 800;
-            color: #0f172a;
-          }
-
-          .faq-intro p {
-            margin: 0;
-            color: #4b5563;
-            line-height: 1.75;
-          }
-
-          .faq-list {
-            display: grid;
-            gap: 14px;
-            margin-bottom: 48px;
-          }
-
-          .faq-item {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
-            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-          }
-
-          .faq-item:hover {
-            border-color: #bfdbfe;
-            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-            transform: translateY(-1px);
-          }
-
-          .faq-trigger {
-            width: 100%;
-            border: 0;
-            background: #ffffff;
-            padding: 20px 22px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            cursor: pointer;
-            text-align: left;
-          }
-
-          .faq-trigger:focus-visible {
-            outline: 3px solid #93c5fd;
-            outline-offset: -3px;
-          }
-
-          .faq-question {
-            font-size: 1rem;
-            font-weight: 700;
-            line-height: 1.5;
-            color: #111827;
-            flex: 1;
-          }
-
-          .faq-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 999px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            background: #eff6ff;
-            color: #1d4ed8;
-            font-size: 0.95rem;
-            font-weight: 800;
-            transition: transform 0.2s ease, background 0.2s ease;
-          }
-
-          .faq-item.open .faq-icon {
-            transform: rotate(180deg);
-            background: #dbeafe;
-          }
-
-          .faq-panel {
-            display: grid;
-            grid-template-rows: 0fr;
-            transition: grid-template-rows 0.28s ease;
-          }
-
-          .faq-item.open .faq-panel {
-            grid-template-rows: 1fr;
-          }
-
-          .faq-panel-inner {
-            overflow: hidden;
-          }
-
-          .faq-answer {
-            padding: 0 22px 20px;
-            border-top: 1px solid #f1f5f9;
-            color: #374151;
-            line-height: 1.8;
-            font-size: 0.97rem;
-          }
-
-          .faq-cta {
-            background: linear-gradient(135deg, #0a1628, #0d2146);
-            color: #ffffff;
-            border-radius: 20px;
-            padding: 36px 28px;
-            text-align: center;
-            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
-          }
-
-          .faq-cta h2 {
-            margin: 0 0 12px;
-            font-size: 1.6rem;
-            line-height: 1.15;
-            font-weight: 800;
-            color: #ffffff;
-          }
-
-          .faq-cta p {
-            max-width: 560px;
-            margin: 0 auto 24px;
-            color: rgba(255,255,255,0.82);
-            line-height: 1.75;
-          }
-
-          .faq-cta-actions {
-            display: flex;
-            gap: 14px;
-            justify-content: center;
-            flex-wrap: wrap;
-          }
-
-          .faq-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 190px;
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-          }
-
-          .faq-btn:hover {
-            transform: translateY(-1px);
-          }
-
-          .faq-btn-primary {
-            background: #1d4ed8;
-            color: #ffffff;
-            box-shadow: 0 10px 20px rgba(29, 78, 216, 0.25);
-          }
-
-          .faq-btn-primary:hover {
-            background: #2563eb;
-          }
-
-          .faq-btn-secondary {
-            background: transparent;
-            color: #ffffff;
-            border: 2px solid rgba(255,255,255,0.9);
-          }
-
-          .faq-btn-secondary:hover {
-            background: #ffffff;
-            color: #0a1628;
-          }
-
-          .faq-footer {
-            margin-top: 48px;
-            padding: 26px 20px 34px;
-            text-align: center;
-            background: #0a1628;
-            color: rgba(255,255,255,0.6);
-            font-size: 0.86rem;
-          }
-
-          .faq-footer a {
-            color: rgba(255,255,255,0.78);
-            transition: color 0.2s ease;
-          }
-
-          .faq-footer a:hover {
-            color: #ffffff;
-          }
-
-          .faq-footer strong {
-            color: #ffffff;
-          }
-
-          @media (max-width: 768px) {
-            .faq-hero {
-              padding: 96px 0 42px;
-            }
-
-            .faq-content {
-              padding-top: 36px;
-            }
-
-            .faq-trigger {
-              padding: 16px 16px;
-            }
-
-            .faq-answer {
-              padding: 0 16px 16px;
-              font-size: 0.94rem;
-            }
-
-            .faq-cta {
-              padding: 28px 18px;
-            }
-
-            .faq-cta h2 {
-              font-size: 1.35rem;
-            }
-
-            .faq-btn {
-              width: 100%;
-              min-width: 0;
-            }
-          }
-        `}</style>
-
         <NavBar />
 
         <header className="faq-hero">
@@ -433,7 +436,7 @@ export default function FAQ() {
             </section>
 
             <section className="faq-list" aria-label="Veelgestelde vragen">
-              {faqs.map((faq) => {
+              {FAQS.map((faq) => {
                 const isOpen = openId === faq.id;
                 const buttonId = `faq-button-${faq.id}`;
                 const panelId = `faq-panel-${faq.id}`;
@@ -465,7 +468,7 @@ export default function FAQ() {
                     >
                       <div className="faq-panel-inner">
                         <div className="faq-answer">
-                          <p style={{ margin: 0 }}>{faq.answer}</p>
+                          <p>{faq.answer}</p>
                         </div>
                       </div>
                     </div>
