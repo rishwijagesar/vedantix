@@ -2,7 +2,8 @@ import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const Home = lazy(() => import("./pages/Home"));
+import Home from "./pages/Home";
+
 const Planning = lazy(() => import("./pages/Planning"));
 const Prijzen = lazy(() => import("./pages/Prijzen"));
 const Privacy = lazy(() => import("./pages/Privacy"));
@@ -25,7 +26,6 @@ const WebsiteSchoonmaakbedrijf = lazy(() => import("./pages/WebsiteSchoonmaakbed
 
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/blog/BlogPost"));
-
 const SeoCityPage = lazy(() => import("./pages/SeoCityPage"));
 
 const queryClient = new QueryClient();
@@ -53,13 +53,9 @@ function App() {
             <Route path="/website-klusbedrijf" element={<WebsiteKlusbedrijf />} />
             <Route path="/website-restaurant" element={<WebsiteRestaurant />} />
             <Route path="/website-fotograaf" element={<WebsiteFotograaf />} />
-            <Route
-              path="/website-schoonmaakbedrijf"
-              element={<WebsiteSchoonmaakbedrijf />}
-            />
+            <Route path="/website-schoonmaakbedrijf" element={<WebsiteSchoonmaakbedrijf />} />
 
             <Route path="/website/:niche/:stad" element={<SeoCityPage />} />
-
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
 
@@ -74,21 +70,12 @@ function App() {
             <Route path="/Proces" element={<Navigate to="/proces" replace />} />
             <Route path="/Starters" element={<Navigate to="/starters" replace />} />
             <Route path="/Templates" element={<Navigate to="/templates" replace />} />
-            <Route
-              path="/VedantixHome"
-              element={<Navigate to="/vedantixhome" replace />}
-            />
+            <Route path="/VedantixHome" element={<Navigate to="/vedantixhome" replace />} />
             <Route path="/VoorWie" element={<Navigate to="/voorwie" replace />} />
-            <Route
-              path="/Voorwaarden"
-              element={<Navigate to="/voorwaarden" replace />}
-            />
+            <Route path="/Voorwaarden" element={<Navigate to="/voorwaarden" replace />} />
             <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
             <Route path="/CRM" element={<Navigate to="/admin" replace />} />
-            <Route
-              path="/ClientPortal"
-              element={<Navigate to="/klantenportaal" replace />}
-            />
+            <Route path="/ClientPortal" element={<Navigate to="/klantenportaal" replace />} />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
