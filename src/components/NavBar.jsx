@@ -198,14 +198,6 @@ export default function NavBar() {
             >
               Start je website →
             </a>
-
-            {/* CTA (BELANGRIJK: anchor voor homepage scroll) */}
-            <a
-              href={isHomePage ? "#pricing" : "/#pricing"}
-              className="navbar-cta"
-            >
-              Start je website →
-            </a>
           </div>
 
           <button
