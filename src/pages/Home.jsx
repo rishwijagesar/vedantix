@@ -1230,16 +1230,11 @@ export default function Home() {
 
           <section className="founder-section">
             <div className="founder-grid">
-              <div className="founder-photo">
-                <div className="founder-photo-inner">
-                  <div className="founder-avatar">👋</div>
-                  <strong>Persoonlijk contact</strong>
-                  <p>
-                    Voeg hier later eenvoudig je eigen foto toe voor extra vertrouwen. Tot die tijd werkt een persoonlijke intro al veel beter dan
-                    een anonieme bureaustijl.
-                  </p>
-                </div>
-              </div>
+              <img
+                src="/images/founder.jpeg"
+                alt="Founder Vedantix"
+                className="founder-image"
+              />
 
               <div className="founder-card">
                 <div className="section-label">Achter Vedantix</div>
