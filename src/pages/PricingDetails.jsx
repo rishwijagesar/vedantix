@@ -7,109 +7,316 @@ const PAGE_STYLES = `
   html{scroll-behavior:smooth}
   body{margin:0;padding:0}
 
-  .pricing-page{font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#111827;background:#fff;line-height:1.6}
-  .page-hero{background:linear-gradient(160deg,#0d1a3a 0%,#111827 100%);padding:140px 5% 90px;position:relative;overflow:hidden}
-  .page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(99,102,241,.12) 0%,transparent 65%);pointer-events:none}
-  .page-wrap{max-width:1120px;margin:0 auto;width:100%;position:relative}
-  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.78);font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:1.8px;padding:8px 18px;border-radius:100px;margin-bottom:22px}
-  .eyebrow::before{content:'';width:6px;height:6px;background:#22c55e;border-radius:50%}
-  .page-hero h1{font-size:clamp(2.2rem,4vw,3.6rem);font-weight:900;line-height:1.08;color:#fff;letter-spacing:-1.5px;margin-bottom:16px;max-width:760px}
-  .page-hero p{font-size:1rem;color:rgba(255,255,255,.62);max-width:700px;line-height:1.75}
+  .pricing-page{
+    font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    color:#111827;
+    background:#fff;
+    line-height:1.6
+  }
+
+  .page-hero{
+    background:linear-gradient(160deg,#0d1a3a 0%,#111827 100%);
+    padding:140px 5% 90px;
+    position:relative;
+    overflow:hidden
+  }
+  .page-hero::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:radial-gradient(ellipse at center,rgba(99,102,241,.12) 0%,transparent 65%);
+    pointer-events:none
+  }
+
+  .page-wrap{
+    max-width:1180px;
+    margin:0 auto;
+    width:100%;
+    position:relative
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1);
+    color:rgba(255,255,255,.78);
+    font-size:.72rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1.8px;
+    padding:8px 18px;
+    border-radius:100px;
+    margin-bottom:22px
+  }
+  .eyebrow::before{
+    content:'';
+    width:6px;
+    height:6px;
+    background:#22c55e;
+    border-radius:50%
+  }
+
+  .page-hero h1{
+    font-size:clamp(2.2rem,4vw,3.6rem);
+    font-weight:900;
+    line-height:1.08;
+    color:#fff;
+    letter-spacing:-1.5px;
+    margin-bottom:16px;
+    max-width:760px
+  }
+  .page-hero p{
+    font-size:1rem;
+    color:rgba(255,255,255,.62);
+    max-width:700px;
+    line-height:1.75
+  }
 
   .section{padding:90px 5%}
-  .section-title{font-size:clamp(1.7rem,3vw,2.5rem);font-weight:900;color:#111827;letter-spacing:-.8px;line-height:1.15;margin-bottom:14px}
-  .section-sub{font-size:.95rem;color:#6b7280;line-height:1.75;max-width:760px;margin-bottom:42px}
+  .section.alt{background:#f8fafc}
 
-  .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .pricing-card{border-radius:20px;padding:40px 30px;border:1.5px solid #f3f4f6;transition:all .3s;position:relative;background:#fff}
-  .pricing-card.featured{border-color:#6366f1;background:linear-gradient(160deg,#fafbff,#f0f1ff);box-shadow:0 24px 80px rgba(99,102,241,.14)}
-  .pricing-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:5px 20px;border-radius:100px;font-weight:800;font-size:.68rem;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;box-shadow:0 4px 12px rgba(99,102,241,.3)}
-  .p-tier{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#9ca3af;margin-bottom:8px}
-  .pricing-card.featured .p-tier{color:#6366f1}
-  .p-name{font-size:1.2rem;font-weight:900;color:#111827;letter-spacing:-.5px;margin-bottom:6px}
-  .p-sub{font-size:.82rem;color:#9ca3af;margin-bottom:20px;line-height:1.6;font-weight:600}
-  .p-price{font-size:3rem;font-weight:900;color:#111827;letter-spacing:-2px;line-height:1;margin-bottom:4px}
-  .p-price sup{font-size:1.1rem;font-weight:700;vertical-align:super;letter-spacing:0}
-  .p-price span{font-size:1rem;font-weight:700;color:#9ca3af;letter-spacing:0}
-  .p-setup{font-size:.75rem;color:#9ca3af;margin-bottom:22px;font-weight:600}
-  .p-divider{height:1px;background:#f3f4f6;margin-bottom:22px}
-  .pricing-card.featured .p-divider{background:#e0e7ff}
-  .p-features{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;margin-bottom:0}
-  .p-features li{font-size:.83rem;color:#4b5563;display:flex;gap:9px;align-items:flex-start;line-height:1.55}
-  .p-features li::before{content:'✓';color:#6366f1;font-weight:900;flex-shrink:0;margin-top:1px;font-size:.8rem}
+  .section-title{
+    font-size:clamp(1.7rem,3vw,2.5rem);
+    font-weight:900;
+    color:#111827;
+    letter-spacing:-.8px;
+    line-height:1.15;
+    margin-bottom:14px
+  }
+  .section-sub{
+    font-size:.95rem;
+    color:#6b7280;
+    line-height:1.75;
+    max-width:760px;
+    margin-bottom:42px
+  }
 
-  .compare-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:24px}
-  .compare-card{background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:26px 24px}
-  .compare-card h3{font-size:1rem;font-weight:900;color:#111827;margin-bottom:14px}
-  .compare-list{padding-left:18px;margin:0}
-  .compare-list li{font-size:.86rem;color:#6b7280;line-height:1.75;margin-bottom:6px}
+  .pricing-compare-table{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    align-items:start
+  }
 
-  .notes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:30px}
-  .note-card{background:#f8fafc;border:1px solid #e5e7eb;border-radius:18px;padding:24px}
-  .note-card h3{font-size:.95rem;font-weight:900;color:#111827;margin-bottom:12px}
-  .note-card ul{padding-left:18px;margin:0}
-  .note-card li{font-size:.84rem;color:#6b7280;line-height:1.7;margin-bottom:6px}
+  .pricing-column{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.04)
+  }
 
-  .back-link{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#6366f1;font-weight:800;font-size:.9rem;margin-top:28px}
+  .pricing-column.featured{
+    border-color:#6366f1;
+    box-shadow:0 18px 50px rgba(99,102,241,.14);
+    transform:translateY(-4px)
+  }
+
+  .pricing-head{
+    padding:28px 24px;
+    color:#fff
+  }
+  .pricing-head.starter{background:linear-gradient(135deg,#0f172a,#1d4ed8)}
+  .pricing-head.growth{background:linear-gradient(135deg,#312e81,#7c3aed)}
+  .pricing-head.pro{background:linear-gradient(135deg,#3f1d0f,#ea580c)}
+
+  .pricing-tag{
+    display:inline-block;
+    font-size:.68rem;
+    font-weight:800;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.75);
+    margin-bottom:10px
+  }
+
+  .pricing-featured-badge{
+    display:inline-block;
+    margin-left:8px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.18);
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:.64rem;
+    font-weight:800;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#fff;
+    vertical-align:middle
+  }
+
+  .pricing-title{
+    font-size:1.3rem;
+    font-weight:900;
+    line-height:1.2;
+    margin-bottom:8px
+  }
+
+  .pricing-sub{
+    font-size:.84rem;
+    color:rgba(255,255,255,.78);
+    line-height:1.6
+  }
+
+  .pricing-price-wrap{
+    padding:22px 24px 0;
+    background:#fff
+  }
+
+  .pricing-price{
+    font-size:2.8rem;
+    font-weight:900;
+    color:#111827;
+    letter-spacing:-2px;
+    line-height:1
+  }
+  .pricing-price sup{
+    font-size:1.05rem;
+    font-weight:800;
+    vertical-align:super
+  }
+  .pricing-price span{
+    font-size:.98rem;
+    font-weight:700;
+    color:#6b7280;
+    letter-spacing:0
+  }
+
+  .pricing-setup{
+    font-size:.78rem;
+    color:#9ca3af;
+    margin-top:8px;
+    font-weight:700
+  }
+
+  .pricing-section-block{
+    padding:20px 24px;
+    border-top:1px solid #eef2f7
+  }
+
+  .pricing-block-title{
+    font-size:.72rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color:#6366f1;
+    margin-bottom:12px
+  }
+
+  .pricing-list{
+    list-style:none;
+    padding:0;
+    margin:0;
+    display:flex;
+    flex-direction:column;
+    gap:10px
+  }
+
+  .pricing-list li{
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    font-size:.84rem;
+    color:#4b5563;
+    line-height:1.6
+  }
+  .pricing-list li::before{
+    content:'✓';
+    color:#6366f1;
+    font-weight:900;
+    flex-shrink:0
+  }
+
+  .pricing-list.minus li::before{
+    content:'–';
+    color:#94a3b8
+  }
+
+  .pricing-cta-note{
+    padding:20px 24px;
+    background:#f8fafc;
+    border-top:1px solid #eef2f7;
+    font-size:.8rem;
+    color:#475569;
+    line-height:1.6;
+    font-weight:600
+  }
+
+  .notes-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-top:30px
+  }
+
+  .note-card{
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    padding:24px
+  }
+
+  .note-card h3{
+    font-size:.95rem;
+    font-weight:900;
+    color:#111827;
+    margin-bottom:12px
+  }
+
+  .note-card ul{
+    padding-left:18px;
+    margin:0
+  }
+
+  .note-card li{
+    font-size:.84rem;
+    color:#6b7280;
+    line-height:1.7;
+    margin-bottom:6px
+  }
+
+  .back-link{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    text-decoration:none;
+    color:#6366f1;
+    font-weight:800;
+    font-size:.9rem;
+    margin-top:28px
+  }
 
   @media(max-width:1024px){
-    .pricing-grid,.notes-grid,.compare-grid{grid-template-columns:1fr}
+    .pricing-compare-table,
+    .notes-grid{
+      grid-template-columns:1fr;
+      max-width:560px;
+      margin:0 auto
+    }
+
+    .pricing-column.featured{
+      transform:none
+    }
   }
+
   @media(max-width:768px){
     .page-hero{padding:110px 5% 70px}
     .section{padding:70px 5%}
-    .pricing-card,.compare-card,.note-card{padding:24px 20px}
-    .p-price{font-size:2.4rem}
+
+    .pricing-head,
+    .pricing-price-wrap,
+    .pricing-section-block,
+    .pricing-cta-note,
+    .note-card{
+      padding-left:20px;
+      padding-right:20px
+    }
+
+    .pricing-price{font-size:2.4rem}
   }
 `;
-
-const PACKAGES = [
-  {
-    tier: "Starter",
-    name: "Voor professioneel online zichtbaar zijn",
-    subtitle: "Sterke basis voor ondernemers die vooral een nette en goed beheerde website willen.",
-    price: "99",
-    setup: "€500 eenmalige setup",
-    featured: false,
-    bullets: [
-      "Professionele website",
-      "1 domein, hosting en SSL",
-      "1 mailbox",
-      "Contactformulier",
-      "Basis analytics en basis SEO",
-    ],
-  },
-  {
-    tier: "Growth",
-    name: "Voor meer inhoud en groeiruimte",
-    subtitle: "Voor bedrijven die hun website serieuzer willen inzetten als online basis.",
-    price: "149",
-    setup: "€750 eenmalige setup",
-    featured: true,
-    bullets: [
-      "Alles uit Starter",
-      "5 mailboxen",
-      "Blog/FAQ module",
-      "Light formulieren-opslag",
-      "Meer servicepagina’s en SEO templates",
-    ],
-  },
-  {
-    tier: "Pro",
-    name: "Voor functionaliteit en doorontwikkeling",
-    subtitle: "Voor bedrijven die meer nodig hebben dan een standaard informatieve site.",
-    price: "249",
-    setup: "€1000 eenmalige setup",
-    featured: false,
-    bullets: [
-      "Alles uit Growth",
-      "10 mailboxen",
-      "Login en dashboard",
-      "Reserveringen / intake / workflows",
-      "Data-opslag en technische monitoring",
-    ],
-  },
-];
 
 const PACKAGE_DETAILS = {
   starter: {
@@ -230,126 +437,202 @@ export default function PricingDetails() {
               <div className="eyebrow">Pakketvergelijking</div>
               <h1>Vergelijk alle pakketten en details in één rustig overzicht</h1>
               <p>
-                Deze pagina is bedoeld voor bezoekers die de inhoud, add-ons en technische nuances uitgebreider willen bekijken. Zo blijft je homepage strak en blijft deze vergelijking op een logische plek staan.
+                Deze pagina is bedoeld voor bezoekers die de inhoud, add-ons en technische nuances uitgebreider willen bekijken.
+                Zo blijft je homepage strak en staat de vergelijking op een logische plek.
               </p>
             </div>
           </section>
 
           <section className="section">
             <div className="page-wrap">
-              <h2 className="section-title">Overzicht van de pakketten</h2>
+              <h2 className="section-title">Vergelijk de pakketten naast elkaar</h2>
               <p className="section-sub">
-                Een snelle vergelijking van de drie basisopties. Gebruik dit overzicht als startpunt en bekijk daaronder per pakket de volledige inhoud.
+                Dit overzicht is bewust in drie kolommen opgebouwd, zodat verschillen in prijs, inhoud,
+                uitbreidbaarheid en add-ons direct zichtbaar zijn.
               </p>
 
-              <div className="pricing-grid">
-                {PACKAGES.map((pkg) => (
-                  <div key={pkg.tier} className={`pricing-card ${pkg.featured ? "featured" : ""}`}>
-                    {pkg.featured && <div className="pricing-badge">Meest gekozen</div>}
-                    <div className="p-tier">{pkg.tier}</div>
-                    <div className="p-name">{pkg.name}</div>
-                    <div className="p-sub">{pkg.subtitle}</div>
-                    <div className="p-price">
-                      <sup>€</sup>
-                      {pkg.price}
-                      <span>/m</span>
+              <div className="pricing-compare-table">
+                <div className="pricing-column">
+                  <div className="pricing-head starter">
+                    <div className="pricing-tag">Starter</div>
+                    <div className="pricing-title">Voor professioneel online zichtbaar zijn</div>
+                    <div className="pricing-sub">
+                      Sterke basis voor ondernemers die vooral een nette en goed beheerde website willen.
                     </div>
-                    <div className="p-setup">+ {pkg.setup}</div>
-                    <div className="p-divider" />
-                    <ul className="p-features">
-                      {pkg.bullets.map((item) => (
+                  </div>
+
+                  <div className="pricing-price-wrap">
+                    <div className="pricing-price">
+                      <sup>€</sup>99<span>/m</span>
+                    </div>
+                    <div className="pricing-setup">+ €500 eenmalige setup</div>
+                  </div>
+
+                  <div className="pricing-section-block">
+                    <div className="pricing-block-title">Inbegrepen</div>
+                    <ul className="pricing-list">
+                      {PACKAGE_DETAILS.starter.included.map((item) => (
                         <li key={item}>{item}</li>
                       ))}
                     </ul>
                   </div>
-                ))}
+
+                  <div className="pricing-section-block">
+                    <div className="pricing-block-title">Niet inbegrepen</div>
+                    <ul className="pricing-list minus">
+                      {PACKAGE_DETAILS.starter.notIncluded.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pricing-section-block">
+                    <div className="pricing-block-title">Add-ons</div>
+                    <ul className="pricing-list">
+                      {PACKAGE_DETAILS.starter.addons.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pricing-cta-note">
+                    Geschikt als instap wanneer je vooral professioneel zichtbaar wilt zijn zonder extra complexiteit.
+                  </div>
+                </div>
+
+                <div className="pricing-column featured">
+                  <div className="pricing-head growth">
+                    <div className="pricing-tag">
+                      Growth <span className="pricing-featured-badge">Meest gekozen</span>
+                    </div>
+                    <div className="pricing-title">Voor meer inhoud en groeiruimte</div>
+                    <div className="pricing-sub">
+                      Voor bedrijven die hun website serieuzer willen inzetten als online basis.
+                    </div>
+                  </div>
+
+                  <div className="pricing-price-wrap">
+                    <div className="pricing-price">
+                      <sup>€</sup>149<span>/m</span>
+                    </div>
+                    <div className="pricing-setup">+ €750 eenmalige setup</div>
+                  </div>
+
+                  <div className="pricing-section-block">
+                    <div className="pricing-block-title">Inbegrepen</div>
+                    <ul className="pricing-list">
+                      {PACKAGE_DETAILS.growth.included.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pricing-section-block">
+                    <div className="pricing-block-title">Niet standaard inbegrepen</div>
+                    <ul className="pricing-list minus">
+                      {PACKAGE_DETAILS.growth.notIncluded.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pricing-section-block">
+                    <div className="pricing-block-title">Add-ons</div>
+                    <ul className="pricing-list">
+                      {PACKAGE_DETAILS.growth.addons.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pricing-cta-note">
+                    Beste balans tussen prijs, inhoud en uitbreidbaarheid voor de meeste lokale ondernemers.
+                  </div>
+                </div>
+
+                <div className="pricing-column">
+                  <div className="pricing-head pro">
+                    <div className="pricing-tag">Pro</div>
+                    <div className="pricing-title">Voor functionaliteit en doorontwikkeling</div>
+                    <div className="pricing-sub">
+                      Voor bedrijven die meer nodig hebben dan een standaard informatieve site.
+                    </div>
+                  </div>
+
+                  <div className="pricing-price-wrap">
+                    <div className="pricing-price">
+                      <sup>€</sup>249<span>/m</span>
+                    </div>
+                    <div className="pricing-setup">+ €1000 eenmalige setup</div>
+                  </div>
+
+                  <div className="pricing-section-block">
+                    <div className="pricing-block-title">Inbegrepen</div>
+                    <ul className="pricing-list">
+                      {PACKAGE_DETAILS.pro.included.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pricing-section-block">
+                    <div className="pricing-block-title">Niet standaard inbegrepen</div>
+                    <ul className="pricing-list minus">
+                      {PACKAGE_DETAILS.pro.notIncluded.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pricing-section-block">
+                    <div className="pricing-block-title">Add-ons</div>
+                    <ul className="pricing-list">
+                      {PACKAGE_DETAILS.pro.addons.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pricing-cta-note">
+                    Voor bedrijven die hun website echt als onderdeel van hun proces of dienstverlening willen inzetten.
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
-          <section className="section" style={{ background: "#f8fafc" }}>
-            <div className="page-wrap">
-              <h2 className="section-title">Volledige inhoud per pakket</h2>
-              <p className="section-sub">
-                Hieronder zie je per pakket wat inbegrepen is, wat niet standaard inbegrepen is en welke add-ons mogelijk zijn.
-              </p>
-
-              <div className="compare-grid">
-                <div className="compare-card">
-                  <h3>Starter</h3>
-                  <strong>Inbegrepen</strong>
-                  <ul className="compare-list">
-                    {PACKAGE_DETAILS.starter.included.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                  <strong>Niet inbegrepen</strong>
-                  <ul className="compare-list" style={{ marginTop: 8 }}>
-                    {PACKAGE_DETAILS.starter.notIncluded.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                  <strong>Add-ons</strong>
-                  <ul className="compare-list" style={{ marginTop: 8 }}>
-                    {PACKAGE_DETAILS.starter.addons.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                </div>
-
-                <div className="compare-card">
-                  <h3>Growth</h3>
-                  <strong>Inbegrepen</strong>
-                  <ul className="compare-list">
-                    {PACKAGE_DETAILS.growth.included.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                  <strong>Niet standaard inbegrepen</strong>
-                  <ul className="compare-list" style={{ marginTop: 8 }}>
-                    {PACKAGE_DETAILS.growth.notIncluded.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                  <strong>Add-ons</strong>
-                  <ul className="compare-list" style={{ marginTop: 8 }}>
-                    {PACKAGE_DETAILS.growth.addons.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                </div>
-
-                <div className="compare-card" style={{ gridColumn: "1 / -1" }}>
-                  <h3>Pro</h3>
-                  <strong>Inbegrepen</strong>
-                  <ul className="compare-list">
-                    {PACKAGE_DETAILS.pro.included.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                  <strong>Niet standaard inbegrepen</strong>
-                  <ul className="compare-list" style={{ marginTop: 8 }}>
-                    {PACKAGE_DETAILS.pro.notIncluded.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                  <strong>Add-ons</strong>
-                  <ul className="compare-list" style={{ marginTop: 8 }}>
-                    {PACKAGE_DETAILS.pro.addons.map((item) => <li key={item}>{item}</li>)}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="section">
+          <section className="section alt">
             <div className="page-wrap">
               <h2 className="section-title">Belangrijke nuances</h2>
               <p className="section-sub">
-                Deze drie blokken geven extra context over mailboxen, data-opslag en wat in alle pakketten centraal staat.
+                Extra context over mailboxen, data-opslag en wat in alle pakketten centraal staat.
               </p>
 
               <div className="notes-grid">
                 <div className="note-card">
                   <h3>Mailboxen</h3>
                   <ul>
-                    {MAILBOX_BUNDLES.map((item) => <li key={item}>{item}</li>)}
+                    {MAILBOX_BUNDLES.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
                   </ul>
                 </div>
+
                 <div className="note-card">
                   <h3>Database en data-opslag</h3>
                   <ul>
-                    {DATA_RULES.map((item) => <li key={item}>{item}</li>)}
+                    {DATA_RULES.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
                   </ul>
                 </div>
+
                 <div className="note-card">
                   <h3>In alle pakketten centraal</h3>
                   <ul>
-                    {PACKAGE_BASICS.map((item) => <li key={item}>{item}</li>)}
+                    {PACKAGE_BASICS.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
                   </ul>
                 </div>
               </div>
