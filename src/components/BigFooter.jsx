@@ -436,7 +436,7 @@ export default function BigFooter() {
               <ul className="big-footer__contact-list">
                 <li className="big-footer__contact-item">
                   <span className="big-footer__contact-icon"><IconLocation /></span>
-                  <span>Nederland · Lokale ondernemers</span>
+                  <a href="address:Netherlands">Nederland · Lokale ondernemers</a>
                 </li>
                 <li className="big-footer__contact-item">
                   <span className="big-footer__contact-icon"><IconPhone /></span>
