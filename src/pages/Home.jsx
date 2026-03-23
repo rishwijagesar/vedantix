@@ -7,29 +7,15 @@ const HOME_STYLES = `
   html{scroll-behavior:smooth}
   body{margin:0;padding:0}
 
-  .home-page{font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#111827;background:#fff;line-height:1.6;overflow-x:hidden}
-  .anchor-section{scroll-margin-top:100px}
+  .home-page{
+    font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    color:#111827;
+    background:#fff;
+    line-height:1.6;
+    overflow-x:hidden
+  }
 
-  .btn-ghost{
-    background:rgba(255,255,255,.06);
-    color:#fff;
-    border:1.5px solid rgba(255,255,255,.18);
-    padding:14px 28px;
-    border-radius:10px;
-    font-weight:800;
-    font-size:.92rem;
-    text-decoration:none;
-    display:inline-block;
-    transition:all .25s;
-    cursor:pointer;
-    backdrop-filter:blur(4px);
-  }
-  .btn-ghost:hover{
-    background:rgba(255,255,255,.12);
-    border-color:rgba(255,255,255,.28);
-    color:#fff;
-    transform:translateY(-2px);
-  }
+  .anchor-section{scroll-margin-top:100px}
 
   .btn-primary{
     background:#fff;
@@ -70,6 +56,27 @@ const HOME_STYLES = `
     background:#22c55e;
     transform:translateY(-2px);
     box-shadow:0 10px 32px rgba(37,211,102,.4)
+  }
+
+  .btn-ghost{
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    border:1.5px solid rgba(255,255,255,.18);
+    padding:14px 28px;
+    border-radius:10px;
+    font-weight:800;
+    font-size:.92rem;
+    text-decoration:none;
+    display:inline-block;
+    transition:all .25s;
+    cursor:pointer;
+    backdrop-filter:blur(4px)
+  }
+  .btn-ghost:hover{
+    background:rgba(255,255,255,.12);
+    border-color:rgba(255,255,255,.28);
+    color:#fff;
+    transform:translateY(-2px)
   }
 
   .btn-lead{
@@ -141,6 +148,7 @@ const HOME_STYLES = `
     animation:pulse 2s infinite;
     flex-shrink:0
   }
+
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
   .hero h1{
@@ -215,10 +223,6 @@ const HOME_STYLES = `
     align-items:center;
     margin-bottom:18px
   }
-  .hero-ctas .btn-primary{order:1}
-  .hero-ctas .btn-wa{order:2}
-  .hero-ctas .btn-ghost{order:3}
-
   .hero-cta-note{
     font-size:.78rem;
     color:rgba(255,255,255,.42);
@@ -269,7 +273,9 @@ const HOME_STYLES = `
     position:relative;
     z-index:1
   }
+
   @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
   .mockup-bar{
     background:#141a27;
     padding:11px 16px;
@@ -1062,27 +1068,6 @@ const HOME_STYLES = `
     opacity:.8
   }
 
-  .founder-note{padding:70px 5%;background:#fff}
-  .founder-card{
-    max-width:820px;
-    margin:0 auto;
-    background:#f8fafc;
-    border:1px solid #e5e7eb;
-    border-radius:18px;
-    padding:28px 30px
-  }
-  .founder-card h3{
-    font-size:1rem;
-    font-weight:900;
-    color:#111827;
-    margin-bottom:10px
-  }
-  .founder-card p{
-    font-size:.88rem;
-    color:#6b7280;
-    line-height:1.7
-  }
-
   .cta-section{
     padding:120px 5%;
     background:linear-gradient(160deg,#0d1a3a 0%,#111827 100%);
@@ -1689,7 +1674,7 @@ export default function Home() {
                 <div className="section-label">Demo concepten</div>
                 <h2 className="section-h2">Voorbeelden van richtingen die wij kunnen bouwen</h2>
                 <p className="section-p">
-                  Omdat je nog geen klantcases hebt, moet je wél laten zien wat voor type websites je kunt neerzetten. Deze demo’s vullen dat gat op.
+                  Bekijk voorbeelden van stijlen en structuren die wij voor verschillende soorten lokale bedrijven kunnen neerzetten.
                 </p>
               </div>
 
@@ -1991,15 +1976,6 @@ export default function Home() {
                   <p>Eerst bespreken we rustig wat bij jouw bedrijf past. Pas daarna beslis je of je verder wilt.</p>
                 </div>
               </div>
-            </div>
-          </section>
-
-          <section className="founder-note">
-            <div className="founder-card">
-              <h3>Net gestart? Dan is eerlijkheid sterker dan geforceerde social proof.</h3>
-              <p>
-                Omdat er nog geen klantcases of reviews zijn, is het slimmer om demo’s, heldere uitleg en een sterke eerste indruk te gebruiken als vertrouwenstriggers. Voeg zodra je eerste projecten live staan direct screenshots, korte resultaten en echte klantreacties toe. Tot die tijd werkt transparantie beter dan lege claims.
-              </p>
             </div>
           </section>
 
