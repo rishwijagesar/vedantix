@@ -11,26 +11,25 @@ const HOME_STYLES = `
   .anchor-section{scroll-margin-top:100px}
 
   .btn-ghost{
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  border:1.5px solid rgba(255,255,255,.18);
-  padding:14px 28px;
-  border-radius:10px;
-  font-weight:800;
-  font-size:.92rem;
-  text-decoration:none;
-  display:inline-block;
-  transition:all .25s;
-  cursor:pointer;
-  backdrop-filter:blur(4px);
-}
-.btn-ghost:hover{
-  background:rgba(255,255,255,.12);
-  border-color:rgba(255,255,255,.28);
-  color:#fff;
-  transform:translateY(-2px);
-}
-  .btn-ghost:hover{border-color:#111827;background:#f9fafb}
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    border:1.5px solid rgba(255,255,255,.18);
+    padding:14px 28px;
+    border-radius:10px;
+    font-weight:800;
+    font-size:.92rem;
+    text-decoration:none;
+    display:inline-block;
+    transition:all .25s;
+    cursor:pointer;
+    backdrop-filter:blur(4px);
+  }
+  .btn-ghost:hover{
+    background:rgba(255,255,255,.12);
+    border-color:rgba(255,255,255,.28);
+    color:#fff;
+    transform:translateY(-2px);
+  }
 
   .btn-primary{background:#fff;color:#0f172a;padding:15px 30px;border-radius:10px;font-weight:800;font-size:.92rem;text-decoration:none;display:inline-block;transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;letter-spacing:-.1px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
   .btn-primary:hover{background:#f1f5f9;transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.35)}
@@ -276,6 +275,8 @@ const HOME_STYLES = `
     .hero h1{font-size:2.3rem}
     .hero-ctas{flex-direction:column}
     .hero-ctas a{width:100%;text-align:center}
+    .cta-btns{flex-direction:column}
+    .cta-btns a{width:100%;max-width:420px;margin:0 auto;text-align:center}
     .btn-primary,.btn-ghost,.btn-wa,.btn-lead{padding:13px 20px;font-size:.88rem}
     .problem-grid,.difference-grid,.demo-grid{grid-template-columns:1fr}
     .pricing-card{padding:32px 24px}
@@ -1289,16 +1290,19 @@ export default function Home() {
             </p>
 
             <div className="cta-btns">
+              <a href="#cta" className="btn-primary">
+                Plan gratis kennismaking →
+              </a>
               <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20vrijblijvende%20kennismaking%20voor%20mijn%20website."
+                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
                 target="_blank"
                 rel="noreferrer"
                 className="btn-wa"
               >
-                💬 Plan gratis kennismaking
+                💬 Stel je vraag via WhatsApp
               </a>
-              <a href="#demo" className="btn-primary">
-                Bekijk eerst demo’s →
+              <a href="#demo" className="btn-ghost">
+                Bekijk demo’s →
               </a>
             </div>
 
