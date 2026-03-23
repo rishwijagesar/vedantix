@@ -81,8 +81,9 @@ const HOME_STYLES = `
 
   .trusted{
     background:#f9fafb;
-    padding:26px 5%;
-    border-bottom:1px solid #f3f4f6
+    padding:22px 5%;
+    border-bottom:1px solid #f3f4f6;
+    margin-top:0;
   }
   .trusted-inner{
     max-width:1100px;
@@ -866,6 +867,12 @@ const HOME_STYLES = `
     font-size:1.05rem;
     margin-top:8px;
     font-weight:800
+  }
+
+  @media (max-width: 1280px){
+    .trusted{
+      padding:18px 5%;
+    }
   }
 
   @media(max-width:1024px){
