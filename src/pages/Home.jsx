@@ -1278,13 +1278,13 @@ export default function Home() {
 
           <section className="founder-section">
             <div className="founder-grid">
-              <div className="founder-photo">
+              {/* <div className="founder-photo">
                 <img
                   src="/images/founder.jpeg"
                   alt="Rishwi van Vedantix"
                   className="founder-image"
                 />
-              </div>
+              </div> */}
 
               <div className="founder-card">
                 <div className="section-label">Achter Vedantix</div>
