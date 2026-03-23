@@ -16,6 +16,7 @@ const Voorwaarden = lazy(() => import("./pages/Voorwaarden"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const AdminCRM = lazy(() => import("./pages/AdminCRM.jsx"));
 const KlantenPortaal = lazy(() => import("./pages/KlantenPortaal.jsx"));
+const PricingDetails = lazy(() => import("./pages/PricingDetails.jsx"));
 
 const WebsiteKapper = lazy(() => import("./pages/WebsiteKapper"));
 const WebsiteSalon = lazy(() => import("./pages/WebsiteSalon"));
@@ -39,6 +40,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/planning" element={<Planning />} />
             <Route path="/prijzen" element={<Prijzen />} />
+            <Route path="/pakketvergelijking" element={<PricingDetails />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/proces" element={<Proces />} />
             <Route path="/starters" element={<Starters />} />
