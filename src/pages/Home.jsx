@@ -1,6 +1,7 @@
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
 import BigFooter from "../components/BigFooter";
+import NicheCarousel from "./NicheCarousel";
 
 const HOME_STYLES = `
   *{box-sizing:border-box;margin:0;padding:0}
@@ -424,87 +425,6 @@ const HOME_STYLES = `
   }
 
   .demo-section{padding:100px 5%;background:#f8fafc}
-  .demo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .demo-card{
-    background:#fff;
-    border:1px solid #e5e7eb;
-    border-radius:20px;
-    overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,.04);
-    transition:all .25s
-  }
-  .demo-card:hover{
-    transform:translateY(-3px);
-    box-shadow:0 16px 40px rgba(0,0,0,.08)
-  }
-  .demo-top{padding:24px 22px;color:#fff}
-  .demo-top.barber{background:linear-gradient(135deg,#0f172a,#1d4ed8)}
-  .demo-top.restaurant{background:linear-gradient(135deg,#3f1d0f,#ea580c)}
-  .demo-top.salon{background:linear-gradient(135deg,#4c1d95,#9333ea)}
-  .demo-badge{
-    display:inline-block;
-    font-size:.68rem;
-    font-weight:800;
-    letter-spacing:1.4px;
-    text-transform:uppercase;
-    color:rgba(255,255,255,.72);
-    margin-bottom:10px
-  }
-  .demo-title{
-    font-size:1.2rem;
-    font-weight:900;
-    line-height:1.2;
-    margin-bottom:8px
-  }
-  .demo-sub{
-    font-size:.82rem;
-    color:rgba(255,255,255,.75);
-    line-height:1.6
-  }
-  .demo-body{padding:22px}
-  .demo-list{
-    list-style:none;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    margin-bottom:18px
-  }
-  .demo-list li{
-    display:flex;
-    gap:8px;
-    align-items:flex-start;
-    font-size:.84rem;
-    color:#4b5563;
-    line-height:1.55
-  }
-  .demo-list li::before{
-    content:'✓';
-    color:#6366f1;
-    font-weight:900;
-    flex-shrink:0
-  }
-  .demo-outcome{
-    padding:12px 14px;
-    border-radius:12px;
-    background:#f8fafc;
-    border:1px solid #eef2f7;
-    font-size:.8rem;
-    color:#334155;
-    font-weight:700;
-    line-height:1.55
-  }
-  .demo-cta{
-    margin-top:18px;
-    display:block;
-    text-align:center;
-    padding:12px;
-    border-radius:10px;
-    background:#111827;
-    color:#fff;
-    font-size:.85rem;
-    font-weight:800;
-    text-decoration:none
-  }
 
   .solution-section{padding:100px 5%;background:linear-gradient(160deg,#0d1a3a,#111827)}
   .solution-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
@@ -1123,7 +1043,7 @@ const HOME_STYLES = `
     .hero-container{grid-template-columns:1fr;gap:60px}
     .hero-mockup-wrap{max-width:520px;margin:0 auto}
     .hero-checks{grid-template-columns:1fr}
-    .pricing-grid,.demo-grid,.difference-grid{grid-template-columns:1fr;max-width:520px;margin:0 auto}
+    .pricing-grid,.difference-grid{grid-template-columns:1fr;max-width:520px;margin:0 auto}
     .solution-grid,.why-grid{grid-template-columns:1fr;max-width:560px;margin:0 auto}
     .results-row{grid-template-columns:1fr 1fr}
     .results-row .result-item:nth-child(2){border-right:none}
@@ -1140,7 +1060,7 @@ const HOME_STYLES = `
     .cta-btns{flex-direction:column}
     .cta-btns a{width:100%;max-width:420px;margin:0 auto;text-align:center}
     .btn-primary,.btn-ghost,.btn-wa,.btn-lead{padding:13px 20px;font-size:.88rem}
-    .problem-grid,.difference-grid,.demo-grid{grid-template-columns:1fr}
+    .problem-grid,.difference-grid{grid-template-columns:1fr}
     .pricing-card{padding:32px 24px}
     .p-price{font-size:2.4rem}
     .how-steps{grid-template-columns:1fr}
@@ -1219,48 +1139,6 @@ const DIFFERENCE_POINTS = [
     "Snel aanpasbaar als je groeit",
     "Nieuwe pagina, extra dienst, formulier of uitbreiding nodig? Het model is juist ingericht om vlot door te ontwikkelen.",
   ],
-];
-
-const DEMOS = [
-  {
-    tone: "barber",
-    label: "Demo concept",
-    title: "Barbershop / kapper",
-    subtitle: "Voor ondernemers die meer afspraken en een sterkere eerste indruk willen.",
-    bullets: [
-      "Hero met directe CTA naar afspraak of WhatsApp",
-      "Prijslijst en behandelingen overzichtelijk in beeld",
-      "Mobiel eerst ontworpen voor snelle actie",
-      "Galerij en openingstijden duidelijk zichtbaar",
-    ],
-    outcome: "Sterk voor kappers en barbershops die professioneel willen ogen zonder onnodige complexiteit.",
-  },
-  {
-    tone: "restaurant",
-    label: "Demo concept",
-    title: "Restaurant / food concept",
-    subtitle: "Voor zaken die sfeer willen tonen én reserveringen of contact willen stimuleren.",
-    bullets: [
-      "Visuele homepage met menukaart en sfeerbeelden",
-      "CTA naar reserveren, bellen of route",
-      "Secties voor reviews, openingstijden en specials",
-      "Heldere opbouw voor mobiel gebruik onderweg",
-    ],
-    outcome: "Geschikt voor restaurants, lunchrooms en afhaalconcepten die beter zichtbaar willen zijn.",
-  },
-  {
-    tone: "salon",
-    label: "Demo concept",
-    title: "Salon / beauty",
-    subtitle: "Voor salons die rust, kwaliteit en vertrouwen willen uitstralen.",
-    bullets: [
-      "Rustige premium uitstraling met duidelijke diensten",
-      "CTA’s voor intake, WhatsApp en offerte",
-      "Ruimte voor behandelingen, FAQ en resultaten",
-      "Later uit te breiden met reserveringen of intakeflows",
-    ],
-    outcome: "Sterk voor schoonheidssalons en andere servicebedrijven die professioneel willen overkomen.",
-  },
 ];
 
 const SOLUTION_GET = [
@@ -1678,36 +1556,7 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="demo-grid">
-                {DEMOS.map((demo) => (
-                  <div key={demo.title} className="demo-card">
-                    <div className={`demo-top ${demo.tone}`}>
-                      <div className="demo-badge">{demo.label}</div>
-                      <div className="demo-title">{demo.title}</div>
-                      <div className="demo-sub">{demo.subtitle}</div>
-                    </div>
-
-                    <div className="demo-body">
-                      <ul className="demo-list">
-                        {demo.bullets.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-
-                      <div className="demo-outcome">{demo.outcome}</div>
-
-                      <a
-                        href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20zo'n%20website%20richting%20bespreken."
-                        target="_blank"
-                        rel="noreferrer"
-                        className="demo-cta"
-                      >
-                        Ik wil ook zo’n richting →
-                      </a>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <NicheCarousel />
             </div>
           </section>
 
