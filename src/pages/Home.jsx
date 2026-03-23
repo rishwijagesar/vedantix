@@ -53,7 +53,10 @@ const HOME_STYLES = `
   .hero-checks{margin-bottom:38px;display:grid;grid-template-columns:1fr 1fr;gap:12px 18px;max-width:700px}
   .hero-check{display:flex;align-items:flex-start;gap:12px;font-size:.88rem;color:rgba(255,255,255,.78);font-weight:600;letter-spacing:.1px}
   .hero-check::before{content:'✓';color:#22c55e;font-weight:900;font-size:.85rem;flex-shrink:0;background:rgba(34,197,94,.12);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;line-height:20px;margin-top:1px}
-  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+  .hero-ctas .btn-primary{order:1}
+  .hero-ctas .btn-wa{order:2}
+  .hero-ctas .btn-ghost{order:3}
   .hero-cta-note{font-size:.78rem;color:rgba(255,255,255,.42);font-weight:600;margin-bottom:38px}
   .hero-social-proof{display:flex;align-items:center;gap:20px;padding-top:28px;border-top:1px solid rgba(255,255,255,.07)}
   .hero-sp-stat{font-size:1rem;font-weight:800;color:#fff;line-height:1;margin-bottom:6px}
@@ -656,16 +659,16 @@ export default function Home() {
                   <a href="#cta" className="btn-primary">
                     Plan gratis kennismaking →
                   </a>
-                  <a href="#demo" className="btn-ghost">
-                    Bekijk demo concepten →
-                  </a>
                   <a
                     href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
                     target="_blank"
                     rel="noreferrer"
                     className="btn-wa"
                   >
-                    💬 Start via WhatsApp
+                    💬 Stel je vraag via WhatsApp
+                  </a>
+                  <a href="#demo" className="btn-ghost">
+                    Bekijk demo’s →
                   </a>
                 </div>
                 <div className="hero-cta-note">Vrijblijvend gesprek · heldere pakketten · ook geschikt als je nog niet precies weet wat je nodig hebt</div>
