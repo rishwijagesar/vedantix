@@ -1,7 +1,9 @@
+// src/pages/Home.jsx
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
 import BigFooter from "../components/BigFooter";
 import NicheCarousel from "./NicheCarousel";
+import HomeHero, { HOME_HERO_STYLES } from "./HomeHero";
 
 const HOME_STYLES = `
   *{box-sizing:border-box;margin:0;padding:0}
@@ -17,290 +19,6 @@ const HOME_STYLES = `
   }
 
   .anchor-section{scroll-margin-top:100px}
-
-  .btn-primary{
-    background:#fff;
-    color:#0f172a;
-    padding:15px 30px;
-    border-radius:10px;
-    font-weight:800;
-    font-size:.92rem;
-    text-decoration:none;
-    display:inline-block;
-    transition:all .25s cubic-bezier(.4,0,.2,1);
-    border:none;
-    cursor:pointer;
-    letter-spacing:-.1px;
-    box-shadow:0 4px 16px rgba(0,0,0,.25)
-  }
-  .btn-primary:hover{
-    background:#f1f5f9;
-    transform:translateY(-2px);
-    box-shadow:0 10px 32px rgba(0,0,0,.35)
-  }
-
-  .btn-wa{
-    background:#25d366;
-    color:#fff;
-    padding:15px 30px;
-    border-radius:10px;
-    font-weight:800;
-    font-size:.92rem;
-    text-decoration:none;
-    display:inline-block;
-    transition:all .25s cubic-bezier(.4,0,.2,1);
-    border:none;
-    cursor:pointer;
-    box-shadow:0 4px 20px rgba(37,211,102,.3)
-  }
-  .btn-wa:hover{
-    background:#22c55e;
-    transform:translateY(-2px);
-    box-shadow:0 10px 32px rgba(37,211,102,.4)
-  }
-
-  .btn-ghost{
-    background:rgba(255,255,255,.06);
-    color:#fff;
-    border:1.5px solid rgba(255,255,255,.18);
-    padding:14px 28px;
-    border-radius:10px;
-    font-weight:800;
-    font-size:.92rem;
-    text-decoration:none;
-    display:inline-block;
-    transition:all .25s;
-    cursor:pointer;
-    backdrop-filter:blur(4px)
-  }
-  .btn-ghost:hover{
-    background:rgba(255,255,255,.12);
-    border-color:rgba(255,255,255,.28);
-    color:#fff;
-    transform:translateY(-2px)
-  }
-
-  .btn-lead{
-    background:#0f172a;
-    color:#fff;
-    padding:15px 28px;
-    border-radius:10px;
-    font-weight:800;
-    font-size:.92rem;
-    text-decoration:none;
-    display:inline-block;
-    transition:all .2s;
-    box-shadow:0 4px 16px rgba(0,0,0,.15)
-  }
-  .btn-lead:hover{
-    background:#1e293b;
-    transform:translateY(-2px);
-    box-shadow:0 8px 24px rgba(0,0,0,.2)
-  }
-
-  .hero{
-    background:linear-gradient(150deg,#060c1a 0%,#0a1428 40%,#0d1f3c 70%,#0f1e38 100%);
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    padding:140px 5% 100px;
-    position:relative;
-    overflow:hidden
-  }
-  .hero::before{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:
-      radial-gradient(ellipse at 65% 38%,rgba(59,130,246,.13) 0%,transparent 58%),
-      radial-gradient(ellipse at 20% 80%,rgba(99,102,241,.07) 0%,transparent 50%);
-    pointer-events:none
-  }
-  .hero-container{
-    max-width:1280px;
-    margin:0 auto;
-    width:100%;
-    display:grid;
-    grid-template-columns:1fr 500px;
-    gap:72px;
-    align-items:center
-  }
-  .hero-eyebrow{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.1);
-    color:rgba(255,255,255,.78);
-    font-size:.7rem;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:1.8px;
-    padding:8px 18px;
-    border-radius:100px;
-    margin-bottom:24px
-  }
-  .hero-eyebrow::before{
-    content:'';
-    width:6px;
-    height:6px;
-    background:#22c55e;
-    border-radius:50%;
-    animation:pulse 2s infinite;
-    flex-shrink:0
-  }
-
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-  .hero h1{
-    font-size:clamp(2.7rem,4.8vw,4.35rem);
-    font-weight:900;
-    line-height:1.04;
-    color:#fff;
-    margin-bottom:22px;
-    letter-spacing:-2px;
-    max-width:780px
-  }
-  .hero h1 span{
-    background:linear-gradient(125deg,#60a5fa 0%,#818cf8 50%,#a78bfa 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text
-  }
-  .hero-sub{
-    font-size:1.03rem;
-    color:rgba(255,255,255,.68);
-    line-height:1.78;
-    margin-bottom:18px;
-    max-width:620px;
-    font-weight:400
-  }
-  .hero-sub strong{color:#fff;font-weight:700}
-  .hero-microcopy{
-    font-size:.82rem;
-    color:rgba(255,255,255,.45);
-    margin-bottom:34px;
-    font-weight:600
-  }
-
-  .hero-checks{
-    margin-bottom:38px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px 18px;
-    max-width:720px
-  }
-  .hero-check{
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
-    font-size:.88rem;
-    color:rgba(255,255,255,.78);
-    font-weight:600;
-    letter-spacing:.1px
-  }
-  .hero-check::before{
-    content:'✓';
-    color:#22c55e;
-    font-weight:900;
-    font-size:.85rem;
-    flex-shrink:0;
-    background:rgba(34,197,94,.12);
-    width:20px;
-    height:20px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    line-height:20px;
-    margin-top:1px
-  }
-
-  .hero-ctas{
-    display:flex;
-    gap:14px;
-    flex-wrap:wrap;
-    align-items:center;
-    margin-bottom:18px
-  }
-  .hero-cta-note{
-    font-size:.78rem;
-    color:rgba(255,255,255,.42);
-    font-weight:600;
-    margin-bottom:38px
-  }
-
-  .hero-social-proof{
-    display:flex;
-    align-items:center;
-    gap:20px;
-    padding-top:28px;
-    border-top:1px solid rgba(255,255,255,.07)
-  }
-  .hero-sp-stat{
-    font-size:1rem;
-    font-weight:800;
-    color:#fff;
-    line-height:1;
-    margin-bottom:6px
-  }
-  .hero-sp-text{
-    font-size:.76rem;
-    color:rgba(255,255,255,.42);
-    font-weight:500;
-    line-height:1.5
-  }
-
-  .hero-mockup-wrap{position:relative}
-  .hero-mockup-wrap::before{
-    content:'';
-    position:absolute;
-    top:-30px;
-    left:-30px;
-    right:-30px;
-    bottom:-30px;
-    background:radial-gradient(ellipse at center,rgba(99,102,241,.18) 0%,rgba(59,130,246,.06) 45%,transparent 70%);
-    pointer-events:none;
-    z-index:0;
-    border-radius:40px
-  }
-  .hero-mockup{
-    background:#fff;
-    border-radius:22px;
-    overflow:hidden;
-    box-shadow:0 0 0 1px rgba(255,255,255,.07),0 32px 80px rgba(0,0,0,.55),0 8px 24px rgba(0,0,0,.3);
-    animation:float 5s ease-in-out infinite;
-    position:relative;
-    z-index:1
-  }
-
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-
-  .mockup-bar{
-    background:#141a27;
-    padding:11px 16px;
-    display:flex;
-    align-items:center;
-    gap:6px;
-    border-bottom:1px solid rgba(255,255,255,.04)
-  }
-  .mockup-dot{width:9px;height:9px;border-radius:50%}
-  .mockup-url{
-    flex:1;
-    background:rgba(255,255,255,.06);
-    border-radius:5px;
-    height:20px;
-    margin:0 14px;
-    display:flex;
-    align-items:center;
-    padding:0 10px
-  }
-  .mockup-url span{
-    font-size:.6rem;
-    color:rgba(255,255,255,.35);
-    font-weight:500
-  }
 
   .section-wrap{max-width:1140px;margin:0 auto;width:100%}
   .section-header{
@@ -342,6 +60,24 @@ const HOME_STYLES = `
     margin-bottom:14px
   }
   .section-label.light{color:#818cf8}
+
+  .btn-lead{
+    background:#0f172a;
+    color:#fff;
+    padding:15px 28px;
+    border-radius:10px;
+    font-weight:800;
+    font-size:.92rem;
+    text-decoration:none;
+    display:inline-block;
+    transition:all .2s;
+    box-shadow:0 4px 16px rgba(0,0,0,.15)
+  }
+  .btn-lead:hover{
+    background:#1e293b;
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px rgba(0,0,0,.2)
+  }
 
   .trusted{
     background:#f9fafb;
@@ -1133,9 +869,6 @@ const HOME_STYLES = `
   }
 
   @media(max-width:1024px){
-    .hero-container{grid-template-columns:1fr;gap:60px}
-    .hero-mockup-wrap{max-width:520px;margin:0 auto}
-    .hero-checks{grid-template-columns:1fr}
     .pricing-grid,.difference-grid{grid-template-columns:1fr;max-width:520px;margin:0 auto}
     .solution-grid,.why-grid{grid-template-columns:1fr;max-width:560px;margin:0 auto}
     .results-row{grid-template-columns:1fr 1fr}
@@ -1147,20 +880,14 @@ const HOME_STYLES = `
   }
 
   @media(max-width:768px){
-    .hero{padding:100px 5% 70px;min-height:auto}
-    .hero h1{font-size:2.35rem}
-    .hero-ctas{flex-direction:column}
-    .hero-ctas a{width:100%;text-align:center}
-    .cta-btns{flex-direction:column}
-    .cta-btns a{width:100%;max-width:420px;margin:0 auto;text-align:center}
-    .btn-primary,.btn-ghost,.btn-wa,.btn-lead{padding:13px 20px;font-size:.88rem}
-    .problem-grid,.difference-grid{grid-template-columns:1fr}
     .pricing-card{padding:32px 24px}
     .p-price{font-size:2.4rem}
     .how-steps{grid-template-columns:1fr}
     .trust-items{gap:20px}
     .urgency-box{padding:28px 20px}
     .cta-section{padding:80px 5%}
+    .cta-btns{flex-direction:column}
+    .cta-btns a{width:100%;max-width:420px;margin:0 auto;text-align:center}
     .results-row{grid-template-columns:1fr;border-radius:16px}
     .result-item{border-right:none;border-bottom:1px solid #f3f4f6;padding:28px}
     .result-item:last-child{border-bottom:none}
@@ -1176,9 +903,6 @@ const HOME_STYLES = `
   }
 
   @media(max-width:480px){
-    .hero h1{font-size:1.95rem;letter-spacing:-.8px}
-    .hero-sub{font-size:.92rem}
-    .hero-social-proof{flex-direction:column;align-items:flex-start;gap:10px}
     .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.founder-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:60px 5%}
     .trusted-inner{gap:12px}
     .guarantee-box{flex-direction:column;gap:10px;padding:20px}
@@ -1186,13 +910,6 @@ const HOME_STYLES = `
     .section-header{margin-bottom:40px}
   }
 `;
-
-const HERO_CHECKS = [
-  "Binnen 48 uur een sterke eerste versie live",
-  "Gebouwd voor contact, aanvragen of afspraken",
-  "Hosting, onderhoud en support onder één partij",
-  "Pas verder als de richting goed voelt",
-];
 
 const TRUSTED_BY = ["Kappers", "Restaurants", "Klusbedrijven", "Schoonheidssalons", "Fotografen", "ZZP'ers"];
 
@@ -1322,12 +1039,6 @@ const PACKAGES = [
   },
 ];
 
-const MOCKUP_SERVICES = [
-  ["✂️", "Knippen", "vanaf €18"],
-  ["🧔", "Baardverzorging", "vanaf €12"],
-  ["💈", "Fade & Styling", "vanaf €22"],
-];
-
 const TRUST_ITEMS = [
   ["✔", "Duidelijke maandprijs"],
   ["✔", "Hosting en onderhoud inbegrepen"],
@@ -1376,225 +1087,13 @@ export default function Home() {
         canonical="https://vedantix.nl/"
       />
 
-      <style>{HOME_STYLES}</style>
+      <style>{HOME_STYLES + HOME_HERO_STYLES}</style>
 
       <div className="home-page">
         <NavBar />
 
         <main>
-          <section className="hero">
-            <div className="hero-container">
-              <div className="hero-content">
-                <div className="hero-eyebrow">Voor kappers, salons, restaurants en lokale bedrijven</div>
-
-                <h1>
-                  Meer klanten via jouw website —
-                  <br />
-                  <span>binnen 48 uur live</span>
-                </h1>
-
-                <p className="hero-sub">
-                  Vedantix bouwt websites voor lokale ondernemers die <strong>professioneel willen overkomen en sneller aanvragen,
-                  afspraken of contactmomenten</strong> willen binnenhalen. Geen lang traject, geen technisch gedoe, wel een website
-                  die direct duidelijk maakt waarom iemand voor jou moet kiezen.
-                </p>
-
-                <div className="hero-microcopy">
-                  Ook geschikt als je nog geen bestaande website, reviews of uitgebreide content hebt.
-                </div>
-
-                <div className="hero-checks">
-                  {HERO_CHECKS.map((item) => (
-                    <div key={item} className="hero-check">
-                      {item}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="hero-ctas">
-                  <a
-                    href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn-primary"
-                    style={{ textAlign: "center" }}
-                  >
-                    Plan gratis intake →
-                  </a>
-
-                  <a
-                    href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag%20over%20een%20website."
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn-wa"
-                    style={{ textAlign: "center" }}
-                  >
-                    💬 Stel je vraag via WhatsApp
-                  </a>
-
-                  <a href="#demo" className="btn-ghost" style={{ textAlign: "center" }}>
-                    Bekijk demo’s →
-                  </a>
-                </div>
-
-                <div className="hero-cta-note">
-                  Vrijblijvend gesprek · duidelijke pakketten · pas verder als de richting goed voelt
-                </div>
-
-                <div className="hero-social-proof">
-                  <div>
-                    <div className="hero-sp-stat">Duidelijk</div>
-                    <div className="hero-sp-text">Sterke boodschap en betere eerste indruk</div>
-                  </div>
-                  <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />
-                  <div>
-                    <div className="hero-sp-stat">Praktisch</div>
-                    <div className="hero-sp-text">Gebouwd voor contact, aanvragen en afspraken</div>
-                  </div>
-                  <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />
-                  <div>
-                    <div className="hero-sp-stat">Zonder gedoe</div>
-                    <div className="hero-sp-text">Hosting, onderhoud en support blijven geregeld</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="hero-mockup-wrap">
-                <div className="hero-mockup">
-                  <div className="mockup-bar">
-                    <div className="mockup-dot" style={{ background: "#ff5f57" }} />
-                    <div className="mockup-dot" style={{ background: "#febc2e" }} />
-                    <div className="mockup-dot" style={{ background: "#28c840" }} />
-                    <div className="mockup-url">
-                      <span>barbershop-amsterdam.nl</span>
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      background: "linear-gradient(135deg,#0a1628,#0d2146)",
-                      padding: "28px 24px",
-                      color: "#fff",
-                      textAlign: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: "0.65rem",
-                        fontWeight: 800,
-                        color: "rgba(255,255,255,0.45)",
-                        textTransform: "uppercase",
-                        letterSpacing: 1.5,
-                        marginBottom: 10,
-                      }}
-                    >
-                      Demo concept voor kapper / barber
-                    </div>
-
-                    <div style={{ fontSize: "1.4rem", fontWeight: 900, marginBottom: 6, letterSpacing: -0.5 }}>
-                      Barbershop Amsterdam
-                    </div>
-
-                    <div style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.68)", marginBottom: 16 }}>
-                      Duidelijk. Snel. Gericht op afspraak of WhatsApp.
-                    </div>
-
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: 16,
-                        paddingTop: 12,
-                        borderTop: "1px solid rgba(255,255,255,0.08)",
-                      }}
-                    >
-                      <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>
-                        ⭐ Professionele eerste indruk
-                      </span>
-                      <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>
-                        📱 Mobielvriendelijk
-                      </span>
-                    </div>
-                  </div>
-
-                  <div style={{ padding: "20px 20px", background: "#f9fafb" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                      {MOCKUP_SERVICES.map(([icon, name, price]) => (
-                        <div
-                          key={name}
-                          style={{
-                            background: "#fff",
-                            padding: "10px 13px",
-                            borderRadius: 10,
-                            display: "flex",
-                            gap: 10,
-                            alignItems: "center",
-                            boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-                            border: "1px solid #f3f4f6",
-                          }}
-                        >
-                          <span style={{ fontSize: "1rem" }}>{icon}</span>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: "0.78rem", fontWeight: 800, color: "#111827" }}>{name}</div>
-                          </div>
-                          <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "#6366f1" }}>{price}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div style={{ padding: "14px 20px", background: "#fff", borderTop: "1px solid #f3f4f6" }}>
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <button
-                        type="button"
-                        style={{
-                          flex: 1,
-                          background: "#111827",
-                          color: "#fff",
-                          padding: "9px 10px",
-                          borderRadius: 9,
-                          border: "none",
-                          fontWeight: 800,
-                          fontSize: "0.72rem",
-                          cursor: "pointer",
-                        }}
-                      >
-                        📅 Afspraak maken
-                      </button>
-                      <button
-                        type="button"
-                        style={{
-                          flex: 1,
-                          background: "#25d366",
-                          color: "#fff",
-                          padding: "9px 10px",
-                          borderRadius: 9,
-                          border: "none",
-                          fontWeight: 800,
-                          fontSize: "0.72rem",
-                          cursor: "pointer",
-                        }}
-                      >
-                        💬 WhatsApp
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <p
-                  style={{
-                    marginTop: 16,
-                    fontSize: "0.75rem",
-                    color: "rgba(255,255,255,0.35)",
-                    textAlign: "center",
-                    fontWeight: 600,
-                  }}
-                >
-                  Demo mockup • bedoeld om richting en stijl te laten zien
-                </p>
-              </div>
-            </div>
-          </section>
+          <HomeHero />
 
           <div className="trusted">
             <div className="trusted-inner">
