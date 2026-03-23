@@ -1280,7 +1280,7 @@ export default function Home() {
             <div className="founder-grid">
               <div className="founder-photo">
                 <img
-                  src="/images/founder.jpeg"
+                  src="/images/founder_long.jpeg"
                   alt="Rishwi van Vedantix"
                   className="founder-image"
                 />
