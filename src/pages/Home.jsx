@@ -10,13 +10,13 @@ const HOME_STYLES = `
   .home-page{font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#111827;background:#fff;line-height:1.6;overflow-x:hidden}
   .anchor-section{scroll-margin-top:100px}
 
- .btn-ghost{
+  .btn-ghost{
   background:rgba(255,255,255,.06);
   color:#fff;
   border:1.5px solid rgba(255,255,255,.18);
   padding:14px 28px;
   border-radius:10px;
-  font-weight:700;
+  font-weight:800;
   font-size:.92rem;
   text-decoration:none;
   display:inline-block;
@@ -24,13 +24,13 @@ const HOME_STYLES = `
   cursor:pointer;
   backdrop-filter:blur(4px);
 }
-
 .btn-ghost:hover{
   background:rgba(255,255,255,.12);
   border-color:rgba(255,255,255,.28);
   color:#fff;
   transform:translateY(-2px);
 }
+  .btn-ghost:hover{border-color:#111827;background:#f9fafb}
 
   .btn-primary{background:#fff;color:#0f172a;padding:15px 30px;border-radius:10px;font-weight:800;font-size:.92rem;text-decoration:none;display:inline-block;transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;letter-spacing:-.1px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
   .btn-primary:hover{background:#f1f5f9;transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.35)}
@@ -657,7 +657,7 @@ export default function Home() {
                     Plan gratis kennismaking →
                   </a>
                   <a href="#demo" className="btn-ghost">
-                    Bekijk voorbeelden →
+                    Bekijk demo concepten →
                   </a>
                   <a
                     href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
