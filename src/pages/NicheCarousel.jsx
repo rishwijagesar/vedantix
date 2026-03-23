@@ -3,18 +3,13 @@ import { NICHE_DEMOS } from "../data/nicheDemoData";
 
 const CAROUSEL_STYLES = `
   .niche-carousel{width:100%}
+
   .niche-carousel-top{
     display:flex;
-    justify-content:space-between;
+    justify-content:flex-end;
     align-items:center;
     gap:16px;
     margin-bottom:24px
-  }
-
-  .niche-carousel-meta{
-    font-size:.82rem;
-    color:#6b7280;
-    font-weight:600
   }
 
   .niche-carousel-controls{
@@ -46,7 +41,8 @@ const CAROUSEL_STYLES = `
   .niche-carousel-track{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:20px
+    gap:20px;
+    align-items:stretch
   }
 
   .niche-card{
@@ -55,7 +51,10 @@ const CAROUSEL_STYLES = `
     border-radius:20px;
     overflow:hidden;
     box-shadow:0 10px 30px rgba(0,0,0,.04);
-    transition:all .25s
+    transition:all .25s;
+    height:100%;
+    display:flex;
+    flex-direction:column
   }
 
   .niche-card:hover{
@@ -89,16 +88,23 @@ const CAROUSEL_STYLES = `
     font-size:1.2rem;
     font-weight:900;
     line-height:1.2;
-    margin-bottom:8px
+    margin-bottom:8px;
+    min-height:2.9em
   }
 
   .niche-card-sub{
     font-size:.82rem;
     color:rgba(255,255,255,.75);
-    line-height:1.6
+    line-height:1.6;
+    min-height:4.8em
   }
 
-  .niche-card-body{padding:22px}
+  .niche-card-body{
+    padding:22px;
+    display:flex;
+    flex-direction:column;
+    flex:1
+  }
 
   .niche-card-list{
     list-style:none;
@@ -106,7 +112,8 @@ const CAROUSEL_STYLES = `
     flex-direction:column;
     gap:10px;
     margin-bottom:18px;
-    padding:0
+    padding:0;
+    flex:1
   }
 
   .niche-card-list li{
@@ -133,7 +140,8 @@ const CAROUSEL_STYLES = `
     font-size:.8rem;
     color:#334155;
     font-weight:700;
-    line-height:1.55
+    line-height:1.55;
+    min-height:88px
   }
 
   .niche-card-cta{
@@ -175,154 +183,151 @@ const CAROUSEL_STYLES = `
     .niche-carousel-track{
       grid-template-columns:repeat(2,1fr)
     }
+
+    .niche-card-title,
+    .niche-card-sub,
+    .niche-card-outcome{
+      min-height:auto
+    }
   }
 
   @media(max-width:768px){
     .niche-carousel-top{
-      flex-direction:column;
-      align-items:flex-start
+      justify-content:flex-end
     }
 
     .niche-carousel-track{
       grid-template-columns:1fr
     }
-
-    .niche-carousel-controls{
-      align-self:flex-end
-    }
   }
 `;
 
 function getVisibleCount(width) {
-    if (width <= 768) return 1;
-    if (width <= 1024) return 2;
-    return 3;
+  if (width <= 768) return 1;
+  if (width <= 1024) return 2;
+  return 3;
 }
 
 export default function NicheCarousel() {
-    const [startIndex, setStartIndex] = useState(0);
-    const [visibleCount, setVisibleCount] = useState(() =>
-        typeof window !== "undefined" ? getVisibleCount(window.innerWidth) : 3
-    );
+  const [startIndex, setStartIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(() =>
+    typeof window !== "undefined" ? getVisibleCount(window.innerWidth) : 3
+  );
 
-    useEffect(() => {
-        const handleResize = () => {
-            setVisibleCount(getVisibleCount(window.innerWidth));
-        };
-
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    const maxIndex = Math.max(0, NICHE_DEMOS.length - visibleCount);
-
-    useEffect(() => {
-        if (startIndex > maxIndex) {
-            setStartIndex(maxIndex);
-        }
-    }, [startIndex, maxIndex]);
-
-    const visibleItems = useMemo(
-        () => NICHE_DEMOS.slice(startIndex, startIndex + visibleCount),
-        [startIndex, visibleCount]
-    );
-
-    const totalPages = Math.ceil(NICHE_DEMOS.length / visibleCount);
-    const currentPage = Math.floor(startIndex / visibleCount);
-
-    const handlePrev = () => {
-        setStartIndex((prev) => {
-            const next = prev - visibleCount;
-            return next < 0 ? maxIndex : next;
-        });
+  useEffect(() => {
+    const handleResize = () => {
+      setVisibleCount(getVisibleCount(window.innerWidth));
     };
 
-    const handleNext = () => {
-        setStartIndex((prev) => {
-            const next = prev + visibleCount;
-            return next > maxIndex ? 0 : next;
-        });
-    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-    const goToPage = (pageIndex) => {
-        const nextIndex = pageIndex * visibleCount;
-        setStartIndex(nextIndex > maxIndex ? maxIndex : nextIndex);
-    };
+  const maxIndex = Math.max(0, NICHE_DEMOS.length - visibleCount);
 
-    return (
-        <div className="niche-carousel">
-            <style>{CAROUSEL_STYLES}</style>
+  useEffect(() => {
+    if (startIndex > maxIndex) {
+      setStartIndex(maxIndex);
+    }
+  }, [startIndex, maxIndex]);
 
-            <div className="niche-carousel-top">
-                <div className="niche-carousel-meta">
-                    Ontdek welke website-aanpak past bij jouw branche
-                </div>
+  const visibleItems = useMemo(
+    () => NICHE_DEMOS.slice(startIndex, startIndex + visibleCount),
+    [startIndex, visibleCount]
+  );
 
-                <div className="niche-carousel-controls">
-                    <button
-                        type="button"
-                        className="niche-carousel-btn"
-                        onClick={handlePrev}
-                        aria-label="Vorige niches"
-                    >
-                        ←
-                    </button>
-                    <button
-                        type="button"
-                        className="niche-carousel-btn"
-                        onClick={handleNext}
-                        aria-label="Volgende niches"
-                    >
-                        →
-                    </button>
-                </div>
-            </div>
+  const totalPages = Math.ceil(NICHE_DEMOS.length / visibleCount);
+  const currentPage = Math.floor(startIndex / visibleCount);
 
-            <div className="niche-carousel-track">
-                {visibleItems.map((demo) => (
-                    <div key={demo.slug} className="niche-card">
-                        <div className={`niche-card-top ${demo.theme}`}>
-                            <div className="niche-card-badge">{demo.label}</div>
-                            <div className="niche-card-title">{demo.title}</div>
-                            <div className="niche-card-sub">{demo.subtitle}</div>
-                        </div>
+  const handlePrev = () => {
+    setStartIndex((prev) => {
+      const next = prev - visibleCount;
+      return next < 0 ? maxIndex : next;
+    });
+  };
 
-                        <div className="niche-card-body">
-                            <ul className="niche-card-list">
-                                {demo.bullets.map((item) => (
-                                    <li key={item}>{item}</li>
-                                ))}
-                            </ul>
+  const handleNext = () => {
+    setStartIndex((prev) => {
+      const next = prev + visibleCount;
+      return next > maxIndex ? 0 : next;
+    });
+  };
 
-                            <div className="niche-card-outcome">{demo.outcome}</div>
+  const goToPage = (pageIndex) => {
+    const nextIndex = pageIndex * visibleCount;
+    setStartIndex(nextIndex > maxIndex ? maxIndex : nextIndex);
+  };
 
-                            <a
-                                href={`https://wa.me/310626219989?text=${encodeURIComponent(demo.whatsappText)}`}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="niche-card-cta"
-                            >
-                                Bespreek deze richting →
-                            </a>
-                        </div>
-                    </div>
-                ))}
-            </div>
+  return (
+    <div className="niche-carousel">
+      <style>{CAROUSEL_STYLES}</style>
 
-            {totalPages > 1 && (
-                <div className="niche-carousel-dots">
-                    {Array.from({ length: totalPages }).map((_, index) => (
-                        <button
-                            key={index}
-                            type="button"
-                            className={`niche-carousel-dot ${index === currentPage ? "active" : ""}`}
-                            onClick={() => goToPage(index)}
-                            aria-label={`Ga naar nichepagina ${index + 1}`}
-                        />
-                    ))}
-                </div>
-            )}
+      <div className="niche-carousel-top">
+        <div className="niche-carousel-controls">
+          <button
+            type="button"
+            className="niche-carousel-btn"
+            onClick={handlePrev}
+            aria-label="Vorige niches"
+          >
+            ←
+          </button>
+          <button
+            type="button"
+            className="niche-carousel-btn"
+            onClick={handleNext}
+            aria-label="Volgende niches"
+          >
+            →
+          </button>
         </div>
-    );
+      </div>
+
+      <div className="niche-carousel-track">
+        {visibleItems.map((demo) => (
+          <div key={demo.slug} className="niche-card">
+            <div className={`niche-card-top ${demo.theme}`}>
+              <div className="niche-card-badge">{demo.label}</div>
+              <div className="niche-card-title">{demo.title}</div>
+              <div className="niche-card-sub">{demo.subtitle}</div>
+            </div>
+
+            <div className="niche-card-body">
+              <ul className="niche-card-list">
+                {demo.bullets.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+
+              <div className="niche-card-outcome">{demo.outcome}</div>
+
+              <a
+                href={`https://wa.me/310626219989?text=${encodeURIComponent(demo.whatsappText)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="niche-card-cta"
+              >
+                Bespreek deze richting →
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {totalPages > 1 && (
+        <div className="niche-carousel-dots">
+          {Array.from({ length: totalPages }).map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              className={`niche-carousel-dot ${index === currentPage ? "active" : ""}`}
+              onClick={() => goToPage(index)}
+              aria-label={`Ga naar nichepagina ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
