@@ -153,13 +153,13 @@ const HOME_STYLES = `
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
   .hero h1{
-    font-size:clamp(2.6rem,4.6vw,4.2rem);
+    font-size:clamp(2.7rem,4.8vw,4.35rem);
     font-weight:900;
-    line-height:1.06;
+    line-height:1.04;
     color:#fff;
     margin-bottom:22px;
     letter-spacing:-2px;
-    max-width:760px
+    max-width:780px
   }
   .hero h1 span{
     background:linear-gradient(125deg,#60a5fa 0%,#818cf8 50%,#a78bfa 100%);
@@ -169,9 +169,9 @@ const HOME_STYLES = `
   }
   .hero-sub{
     font-size:1.03rem;
-    color:rgba(255,255,255,.66);
+    color:rgba(255,255,255,.68);
     line-height:1.78;
-    margin-bottom:20px;
+    margin-bottom:18px;
     max-width:620px;
     font-weight:400
   }
@@ -188,7 +188,7 @@ const HOME_STYLES = `
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:12px 18px;
-    max-width:700px
+    max-width:720px
   }
   .hero-check{
     display:flex;
@@ -303,10 +303,22 @@ const HOME_STYLES = `
   }
 
   .section-wrap{max-width:1140px;margin:0 auto;width:100%}
-  .section-header{max-width:700px;margin-bottom:56px}
-  .section-header.centered{margin-left:auto;margin-right:auto;text-align:center}
+  .section-header{
+    max-width:720px;
+    margin-bottom:56px;
+    text-align:left
+  }
+  .section-header.centered{
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center
+  }
+  .section-header.centered .section-p{
+    margin-left:auto;
+    margin-right:auto
+  }
   .section-h2{
-    font-size:clamp(1.9rem,3vw,2.7rem);
+    font-size:clamp(1.95rem,3vw,2.75rem);
     font-weight:900;
     color:#111827;
     letter-spacing:-.8px;
@@ -317,7 +329,8 @@ const HOME_STYLES = `
   .section-p{
     font-size:.96rem;
     color:#6b7280;
-    line-height:1.75
+    line-height:1.75;
+    max-width:660px
   }
   .section-p.light{color:rgba(255,255,255,.56)}
   .section-label{
@@ -487,6 +500,86 @@ const HOME_STYLES = `
     color:#6b7280;
     font-weight:600;
     line-height:1.6
+  }
+
+  .founder-section{padding:100px 5%;background:#f9fafb}
+  .founder-grid{
+    max-width:1100px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:320px 1fr;
+    gap:32px;
+    align-items:stretch
+  }
+  .founder-photo{
+    background:linear-gradient(145deg,#e0e7ff,#f5f3ff);
+    border:1px solid #e0e7ff;
+    border-radius:24px;
+    min-height:320px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+    text-align:center
+  }
+  .founder-photo-inner{
+    max-width:210px
+  }
+  .founder-avatar{
+    width:96px;
+    height:96px;
+    border-radius:50%;
+    background:#fff;
+    border:1px solid #c7d2fe;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:2rem;
+    margin:0 auto 16px
+  }
+  .founder-photo strong{
+    display:block;
+    font-size:1rem;
+    color:#111827;
+    margin-bottom:6px
+  }
+  .founder-photo p{
+    font-size:.85rem;
+    color:#6b7280;
+    line-height:1.7
+  }
+  .founder-card{
+    background:#fff;
+    border:1px solid #eef2ff;
+    border-radius:24px;
+    padding:40px
+  }
+  .founder-card p{
+    font-size:.95rem;
+    color:#4b5563;
+    line-height:1.9;
+    margin-bottom:16px;
+    max-width:680px
+  }
+  .founder-points{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px 18px;
+    margin-top:24px
+  }
+  .founder-point{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-size:.86rem;
+    color:#374151;
+    font-weight:600
+  }
+  .founder-point::before{
+    content:'✓';
+    color:#6366f1;
+    font-weight:900;
+    flex-shrink:0
   }
 
   .pricing-section{padding:100px 5%;background:#fff}
@@ -850,7 +943,7 @@ const HOME_STYLES = `
     border-bottom:1px solid #f3f4f6
   }
   .lead-magnet-inner{
-    max-width:800px;
+    max-width:860px;
     margin:0 auto;
     display:flex;
     align-items:center;
@@ -1050,11 +1143,12 @@ const HOME_STYLES = `
     .results-row .result-item:nth-child(3){border-right:none;border-top:1px solid #f3f4f6;grid-column:1/-1}
     .how-steps{grid-template-columns:1fr 1fr;gap:32px}
     .how-steps::before{display:none}
+    .founder-grid{grid-template-columns:1fr;max-width:720px}
   }
 
   @media(max-width:768px){
     .hero{padding:100px 5% 70px;min-height:auto}
-    .hero h1{font-size:2.3rem}
+    .hero h1{font-size:2.35rem}
     .hero-ctas{flex-direction:column}
     .hero-ctas a{width:100%;text-align:center}
     .cta-btns{flex-direction:column}
@@ -1070,7 +1164,9 @@ const HOME_STYLES = `
     .results-row{grid-template-columns:1fr;border-radius:16px}
     .result-item{border-right:none;border-bottom:1px solid #f3f4f6;padding:28px}
     .result-item:last-child{border-bottom:none}
-    .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:80px 5%}
+    .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.founder-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:80px 5%}
+    .founder-card{padding:32px 24px}
+    .founder-points{grid-template-columns:1fr}
   }
 
   @media(max-width:640px){
@@ -1080,10 +1176,10 @@ const HOME_STYLES = `
   }
 
   @media(max-width:480px){
-    .hero h1{font-size:1.9rem;letter-spacing:-.8px}
+    .hero h1{font-size:1.95rem;letter-spacing:-.8px}
     .hero-sub{font-size:.92rem}
     .hero-social-proof{flex-direction:column;align-items:flex-start;gap:10px}
-    .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:60px 5%}
+    .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.founder-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:60px 5%}
     .trusted-inner{gap:12px}
     .guarantee-box{flex-direction:column;gap:10px;padding:20px}
     .cta-section h2{font-size:1.8rem}
@@ -1092,10 +1188,10 @@ const HOME_STYLES = `
 `;
 
 const HERO_CHECKS = [
-  "Website, hosting en onderhoud onder één partij",
-  "Gebouwd om contact, aanvragen of afspraken makkelijker te maken",
-  "Snelle livegang zonder technisch gedoe aan jouw kant",
-  "Later uitbreidbaar met extra pagina’s of functionaliteit",
+  "Binnen 48 uur een sterke eerste versie live",
+  "Gebouwd voor contact, aanvragen of afspraken",
+  "Hosting, onderhoud en support onder één partij",
+  "Pas verder als de richting goed voelt",
 ];
 
 const TRUSTED_BY = ["Kappers", "Restaurants", "Klusbedrijven", "Schoonheidssalons", "Fotografen", "ZZP'ers"];
@@ -1126,17 +1222,17 @@ const PROBLEMS = [
 const DIFFERENCE_POINTS = [
   [
     "01",
-    "Niet alleen een mooie site",
-    "Vedantix positioneert je website als praktisch verkoopmiddel: duidelijk, snel en gericht op contact, aanvragen of afspraken.",
+    "Scherpe boodschap in plaats van alleen design",
+    "Niet zomaar een nette website, maar een homepage die direct duidelijk maakt wat je doet en waarom iemand contact moet opnemen.",
   ],
   [
     "02",
-    "Geen losse technische puzzel",
-    "Je hoeft niet zelf hosting, domein, updates en support te coördineren. Dat blijft op één plek geregeld.",
+    "Vertrouwen zonder neppe reviews",
+    "Omdat je starter kunt zijn, sturen we op transparantie: duidelijke pakketten, snelle communicatie, demo’s en een helder proces.",
   ],
   [
     "03",
-    "Snel aanpasbaar als je groeit",
+    "Snel live, daarna makkelijk uitbreiden",
     "Nieuwe pagina, extra dienst, formulier of uitbreiding nodig? Het model is juist ingericht om vlot door te ontwikkelen.",
   ],
 ];
@@ -1144,10 +1240,10 @@ const DIFFERENCE_POINTS = [
 const SOLUTION_GET = [
   "Een professionele website die past bij jouw branche",
   "Hosting, domein, SSL en technisch beheer onder één dak",
-  "Een duidelijke structuur gericht op contact, aanvragen of afspraken",
+  "Een structuur die gericht is op contact, aanvragen of afspraken",
   "Snelle hulp bij updates en kleine wijzigingen",
   "Een website die netjes werkt op mobiel, tablet en desktop",
-  "Eén vast traject zonder losse technische puzzelstukjes",
+  "Een duidelijk traject zonder losse technische puzzelstukjes",
 ];
 
 const SOLUTION_SKIP = [
@@ -1163,6 +1259,13 @@ const RESULTS = [
   ["Meer vertrouwen", "Een website die professioneler en duidelijker overkomt"],
   ["Meer actie", "Sterkere focus op bellen, WhatsAppen of aanvragen"],
   ["Meer rust", "Onderhoud, updates en support blijven geregeld"],
+];
+
+const FOUNDER_POINTS = [
+  "Direct contact zonder lagen of accountmanagers",
+  "Snelle communicatie via WhatsApp of telefoon",
+  "Praktische focus op duidelijke websites die verkopen",
+  "Ook geschikt als je nog geen bestaande website hebt",
 ];
 
 const PACKAGES = [
@@ -1229,7 +1332,7 @@ const TRUST_ITEMS = [
   ["✔", "Duidelijke maandprijs"],
   ["✔", "Hosting en onderhoud inbegrepen"],
   ["✔", "Eén aanspreekpunt"],
-  ["✔", "Doorlopende ondersteuning"],
+  ["✔", "Snelle communicatie"],
   ["✔", "Gebouwd voor lokale ondernemers"],
 ];
 
@@ -1252,7 +1355,7 @@ const WHY_NEW = [
 const HOW_STEPS = [
   ["1", "Kennismaking", "We bespreken kort je bedrijf, doelgroep en wat je website praktisch moet doen."],
   ["2", "Ontwerp & opbouw", "Wij bouwen een professionele basis die past bij jouw branche en uitstraling."],
-  ["3", "Livegang", "We zetten je website netjes live en zorgen dat alles technisch goed staat."],
+  ["3", "Feedback & livegang", "Je geeft feedback, wij scherpen aan en zetten je website netjes live."],
   ["4", "Onderhoud & updates", "Na livegang blijven we betrokken voor beheer, kleine wijzigingen en doorontwikkeling."],
 ];
 
@@ -1269,7 +1372,7 @@ export default function Home() {
     <>
       <SEO
         title="Website laten maken voor kappers, salons en lokale bedrijven | Vedantix"
-        description="Professionele websites voor kappers, salons, restaurants en lokale ondernemers. Inclusief hosting, onderhoud en doorlopende ondersteuning in één helder abonnement."
+        description="Binnen 48 uur een professionele website voor kappers, salons, restaurants en lokale ondernemers. Inclusief hosting, onderhoud en doorlopende ondersteuning."
         canonical="https://vedantix.nl/"
       />
 
@@ -1285,18 +1388,19 @@ export default function Home() {
                 <div className="hero-eyebrow">Voor kappers, salons, restaurants en lokale bedrijven</div>
 
                 <h1>
-                  Een website die <span>professioneel oogt</span>
+                  Meer klanten via jouw website —
                   <br />
-                  en sneller tot actie leidt
+                  <span>binnen 48 uur live</span>
                 </h1>
 
                 <p className="hero-sub">
-                  Vedantix bouwt websites voor lokale ondernemers die <strong>duidelijker, sterker en makkelijker benaderbaar</strong> willen zijn.
-                  Jij focust op je bedrijf, wij regelen de techniek, hosting, onderhoud en doorlopende ondersteuning.
+                  Vedantix bouwt websites voor lokale ondernemers die <strong>professioneel willen overkomen en sneller aanvragen,
+                  afspraken of contactmomenten</strong> willen binnenhalen. Geen lang traject, geen technisch gedoe, wel een website
+                  die direct duidelijk maakt waarom iemand voor jou moet kiezen.
                 </p>
 
                 <div className="hero-microcopy">
-                  Geen lange trajecten. Geen technisch gedoe. Wel een site die beter voor je werkt.
+                  Ook geschikt als je nog geen bestaande website, reviews of uitgebreide content hebt.
                 </div>
 
                 <div className="hero-checks">
@@ -1315,7 +1419,7 @@ export default function Home() {
                     className="btn-primary"
                     style={{ textAlign: "center" }}
                   >
-                    Plan gratis kennismaking →
+                    Plan gratis intake →
                   </a>
 
                   <a
@@ -1323,23 +1427,24 @@ export default function Home() {
                     target="_blank"
                     rel="noreferrer"
                     className="btn-wa"
+                    style={{ textAlign: "center" }}
                   >
                     💬 Stel je vraag via WhatsApp
                   </a>
 
-                  <a href="#demo" className="btn-ghost">
+                  <a href="#demo" className="btn-ghost" style={{ textAlign: "center" }}>
                     Bekijk demo’s →
                   </a>
                 </div>
 
                 <div className="hero-cta-note">
-                  Vrijblijvend gesprek · heldere pakketten · ook geschikt als je nog niet precies weet wat je nodig hebt
+                  Vrijblijvend gesprek · duidelijke pakketten · pas verder als de richting goed voelt
                 </div>
 
                 <div className="hero-social-proof">
                   <div>
                     <div className="hero-sp-stat">Duidelijk</div>
-                    <div className="hero-sp-text">Sterkere boodschap en betere structuur</div>
+                    <div className="hero-sp-text">Sterke boodschap en betere eerste indruk</div>
                   </div>
                   <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />
                   <div>
@@ -1348,8 +1453,8 @@ export default function Home() {
                   </div>
                   <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />
                   <div>
-                    <div className="hero-sp-stat">Onderhouden</div>
-                    <div className="hero-sp-text">Niet alleen opleveren, maar ook blijven beheren</div>
+                    <div className="hero-sp-stat">Zonder gedoe</div>
+                    <div className="hero-sp-text">Hosting, onderhoud en support blijven geregeld</div>
                   </div>
                 </div>
               </div>
@@ -1493,7 +1598,7 @@ export default function Home() {
 
           <div className="trusted">
             <div className="trusted-inner">
-              <span className="trusted-label">Gebouwd voor</span>
+              <span className="trusted-label">Geschikt voor</span>
               {TRUSTED_BY.map((item) => (
                 <span key={item} className="trusted-pill">
                   {item}
@@ -1506,9 +1611,10 @@ export default function Home() {
             <div className="section-wrap">
               <div className="section-header">
                 <div className="section-label">Het probleem</div>
-                <h2 className="section-h2">De meeste websites van lokale ondernemers laten kansen liggen</h2>
+                <h2 className="section-h2">De meeste websites van lokale ondernemers laten klanten liggen</h2>
                 <p className="section-p">
-                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen opwekt, te weinig richting geeft en na oplevering vaak stil blijft staan.
+                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen opwekt, te weinig richting geeft en
+                  na oplevering vaak stil blijft staan.
                 </p>
               </div>
 
@@ -1528,9 +1634,9 @@ export default function Home() {
             <div className="section-wrap">
               <div className="section-header centered">
                 <div className="section-label">Waarom Vedantix</div>
-                <h2 className="section-h2">Zo onderscheid je je van standaard webbouwers</h2>
+                <h2 className="section-h2">Niet zomaar een mooie website, maar een website die beter verkoopt</h2>
                 <p className="section-p">
-                  Niet concurreren op alleen “mooie websites”, maar op duidelijkheid, snelheid, onderhoud en praktische waarde voor de ondernemer.
+                  De focus ligt op een sterke eerste indruk, duidelijke call-to-actions, snelheid en vertrouwen zonder opgeblazen claims.
                 </p>
               </div>
 
@@ -1552,7 +1658,8 @@ export default function Home() {
                 <div className="section-label">Demo concepten</div>
                 <h2 className="section-h2">Voorbeelden van richtingen die wij kunnen bouwen</h2>
                 <p className="section-p">
-                  Bekijk voorbeelden van stijlen en structuren die wij voor verschillende soorten lokale bedrijven kunnen neerzetten.
+                  Nog geen portfolio met tientallen live cases? Dan zijn goede demo’s de snelste manier om te laten zien welke stijl en
+                  structuur mogelijk is voor jouw branche.
                 </p>
               </div>
 
@@ -1597,10 +1704,10 @@ export default function Home() {
           <section className="results-section">
             <div className="section-wrap">
               <div className="section-header">
-                <div className="section-label">De meerwaarde</div>
-                <h2 className="section-h2">Wat dit model je oplevert</h2>
+                <div className="section-label">Wat dit oplevert</div>
+                <h2 className="section-h2">Een betere eerste indruk, meer actie en minder twijfel</h2>
                 <p className="section-p">
-                  Niet alleen een nette site, maar vooral een sterkere eerste indruk, meer richting naar actie en minder technisch gedoe na livegang.
+                  Je website hoeft niet alleen mooi te zijn. Hij moet iemand snel overtuigen om te bellen, appen, reserveren of een aanvraag te doen.
                 </p>
               </div>
 
@@ -1611,6 +1718,47 @@ export default function Home() {
                     <div className="result-label">{label}</div>
                   </div>
                 ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="founder-section">
+            <div className="founder-grid">
+              <div className="founder-photo">
+                <div className="founder-photo-inner">
+                  <div className="founder-avatar">👋</div>
+                  <strong>Persoonlijk contact</strong>
+                  <p>
+                    Voeg hier later eenvoudig je eigen foto toe voor extra vertrouwen. Tot die tijd werkt een persoonlijke intro al veel beter dan
+                    een anonieme bureaustijl.
+                  </p>
+                </div>
+              </div>
+
+              <div className="founder-card">
+                <div className="section-label">Achter Vedantix</div>
+                <h2 className="section-h2">Geen groot bureau, maar direct en snel schakelen</h2>
+
+                <p>
+                  Vedantix is er voor lokale ondernemers die een professionele website willen zonder lang traject, vage communicatie of technische rompslomp.
+                </p>
+
+                <p>
+                  Je hebt direct contact, een duidelijke prijs en een praktische aanpak. Het doel is simpel: een website neerzetten die professioneel oogt
+                  en sneller tot actie leidt.
+                </p>
+
+                <p>
+                  Heb je nog geen bestaande website, geen reviews of nog geen uitgebreide content? Dan bouwen we juist vanuit eenvoud en duidelijkheid een sterke basis.
+                </p>
+
+                <div className="founder-points">
+                  {FOUNDER_POINTS.map((item) => (
+                    <div key={item} className="founder-point">
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
@@ -1762,8 +1910,8 @@ export default function Home() {
             <div className="section-wrap">
               <div className="section-header centered">
                 <div className="section-label">Werkwijze</div>
-                <h2 className="section-h2">Hoe het werkt</h2>
-                <p className="section-p">Vier duidelijke stappen van kennismaking tot livegang en onderhoud.</p>
+                <h2 className="section-h2">Van eerste bericht naar live website in 4 stappen</h2>
+                <p className="section-p">Een duidelijk proces werkt beter dan vage beloftes. Zo weet een klant precies wat hij kan verwachten.</p>
               </div>
 
               <div className="how-steps">
@@ -1785,7 +1933,7 @@ export default function Home() {
                 <div className="lead-magnet-title">Ontvang een eerlijke scan van je huidige website</div>
                 <div className="lead-magnet-sub">
                   We kijken vrijblijvend naar je online presentatie en laten concreet zien waar winst zit in duidelijkheid,
-                  uitstraling, mobiele gebruikservaring en CTA’s.
+                  uitstraling, mobiele gebruikservaring en call-to-actions.
                 </div>
               </div>
 
@@ -1821,17 +1969,17 @@ export default function Home() {
               <div className="guarantee-box">
                 <div className="guarantee-icon">🤝</div>
                 <div>
-                  <strong>Vrijblijvend kennismaken</strong>
-                  <p>Eerst bespreken we rustig wat bij jouw bedrijf past. Pas daarna beslis je of je verder wilt.</p>
+                  <strong>Geen druk, wel duidelijkheid</strong>
+                  <p>Eerst bespreken we wat bij jouw bedrijf past. Daarna beslis jij rustig of je verder wilt.</p>
                 </div>
               </div>
             </div>
           </section>
 
           <section id="cta" className="cta-section anchor-section">
-            <h2>Klaar om je website professioneler en duidelijker neer te zetten?</h2>
+            <h2>Klaar om je website professioneler en overtuigender neer te zetten?</h2>
             <p>
-              Plan een vrijblijvende kennismaking en ontdek welk pakket, welke stijl en welke richting het beste past bij jouw bedrijf.
+              Plan een vrijblijvende intake en ontdek welk pakket, welke stijl en welke richting het beste past bij jouw bedrijf.
             </p>
 
             <div className="cta-btns">
@@ -1842,7 +1990,7 @@ export default function Home() {
                 className="btn-primary"
                 style={{ textAlign: "center" }}
               >
-                Plan gratis kennismaking →
+                Plan gratis intake →
               </a>
 
               <a
@@ -1850,11 +1998,12 @@ export default function Home() {
                 target="_blank"
                 rel="noreferrer"
                 className="btn-wa"
+                style={{ textAlign: "center" }}
               >
                 💬 Stel je vraag via WhatsApp
               </a>
 
-              <a href="#demo" className="btn-ghost">
+              <a href="#demo" className="btn-ghost" style={{ textAlign: "center" }}>
                 Bekijk demo’s →
               </a>
             </div>
