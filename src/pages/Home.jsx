@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
 import BigFooter from "../components/BigFooter";
@@ -14,6 +13,13 @@ const HOME_STYLES = `
   .btn-ghost{background:transparent;color:#111827;border:1.5px solid #d1d5db;padding:14px 28px;border-radius:10px;font-weight:600;font-size:.92rem;text-decoration:none;display:inline-block;transition:all .25s;cursor:pointer}
   .btn-ghost:hover{border-color:#111827;background:#f9fafb}
 
+  .btn-primary{background:#fff;color:#0f172a;padding:15px 30px;border-radius:10px;font-weight:700;font-size:.92rem;text-decoration:none;display:inline-block;transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;letter-spacing:-.1px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+  .btn-primary:hover{background:#f1f5f9;transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.35)}
+  .btn-wa{background:#25d366;color:#fff;padding:15px 30px;border-radius:10px;font-weight:700;font-size:.92rem;text-decoration:none;display:inline-block;transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,.3)}
+  .btn-wa:hover{background:#22c55e;transform:translateY(-2px);box-shadow:0 10px 32px rgba(37,211,102,.4)}
+  .btn-lead{background:#0f172a;color:#fff;padding:15px 28px;border-radius:10px;font-weight:700;font-size:.92rem;text-decoration:none;display:inline-block;transition:all .2s;box-shadow:0 4px 16px rgba(0,0,0,.15)}
+  .btn-lead:hover{background:#1e293b;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+
   .hero{background:linear-gradient(150deg,#060c1a 0%,#0a1428 40%,#0d1f3c 70%,#0f1e38 100%);min-height:100vh;display:flex;align-items:center;padding:140px 5% 100px;position:relative;overflow:hidden}
   .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 65% 38%,rgba(59,130,246,.13) 0%,transparent 58%),radial-gradient(ellipse at 20% 80%,rgba(99,102,241,.07) 0%,transparent 50%);pointer-events:none}
   .hero-container{max-width:1280px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 480px;gap:80px;align-items:center}
@@ -22,19 +28,13 @@ const HOME_STYLES = `
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
   .hero h1{font-size:clamp(2.5rem,4.5vw,4rem);font-weight:900;line-height:1.12;color:#fff;margin-bottom:28px;letter-spacing:-2px}
   .hero h1 span{background:linear-gradient(125deg,#60a5fa 0%,#818cf8 50%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .hero-sub{font-size:1.05rem;color:rgba(255,255,255,.55);line-height:1.75;margin-bottom:40px;max-width:460px;font-weight:400}
+  .hero-sub{font-size:1.05rem;color:rgba(255,255,255,.55);line-height:1.75;margin-bottom:40px;max-width:520px;font-weight:400}
   .hero-checks{margin-bottom:44px;display:flex;flex-direction:column;gap:13px}
   .hero-check{display:flex;align-items:center;gap:12px;font-size:.88rem;color:rgba(255,255,255,.7);font-weight:600;letter-spacing:.1px}
   .hero-check::before{content:'✓';color:#22c55e;font-weight:900;font-size:.85rem;flex-shrink:0;background:rgba(34,197,94,.12);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;line-height:20px}
   .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:52px}
   .hero-social-proof{display:flex;align-items:center;gap:20px;padding-top:32px;border-top:1px solid rgba(255,255,255,.07)}
   .hero-sp-text{font-size:.76rem;color:rgba(255,255,255,.4);font-weight:500;line-height:1.5}
-  .hero-sp-stars{color:#fbbf24;font-size:.88rem;letter-spacing:1.5px;margin-bottom:4px}
-
-  .btn-primary{background:#fff;color:#0f172a;padding:15px 30px;border-radius:10px;font-weight:700;font-size:.92rem;text-decoration:none;display:inline-block;transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;letter-spacing:-.1px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
-  .btn-primary:hover{background:#f1f5f9;transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,.35)}
-  .btn-wa{background:#25d366;color:#fff;padding:15px 30px;border-radius:10px;font-weight:700;font-size:.92rem;text-decoration:none;display:inline-block;transition:all .25s cubic-bezier(.4,0,.2,1);border:none;cursor:pointer;box-shadow:0 4px 20px rgba(37,211,102,.3)}
-  .btn-wa:hover{background:#22c55e;transform:translateY(-2px);box-shadow:0 10px 32px rgba(37,211,102,.4)}
 
   .hero-mockup-wrap{position:relative}
   .hero-mockup-wrap::before{content:'';position:absolute;top:-30px;left:-30px;right:-30px;bottom:-30px;background:radial-gradient(ellipse at center,rgba(99,102,241,.18) 0%,rgba(59,130,246,.06) 45%,transparent 70%);pointer-events:none;z-index:0;border-radius:40px}
@@ -46,20 +46,19 @@ const HOME_STYLES = `
   .mockup-url span{font-size:.6rem;color:rgba(255,255,255,.35);font-weight:500}
 
   .section-wrap{max-width:1100px;margin:0 auto;width:100%}
-  .section-header{max-width:580px;margin-bottom:56px}
+  .section-header{max-width:640px;margin-bottom:56px}
   .section-header.centered{margin-left:auto;margin-right:auto;text-align:center}
   .section-h2{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:900;color:#111827;letter-spacing:-.8px;line-height:1.15;margin-bottom:14px}
   .section-h2.light{color:#fff}
   .section-p{font-size:.95rem;color:#6b7280;line-height:1.7}
   .section-p.light{color:rgba(255,255,255,.5)}
+  .section-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#6366f1;margin-bottom:14px}
+  .section-label.light{color:#818cf8}
 
   .trusted{background:#f9fafb;padding:26px 5%;border-bottom:1px solid #f3f4f6}
   .trusted-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
   .trusted-label{font-size:.72rem;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;margin-right:8px}
   .trusted-pill{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:7px 14px;font-size:.78rem;font-weight:600;color:#6b7280}
-
-  .section-label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#6366f1;margin-bottom:14px}
-  .section-label.light{color:#818cf8}
 
   .problem-section{padding:100px 5%;background:#fff}
   .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
@@ -94,43 +93,37 @@ const HOME_STYLES = `
   .result-num{font-size:2.4rem;font-weight:900;color:#111827;letter-spacing:-1px;margin-bottom:4px;line-height:1}
   .result-label{font-size:.8rem;color:#9ca3af;font-weight:500}
 
-  .testimonials-section{padding:100px 5%;background:#f9fafb}
-  .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .testimonial-card{background:#fff;border-radius:14px;padding:28px;border:1px solid #f3f4f6;transition:box-shadow .25s}
-  .testimonial-card:hover{box-shadow:0 8px 32px rgba(0,0,0,.07)}
-  .t-stars{color:#fbbf24;font-size:.85rem;margin-bottom:12px;letter-spacing:1px}
-  .t-quote{font-size:.88rem;color:#374151;line-height:1.65;margin-bottom:16px;font-style:italic}
-  .t-author{display:flex;align-items:center;gap:10px}
-  .t-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:#fff;flex-shrink:0}
-  .t-name{font-size:.8rem;font-weight:700;color:#111827}
-  .t-role{font-size:.73rem;color:#9ca3af}
-
   .pricing-section{padding:100px 5%;background:#fff}
   .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .pricing-card{border-radius:20px;padding:44px 36px;border:1.5px solid #f3f4f6;transition:all .3s;position:relative;background:#fff}
+  .pricing-card{border-radius:20px;padding:40px 30px;border:1.5px solid #f3f4f6;transition:all .3s;position:relative;background:#fff}
   .pricing-card:hover{border-color:#e0e7ff;box-shadow:0 20px 60px rgba(99,102,241,.08);transform:translateY(-3px)}
   .pricing-card.featured{border-color:#6366f1;background:linear-gradient(160deg,#fafbff,#f0f1ff);box-shadow:0 24px 80px rgba(99,102,241,.14)}
   .pricing-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;padding:5px 20px;border-radius:100px;font-weight:700;font-size:.68rem;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;box-shadow:0 4px 12px rgba(99,102,241,.3)}
   .p-tier{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#9ca3af;margin-bottom:8px}
   .pricing-card.featured .p-tier{color:#6366f1}
-  .p-name{font-size:1.4rem;font-weight:900;color:#111827;letter-spacing:-.5px;margin-bottom:6px}
-  .p-sub{font-size:.8rem;color:#9ca3af;margin-bottom:24px;line-height:1.5;font-weight:500}
+  .p-name{font-size:1.2rem;font-weight:900;color:#111827;letter-spacing:-.5px;margin-bottom:6px}
+  .p-sub{font-size:.8rem;color:#9ca3af;margin-bottom:20px;line-height:1.5;font-weight:500}
   .p-price{font-size:3rem;font-weight:900;color:#111827;letter-spacing:-2px;line-height:1;margin-bottom:4px}
   .p-price sup{font-size:1.1rem;font-weight:700;vertical-align:super;letter-spacing:0}
   .p-price span{font-size:1rem;font-weight:600;color:#9ca3af;letter-spacing:0}
-  .p-setup{font-size:.75rem;color:#9ca3af;margin-bottom:28px;font-weight:500}
-  .p-divider{height:1px;background:#f3f4f6;margin-bottom:28px}
+  .p-setup{font-size:.75rem;color:#9ca3af;margin-bottom:22px;font-weight:500}
+  .p-divider{height:1px;background:#f3f4f6;margin-bottom:22px}
   .pricing-card.featured .p-divider{background:#e0e7ff}
-  .p-features{list-style:none;padding:0;display:flex;flex-direction:column;gap:11px;margin-bottom:32px}
+  .p-features{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
   .p-features li{font-size:.83rem;color:#4b5563;display:flex;gap:9px;align-items:flex-start;line-height:1.5}
   .p-features li::before{content:'✓';color:#6366f1;font-weight:900;flex-shrink:0;margin-top:1px;font-size:.8rem}
-  .p-note{font-size:.75rem;color:#9ca3af;margin-bottom:20px;font-style:italic;line-height:1.5;min-height:32px}
+  .p-note{font-size:.75rem;color:#9ca3af;margin-bottom:18px;font-style:italic;line-height:1.5;min-height:32px}
   .pricing-card.featured .p-features li{color:#374151}
   .p-cta{display:block;text-align:center;padding:13px;border-radius:10px;font-weight:700;font-size:.88rem;text-decoration:none;transition:all .25s}
   .p-cta.default{background:#f9fafb;color:#374151;border:1.5px solid #e5e7eb}
   .p-cta.default:hover{background:#f3f4f6;border-color:#d1d5db}
   .p-cta.featured{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;box-shadow:0 4px 16px rgba(99,102,241,.25)}
   .p-cta.featured:hover{box-shadow:0 8px 28px rgba(99,102,241,.35);transform:translateY(-1px)}
+
+  .pricing-details{margin-top:36px;display:grid;grid-template-columns:1fr;gap:10px}
+  .pricing-help{margin-top:18px;font-size:.82rem;color:#9ca3af;text-align:center}
+  .pricing-summary{font-size:.82rem;font-weight:700;color:#374151;padding:14px 0;user-select:none;list-style:none;cursor:pointer}
+  .pricing-details-content{padding-top:4px;padding-bottom:12px;font-size:.83rem;color:#6b7280;line-height:1.7}
 
   .trust-strip{background:#f9fafb;border-top:1px solid #f3f4f6;border-bottom:1px solid #f3f4f6;padding:24px 5%}
   .trust-items{max-width:1100px;margin:0 auto;display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
@@ -183,8 +176,6 @@ const HOME_STYLES = `
   .lead-magnet-title{font-size:1.5rem;font-weight:900;color:#0f172a;letter-spacing:-.5px;line-height:1.2;margin-bottom:10px}
   .lead-magnet-sub{font-size:.88rem;color:#6b7280;line-height:1.6}
   .lead-magnet-cta{flex-shrink:0}
-  .btn-lead{background:#0f172a;color:#fff;padding:15px 28px;border-radius:10px;font-weight:700;font-size:.92rem;text-decoration:none;display:inline-block;transition:all .2s;box-shadow:0 4px 16px rgba(0,0,0,.15)}
-  .btn-lead:hover{background:#1e293b;transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
   .lead-magnet-note{font-size:.75rem;color:#9ca3af;margin-top:8px;text-align:center}
 
   .urgency-section{padding:80px 5%;background:#fff}
@@ -212,16 +203,10 @@ const HOME_STYLES = `
   .cta-phone{margin-top:48px;color:rgba(255,255,255,.35);font-size:.82rem;position:relative}
   .cta-phone strong{color:#60a5fa;display:block;font-size:1.05rem;margin-top:8px;font-weight:700}
 
-  footer{background:#0a0f1e;color:rgba(255,255,255,.35);padding:40px 5%;text-align:center;font-size:.8rem;border-top:1px solid rgba(255,255,255,.05)}
-  footer strong{color:rgba(255,255,255,.7)}
-  footer a{color:rgba(255,255,255,.35);text-decoration:none;margin:0 14px;transition:color .2s}
-  footer a:hover{color:#60a5fa}
-
   @media(max-width:1024px){
     .hero-container{grid-template-columns:1fr;gap:60px}
     .hero-mockup-wrap{max-width:480px;margin:0 auto}
     .pricing-grid{grid-template-columns:1fr;max-width:460px;margin:0 auto}
-    .testimonials-grid{grid-template-columns:1fr}
     .solution-grid{grid-template-columns:1fr;max-width:520px}
     .why-grid{grid-template-columns:1fr;max-width:520px}
     .results-row{grid-template-columns:1fr 1fr}
@@ -235,14 +220,13 @@ const HOME_STYLES = `
     .hero h1{font-size:2.2rem}
     .hero-ctas{flex-direction:column}
     .hero-ctas a{width:100%;text-align:center}
-    .btn-primary,.btn-ghost,.btn-wa{padding:13px 20px;font-size:.88rem}
+    .btn-primary,.btn-ghost,.btn-wa,.btn-lead{padding:13px 20px;font-size:.88rem}
     .problem-grid{grid-template-columns:1fr;gap:0}
     .problem-card:nth-child(n){border-radius:0}
     .problem-card:first-child{border-radius:16px 16px 0 0}
     .problem-card:last-child{border-radius:0 0 16px 16px}
     .pricing-card{padding:32px 24px}
     .p-price{font-size:2.4rem}
-    .testimonials-grid{grid-template-columns:1fr}
     .how-steps{grid-template-columns:1fr}
     .trust-items{gap:20px}
     .urgency-box{padding:28px 20px}
@@ -250,7 +234,7 @@ const HOME_STYLES = `
     .results-row{grid-template-columns:1fr;border-radius:16px}
     .result-item{border-right:none;border-bottom:1px solid #f3f4f6;padding:28px}
     .result-item:last-child{border-bottom:none}
-    .problem-section,.solution-section,.results-section,.testimonials-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:80px 5%}
+    .problem-section,.solution-section,.results-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:80px 5%}
   }
   @media(max-width:640px){
     .lead-magnet-inner{flex-direction:column;gap:24px;text-align:center}
@@ -261,182 +245,13 @@ const HOME_STYLES = `
     .hero h1{font-size:1.8rem;letter-spacing:-.8px}
     .hero-sub{font-size:.9rem}
     .hero-social-proof{flex-direction:column;align-items:flex-start;gap:8px}
-    .problem-section,.solution-section,.results-section,.testimonials-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:60px 5%}
+    .problem-section,.solution-section,.results-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:60px 5%}
     .trusted-inner{gap:12px}
     .guarantee-box{flex-direction:column;gap:10px;padding:20px}
     .cta-section h2{font-size:1.8rem}
     .section-header{margin-bottom:40px}
   }
 `;
-
-/** @type {import('react').CSSProperties} */
-const HERO_DIVIDER_STYLE = { width: 1, height: 36, background: "rgba(255,255,255,0.08)" };
-/** @type {import('react').CSSProperties} */
-const HERO_VALUE_STYLE = { fontSize: "1rem", fontWeight: 800, color: "#fff", lineHeight: 1 };
-/** @type {import('react').CSSProperties} */
-const MOCKUP_HEADER_STYLE = {
-  background: "linear-gradient(135deg,#0a1628,#0d2146)",
-  padding: "28px 24px",
-  color: "#fff",
-  textAlign: "center",
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_EYEBROW_STYLE = {
-  fontSize: "0.65rem",
-  fontWeight: 700,
-  color: "rgba(255,255,255,0.45)",
-  textTransform: "uppercase",
-  letterSpacing: 1.5,
-  marginBottom: 10,
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_TITLE_STYLE = {
-  fontSize: "1.4rem",
-  fontWeight: 900,
-  marginBottom: 6,
-  letterSpacing: -0.5,
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_SUBTITLE_STYLE = {
-  fontSize: "0.82rem",
-  color: "rgba(255,255,255,0.6)",
-  marginBottom: 16,
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_META_ROW_STYLE = {
-  display: "flex",
-  justifyContent: "center",
-  gap: 16,
-  paddingTop: 12,
-  borderTop: "1px solid rgba(255,255,255,0.08)",
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_META_TEXT_STYLE = {
-  fontSize: "0.72rem",
-  color: "rgba(255,255,255,0.7)",
-  fontWeight: 600,
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_LIST_WRAP_STYLE = {
-  padding: "20px 20px",
-  background: "#f9fafb",
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_LIST_STYLE = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 8,
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_ITEM_STYLE = {
-  background: "#fff",
-  padding: "10px 13px",
-  borderRadius: 10,
-  display: "flex",
-  gap: 10,
-  alignItems: "center",
-  boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-  border: "1px solid #f3f4f6",
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_ITEM_NAME_STYLE = {
-  fontSize: "0.78rem",
-  fontWeight: 700,
-  color: "#111827",
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_ITEM_PRICE_STYLE = {
-  fontSize: "0.72rem",
-  fontWeight: 700,
-  color: "#6366f1",
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_FOOTER_STYLE = {
-  padding: "14px 20px",
-  background: "#fff",
-  borderTop: "1px solid #f3f4f6",
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_BUTTON_ROW_STYLE = {
-  display: "flex",
-  gap: 8,
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_DARK_BUTTON_STYLE = {
-  flex: 1,
-  background: "#111827",
-  color: "#fff",
-  padding: "9px 10px",
-  borderRadius: 9,
-  border: "none",
-  fontWeight: 700,
-  fontSize: "0.72rem",
-  cursor: "pointer",
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_WHATSAPP_BUTTON_STYLE = {
-  ...MOCKUP_DARK_BUTTON_STYLE,
-  background: "#25d366",
-};
-/** @type {import('react').CSSProperties} */
-const MOCKUP_CAPTION_STYLE = {
-  marginTop: 16,
-  fontSize: "0.75rem",
-  color: "rgba(255,255,255,0.35)",
-  textAlign: "center",
-  fontWeight: 500,
-};
-/** @type {import('react').CSSProperties} */
-const DETAILS_SUMMARY_STYLE = {
-  fontSize: "0.8rem",
-  fontWeight: 600,
-  color: "#9ca3af",
-  padding: "10px 0",
-  userSelect: "none",
-  listStyle: "none",
-};
-/** @type {import('react').CSSProperties} */
-const DETAILS_CONTENT_STYLE = {
-  paddingTop: 8,
-  paddingBottom: 12,
-  fontSize: "0.82rem",
-  color: "#9ca3af",
-  lineHeight: 1.7,
-};
-/** @type {import('react').CSSProperties} */
-const ROI_LEFT_STYLE = { textAlign: "right" };
-/** @type {import('react').CSSProperties} */
-const ROI_RIGHT_STYLE = { textAlign: "left" };
-/** @type {import('react').CSSProperties} */
-const ROI_INVEST_SUFFIX_STYLE = { fontSize: "1.2rem", fontWeight: 700, color: "#9ca3af" };
-/** @type {import('react').CSSProperties} */
-const ROI_GAIN_SUFFIX_STYLE = { fontSize: "1.2rem", fontWeight: 700, color: "#86efac" };
-/** @type {import('react').CSSProperties} */
-const ROI_DIVIDER_ROW_STYLE = { display: "flex", alignItems: "center" };
-/** @type {import('react').CSSProperties} */
-const ROI_BOTTOM_STYLE = { borderTop: "1px solid #f3f4f6", paddingTop: 32 };
-/** @type {import('react').CSSProperties} */
-const CTA_META_ROW_STYLE = {
-  marginTop: 32,
-  display: "flex",
-  justifyContent: "center",
-  gap: 12,
-  flexWrap: "wrap",
-  position: "relative",
-};
-/** @type {import('react').CSSProperties} */
-const CTA_META_ITEM_STYLE = {
-  fontSize: "0.78rem",
-  color: "rgba(255,255,255,0.4)",
-  fontWeight: 600,
-  display: "flex",
-  alignItems: "center",
-  gap: 6,
-};
-/** @type {import('react').CSSProperties} */
-const CTA_META_CHECK_STYLE = { color: "#22c55e" };
-/** @type {import('react').CSSProperties} */
-const FOOTER_LINK_ROW_STYLE = { marginTop: 14 };
 
 const HERO_CHECKS = [
   "Professionele website, hosting en onderhoud in één abonnement",
@@ -449,23 +264,23 @@ const TRUSTED_BY = ["Kappers", "Restaurants", "Klusbedrijven", "Schoonheidssalon
 const PROBLEMS = [
   [
     "🔍",
-    "Je bedrijf oogt minder professioneel",
-    "Zonder sterke website missen bezoekers vaak het vertrouwen dat nodig is om contact op te nemen of een afspraak te maken.",
+    "Je website bepaalt vaak de eerste indruk",
+    "Voor veel lokale ondernemers is de website het eerste serieuze contactmoment. Dan moet die professioneel, duidelijk en betrouwbaar aanvoelen.",
   ],
   [
     "📱",
-    "Je online presentatie loopt achter",
-    "Een verouderde of ontbrekende website geeft al snel de indruk dat je minder actief of minder betrouwbaar bent dan je concurrent.",
+    "Een verouderde site werkt tegen je",
+    "Een website die onduidelijk, traag of verouderd oogt, kan bezoekers laten afhaken voordat ze contact opnemen.",
   ],
   [
     "📞",
-    "Klanten weten niet goed wat de volgende stap is",
-    "Als bellen, mailen, reserveren of aanvragen niet duidelijk geregeld is, haken bezoekers sneller af.",
+    "De volgende stap is niet duidelijk genoeg",
+    "Als bellen, mailen, reserveren of aanvragen niet logisch geregeld is, haken potentiële klanten sneller af.",
   ],
   [
     "🛠️",
-    "Alles blijft op jouw bord liggen",
-    "Hosting, updates, kleine aanpassingen en technische vragen kosten tijd die je liever in je bedrijf stopt.",
+    "Technisch beheer kost onnodig tijd",
+    "Hosting, updates, domeinbeheer en kleine wijzigingen zijn vaak precies de zaken waar ondernemers geen tijd aan willen verliezen.",
   ],
 ];
 
@@ -493,31 +308,154 @@ const RESULTS = [
   ["Ontzorgd", "Beheer, updates en support op één plek"],
 ];
 
-const TESTIMONIALS = [
+const PACKAGES = [
   {
-    stars: "★★★★★",
-    quote:
-      "Prettige samenwerking en vooral fijn dat alles op één plek geregeld is. Ik hoef niet meer na te denken over hosting, updates of kleine aanpassingen.",
-    name: "Sander K.",
-    role: "Kapper, Amsterdam",
-    color: "#6366f1",
+    tier: "Starter",
+    name: "Voor professioneel online zichtbaar zijn",
+    subtitle: "Sterke basis voor ondernemers die vooral een nette en goed beheerde website willen.",
+    price: "99",
+    setup: "€500 eenmalige setup",
+    featured: false,
+    bullets: [
+      "Professionele website",
+      "1 domein, hosting en SSL",
+      "1 mailbox",
+      "Contactformulier",
+      "Basis analytics en basis SEO",
+    ],
+    note: "Geen database, login of complexe reserveringsmodule standaard inbegrepen.",
+    cta: "Kies Starter →",
   },
   {
-    stars: "★★★★★",
-    quote:
-      "De website ziet er verzorgd uit en past veel beter bij mijn salon dan wat ik eerst had. Het voelt professioneler en duidelijker voor klanten.",
-    name: "Fatima O.",
-    role: "Schoonheidssalon, Rotterdam",
-    color: "#8b5cf6",
+    tier: "Growth",
+    name: "Voor meer inhoud en groeiruimte",
+    subtitle: "Voor bedrijven die hun website serieuzer willen inzetten als online basis.",
+    price: "149",
+    setup: "€750 eenmalige setup",
+    featured: true,
+    bullets: [
+      "Alles uit Starter",
+      "5 mailboxen",
+      "Blog/FAQ module",
+      "Light formulieren-opslag",
+      "Meer servicepagina’s en SEO templates",
+    ],
+    note: "Geschikt als je meer structuur, inhoud en uitbreidbaarheid wilt.",
+    cta: "Kies Growth →",
   },
   {
-    stars: "★★★★★",
-    quote:
-      "Wat ik vooral waardeer is de rust: één partij die bouw, onderhoud en updates regelt. Dat werkt voor mij veel beter dan alles los organiseren.",
-    name: "Tom V.",
-    role: "Klusbedrijf, Utrecht",
-    color: "#6366f1",
+    tier: "Pro",
+    name: "Voor functionaliteit en doorontwikkeling",
+    subtitle: "Voor bedrijven die meer nodig hebben dan een standaard informatieve site.",
+    price: "249",
+    setup: "€1000 eenmalige setup",
+    featured: false,
+    bullets: [
+      "Alles uit Growth",
+      "10 mailboxen",
+      "Login en dashboard",
+      "Reserveringen / intake / workflows",
+      "Data-opslag en technische monitoring",
+    ],
+    note: "Voor websites die een serieuzer onderdeel van je bedrijfsproces worden.",
+    cta: "Kies Pro →",
   },
+];
+
+const PACKAGE_DETAILS = {
+  starter: {
+    included: [
+      "Professionele website",
+      "1 domein",
+      "Hosting",
+      "SSL-certificaat",
+      "DNS-beheer",
+      "1 mailbox",
+      "Contactformulier",
+      "Basis analytics",
+      "Basis SEO-profiel",
+      "Handmatige redeploy via admin portal",
+    ],
+    notIncluded: [
+      "Geen database standaard",
+      "Geen login/auth",
+      "Geen dashboard",
+      "Geen maatwerk backend",
+      "Geen complex reserveringssysteem",
+    ],
+    addons: [
+      "Extra mailboxbundels",
+      "Local SEO uitbreiding",
+      "Blog/FAQ module",
+      "Light formulieren-opslag",
+      "Eenvoudige reserveringswidget van derde partij",
+    ],
+  },
+  growth: {
+    included: [
+      "Alles uit Starter",
+      "5 mailboxen",
+      "Blog/FAQ module",
+      "Formulieren met opslag (light)",
+      "Uitgebreidere SEO templates",
+      "Meerdere servicepagina’s",
+    ],
+    notIncluded: [
+      "Geen zware database standaard",
+      "Geen complex login/dashboard standaard",
+      "Geen uitgebreide maatwerkfunctionaliteit standaard",
+    ],
+    addons: [
+      "Reserveringsmodule",
+      "Database light",
+      "Extra mailboxbundels",
+      "Extra landingspagina’s",
+    ],
+  },
+  pro: {
+    included: [
+      "Alles uit Growth",
+      "10 mailboxen",
+      "Maatwerk functionaliteit mogelijk",
+      "Data-opslag voor formulieren en workflows inbegrepen",
+      "Login/auth",
+      "Dashboardfunctionaliteit",
+      "Reserveringen / intake / workflowmodules",
+      "Technische monitoring op de achtergrond",
+    ],
+    addons: [
+      "PostgreSQL / RDS premium add-on",
+      "Extra mailboxbundels",
+      "Extra data/storage bundels",
+      "Security add-on zoals WAF",
+    ],
+  },
+};
+
+const PACKAGE_BASICS = [
+  "Professionele website",
+  "Hosting geregeld",
+  "Domein en DNS geregeld",
+  "SSL geregeld",
+  "Onderhoud en support vanuit één partij",
+  "Geen technisch gedoe voor de klant",
+  "Duidelijke vaste structuur",
+];
+
+const MAILBOX_BUNDLES = [
+  "Starter: 1 mailbox inbegrepen",
+  "Growth: 5 mailboxen inbegrepen",
+  "Pro: 10 mailboxen inbegrepen",
+  "Extra mailboxen als bundels: +1, +5 of +10",
+  "Aliassen zoals info@, hello@ of noreply@ kunnen slim worden ingezet om kosten beter beheersbaar te houden",
+];
+
+const DATA_RULES = [
+  "Starter: standaard geen database",
+  "Growth: light data-opslag als add-on",
+  "Pro: serverless data standaard inbegrepen",
+  "PostgreSQL / RDS alleen als premium add-on",
+  "Werk altijd met limieten op opslag, requests en retention",
 ];
 
 const MOCKUP_SERVICES = [
@@ -551,30 +489,19 @@ const WHY_NEW = [
 ];
 
 const HOW_STEPS = [
-  [
-    "1",
-    "Kennismaking",
-    "We bespreken kort je bedrijf, doelgroep en wat je website praktisch moet doen.",
-  ],
-  [
-    "2",
-    "Ontwerp & opbouw",
-    "Wij bouwen een professionele basis die past bij jouw branche en uitstraling.",
-  ],
-  [
-    "3",
-    "Livegang",
-    "We zetten je website netjes live en zorgen dat alles technisch goed staat.",
-  ],
-  [
-    "4",
-    "Onderhoud & updates",
-    "Na livegang blijven we betrokken voor beheer, kleine wijzigingen en doorontwikkeling.",
-  ],
+  ["1", "Kennismaking", "We bespreken kort je bedrijf, doelgroep en wat je website praktisch moet doen."],
+  ["2", "Ontwerp & opbouw", "Wij bouwen een professionele basis die past bij jouw branche en uitstraling."],
+  ["3", "Livegang", "We zetten je website netjes live en zorgen dat alles technisch goed staat."],
+  ["4", "Onderhoud & updates", "Na livegang blijven we betrokken voor beheer, kleine wijzigingen en doorontwikkeling."],
 ];
 
 const URGENCY_SPOTS = [1, 2, 3, 4, 5];
-const CTA_META = ["Duidelijke maandprijs", "Onderhoud inbegrepen", "Vast aanspreekpunt", "Vrijblijvende kennismaking"];
+const CTA_META = [
+  "Duidelijke maandprijs",
+  "Onderhoud inbegrepen",
+  "Vast aanspreekpunt",
+  "Vrijblijvende kennismaking",
+];
 
 export default function Home() {
   return (
@@ -596,12 +523,15 @@ export default function Home() {
               <div className="hero-content">
                 <div className="hero-eyebrow">Voor kappers, salons & lokale bedrijven</div>
                 <h1>
-                  Een professionele website —<br />
+                  Een professionele website —
+                  <br />
                   <span>zonder technisch gedoe</span>
                 </h1>
                 <p className="hero-sub">
-                  Vedantix bouwt en beheert websites voor lokale ondernemers. Jij focust op je bedrijf, wij regelen de techniek, updates en online presentatie.
+                  Vedantix bouwt en beheert professionele websites voor lokale ondernemers. Jij focust op je bedrijf,
+                  wij regelen hosting, techniek, updates en doorlopende ondersteuning.
                 </p>
+
                 <div className="hero-checks">
                   {HERO_CHECKS.map((item) => (
                     <div key={item} className="hero-check">
@@ -609,6 +539,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+
                 <div className="hero-ctas">
                   <a href="#pricing" className="btn-primary">
                     Bekijk de pakketten →
@@ -622,19 +553,20 @@ export default function Home() {
                     💬 Gratis gesprek
                   </a>
                 </div>
+
                 <div className="hero-social-proof">
                   <div>
-                    <div className="hero-sp-stars">★★★★★</div>
-                    <div className="hero-sp-text">Gebouwd voor lokale ondernemers die ontzorgd willen worden</div>
+                    <div style={{ fontSize: "1rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>Duidelijk</div>
+                    <div className="hero-sp-text">Heldere pakketten zonder technisch gedoe</div>
                   </div>
-                  <div style={HERO_DIVIDER_STYLE} />
+                  <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />
                   <div>
-                    <div style={HERO_VALUE_STYLE}>Snel</div>
+                    <div style={{ fontSize: "1rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>Snel</div>
                     <div className="hero-sp-text">Snelle livegang mogelijk</div>
                   </div>
-                  <div style={HERO_DIVIDER_STYLE} />
+                  <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />
                   <div>
-                    <div style={HERO_VALUE_STYLE}>Vrijblijvend</div>
+                    <div style={{ fontSize: "1rem", fontWeight: 800, color: "#fff", lineHeight: 1 }}>Vrijblijvend</div>
                     <div className="hero-sp-text">Kennismaking zonder verplichting</div>
                   </div>
                 </div>
@@ -650,40 +582,118 @@ export default function Home() {
                       <span>barbershop-amsterdam.nl</span>
                     </div>
                   </div>
-                  <div style={MOCKUP_HEADER_STYLE}>
-                    <div style={MOCKUP_EYEBROW_STYLE}>Premium Barbershop</div>
-                    <div style={MOCKUP_TITLE_STYLE}>Barbershop Amsterdam</div>
-                    <div style={MOCKUP_SUBTITLE_STYLE}>Klassieke kapsels & scheerbeurt</div>
-                    <div style={MOCKUP_META_ROW_STYLE}>
-                      <span style={MOCKUP_META_TEXT_STYLE}>⭐ Goede eerste indruk</span>
-                      <span style={MOCKUP_META_TEXT_STYLE}>📱 Mobielvriendelijk</span>
+
+                  <div
+                    style={{
+                      background: "linear-gradient(135deg,#0a1628,#0d2146)",
+                      padding: "28px 24px",
+                      color: "#fff",
+                      textAlign: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "0.65rem",
+                        fontWeight: 700,
+                        color: "rgba(255,255,255,0.45)",
+                        textTransform: "uppercase",
+                        letterSpacing: 1.5,
+                        marginBottom: 10,
+                      }}
+                    >
+                      Premium Barbershop
+                    </div>
+                    <div style={{ fontSize: "1.4rem", fontWeight: 900, marginBottom: 6, letterSpacing: -0.5 }}>
+                      Barbershop Amsterdam
+                    </div>
+                    <div style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.6)", marginBottom: 16 }}>
+                      Klassieke kapsels & scheerbeurt
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: 16,
+                        paddingTop: 12,
+                        borderTop: "1px solid rgba(255,255,255,0.08)",
+                      }}
+                    >
+                      <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
+                        ⭐ Goede eerste indruk
+                      </span>
+                      <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", fontWeight: 600 }}>
+                        📱 Mobielvriendelijk
+                      </span>
                     </div>
                   </div>
-                  <div style={MOCKUP_LIST_WRAP_STYLE}>
-                    <div style={MOCKUP_LIST_STYLE}>
+
+                  <div style={{ padding: "20px 20px", background: "#f9fafb" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                       {MOCKUP_SERVICES.map(([icon, name, price]) => (
-                        <div key={name} style={MOCKUP_ITEM_STYLE}>
+                        <div
+                          key={name}
+                          style={{
+                            background: "#fff",
+                            padding: "10px 13px",
+                            borderRadius: 10,
+                            display: "flex",
+                            gap: 10,
+                            alignItems: "center",
+                            boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+                            border: "1px solid #f3f4f6",
+                          }}
+                        >
                           <span style={{ fontSize: "1rem" }}>{icon}</span>
                           <div style={{ flex: 1 }}>
-                            <div style={MOCKUP_ITEM_NAME_STYLE}>{name}</div>
+                            <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "#111827" }}>{name}</div>
                           </div>
-                          <span style={MOCKUP_ITEM_PRICE_STYLE}>{price}</span>
+                          <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#6366f1" }}>{price}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                  <div style={MOCKUP_FOOTER_STYLE}>
-                    <div style={MOCKUP_BUTTON_ROW_STYLE}>
-                      <button type="button" style={MOCKUP_DARK_BUTTON_STYLE}>
+
+                  <div style={{ padding: "14px 20px", background: "#fff", borderTop: "1px solid #f3f4f6" }}>
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <button
+                        type="button"
+                        style={{
+                          flex: 1,
+                          background: "#111827",
+                          color: "#fff",
+                          padding: "9px 10px",
+                          borderRadius: 9,
+                          border: "none",
+                          fontWeight: 700,
+                          fontSize: "0.72rem",
+                          cursor: "pointer",
+                        }}
+                      >
                         📅 Afspraak maken
                       </button>
-                      <button type="button" style={MOCKUP_WHATSAPP_BUTTON_STYLE}>
+                      <button
+                        type="button"
+                        style={{
+                          flex: 1,
+                          background: "#25d366",
+                          color: "#fff",
+                          padding: "9px 10px",
+                          borderRadius: 9,
+                          border: "none",
+                          fontWeight: 700,
+                          fontSize: "0.72rem",
+                          cursor: "pointer",
+                        }}
+                      >
                         💬 WhatsApp
                       </button>
                     </div>
                   </div>
                 </div>
-                <p style={MOCKUP_CAPTION_STYLE}>Jij kiest een stijl • Wij regelen de rest</p>
+
+                <p style={{ marginTop: 16, fontSize: "0.75rem", color: "rgba(255,255,255,0.35)", textAlign: "center", fontWeight: 500 }}>
+                  Jij kiest een stijl • Wij regelen de rest
+                </p>
               </div>
             </div>
           </section>
@@ -705,9 +715,10 @@ export default function Home() {
                 <div className="section-label">Het probleem</div>
                 <h2 className="section-h2">Een goede website is geen luxe meer</h2>
                 <p className="section-p">
-                  Voor veel lokale ondernemers is de website het eerste serieuze contactmoment. Dan moet die professioneel, duidelijk en betrouwbaar aanvoelen.
+                  Veel ondernemers laten online kansen liggen doordat hun website verouderd is, onduidelijk voelt of technisch niet goed wordt bijgehouden.
                 </p>
               </div>
+
               <div className="problem-grid">
                 {PROBLEMS.map(([icon, title, text]) => (
                   <div key={title} className="problem-card">
@@ -729,6 +740,7 @@ export default function Home() {
                   Website, hosting, onderhoud en ondersteuning in één duidelijk abonnement. Geen losse partijen, geen technisch gedoe.
                 </p>
               </div>
+
               <div className="solution-grid">
                 <div className="solution-col get">
                   <h3>✓ Wat je krijgt</h3>
@@ -739,6 +751,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+
                 <div className="solution-col skip">
                   <h3>👍 Wat je niet meer doet</h3>
                   {SOLUTION_SKIP.map((item) => (
@@ -761,6 +774,7 @@ export default function Home() {
                   Niet alleen een mooie website, maar vooral continuïteit, duidelijkheid en een professionele online basis.
                 </p>
               </div>
+
               <div className="results-row">
                 {RESULTS.map(([number, label]) => (
                   <div key={number} className="result-item">
@@ -772,129 +786,154 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="testimonials-section">
-            <div className="section-wrap">
-              <div className="section-header centered">
-                <div className="section-label">Wat klanten zeggen</div>
-                <h2 className="section-h2">Ondernemers zoals jij gingen je voor</h2>
-              </div>
-              <div className="testimonials-grid">
-                {TESTIMONIALS.map((item) => (
-                  <div key={item.name} className="testimonial-card">
-                    <div className="t-stars">{item.stars}</div>
-                    <p className="t-quote">"{item.quote}"</p>
-                    <div className="t-author">
-                      <div className="t-avatar" style={{ background: item.color }}>
-                        {item.name[0]}
-                      </div>
-                      <div>
-                        <div className="t-name">{item.name}</div>
-                        <div className="t-role">{item.role}</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
           <section id="pricing" className="pricing-section anchor-section">
             <div className="section-wrap">
               <div className="section-header centered">
-                <div className="section-label">Tarieven</div>
-                <h2 className="section-h2">Kies jouw pakket</h2>
+                <div className="section-label">Pakketten</div>
+                <h2 className="section-h2">Kies het pakket dat bij jouw bedrijf past</h2>
                 <p className="section-p">
-                  Kies het pakket dat past bij jouw bedrijf. Heldere maandkosten, vaste ondersteuning en ruimte om later door te groeien.
+                  Heldere maandprijzen, eenmalige setup en ruimte om later op te schalen met add-ons of extra functionaliteit.
                 </p>
               </div>
+
               <div className="pricing-grid">
-                <div className="pricing-card">
-                  <div className="p-tier">Starter</div>
-                  <div className="p-name">Sterke basis</div>
-                  <div className="p-sub">Voor ondernemers die professioneel online zichtbaar willen zijn</div>
-                  <div className="p-price">
-                    <sup>€</sup>99<span>/m</span>
-                  </div>
-                  <div className="p-setup">+ €500 eenmalige setup</div>
-                  <div className="p-divider" />
-                  <ul className="p-features">
-                    <li>1–2 pagina website</li>
-                    <li>Mobielvriendelijk design</li>
-                    <li>Contactformulier</li>
-                    <li>Hosting + domein koppeling</li>
-                    <li>SSL beveiliging</li>
-                    <li>Basis SEO setup</li>
-                    <li>Support binnen 48 uur</li>
-                  </ul>
-                  <p className="p-note">Een nette, verzorgde basis waarmee je bedrijf professioneel online staat</p>
-                  <a href="#cta" className="p-cta default">
-                    Kies Starter →
-                  </a>
-                </div>
+                {PACKAGES.map((pkg) => (
+                  <div key={pkg.tier} className={`pricing-card ${pkg.featured ? "featured" : ""}`}>
+                    {pkg.featured && <div className="pricing-badge">Meest gekozen</div>}
 
-                <div className="pricing-card featured">
-                  <div className="pricing-badge">Meest gekozen</div>
-                  <div className="p-tier">Growth</div>
-                  <div className="p-name">Groei & vertrouwen</div>
-                  <div className="p-sub">Voor bedrijven die meer structuur, inhoud en begeleiding willen</div>
-                  <div className="p-price">
-                    <sup>€</sup>149<span>/m</span>
-                  </div>
-                  <div className="p-setup">+ €750 eenmalige setup</div>
-                  <div className="p-divider" />
-                  <ul className="p-features">
-                    <li>Tot 5 pagina&apos;s</li>
-                    <li>Alles van Starter</li>
-                    <li>Google Maps integratie</li>
-                    <li>Conversiegerichte opbouw</li>
-                    <li>SEO basisoptimalisatie</li>
-                    <li>Maandelijkse performance check</li>
-                    <li>Support binnen 24 uur</li>
-                    <li>Kleine updates inbegrepen</li>
-                  </ul>
-                  <p className="p-note" style={{ color: "#6366f1" }}>
-                    Meer ruimte voor inhoud, doorontwikkeling en een sterkere online presentatie
-                  </p>
-                  <a href="#cta" className="p-cta featured">
-                    Kies Growth →
-                  </a>
-                </div>
+                    <div className="p-tier">{pkg.tier}</div>
+                    <div className="p-name">{pkg.name}</div>
+                    <div className="p-sub">{pkg.subtitle}</div>
 
-                <div className="pricing-card">
-                  <div className="p-tier">Pro</div>
-                  <div className="p-name">Maatwerk & doorontwikkeling</div>
-                  <div className="p-sub">Voor bedrijven die meer functionaliteit en meer snelheid willen</div>
-                  <div className="p-price">
-                    <sup>€</sup>249<span>/m</span>
+                    <div className="p-price">
+                      <sup>€</sup>
+                      {pkg.price}
+                      <span>/m</span>
+                    </div>
+                    <div className="p-setup">+ {pkg.setup}</div>
+
+                    <div className="p-divider" />
+
+                    <ul className="p-features">
+                      {pkg.bullets.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+
+                    <p className="p-note" style={pkg.featured ? { color: "#6366f1" } : undefined}>
+                      {pkg.note}
+                    </p>
+
+                    <a href="#cta" className={`p-cta ${pkg.featured ? "featured" : "default"}`}>
+                      {pkg.cta}
+                    </a>
                   </div>
-                  <div className="p-setup">+ €1000 eenmalige setup</div>
-                  <div className="p-divider" />
-                  <ul className="p-features">
-                    <li>Tot 10 pagina&apos;s</li>
-                    <li>Custom design op maat</li>
-                    <li>Geavanceerde functies (boekingen / formulieren)</li>
-                    <li>Alles van Growth</li>
-                    <li>Volledige SEO optimalisatie</li>
-                    <li>Priority support (binnen 12 uur)</li>
-                    <li>Snelle aanpassingen mogelijk</li>
-                  </ul>
-                  <p className="p-note">Voor ondernemers die hun website als serieus onderdeel van hun bedrijf zien</p>
-                  <a href="#cta" className="p-cta default">
-                    Kies Pro →
-                  </a>
-                </div>
+                ))}
               </div>
 
-              <div style={{ marginTop: 32 }}>
-                <details style={{ cursor: "pointer" }}>
-                  <summary style={DETAILS_SUMMARY_STYLE}>
-                    💡 Wat valt onder kleine updates en wijzigingen?
-                  </summary>
-                  <div style={DETAILS_CONTENT_STYLE}>
-                    Teksten aanpassen, foto&apos;s vervangen, kleine layout-wijzigingen, contactgegevens updaten.
-                    Grote wijzigingen zoals nieuwe modules, extra pagina&apos;s of uitgebreid maatwerk bespreken we altijd vooraf.
+              <div className="pricing-details">
+                <details>
+                  <summary className="pricing-summary">Starter — volledige inhoud bekijken</summary>
+                  <div className="pricing-details-content">
+                    <strong>Inbegrepen</strong>
+                    <ul style={{ paddingLeft: 18, margin: "8px 0 12px" }}>
+                      {PACKAGE_DETAILS.starter.included.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
+                    <strong>Niet inbegrepen</strong>
+                    <ul style={{ paddingLeft: 18, margin: "8px 0 12px" }}>
+                      {PACKAGE_DETAILS.starter.notIncluded.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
+                    <strong>Mogelijke add-ons</strong>
+                    <ul style={{ paddingLeft: 18, margin: "8px 0 0" }}>
+                      {PACKAGE_DETAILS.starter.addons.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
                 </details>
+
+                <details>
+                  <summary className="pricing-summary">Growth — volledige inhoud bekijken</summary>
+                  <div className="pricing-details-content">
+                    <strong>Inbegrepen</strong>
+                    <ul style={{ paddingLeft: 18, margin: "8px 0 12px" }}>
+                      {PACKAGE_DETAILS.growth.included.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
+                    <strong>Niet standaard inbegrepen</strong>
+                    <ul style={{ paddingLeft: 18, margin: "8px 0 12px" }}>
+                      {PACKAGE_DETAILS.growth.notIncluded.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
+                    <strong>Mogelijke add-ons</strong>
+                    <ul style={{ paddingLeft: 18, margin: "8px 0 0" }}>
+                      {PACKAGE_DETAILS.growth.addons.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+
+                <details>
+                  <summary className="pricing-summary">Pro — volledige inhoud bekijken</summary>
+                  <div className="pricing-details-content">
+                    <strong>Inbegrepen</strong>
+                    <ul style={{ paddingLeft: 18, margin: "8px 0 12px" }}>
+                      {PACKAGE_DETAILS.pro.included.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
+                    <strong>Mogelijke add-ons</strong>
+                    <ul style={{ paddingLeft: 18, margin: "8px 0 0" }}>
+                      {PACKAGE_DETAILS.pro.addons.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+
+                <details>
+                  <summary className="pricing-summary">Belangrijke nuance over mailboxen</summary>
+                  <div className="pricing-details-content">
+                    <ul style={{ paddingLeft: 18, margin: 0 }}>
+                      {MAILBOX_BUNDLES.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+
+                <details>
+                  <summary className="pricing-summary">Belangrijke nuance over database en data-opslag</summary>
+                  <div className="pricing-details-content">
+                    <ul style={{ paddingLeft: 18, margin: 0 }}>
+                      {DATA_RULES.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+
+                <details>
+                  <summary className="pricing-summary">Wat in alle pakketten centraal staat</summary>
+                  <div className="pricing-details-content">
+                    <ul style={{ paddingLeft: 18, margin: 0 }}>
+                      {PACKAGE_BASICS.map((item) => (
+                        <li key={item} style={{ marginBottom: 6 }}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </details>
+              </div>
+
+              <div className="pricing-help">
+                Twijfel je tussen twee pakketten? Kies de basis die nu past — uitbreiden kan later altijd.
               </div>
             </div>
           </section>
@@ -918,29 +957,31 @@ export default function Home() {
               </p>
 
               <div className="roi-comparison">
-                <div className="roi-block" style={ROI_LEFT_STYLE}>
+                <div className="roi-block" style={{ textAlign: "right" }}>
                   <div className="roi-value invest">
-                    Vast<span style={ROI_INVEST_SUFFIX_STYLE}> per maand</span>
+                    Vast
+                    <span style={{ fontSize: "1.2rem", fontWeight: 700, color: "#9ca3af" }}> per maand</span>
                   </div>
                   <div className="roi-block-label">Duidelijke kosten</div>
                 </div>
 
                 <div className="roi-divider">
-                  <div style={ROI_DIVIDER_ROW_STYLE}>
+                  <div style={{ display: "flex", alignItems: "center" }}>
                     <div className="roi-arrow-line" />
                     <div className="roi-arrow-head" />
                   </div>
                 </div>
 
-                <div className="roi-block" style={ROI_RIGHT_STYLE}>
+                <div className="roi-block" style={{ textAlign: "left" }}>
                   <div className="roi-value gain">
-                    Rust<span style={ROI_GAIN_SUFFIX_STYLE}> & continuïteit</span>
+                    Rust
+                    <span style={{ fontSize: "1.2rem", fontWeight: 700, color: "#86efac" }}> & continuïteit</span>
                   </div>
                   <div className="roi-block-label">Doorlopend geregeld</div>
                 </div>
               </div>
 
-              <div style={ROI_BOTTOM_STYLE}>
+              <div style={{ borderTop: "1px solid #f3f4f6", paddingTop: 32 }}>
                 <div className="roi-bottom-line">
                   Geen losse kosten voor hosting, onderhoud en kleine updates bij verschillende partijen.
                 </div>
@@ -960,6 +1001,7 @@ export default function Home() {
                   Voor veel ondernemers is een abonnement overzichtelijker: één partij, één maandprijs en doorlopende ondersteuning.
                 </p>
               </div>
+
               <div className="why-grid">
                 <div className="why-col old">
                   <h3>Losse website zonder vervolg</h3>
@@ -969,6 +1011,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+
                 <div className="why-col new">
                   <h3>Abonnement met doorlopende ondersteuning</h3>
                   {WHY_NEW.map((item) => (
@@ -988,6 +1031,7 @@ export default function Home() {
                 <h2 className="section-h2">Hoe het werkt</h2>
                 <p className="section-p">Vier eenvoudige stappen naar jouw nieuwe website.</p>
               </div>
+
               <div className="how-steps">
                 {HOW_STEPS.map(([number, title, text]) => (
                   <div key={number} className="how-step">
@@ -1006,9 +1050,11 @@ export default function Home() {
                 <div className="lead-magnet-badge">🎁 Gratis — geen verplichtingen</div>
                 <div className="lead-magnet-title">Ontvang een eerlijke blik op je huidige website</div>
                 <div className="lead-magnet-sub">
-                  We kijken vrijblijvend naar je online presentatie en laten zien waar winst zit in duidelijkheid, uitstraling en gebruiksgemak.
+                  We kijken vrijblijvend naar je online presentatie en laten zien waar winst zit in duidelijkheid,
+                  uitstraling en gebruiksgemak.
                 </div>
               </div>
+
               <div className="lead-magnet-cta">
                 <a
                   href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20website%20analyse."
@@ -1033,17 +1079,14 @@ export default function Home() {
                     <div key={item} className={`spot ${item <= 3 ? "taken" : "free"}`} />
                   ))}
                 </div>
-                <p>
-                  Zo houden we ruimte voor kwaliteit, snelle communicatie en doorlopende aandacht na livegang.
-                </p>
+                <p>Zo houden we ruimte voor kwaliteit, snelle communicatie en doorlopende aandacht na livegang.</p>
               </div>
+
               <div className="guarantee-box">
                 <div className="guarantee-icon">🤝</div>
                 <div>
                   <strong>Vrijblijvend kennismaken</strong>
-                  <p>
-                    Eerst bespreken we rustig wat bij jouw bedrijf past. Pas daarna beslis je of je verder wilt.
-                  </p>
+                  <p>Eerst bespreken we rustig wat bij jouw bedrijf past. Pas daarna beslis je of je verder wilt.</p>
                 </div>
               </div>
             </div>
@@ -1054,6 +1097,7 @@ export default function Home() {
             <p>
               Kies voor een website die niet alleen mooi oogt, maar ook goed onderhouden blijft en past bij hoe jij wilt ondernemen.
             </p>
+
             <div className="cta-btns">
               <a href="#pricing" className="btn-primary">
                 Bekijk jouw pakket →
@@ -1067,13 +1111,34 @@ export default function Home() {
                 💬 Plan gratis gesprek
               </a>
             </div>
-            <div style={CTA_META_ROW_STYLE}>
+
+            <div
+              style={{
+                marginTop: 32,
+                display: "flex",
+                justifyContent: "center",
+                gap: 12,
+                flexWrap: "wrap",
+                position: "relative",
+              }}
+            >
               {CTA_META.map((item) => (
-                <span key={item} style={CTA_META_ITEM_STYLE}>
-                  <span style={CTA_META_CHECK_STYLE}>✓</span> {item}
+                <span
+                  key={item}
+                  style={{
+                    fontSize: "0.78rem",
+                    color: "rgba(255,255,255,0.4)",
+                    fontWeight: 600,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <span style={{ color: "#22c55e" }}>✓</span> {item}
                 </span>
               ))}
             </div>
+
             <div className="cta-phone">
               Liever direct bellen?
               <strong>+31 6 26 21 99 89</strong>
