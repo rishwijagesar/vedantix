@@ -198,7 +198,7 @@ export default function CRMKlanten() {
       setActionLoadingId(`${klant.id}-deploy`);
 
       // TODO: vervang dit later door echte backend/function call
-      // await base44.functions.invoke("deploy_customer_website", { customerId: klant.id });
+      // await base44.functions.invoke("deploy_customer_website", { customerId: klant.id })
 
       await updateDeploymentState(klant.id, "deploying");
       alert(`Deploy gestart voor ${klant.bedrijfsnaam}`);
