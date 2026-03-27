@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   AWS_REGION: eu-west-1
   S3_BUCKET: vedantix.nl-bucket
@@ -13,10 +17,6 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
       - name: Checkout
@@ -27,27 +27,21 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install deps
+      - name: Install
         run: npm ci
 
       - name: Build
         run: npm run build
 
-      - name: Configure AWS (OIDC)
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::381492205513:role/github-deployer-role
+          role-to-assume: arn:aws:iam::381492205513:role/github-vedantix-role
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Upload to S3
         run: |
-          aws s3 sync dist s3://${{ env.S3_BUCKET }} \
-            --delete \
-            --cache-control "public, max-age=31536000, immutable" \
-            --exclude "index.html"
-
-          aws s3 cp dist/index.html s3://${{ env.S3_BUCKET }}/index.html \
-            --cache-control "no-cache"
+          aws s3 sync dist s3://${{ env.S3_BUCKET }} --delete
 
       - name: Invalidate CloudFront
         run: |
