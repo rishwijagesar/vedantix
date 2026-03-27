@@ -66,7 +66,7 @@ export default function ClientPortal() {
     { id: "facturen", icon: "🧾", label: "Facturen" },
     { id: "tickets", icon: "🎫", label: "Tickets" },
     { id: "gegevens", icon: "👤", label: "Mijn gegevens" },
-    { id: "documenten", icon: "📁", label: "Documenten" },
+    { id: "documente", icon: "📁", label: "Documenten" },
   ];
 
   const tabs = {
