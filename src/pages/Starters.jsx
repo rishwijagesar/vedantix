@@ -1,5 +1,4 @@
 import { useState } from "react";
-import LiveChatWidget from "../components/LiveChatWidget";
 
 const SUGGESTIONS = {
   kapper: { label: "Kapperszaak", icon: "✂️", suggestions: ["Online afsprakensysteem / agenda", "Fotogalerij van jouw werk", "Prijslijst per behandeling", "Team & stylisten overzicht", "Google Maps integratie"] },
@@ -24,15 +23,15 @@ const PACKAGES = [
 // Clean domain input — strip spaces, dots, extensions, special chars
 
 // Ensure mobile viewport
-if (typeof document !== "undefined") {
-  let vp = document.querySelector('meta[name="viewport"]');
-  if (!vp) {
-    vp = document.createElement("meta");
-    vp.name = "viewport";
-    vp.content = "width=device-width, initial-scale=1.0";
-    document.head.appendChild(vp);
-  }
-}
+// if (typeof document !== "undefined") {
+//   let vp = document.querySelector('meta[name="viewport"]');
+//   if (!vp) {
+//     vp = document.createElement("meta");
+//     vp.name = "viewport";
+//     vp.content = "width=device-width, initial-scale=1.0";
+//     document.head.appendChild(vp);
+//   }
+// }
 
 
 function cleanDomain(input) {
@@ -476,7 +475,6 @@ export default function Starters() {
           </div>
         )}
       </div>
-      <LiveChatWidget />
     </div>
   );
 }
