@@ -640,7 +640,7 @@ export default function HomeHero() {
             <div className="hero-eyebrow">Voor kappers, salons, restaurants en lokale bedrijven</div>
 
             <h1>
-              Mer klanten via jouw website —
+              Meer klanten via jouw website —
               <br />
               <span>binnen 48 uur live</span>
             </h1>
