@@ -155,8 +155,8 @@ const styles = {
     padding: "88px 20px",
     background: `
       linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
-      radial-gradient(circle at 20% 20%, rgba(59,130,246,0.08), transparent 40%),
-      radial-gradient(circle at 80% 80%, rgba(168,85,247,0.08), transparent 40%)
+      radial-gradient(circle at 20% 20%, rgba(59,130,246,0.06), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(168,85,247,0.06), transparent 40%)
     `,
     color: "#ffffff",
   },
