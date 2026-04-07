@@ -441,7 +441,7 @@ const HOME_STYLES = `
   .p-setup{
     font-size:.75rem;
     color:#9ca3af;
-    margin-bottom:22px;
+    margin-bottom:16px;
     font-weight:600
   }
   .p-divider{height:1px;background:#f3f4f6;margin-bottom:22px}
@@ -479,6 +479,24 @@ const HOME_STYLES = `
     min-height:32px
   }
   .pricing-card.featured .p-features li{color:#374151}
+
+  .p-terms{
+    margin-bottom:18px;
+    padding:12px 14px;
+    border-radius:12px;
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    font-size:.76rem;
+    color:#475569;
+    line-height:1.55;
+    font-weight:700
+  }
+  .pricing-card.featured .p-terms{
+    background:#eef2ff;
+    border-color:#c7d2fe;
+    color:#4338ca
+  }
+
   .p-cta{
     display:block;
     text-align:center;
@@ -987,44 +1005,44 @@ const PROBLEMS = [
   [
     "🛠️",
     "Na oplevering begint vaak het gedoe",
-    "Hosting, updates, domeinbeheer en kleine wijzigingen zijn precies de dingen waar ondernemers geen tijd voor willen vrijmaken.",
+    "Veel ondernemers willen geen tijd verliezen aan wijzigingen, beheer of technische vragen. Dat moet gewoon geregeld blijven.",
   ],
 ];
 
 const DIFFERENCE_POINTS = [
   [
     "01",
-    "Scherpe boodschap in plaats van alleen design",
-    "Niet zomaar een nette website, maar een homepage die direct duidelijk maakt wat je doet en waarom iemand contact moet opnemen.",
+    "Gebouwd voor lokale ondernemers",
+    "Geen algemene websites voor iedereen, maar een aanpak voor bedrijven die lokaal gevonden willen worden en meer aanvragen willen krijgen.",
   ],
   [
     "02",
-    "Vertrouwen zonder neppe reviews",
-    "Omdat je starter kunt zijn, sturen we op transparantie: duidelijke pakketten, snelle communicatie, demo’s en een helder proces.",
+    "Snel live en makkelijk starten",
+    "Je hoeft niet eerst een groot traject in. We houden het simpel, duidelijk en praktisch zodat je snel online staat.",
   ],
   [
     "03",
-    "Snel live, daarna makkelijk uitbreiden",
-    "Nieuwe pagina, extra dienst, formulier of uitbreiding nodig? Het model is juist ingericht om vlot door te ontwikkelen.",
+    "Maandelijkse ondersteuning in plaats van losse oplevering",
+    "Je website blijft niet aan je lot overgelaten. Updates, onderhoud en kleine wijzigingen blijven gewoon doorlopen.",
   ],
 ];
 
 const SOLUTION_GET = [
-  "Een professionele website die past bij jouw branche",
-  "Hosting, domein, SSL en technisch beheer onder één dak",
-  "Een structuur die gericht is op contact, aanvragen of afspraken",
-  "Snelle hulp bij updates en kleine wijzigingen",
-  "Een website die netjes werkt op mobiel, tablet en desktop",
-  "Een duidelijk traject zonder losse technische puzzelstukjes",
+  "Een professionele website die vertrouwen uitstraalt",
+  "Een website die goed werkt op mobiel",
+  "Duidelijke knoppen voor bellen, WhatsApp of aanvragen",
+  "Onderhoud en kleine hulpvragen geregeld",
+  "Eén vast aanspreekpunt voor je website",
+  "Geen technisch gedoe of losse partijen",
 ];
 
 const SOLUTION_SKIP = [
-  "Zelf hosting en techniek uitzoeken",
-  "Steeds opnieuw offertes opvragen voor kleine aanpassingen",
-  "Onzekerheid over wie iets moet oplossen",
-  "Gedoe met verschillende partijen voor website, domein en onderhoud",
-  "Een site die na oplevering langzaam veroudert",
-  "Tijd verliezen aan technische zaken buiten je vakgebied",
+  "Zelf uitzoeken waar je website draait",
+  "Technische termen proberen te begrijpen",
+  "Meerdere partijen bellen bij problemen",
+  "Los betalen voor elke kleine wijziging",
+  "Een website die na oplevering stil blijft staan",
+  "Tijd verliezen aan dingen buiten je eigen vak",
 ];
 
 const RESULTS = [
@@ -1043,63 +1061,66 @@ const FOUNDER_POINTS = [
 const PACKAGES = [
   {
     tier: "Starter",
-    name: "Voor professioneel online zichtbaar zijn",
-    subtitle: "Sterke basis voor ondernemers die vooral een nette en goed beheerde website willen.",
+    name: "Voor starters en kleine lokale bedrijven",
+    subtitle: "Voor ondernemers die snel professioneel online zichtbaar willen zijn zonder ingewikkeld traject.",
     price: "99",
     setup: "€500 eenmalige setup",
     featured: false,
+    cancelNote: "Maandelijks opzegbaar vanaf 6 maanden · daarna €50 opzegvergoeding",
     bullets: [
-      "Professionele website",
-      "1 domein, hosting en SSL",
-      "1 mailbox",
-      "Contactformulier",
-      "Basis analytics en basis SEO",
+      "Professionele website tot 5 pagina’s",
+      "Geschikt voor mobiel en tablet",
+      "Contact via WhatsApp, bellen en formulier",
+      "Onderhoud en kleine updates inbegrepen",
+      "1 zakelijk mailadres",
     ],
-    note: "Geen database, login of complexe reserveringsmodule standaard inbegrepen.",
+    note: "Ideaal als je vooral professioneel zichtbaar wilt zijn en een lage instap zoekt.",
     cta: "Plan kennismaking →",
   },
   {
     tier: "Growth",
-    name: "Voor meer inhoud en groeiruimte",
-    subtitle: "Voor bedrijven die hun website serieuzer willen inzetten als online basis.",
+    name: "Voor bedrijven die meer aanvragen willen",
+    subtitle: "Voor ondernemers die hun website actiever willen inzetten voor zichtbaarheid, inhoud en groei.",
     price: "149",
     setup: "€750 eenmalige setup",
     featured: true,
+    cancelNote: "Maandelijks opzegbaar vanaf 6 maanden · daarna zonder lange contractduur",
     bullets: [
       "Alles uit Starter",
-      "5 mailboxen",
-      "Blog/FAQ module",
-      "Light formulieren-opslag",
-      "Meer servicepagina’s en SEO templates",
+      "Meer pagina’s en sterkere SEO-structuur",
+      "Blog of FAQ mogelijk",
+      "Meer ruimte voor diensten en landingspagina’s",
+      "5 zakelijke mailadressen",
     ],
-    note: "Geschikt als je meer structuur, inhoud en uitbreidbaarheid wilt.",
+    note: "Beste keuze voor de meeste lokale ondernemers die serieus online willen groeien.",
     cta: "Plan kennismaking →",
   },
   {
     tier: "Pro",
-    name: "Voor functionaliteit en doorontwikkeling",
-    subtitle: "Voor bedrijven die meer nodig hebben dan een standaard informatieve site.",
+    name: "Voor bedrijven die online processen willen automatiseren",
+    subtitle: "Voor ondernemers die meer nodig hebben dan alleen een website, zoals intake, reserveringen of klantomgeving.",
     price: "249",
     setup: "€1000 eenmalige setup",
     featured: false,
+    cancelNote: "Maandelijks opzegbaar vanaf maand 3",
     bullets: [
       "Alles uit Growth",
-      "10 mailboxen",
-      "Login en dashboard",
-      "Reserveringen / intake / workflows",
-      "Data-opslag en technische monitoring",
+      "Klantomgeving of dashboard mogelijk",
+      "Reserveringen, intake of workflows mogelijk",
+      "Meer maatwerk en doorontwikkeling",
+      "10 zakelijke mailadressen",
     ],
-    note: "Voor websites die een serieuzer onderdeel van je bedrijfsproces worden.",
+    note: "Geschikt als je website echt een actief onderdeel van je bedrijfsproces wordt.",
     cta: "Plan kennismaking →",
   },
 ];
 
 const TRUST_ITEMS = [
-  ["✔", "Duidelijke maandprijs"],
-  ["✔", "Hosting en onderhoud inbegrepen"],
-  ["✔", "Eén aanspreekpunt"],
-  ["✔", "Snelle communicatie"],
   ["✔", "Gebouwd voor lokale ondernemers"],
+  ["✔", "Duidelijke maandprijs"],
+  ["✔", "Persoonlijk contact"],
+  ["✔", "Onderhoud inbegrepen"],
+  ["✔", "Flexibel op te schalen"],
 ];
 
 const WHY_OLD = [
@@ -1111,11 +1132,11 @@ const WHY_OLD = [
 ];
 
 const WHY_NEW = [
-  "Website, hosting en onderhoud in één abonnement",
-  "Duidelijke vaste kosten per maand",
-  "Snelle hulp bij kleine wijzigingen",
-  "Doorlopende technische zorg en beheer",
-  "Meer rust, continuïteit en een professionelere uitstraling",
+  "Je website blijft onderhouden en actueel",
+  "Je hebt één partij voor alles rondom je website",
+  "Kleine wijzigingen kunnen snel worden opgepakt",
+  "Je weet vooraf wat je maandelijks betaalt",
+  "Je kunt later makkelijk doorgroeien naar meer functionaliteit",
 ];
 
 const HOW_STEPS = [
@@ -1138,7 +1159,7 @@ export default function Home() {
     <>
       <SEO
         title="Website laten maken voor kappers, salons en lokale bedrijven | Vedantix"
-        description="Binnen 48 uur een professionele website voor kappers, salons, restaurants en lokale ondernemers. Inclusief hosting, onderhoud en doorlopende ondersteuning."
+        description="Binnen 48 uur een professionele website voor kappers, salons, restaurants en lokale ondernemers. Inclusief onderhoud, support en doorlopende ondersteuning."
         canonical="https://vedantix.nl/"
       />
 
@@ -1190,7 +1211,8 @@ export default function Home() {
                 <div className="section-label">Waarom Vedantix</div>
                 <h2 className="section-h2">Niet zomaar een mooie website, maar een website die beter verkoopt</h2>
                 <p className="section-p">
-                  De focus ligt op een sterke eerste indruk, duidelijke call-to-actions, snelheid en vertrouwen zonder opgeblazen claims.
+                  Vedantix is er voor lokale ondernemers die geen zin hebben in technisch gedoe, lange trajecten of vage prijzen.
+                  Je krijgt een website die duidelijk oogt, sneller tot actie leidt en gewoon doorlopend wordt bijgehouden.
                 </p>
               </div>
 
@@ -1212,8 +1234,7 @@ export default function Home() {
                 <div className="section-label">Demo concepten</div>
                 <h2 className="section-h2">Voorbeelden van richtingen die wij kunnen bouwen</h2>
                 <p className="section-p">
-                  Nog geen portfolio met tientallen live cases? Dan zijn goede demo’s de snelste manier om te laten zien welke stijl en
-                  structuur mogelijk is voor jouw branche.
+                  Goede demo’s laten snel zien welke stijl, opbouw en richting mogelijk is voor jouw branche, ook als je nog geen groot portfolio hebt bekeken.
                 </p>
               </div>
 
@@ -1227,7 +1248,7 @@ export default function Home() {
                 <div className="section-label light">De oplossing</div>
                 <h2 className="section-h2 light">Alles onder één dak geregeld</h2>
                 <p className="section-p light">
-                  Website, hosting, onderhoud en ondersteuning in één duidelijk abonnement. Geen losse partijen, geen technisch gedoe.
+                  Je website, onderhoud en ondersteuning in één duidelijk abonnement. Geen losse partijen, geen technisch gedoe.
                 </p>
               </div>
 
@@ -1342,7 +1363,8 @@ export default function Home() {
                 <div className="section-label">Pakketten</div>
                 <h2 className="section-h2">Kies het pakket dat bij jouw bedrijf past</h2>
                 <p className="section-p">
-                  Heldere maandprijzen, eenmalige setup en ruimte om later op te schalen met add-ons of extra functionaliteit.
+                  Kies wat past bij jouw fase: snel professioneel online, meer aanvragen genereren of een website die ook processen ondersteunt.
+                  Elk pakket is duidelijk, praktisch en gericht op lokale ondernemers.
                 </p>
               </div>
 
@@ -1362,6 +1384,8 @@ export default function Home() {
                     </div>
 
                     <div className="p-setup">+ {pkg.setup}</div>
+
+                    <div className="p-terms">{pkg.cancelNote}</div>
 
                     <div className="p-divider" />
 
@@ -1406,9 +1430,9 @@ export default function Home() {
 
           <section className="roi-section">
             <div className="roi-inner">
-              <h2 className="roi-title">Waarom een abonnement voor veel ondernemers beter werkt</h2>
+              <h2 className="roi-title">Waarom dit voor veel ondernemers fijner werkt dan een losse oplevering</h2>
               <p className="roi-subtitle">
-                Je koopt niet alleen een website, maar ook rust, continuïteit en een partij die jouw online basis blijft beheren.
+                Je betaalt niet alleen voor het bouwen van een website, maar ook voor het bijhouden, ondersteunen en verbeteren ervan.
               </p>
 
               <div className="roi-comparison">
@@ -1438,10 +1462,10 @@ export default function Home() {
 
               <div style={{ borderTop: "1px solid #f3f4f6", paddingTop: 32 }}>
                 <div className="roi-bottom-line">
-                  Geen losse kosten voor hosting, onderhoud en kleine updates bij verschillende partijen.
+                  Geen losse website die je daarna zelf moet beheren of ergens anders moet onderbrengen.
                 </div>
                 <div className="roi-note">
-                  Een helder abonnement werkt vaak prettiger dan een website die na oplevering aan je wordt overgedragen zonder vervolg.
+                  Vooral voor drukke ondernemers is het prettig als onderhoud, updates en ondersteuning gewoon doorlopen.
                 </div>
               </div>
             </div>

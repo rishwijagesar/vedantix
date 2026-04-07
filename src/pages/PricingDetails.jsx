@@ -191,6 +191,18 @@ const PAGE_STYLES = `
     font-weight:700
   }
 
+  .pricing-terms{
+    margin-top:14px;
+    padding:12px 14px;
+    border-radius:12px;
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    font-size:.76rem;
+    font-weight:700;
+    color:#475569;
+    line-height:1.55
+  }
+
   .pricing-section-block{
     padding:20px 24px;
     border-top:1px solid #eef2f7
@@ -322,99 +334,94 @@ const PACKAGE_DETAILS = {
   starter: {
     included: [
       "Professionele website",
-      "1 domein",
-      "Hosting",
-      "SSL-certificaat",
-      "DNS-beheer",
-      "1 mailbox",
-      "Contactformulier",
-      "Basis analytics",
-      "Basis SEO-profiel",
-      "Handmatige redeploy via admin portal",
+      "Tot 5 pagina’s",
+      "1 zakelijk mailadres",
+      "Mobielvriendelijk ontwerp",
+      "Contactformulier en WhatsApp-knop",
+      "Onderhoud en kleine updates",
+      "Je website blijft online en veilig",
     ],
     notIncluded: [
-      "Geen database standaard",
-      "Geen login/auth",
-      "Geen dashboard",
-      "Geen maatwerk backend",
-      "Geen complex reserveringssysteem",
+      "Geen klantomgeving of login",
+      "Geen uitgebreide reserveringsmodule",
+      "Geen maatwerk functionaliteit",
+      "Niet bedoeld voor complexe processen",
     ],
     addons: [
-      "Extra mailboxbundels",
-      "Local SEO uitbreiding",
-      "Blog/FAQ module",
-      "Light formulieren-opslag",
-      "Eenvoudige reserveringswidget van derde partij",
+      "Extra mailadressen",
+      "Extra pagina’s",
+      "Lokale SEO uitbreiding",
+      "Blog of FAQ uitbreiding",
+      "Extra formulieren of secties",
     ],
   },
   growth: {
     included: [
       "Alles uit Starter",
-      "5 mailboxen",
-      "Blog/FAQ module",
-      "Formulieren met opslag (light)",
-      "Uitgebreidere SEO templates",
-      "Meerdere servicepagina’s",
+      "Meer pagina’s en meer inhoud",
+      "5 zakelijke mailadressen",
+      "Blog of FAQ mogelijk",
+      "Sterkere SEO-opbouw",
+      "Meer ruimte voor dienstenpagina’s en landingspagina’s",
     ],
     notIncluded: [
-      "Geen zware database standaard",
-      "Geen complex login/dashboard standaard",
-      "Geen uitgebreide maatwerkfunctionaliteit standaard",
+      "Geen uitgebreide klantomgeving standaard",
+      "Geen zwaar maatwerk standaard",
+      "Niet bedoeld voor complexe interne workflows",
     ],
     addons: [
+      "Extra pagina’s",
+      "Extra mailadressen",
       "Reserveringsmodule",
-      "Database light",
-      "Extra mailboxbundels",
-      "Extra landingspagina’s",
+      "Uitgebreidere leadformulieren",
+      "Extra SEO-landingspagina’s",
     ],
   },
   pro: {
     included: [
       "Alles uit Growth",
-      "10 mailboxen",
-      "Maatwerk functionaliteit mogelijk",
-      "Data-opslag voor formulieren en workflows inbegrepen",
-      "Login/auth",
-      "Dashboardfunctionaliteit",
-      "Reserveringen / intake / workflowmodules",
-      "Technische monitoring op de achtergrond",
+      "10 zakelijke mailadressen",
+      "Klantomgeving of dashboard mogelijk",
+      "Reserveringen, intake of workflows mogelijk",
+      "Meer maatwerk en doorontwikkeling",
+      "Geschikt voor bedrijven die online processen willen ondersteunen",
     ],
     notIncluded: [
-      "Maatwerk en premium infra alleen wanneer nodig",
+      "Zeer specialistisch maatwerk alleen op offertebasis",
     ],
     addons: [
-      "PostgreSQL / RDS premium add-on",
-      "Extra mailboxbundels",
-      "Extra data/storage bundels",
-      "Security add-on zoals WAF",
+      "Extra mailadressen",
+      "Extra opslag of uitgebreide formulieren",
+      "Extra beveiliging",
+      "Extra maatwerk modules",
     ],
   },
 };
 
 const MAILBOX_BUNDLES = [
-  "Starter: 1 mailbox inbegrepen",
-  "Growth: 5 mailboxen inbegrepen",
-  "Pro: 10 mailboxen inbegrepen",
-  "Extra mailboxen als bundels: +1, +5 of +10",
-  "Aliassen zoals info@, hello@ of noreply@ kunnen slim worden ingezet om kosten beter beheersbaar te houden",
+  "Starter: 1 zakelijk mailadres inbegrepen",
+  "Growth: 5 zakelijke mailadressen inbegrepen",
+  "Pro: 10 zakelijke mailadressen inbegrepen",
+  "Extra mailadressen kunnen later worden toegevoegd",
+  "Aliassen zoals info@ of hello@ zijn vaak slim genoeg voor kleinere teams",
 ];
 
 const DATA_RULES = [
-  "Starter: standaard geen database",
-  "Growth: light data-opslag als add-on",
-  "Pro: serverless data standaard inbegrepen",
-  "PostgreSQL / RDS alleen als premium add-on",
-  "Werk altijd met limieten op opslag, requests en retention",
+  "Starter is bedoeld voor een duidelijke bedrijfswebsite zonder complexe functionaliteit",
+  "Growth biedt meer ruimte voor formulieren, inhoud en uitbreidingen",
+  "Pro is bedoeld voor bedrijven die ook processen via hun website willen ondersteunen",
+  "Complex maatwerk wordt alleen toegevoegd als het echt nodig is",
+  "Je betaalt dus niet direct voor techniek die je nog niet gebruikt",
 ];
 
 const PACKAGE_BASICS = [
-  "Professionele website",
-  "Hosting geregeld",
-  "Domein en DNS geregeld",
-  "SSL geregeld",
-  "Onderhoud en support vanuit één partij",
-  "Geen technisch gedoe voor de klant",
-  "Duidelijke vaste structuur",
+  "Professionele uitstraling",
+  "Mobielvriendelijke website",
+  "Onderhoud en support",
+  "Eén vast aanspreekpunt",
+  "Duidelijke maandprijs",
+  "Geen technisch gedoe",
+  "Gebouwd voor lokale ondernemers",
 ];
 
 export default function PricingDetails() {
@@ -422,7 +429,7 @@ export default function PricingDetails() {
     <>
       <SEO
         title="Pakketvergelijking | Vedantix"
-        description="Vergelijk alle Vedantix pakketten, inbegrepen onderdelen, add-ons, mailboxen en technische nuances op één overzichtelijke pagina."
+        description="Vergelijk alle Vedantix pakketten en zie in gewone taal welk pakket past bij jouw bedrijf, doelen en groeifase."
         canonical="https://vedantix.nl/pakketvergelijking"
       />
 
@@ -435,10 +442,10 @@ export default function PricingDetails() {
           <section className="page-hero">
             <div className="page-wrap">
               <div className="eyebrow">Pakketvergelijking</div>
-              <h1>Vergelijk alle pakketten en details in één rustig overzicht</h1>
+              <h1>Vergelijk de pakketten en kies wat past bij jouw bedrijf</h1>
               <p>
-                Deze pagina is bedoeld voor bezoekers die de inhoud, add-ons en technische nuances uitgebreider willen bekijken.
-                Zo blijft je homepage strak en staat de vergelijking op een logische plek.
+                Hier zie je in gewone taal welk pakket past bij jouw fase: professioneel zichtbaar zijn, meer aanvragen genereren
+                of extra functionaliteit toevoegen aan je website.
               </p>
             </div>
           </section>
@@ -448,16 +455,16 @@ export default function PricingDetails() {
               <h2 className="section-title">Vergelijk de pakketten naast elkaar</h2>
               <p className="section-sub">
                 Dit overzicht is bewust in drie kolommen opgebouwd, zodat verschillen in prijs, inhoud,
-                uitbreidbaarheid en add-ons direct zichtbaar zijn.
+                flexibiliteit en uitbreidbaarheid direct zichtbaar zijn.
               </p>
 
               <div className="pricing-compare-table">
                 <div className="pricing-column">
                   <div className="pricing-head starter">
                     <div className="pricing-tag">Starter</div>
-                    <div className="pricing-title">Voor professioneel online zichtbaar zijn</div>
+                    <div className="pricing-title">Voor starters en kleine lokale bedrijven</div>
                     <div className="pricing-sub">
-                      Sterke basis voor ondernemers die vooral een nette en goed beheerde website willen.
+                      Voor ondernemers die snel professioneel online zichtbaar willen zijn zonder ingewikkeld traject.
                     </div>
                   </div>
 
@@ -466,6 +473,7 @@ export default function PricingDetails() {
                       <sup>€</sup>99<span>/m</span>
                     </div>
                     <div className="pricing-setup">+ €500 eenmalige setup</div>
+                    <div className="pricing-terms">Maandelijks opzegbaar vanaf 6 maanden · daarna €50 opzegvergoeding</div>
                   </div>
 
                   <div className="pricing-section-block">
@@ -487,7 +495,7 @@ export default function PricingDetails() {
                   </div>
 
                   <div className="pricing-section-block">
-                    <div className="pricing-block-title">Add-ons</div>
+                    <div className="pricing-block-title">Uitbreidingen</div>
                     <ul className="pricing-list">
                       {PACKAGE_DETAILS.starter.addons.map((item) => (
                         <li key={item}>{item}</li>
@@ -505,9 +513,9 @@ export default function PricingDetails() {
                     <div className="pricing-tag">
                       Growth <span className="pricing-featured-badge">Meest gekozen</span>
                     </div>
-                    <div className="pricing-title">Voor meer inhoud en groeiruimte</div>
+                    <div className="pricing-title">Voor bedrijven die meer aanvragen willen</div>
                     <div className="pricing-sub">
-                      Voor bedrijven die hun website serieuzer willen inzetten als online basis.
+                      Voor ondernemers die hun website actiever willen inzetten voor zichtbaarheid, inhoud en groei.
                     </div>
                   </div>
 
@@ -516,6 +524,7 @@ export default function PricingDetails() {
                       <sup>€</sup>149<span>/m</span>
                     </div>
                     <div className="pricing-setup">+ €750 eenmalige setup</div>
+                    <div className="pricing-terms">Maandelijks opzegbaar vanaf 6 maanden · daarna zonder lange contractduur</div>
                   </div>
 
                   <div className="pricing-section-block">
@@ -537,7 +546,7 @@ export default function PricingDetails() {
                   </div>
 
                   <div className="pricing-section-block">
-                    <div className="pricing-block-title">Add-ons</div>
+                    <div className="pricing-block-title">Uitbreidingen</div>
                     <ul className="pricing-list">
                       {PACKAGE_DETAILS.growth.addons.map((item) => (
                         <li key={item}>{item}</li>
@@ -546,16 +555,16 @@ export default function PricingDetails() {
                   </div>
 
                   <div className="pricing-cta-note">
-                    Beste balans tussen prijs, inhoud en uitbreidbaarheid voor de meeste lokale ondernemers.
+                    Beste balans tussen prijs, inhoud en groeiruimte voor de meeste lokale ondernemers.
                   </div>
                 </div>
 
                 <div className="pricing-column">
                   <div className="pricing-head pro">
                     <div className="pricing-tag">Pro</div>
-                    <div className="pricing-title">Voor functionaliteit en doorontwikkeling</div>
+                    <div className="pricing-title">Voor bedrijven die online processen willen automatiseren</div>
                     <div className="pricing-sub">
-                      Voor bedrijven die meer nodig hebben dan een standaard informatieve site.
+                      Voor ondernemers die meer nodig hebben dan alleen een website, zoals intake, reserveringen of een klantomgeving.
                     </div>
                   </div>
 
@@ -564,6 +573,7 @@ export default function PricingDetails() {
                       <sup>€</sup>249<span>/m</span>
                     </div>
                     <div className="pricing-setup">+ €1000 eenmalige setup</div>
+                    <div className="pricing-terms">Maandelijks opzegbaar vanaf maand 3</div>
                   </div>
 
                   <div className="pricing-section-block">
@@ -585,7 +595,7 @@ export default function PricingDetails() {
                   </div>
 
                   <div className="pricing-section-block">
-                    <div className="pricing-block-title">Add-ons</div>
+                    <div className="pricing-block-title">Uitbreidingen</div>
                     <ul className="pricing-list">
                       {PACKAGE_DETAILS.pro.addons.map((item) => (
                         <li key={item}>{item}</li>
@@ -605,12 +615,12 @@ export default function PricingDetails() {
             <div className="page-wrap">
               <h2 className="section-title">Belangrijke nuances</h2>
               <p className="section-sub">
-                Extra context over mailboxen, data-opslag en wat in alle pakketten centraal staat.
+                Extra context over mailadressen, uitbreidingen en wat in alle pakketten centraal staat.
               </p>
 
               <div className="notes-grid">
                 <div className="note-card">
-                  <h3>Mailboxen</h3>
+                  <h3>Mailadressen</h3>
                   <ul>
                     {MAILBOX_BUNDLES.map((item) => (
                       <li key={item}>{item}</li>
@@ -619,7 +629,7 @@ export default function PricingDetails() {
                 </div>
 
                 <div className="note-card">
-                  <h3>Database en data-opslag</h3>
+                  <h3>Groei en functionaliteit</h3>
                   <ul>
                     {DATA_RULES.map((item) => (
                       <li key={item}>{item}</li>
