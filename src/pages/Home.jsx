@@ -1357,7 +1357,6 @@ export default function Home() {
 
         <main>
           <HomeHero />
-          <ClientCasesSection />
 
           <div className="trusted">
             <div className="trusted-inner">
@@ -1369,6 +1368,8 @@ export default function Home() {
               ))}
             </div>
           </div>
+
+          <ClientCasesSection />
 
           <section className="niche-fit-section anchor-section" id="voor-wie">
             <div className="section-wrap">
