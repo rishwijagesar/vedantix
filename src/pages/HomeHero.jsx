@@ -616,7 +616,7 @@ export default function HomeHero() {
 
             <p className="hero-sub">
               Vedantix bouwt websites voor lokale ondernemers die <strong>professioneel willen overkomen en sneller aanvragen,
-              afspraken of contactmomenten</strong> willen binnenhalen. Geen lang traject, geen technisch gedoe, wel een website
+                afspraken of contactmomenten</strong> willen binnenhalen. Geen lang traject, geen technisch gedoe, wel een website
               die direct duidelijk maakt waarom iemand voor jou moet kiezen.
             </p>
 
@@ -644,21 +644,19 @@ export default function HomeHero() {
               </a>
 
               <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag%20over%20een%20website."
-                target="_blank"
-                rel="noreferrer"
-                className="btn-wa"
-                style={{ textAlign: "center" }}
-              >
-                💬 Stel je vraag via WhatsApp
-              </a>
-
-              <a
                 href="#demo"
                 className="btn-ghost"
                 style={{ textAlign: "center" }}
               >
                 Bekijk demo’s →
+              </a>
+
+              <a
+                href="#prijzen"
+                className="btn-ghost"
+                style={{ textAlign: "center" }}
+              >
+                Bekijk pakketten →
               </a>
             </div>
 
