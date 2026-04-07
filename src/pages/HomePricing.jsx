@@ -306,52 +306,52 @@ const PRICING_STYLES = `
 
 const PACKAGES = [
   {
-    tier: "Zichtbaar",
-    name: "Professioneel online zonder gedoe",
-    fit: "Voor starters, zzp’ers en kleine bedrijven",
+    tier: "Basic",
+    name: "Voor professioneel online zichtbaar zijn",
+    fit: "Voor starters, zzp’ers en kleine lokale bedrijven",
     price: "99",
     setup: "€500 setup",
     featured: false,
     cancelNote: "Opzegbaar vanaf 6 maanden",
     bullets: [
-      "Website tot 5 pagina’s",
+      "Professionele website tot 5 pagina’s",
       "Mobielvriendelijk ontwerp",
       "WhatsApp, bellen en formulier",
-      "Onderhoud inbegrepen",
+      "Onderhoud en kleine updates inbegrepen",
     ],
-    cta: "Kies Zichtbaar →",
+    cta: "Kies Basic →",
   },
   {
-    tier: "Groei",
-    name: "Meer aanvragen via je website",
-    fit: "Meest gekozen door kappers, salons en klusbedrijven",
+    tier: "Growth",
+    name: "Voor meer aanvragen en groeiruimte",
+    fit: "Meest gekozen door kappers, salons, fotografen en klusbedrijven",
     price: "149",
     setup: "€750 setup",
     featured: true,
     cancelNote: "Opzegbaar vanaf 6 maanden",
     bullets: [
-      "Alles uit Zichtbaar",
-      "Meer pagina’s en SEO-structuur",
+      "Alles uit Basic",
+      "Meer pagina’s en sterkere SEO-structuur",
       "Blog of FAQ mogelijk",
-      "Meer ruimte voor diensten",
+      "Meer ruimte voor diensten en landingspagina’s",
     ],
-    cta: "Kies Groei →",
+    cta: "Kies Growth →",
   },
   {
-    tier: "Automatiseren",
-    name: "Je website laten meewerken",
-    fit: "Voor reserveringen, intake en workflows",
+    tier: "Pro",
+    name: "Voor functionaliteit en doorontwikkeling",
+    fit: "Voor reserveringen, intake, dashboards en workflows",
     price: "249",
     setup: "€1000 setup",
     featured: false,
     cancelNote: "Opzegbaar vanaf maand 3",
     bullets: [
-      "Alles uit Groei",
-      "Dashboard of klantomgeving",
+      "Alles uit Growth",
+      "Dashboard of klantomgeving mogelijk",
       "Reserveringen of intake mogelijk",
       "Meer maatwerk en doorontwikkeling",
     ],
-    cta: "Kies Automatiseren →",
+    cta: "Kies Pro →",
   },
 ];
 
@@ -367,10 +367,10 @@ export default function HomePricing() {
 
         <div className="section-header centered">
           <div className="section-label">Pakketten</div>
-          <h2 className="section-h2">Kies het pakket dat bij jouw bedrijf past</h2>
+          <h2 className="section-h2">Van professioneel zichtbaar naar website die echt meewerkt</h2>
           <p className="section-p">
-            Eerst professioneel zichtbaar zijn, daarna meer aanvragen of uiteindelijk processen laten meewerken.
-            De pakketten zijn bewust simpel gehouden zodat je snel ziet wat bij jouw fase past.
+            Basic is voor een sterke online basis. Growth is voor ondernemers die meer aanvragen willen.
+            Pro is voor bedrijven die hun website ook processen willen laten ondersteunen.
           </p>
         </div>
 
@@ -414,10 +414,10 @@ export default function HomePricing() {
         </div>
 
         <div className="pricing-decision">
-          <h3>Twijfel je?</h3>
+          <h3>Twijfel je tussen de pakketten?</h3>
           <p>
-            De meeste ondernemers kiezen voor <strong>Groei</strong>. Daar zit meestal alles in om meer klanten,
-            afspraken of aanvragen te krijgen zonder dat het meteen complex wordt.
+            In de meeste gevallen is <strong>Growth</strong> de beste keuze. Dat pakket geeft meestal de beste balans
+            tussen professionele uitstraling, groeiruimte en meer aanvragen.
           </p>
         </div>
 
