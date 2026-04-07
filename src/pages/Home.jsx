@@ -6,6 +6,7 @@ import HomeHero, { HOME_HERO_STYLES } from "./HomeHero";
 import HomePricing from "./HomePricing";
 import HomeDemoSection from "./HomeDemoSection";
 import HomeFounderSection from "./HomeFounderSection";
+import ClientCasesSection from "../components/home/ClientCasesSection";
 
 const HOME_STYLES = `
   *{box-sizing:border-box;margin:0;padding:0}
@@ -1356,6 +1357,7 @@ export default function Home() {
 
         <main>
           <HomeHero />
+          <ClientCasesSection />
 
           <div className="trusted">
             <div className="trusted-inner">
