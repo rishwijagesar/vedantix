@@ -22,7 +22,7 @@ const HOME_STYLES = `
 
   .section-wrap{max-width:1140px;margin:0 auto;width:100%}
   .section-header{
-    max-width:720px;
+    max-width:760px;
     margin-bottom:56px;
     text-align:left
   }
@@ -48,9 +48,9 @@ const HOME_STYLES = `
     font-size:.96rem;
     color:#6b7280;
     line-height:1.75;
-    max-width:660px
+    max-width:680px
   }
-  .section-p.light{color:rgba(255,255,255,.56)}
+  .section-p.light{color:rgba(255,255,255,.58)}
   .section-label{
     font-size:.72rem;
     font-weight:800;
@@ -77,6 +77,23 @@ const HOME_STYLES = `
     background:#1e293b;
     transform:translateY(-2px);
     box-shadow:0 8px 24px rgba(0,0,0,.2)
+  }
+
+  .btn-outline{
+    background:#fff;
+    color:#111827;
+    padding:14px 22px;
+    border-radius:10px;
+    border:1px solid #e5e7eb;
+    font-weight:800;
+    font-size:.88rem;
+    text-decoration:none;
+    display:inline-block;
+    transition:all .2s
+  }
+  .btn-outline:hover{
+    background:#f8fafc;
+    border-color:#cbd5e1
   }
 
   .trusted{
@@ -112,138 +129,9 @@ const HOME_STYLES = `
     color:#6b7280
   }
 
-  .problem-section{padding:100px 5%;background:#fff}
-  .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  .problem-card{
-    padding:32px 28px;
-    background:#fafafa;
-    border:1px solid #f3f4f6;
-    border-radius:16px;
-    transition:all .25s
-  }
-  .problem-card:hover{
-    background:#fff;
-    box-shadow:0 8px 32px rgba(0,0,0,.06);
-    z-index:1;
-    transform:translateY(-2px)
-  }
-  .problem-icon{font-size:1.6rem;margin-bottom:14px}
-  .problem-card h3{
-    font-size:1rem;
-    font-weight:800;
-    color:#111827;
-    margin-bottom:8px
-  }
-  .problem-card p{
-    font-size:.86rem;
-    color:#6b7280;
-    line-height:1.7
-  }
-
-  .difference-section{padding:100px 5%;background:#fff}
-  .difference-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-  .difference-card{
-    background:linear-gradient(180deg,#ffffff,#fafbff);
-    border:1px solid #eef2ff;
-    border-radius:18px;
-    padding:28px 24px;
-    box-shadow:0 8px 32px rgba(99,102,241,.04)
-  }
-  .difference-icon{
-    width:42px;
-    height:42px;
-    border-radius:12px;
-    background:#eef2ff;
-    color:#6366f1;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:1.1rem;
-    font-weight:800;
-    margin-bottom:16px
-  }
-  .difference-card h3{
-    font-size:.98rem;
-    font-weight:800;
-    color:#111827;
-    margin-bottom:8px
-  }
-  .difference-card p{
-    font-size:.86rem;
-    color:#6b7280;
-    line-height:1.7
-  }
-
-  .demo-section{padding:100px 5%;background:#f8fafc}
-
-  .solution-section{padding:100px 5%;background:linear-gradient(160deg,#0d1a3a,#111827)}
-  .solution-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-  .solution-col{padding:36px;border-radius:16px}
-  .solution-col.get{
-    background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.08)
-  }
-  .solution-col.skip{
-    background:rgba(99,102,241,.08);
-    border:1px solid rgba(99,102,241,.15)
-  }
-  .solution-col h3{
-    font-size:.9rem;
-    font-weight:800;
-    margin-bottom:20px;
-    padding-bottom:16px;
-    border-bottom:1px solid rgba(255,255,255,.07)
-  }
-  .solution-col.get h3{color:rgba(255,255,255,.9)}
-  .solution-col.skip h3{color:#a78bfa}
-  .sol-item{
-    display:flex;
-    gap:10px;
-    align-items:flex-start;
-    margin-bottom:14px;
-    font-size:.85rem;
-    line-height:1.6
-  }
-  .sol-item:last-child{margin-bottom:0}
-  .sol-check{flex-shrink:0;margin-top:2px;font-size:.8rem}
-  .solution-col.get .sol-item{color:rgba(255,255,255,.65)}
-  .solution-col.skip .sol-item{color:rgba(255,255,255,.55)}
-
-  .results-section{padding:100px 5%;background:#fff}
-  .results-row{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:0;
-    border:1px solid #f3f4f6;
-    border-radius:20px;
-    overflow:hidden
-  }
-  .result-item{
-    padding:40px 32px;
-    text-align:center;
-    border-right:1px solid #f3f4f6
-  }
-  .result-item:last-child{border-right:none}
-  .result-num{
-    font-size:2rem;
-    font-weight:900;
-    color:#111827;
-    letter-spacing:-1px;
-    margin-bottom:8px;
-    line-height:1.1
-  }
-  .result-label{
-    font-size:.84rem;
-    color:#6b7280;
-    font-weight:600;
-    line-height:1.6
-  }
-
   .niche-fit-section{
-    padding:100px 5%;
-    background:#f8fafc;
-    border-top:1px solid #f3f4f6;
-    border-bottom:1px solid #f3f4f6
+    padding:96px 5%;
+    background:#fff
   }
   .niche-fit-grid{
     display:grid;
@@ -371,134 +259,70 @@ const HOME_STYLES = `
     flex-direction:column;
     gap:12px
   }
-  .niche-highlight-cta .btn-lead{
-    text-align:center
-  }
   .niche-highlight-note{
     font-size:.8rem;
     color:#9ca3af;
     line-height:1.6
   }
 
-  .founder-section{padding:100px 5%;background:#f9fafb}
-  .founder-grid{
-    max-width:1100px;
-    margin:0 auto;
-    display:grid;
-    grid-template-columns:320px 1fr;
-    gap:32px;
-    align-items:stretch
+  .problem-section{padding:96px 5%;background:#f8fafc}
+  .problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .problem-card{
+    padding:32px 28px;
+    background:#fff;
+    border:1px solid #f3f4f6;
+    border-radius:16px;
+    transition:all .25s
   }
-  .founder-photo{
-    background:linear-gradient(145deg,#e0e7ff,#f5f3ff);
-    border:1px solid #e0e7ff;
-    border-radius:24px;
-    min-height:320px;
+  .problem-card:hover{
+    box-shadow:0 8px 32px rgba(0,0,0,.06);
+    transform:translateY(-2px)
+  }
+  .problem-icon{font-size:1.6rem;margin-bottom:14px}
+  .problem-card h3{
+    font-size:1rem;
+    font-weight:800;
+    color:#111827;
+    margin-bottom:8px
+  }
+  .problem-card p{
+    font-size:.86rem;
+    color:#6b7280;
+    line-height:1.7
+  }
+
+  .difference-section{padding:96px 5%;background:#fff}
+  .difference-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .difference-card{
+    background:linear-gradient(180deg,#ffffff,#fafbff);
+    border:1px solid #eef2ff;
+    border-radius:18px;
+    padding:28px 24px;
+    box-shadow:0 8px 32px rgba(99,102,241,.04)
+  }
+  .difference-icon{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:#eef2ff;
+    color:#6366f1;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:0;
-    overflow:hidden;
-  }
-  .founder-image{
-    width:100%;
-    height:100%;
-    min-height:320px;
-    object-fit:cover;
-    object-position:center top;
-    display:block;
-  }
-  .founder-card{
-    background:#fff;
-    border:1px solid #eef2ff;
-    border-radius:24px;
-    padding:40px
-  }
-  .founder-card p{
-    font-size:.95rem;
-    color:#4b5563;
-    line-height:1.9;
-    margin-bottom:16px;
-    max-width:680px
-  }
-  .founder-points{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px 18px;
-    margin-top:24px
-  }
-  .founder-point{
-    display:flex;
-    gap:10px;
-    align-items:flex-start;
-    font-size:.86rem;
-    color:#374151;
-    font-weight:600
-  }
-  .founder-point::before{
-    content:'✓';
-    color:#6366f1;
-    font-weight:900;
-    flex-shrink:0
-  }
-
-  .founder-mini-testimonial{
-    margin-top:28px;
-    padding:22px;
-    background:linear-gradient(135deg,#f8fafc,#eef2ff);
-    border:1px solid #e0e7ff;
-    border-radius:20px;
-    box-shadow:0 8px 24px rgba(99,102,241,.06);
-  }
-  .founder-mini-head{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:14px;
-  }
-  .founder-mini-avatar{
-    width:56px;
-    height:56px;
-    border-radius:50%;
-    object-fit:cover;
-    object-position:center top;
-    border:2px solid #fff;
-    box-shadow:0 4px 12px rgba(0,0,0,.08);
-    flex-shrink:0;
-  }
-  .founder-mini-meta{
-    display:flex;
-    flex-direction:column;
-    gap:2px;
-  }
-  .founder-mini-meta strong{
-    font-size:.94rem;
-    color:#111827;
+    font-size:1.1rem;
     font-weight:800;
-    line-height:1.2;
+    margin-bottom:16px
   }
-  .founder-mini-meta span{
-    font-size:.78rem;
+  .difference-card h3{
+    font-size:.98rem;
+    font-weight:800;
+    color:#111827;
+    margin-bottom:8px
+  }
+  .difference-card p{
+    font-size:.86rem;
     color:#6b7280;
-    font-weight:600;
-    line-height:1.3;
-  }
-  .founder-mini-quote{
-    margin:0;
-    font-size:.92rem;
-    line-height:1.8;
-    color:#374151;
-    font-style:italic;
-    position:relative;
-  }
-  .founder-mini-quote::before{
-    content:'“';
-    font-size:2rem;
-    line-height:1;
-    color:#818cf8;
-    font-weight:900;
-    margin-right:4px;
-    vertical-align:top;
+    line-height:1.7
   }
 
   .pricing-section{padding:100px 5%;background:#fff}
@@ -672,7 +496,6 @@ const HOME_STYLES = `
     border-color:#c7d2fe;
     color:#4338ca
   }
-
   .p-cta{
     display:block;
     text-align:center;
@@ -701,7 +524,6 @@ const HOME_STYLES = `
     box-shadow:0 8px 28px rgba(99,102,241,.35);
     transform:translateY(-1px)
   }
-
   .pricing-help{
     margin-top:24px;
     font-size:.84rem;
@@ -714,7 +536,6 @@ const HOME_STYLES = `
     text-decoration:none
   }
   .pricing-help a:hover{text-decoration:underline}
-
   .pricing-decision{
     max-width:860px;
     margin:28px auto 0;
@@ -737,7 +558,7 @@ const HOME_STYLES = `
   }
 
   .comparison-section{
-    padding:100px 5%;
+    padding:96px 5%;
     background:#f9fafb
   }
   .comparison-grid{
@@ -788,44 +609,207 @@ const HOME_STYLES = `
     flex-shrink:0
   }
 
-  .niche-pages-section{
-    padding:90px 5%;
-    background:#fff
-  }
-  .niche-pages-grid{
+  .demo-section{padding:96px 5%;background:#fff}
+
+  .how-section{padding:96px 5%;background:#fff}
+  .how-steps{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px
+    grid-template-columns:repeat(4,1fr);
+    gap:0;
+    margin-top:56px;
+    position:relative
   }
-  .niche-page-card{
-    border-radius:18px;
-    border:1px solid #e5e7eb;
+  .how-steps::before{
+    content:'';
+    position:absolute;
+    top:24px;
+    left:calc(12.5% + 20px);
+    right:calc(12.5% + 20px);
+    height:1px;
+    background:linear-gradient(90deg,#e0e7ff,#c7d2fe,#e0e7ff);
+    z-index:0
+  }
+  .how-step{
+    text-align:center;
+    padding:0 20px;
+    position:relative;
+    z-index:1
+  }
+  .step-num{
+    width:48px;
+    height:48px;
     background:#fff;
-    padding:22px;
-    transition:all .25s
-  }
-  .niche-page-card:hover{
-    transform:translateY(-2px);
-    box-shadow:0 12px 30px rgba(15,23,42,.06);
-    border-color:#c7d2fe
-  }
-  .niche-page-card h3{
-    font-size:.98rem;
+    border:2px solid #e0e7ff;
+    border-radius:50%;
+    font-size:.95rem;
     font-weight:900;
+    color:#6366f1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 20px;
+    box-shadow:0 4px 12px rgba(99,102,241,.12)
+  }
+  .how-step h3{
+    font-size:.88rem;
+    font-weight:800;
     color:#111827;
     margin-bottom:8px
   }
-  .niche-page-card p{
+  .how-step p{
+    font-size:.78rem;
+    color:#9ca3af;
+    line-height:1.6
+  }
+
+  .results-section{padding:96px 5%;background:#fff}
+  .results-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:0;
+    border:1px solid #f3f4f6;
+    border-radius:20px;
+    overflow:hidden
+  }
+  .result-item{
+    padding:40px 32px;
+    text-align:center;
+    border-right:1px solid #f3f4f6
+  }
+  .result-item:last-child{border-right:none}
+  .result-num{
+    font-size:2rem;
+    font-weight:900;
+    color:#111827;
+    letter-spacing:-1px;
+    margin-bottom:8px;
+    line-height:1.1
+  }
+  .result-label{
     font-size:.84rem;
     color:#6b7280;
-    line-height:1.7;
-    margin-bottom:14px
+    font-weight:600;
+    line-height:1.6
   }
-  .niche-page-card a{
+
+  .founder-section{padding:96px 5%;background:#f9fafb}
+  .founder-grid{
+    max-width:1100px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:320px 1fr;
+    gap:32px;
+    align-items:stretch
+  }
+  .founder-photo{
+    background:linear-gradient(145deg,#e0e7ff,#f5f3ff);
+    border:1px solid #e0e7ff;
+    border-radius:24px;
+    min-height:320px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    overflow:hidden;
+  }
+  .founder-image{
+    width:100%;
+    height:100%;
+    min-height:320px;
+    object-fit:cover;
+    object-position:center top;
+    display:block;
+  }
+  .founder-card{
+    background:#fff;
+    border:1px solid #eef2ff;
+    border-radius:24px;
+    padding:40px
+  }
+  .founder-card p{
+    font-size:.95rem;
+    color:#4b5563;
+    line-height:1.9;
+    margin-bottom:16px;
+    max-width:680px
+  }
+  .founder-points{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px 18px;
+    margin-top:24px
+  }
+  .founder-point{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-size:.86rem;
+    color:#374151;
+    font-weight:600
+  }
+  .founder-point::before{
+    content:'✓';
     color:#6366f1;
+    font-weight:900;
+    flex-shrink:0
+  }
+  .founder-mini-testimonial{
+    margin-top:28px;
+    padding:22px;
+    background:linear-gradient(135deg,#f8fafc,#eef2ff);
+    border:1px solid #e0e7ff;
+    border-radius:20px;
+    box-shadow:0 8px 24px rgba(99,102,241,.06);
+  }
+  .founder-mini-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .founder-mini-avatar{
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    object-fit:cover;
+    object-position:center top;
+    border:2px solid #fff;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+    flex-shrink:0;
+  }
+  .founder-mini-meta{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .founder-mini-meta strong{
+    font-size:.94rem;
+    color:#111827;
     font-weight:800;
-    font-size:.84rem;
-    text-decoration:none
+    line-height:1.2;
+  }
+  .founder-mini-meta span{
+    font-size:.78rem;
+    color:#6b7280;
+    font-weight:600;
+    line-height:1.3;
+  }
+  .founder-mini-quote{
+    margin:0;
+    font-size:.92rem;
+    line-height:1.8;
+    color:#374151;
+    font-style:italic;
+    position:relative;
+  }
+  .founder-mini-quote::before{
+    content:'“';
+    font-size:2rem;
+    line-height:1;
+    color:#818cf8;
+    font-weight:900;
+    margin-right:4px;
+    vertical-align:top;
   }
 
   .trust-strip{
@@ -852,7 +836,7 @@ const HOME_STYLES = `
   }
   .trust-icon{font-size:.95rem}
 
-  .roi-section{padding:110px 5%;background:#fff}
+  .roi-section{padding:100px 5%;background:#fff}
   .roi-inner{max-width:760px;margin:0 auto;text-align:center}
   .roi-title{
     font-size:clamp(1.8rem,3vw,2.4rem);
@@ -922,7 +906,7 @@ const HOME_STYLES = `
   }
   .roi-note{font-size:.78rem;color:#9ca3af}
 
-  .why-section{padding:100px 5%;background:#f9fafb}
+  .why-section{padding:96px 5%;background:#f9fafb}
   .why-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
   .why-col{padding:40px;border-radius:18px}
   .why-col.old{
@@ -967,57 +951,6 @@ const HOME_STYLES = `
     color:#6366f1;
     font-weight:700;
     flex-shrink:0
-  }
-
-  .how-section{padding:100px 5%;background:#fff}
-  .how-steps{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:0;
-    margin-top:56px;
-    position:relative
-  }
-  .how-steps::before{
-    content:'';
-    position:absolute;
-    top:24px;
-    left:calc(12.5% + 20px);
-    right:calc(12.5% + 20px);
-    height:1px;
-    background:linear-gradient(90deg,#e0e7ff,#c7d2fe,#e0e7ff);
-    z-index:0
-  }
-  .how-step{
-    text-align:center;
-    padding:0 20px;
-    position:relative;
-    z-index:1
-  }
-  .step-num{
-    width:48px;
-    height:48px;
-    background:#fff;
-    border:2px solid #e0e7ff;
-    border-radius:50%;
-    font-size:.95rem;
-    font-weight:900;
-    color:#6366f1;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:0 auto 20px;
-    box-shadow:0 4px 12px rgba(99,102,241,.12)
-  }
-  .how-step h3{
-    font-size:.88rem;
-    font-weight:800;
-    color:#111827;
-    margin-bottom:8px
-  }
-  .how-step p{
-    font-size:.78rem;
-    color:#9ca3af;
-    line-height:1.6
   }
 
   .lead-magnet-section{
@@ -1216,15 +1149,9 @@ const HOME_STYLES = `
     font-weight:800
   }
 
-  @media (max-width: 1280px){
-    .trusted{
-      padding:18px 5%;
-    }
-  }
-
   @media(max-width:1024px){
-    .pricing-grid,.difference-grid,.niche-fit-grid,.niche-pages-grid{grid-template-columns:1fr;max-width:640px;margin:0 auto}
-    .solution-grid,.why-grid,.comparison-grid,.niche-highlight{grid-template-columns:1fr;max-width:720px;margin:0 auto}
+    .niche-fit-grid,.pricing-grid,.difference-grid{grid-template-columns:1fr;max-width:620px;margin:0 auto}
+    .problem-grid,.comparison-grid,.why-grid,.niche-highlight{grid-template-columns:1fr;max-width:720px;margin:0 auto}
     .results-row{grid-template-columns:1fr 1fr}
     .results-row .result-item:nth-child(2){border-right:none}
     .results-row .result-item:nth-child(3){border-right:none;border-top:1px solid #f3f4f6;grid-column:1/-1}
@@ -1245,31 +1172,24 @@ const HOME_STYLES = `
     .results-row{grid-template-columns:1fr;border-radius:16px}
     .result-item{border-right:none;border-bottom:1px solid #f3f4f6;padding:28px}
     .result-item:last-child{border-bottom:none}
-    .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.founder-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section,.comparison-section,.niche-fit-section,.niche-pages-section{padding:80px 5%}
+    .problem-section,.difference-section,.demo-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section,.comparison-section,.niche-fit-section,.results-section,.founder-section{padding:80px 5%}
     .founder-card{padding:32px 24px}
     .founder-points{grid-template-columns:1fr}
-    .founder-mini-head{align-items:center}
   }
 
   @media(max-width:640px){
     .lead-magnet-inner{flex-direction:column;gap:24px;text-align:center}
     .lead-magnet-cta{width:100%}
-    .btn-lead{display:block;text-align:center}
+    .btn-lead,.btn-outline{display:block;text-align:center}
   }
 
   @media(max-width:480px){
-    .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.founder-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section,.comparison-section,.niche-fit-section,.niche-pages-section{padding:60px 5%}
+    .problem-section,.difference-section,.demo-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section,.comparison-section,.niche-fit-section,.results-section,.founder-section{padding:60px 5%}
     .trusted-inner{gap:12px}
     .guarantee-box{flex-direction:column;gap:10px;padding:20px}
     .cta-section h2{font-size:1.8rem}
     .section-header{margin-bottom:40px}
-    .founder-mini-head{
-      flex-direction:row;
-      align-items:center;
-    }
-    .founder-mini-testimonial{
-      padding:18px;
-    }
+    .founder-mini-testimonial{padding:18px}
   }
 `;
 
@@ -1330,7 +1250,7 @@ const NICHE_OPTIONS = [
     name: "Schoonheidssalons",
     problem: "Je wilt meer boekingen en een uitstraling die rust, kwaliteit en vertrouwen uitstraalt.",
     bestFit: "Groei past het vaakst bij salons",
-    href: "/website-schoonheidssalon",
+    href: "/website-salon",
     highlightTitle: "Meer boekingen met een rustige, luxe uitstraling",
     highlightText:
       "Voor een schoonheidssalon moet je website professioneel ogen, behandelingen duidelijk tonen en klanten soepel naar contact of boeking leiden.",
@@ -1415,37 +1335,6 @@ const DIFFERENCE_POINTS = [
   ],
 ];
 
-const SOLUTION_GET = [
-  "Een professionele website die vertrouwen uitstraalt",
-  "Een website die goed werkt op mobiel",
-  "Duidelijke knoppen voor bellen, WhatsApp of aanvragen",
-  "Onderhoud en kleine hulpvragen geregeld",
-  "Eén vast aanspreekpunt voor je website",
-  "Geen technisch gedoe of losse partijen",
-];
-
-const SOLUTION_SKIP = [
-  "Zelf uitzoeken waar je website draait",
-  "Technische termen proberen te begrijpen",
-  "Meerdere partijen bellen bij problemen",
-  "Los betalen voor elke kleine wijziging",
-  "Een website die na oplevering stil blijft staan",
-  "Tijd verliezen aan dingen buiten je eigen vak",
-];
-
-const RESULTS = [
-  ["Meer vertrouwen", "Een website die professioneler en duidelijker overkomt"],
-  ["Meer actie", "Sterkere focus op bellen, WhatsAppen of aanvragen"],
-  ["Meer rust", "Onderhoud, updates en support blijven geregeld"],
-];
-
-const FOUNDER_POINTS = [
-  "Direct contact zonder lagen of accountmanagers",
-  "Snelle communicatie via WhatsApp of telefoon",
-  "Praktische focus op duidelijke websites die verkopen",
-  "Ook geschikt als je nog geen bestaande website hebt",
-];
-
 const PACKAGES = [
   {
     tier: "Zichtbaar",
@@ -1506,6 +1395,35 @@ const PACKAGES = [
   },
 ];
 
+const COMPARE_SELF = [
+  "Zelf tools, hosting of bouwers uitzoeken",
+  "Tijd kwijt aan ontwerp, inhoud en techniek",
+  "Geen duidelijke structuur voor meer aanvragen",
+  "Bij problemen zelf zoeken wie iets oplost",
+  "Vaak starten met goedkoop, maar later alsnog gedoe",
+];
+
+const COMPARE_VEDANTIX = [
+  "Alles vanuit één partij geregeld",
+  "Gebouwd met focus op aanvragen, contact en vertrouwen",
+  "Persoonlijke hulp in plaats van een anoniem ticketsysteem",
+  "Onderhoud en kleine updates blijven doorlopen",
+  "Snel live en makkelijk op te schalen als je groeit",
+];
+
+const RESULTS = [
+  ["Meer vertrouwen", "Een website die professioneler en duidelijker overkomt"],
+  ["Meer actie", "Sterkere focus op bellen, WhatsAppen of aanvragen"],
+  ["Meer rust", "Onderhoud, updates en support blijven geregeld"],
+];
+
+const FOUNDER_POINTS = [
+  "Direct contact zonder lagen of accountmanagers",
+  "Snelle communicatie via WhatsApp of telefoon",
+  "Praktische focus op duidelijke websites die verkopen",
+  "Ook geschikt als je nog geen bestaande website hebt",
+];
+
 const TRUST_ITEMS = [
   ["✔", "Gebouwd voor lokale ondernemers"],
   ["✔", "Duidelijke maandprijs"],
@@ -1537,22 +1455,6 @@ const HOW_STEPS = [
   ["4", "Onderhoud & updates", "Na livegang blijven we betrokken voor beheer, kleine wijzigingen en doorontwikkeling."],
 ];
 
-const COMPARE_SELF = [
-  "Zelf tools, hosting of bouwers uitzoeken",
-  "Tijd kwijt aan ontwerp, inhoud en techniek",
-  "Geen duidelijke structuur voor meer aanvragen",
-  "Bij problemen zelf zoeken wie iets oplost",
-  "Vaak starten met goedkoop, maar later alsnog gedoe",
-];
-
-const COMPARE_VEDANTIX = [
-  "Alles vanuit één partij geregeld",
-  "Gebouwd met focus op aanvragen, contact en vertrouwen",
-  "Persoonlijke hulp in plaats van een anoniem ticketsysteem",
-  "Onderhoud en kleine updates blijven doorlopen",
-  "Snel live en makkelijk op te schalen als je groeit",
-];
-
 const URGENCY_SPOTS = [1, 2, 3, 4, 5];
 const CTA_META = [
   "Vrijblijvende kennismaking",
@@ -1573,7 +1475,7 @@ export default function Home() {
     <>
       <SEO
         title="Website laten maken voor kappers, restaurants en lokale bedrijven | Vedantix"
-        description="Binnen 48 uur een professionele website voor kappers, restaurants, klusbedrijven, salons, fotografen en zzp’ers. Gericht op meer aanvragen, minder gedoe en doorlopende ondersteuning."
+        description="Binnen 48 uur een professionele website voor kappers, restaurants, klusbedrijven, schoonheidssalons, fotografen en zzp’ers. Gericht op meer aanvragen, minder gedoe en doorlopende ondersteuning."
         canonical="https://vedantix.nl/"
       />
 
@@ -1596,57 +1498,11 @@ export default function Home() {
             </div>
           </div>
 
-          <section className="problem-section">
-            <div className="section-wrap">
-              <div className="section-header">
-                <div className="section-label">Het probleem</div>
-                <h2 className="section-h2">De meeste websites van lokale ondernemers laten klanten liggen</h2>
-                <p className="section-p">
-                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen opwekt, te weinig richting geeft en
-                  na oplevering vaak stil blijft staan.
-                </p>
-              </div>
-
-              <div className="problem-grid">
-                {PROBLEMS.map(([icon, title, text]) => (
-                  <div key={title} className="problem-card">
-                    <div className="problem-icon">{icon}</div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="difference-section">
-            <div className="section-wrap">
-              <div className="section-header centered">
-                <div className="section-label">Waarom Vedantix</div>
-                <h2 className="section-h2">Niet zomaar een mooie website, maar een website die beter verkoopt</h2>
-                <p className="section-p">
-                  Vedantix is er voor lokale ondernemers die geen zin hebben in technisch gedoe, lange trajecten of vage prijzen.
-                  Je krijgt een website die duidelijk oogt, sneller tot actie leidt en gewoon doorlopend wordt bijgehouden.
-                </p>
-              </div>
-
-              <div className="difference-grid">
-                {DIFFERENCE_POINTS.map(([icon, title, text]) => (
-                  <div key={title} className="difference-card">
-                    <div className="difference-icon">{icon}</div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
           <section className="niche-fit-section anchor-section" id="voor-wie">
             <div className="section-wrap">
               <div className="section-header centered">
                 <div className="section-label">Wat past bij jou?</div>
-                <h2 className="section-h2">Kies jouw branche en zie direct wat het beste past</h2>
+                <h2 className="section-h2">Kies jouw branche en zie direct wat meestal het beste past</h2>
                 <p className="section-p">
                   Een kapper, restaurant of zzp’er zoekt niet hetzelfde. Daarom zie je hieronder per niche meteen waar de meeste winst zit
                   en welk pakket meestal het beste aansluit.
@@ -1695,142 +1551,61 @@ export default function Home() {
                   <a href="#pricing" className="btn-lead">
                     Bekijk passende pakketten →
                   </a>
-                  <a href={activeNiche.href} className="btn-lead" style={{ background: "#fff", color: "#111827", border: "1px solid #e5e7eb", boxShadow: "none" }}>
+
+                  <a href={activeNiche.href} className="btn-outline">
                     Bekijk pagina voor {activeNiche.name.toLowerCase()} →
                   </a>
+
                   <div className="niche-highlight-note">
-                    Aanrader: maak voor elke branche ook een eigen landingspagina. Dat converteert sterker en helpt SEO.
+                    Deze nichepagina’s helpen bezoekers zichzelf sneller te herkennen en werken ook sterk voor SEO.
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          <section id="demo" className="demo-section anchor-section">
-            <div className="section-wrap">
-              <div className="section-header centered">
-                <div className="section-label">Demo concepten</div>
-                <h2 className="section-h2">Voorbeelden van richtingen die wij kunnen bouwen</h2>
-                <p className="section-p">
-                  Goede demo’s laten snel zien welke stijl, opbouw en richting mogelijk is voor jouw branche, ook als je nog geen groot portfolio hebt bekeken.
-                </p>
-              </div>
-
-              <NicheCarousel />
-            </div>
-          </section>
-
-          <section className="solution-section">
+          <section className="problem-section">
             <div className="section-wrap">
               <div className="section-header">
-                <div className="section-label light">De oplossing</div>
-                <h2 className="section-h2 light">Alles onder één dak geregeld</h2>
-                <p className="section-p light">
-                  Je website, onderhoud en ondersteuning in één duidelijk abonnement. Geen losse partijen, geen technisch gedoe.
-                </p>
-              </div>
-
-              <div className="solution-grid">
-                <div className="solution-col get">
-                  <h3>✓ Wat je krijgt</h3>
-                  {SOLUTION_GET.map((item) => (
-                    <div key={item} className="sol-item">
-                      <span className="sol-check">✓</span>
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="solution-col skip">
-                  <h3>→ Wat je niet meer hoeft te doen</h3>
-                  {SOLUTION_SKIP.map((item) => (
-                    <div key={item} className="sol-item">
-                      <span className="sol-check">→</span>
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="results-section">
-            <div className="section-wrap">
-              <div className="section-header">
-                <div className="section-label">Wat dit oplevert</div>
-                <h2 className="section-h2">Een betere eerste indruk, meer actie en minder twijfel</h2>
+                <div className="section-label">Het probleem</div>
+                <h2 className="section-h2">De meeste websites van lokale ondernemers laten klanten liggen</h2>
                 <p className="section-p">
-                  Je website hoeft niet alleen mooi te zijn. Hij moet iemand snel overtuigen om te bellen, appen, reserveren of een aanvraag te doen.
+                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen opwekt, te weinig richting geeft en
+                  na oplevering vaak stil blijft staan.
                 </p>
               </div>
 
-              <div className="results-row">
-                {RESULTS.map(([number, label]) => (
-                  <div key={number} className="result-item">
-                    <div className="result-num">{number}</div>
-                    <div className="result-label">{label}</div>
+              <div className="problem-grid">
+                {PROBLEMS.map(([icon, title, text]) => (
+                  <div key={title} className="problem-card">
+                    <div className="problem-icon">{icon}</div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
                   </div>
                 ))}
               </div>
             </div>
           </section>
 
-          <section className="founder-section">
-            <div className="founder-grid">
-              <div className="founder-photo">
-                <img
-                  src="/images/founder_long.jpeg"
-                  alt="Rishwi van Vedantix"
-                  className="founder-image"
-                />
+          <section className="difference-section">
+            <div className="section-wrap">
+              <div className="section-header centered">
+                <div className="section-label">Waarom Vedantix</div>
+                <h2 className="section-h2">Geen tool of los product, maar een website die beter verkoopt</h2>
+                <p className="section-p">
+                  Vedantix is er voor lokale ondernemers die geen zin hebben in technisch gedoe, lange trajecten of vage prijzen.
+                  Je krijgt een website die duidelijk oogt, sneller tot actie leidt en gewoon doorlopend wordt bijgehouden.
+                </p>
               </div>
 
-              <div className="founder-card">
-                <div className="section-label">Achter Vedantix</div>
-                <h2 className="section-h2">Persoonlijk contact, snelle oplevering en focus op resultaat</h2>
-
-                <p>
-                  Vedantix is er voor lokale ondernemers die een professionele website willen zonder lang traject,
-                  vage communicatie of technisch gedoe.
-                </p>
-
-                <p>
-                  Je hebt direct contact, een duidelijke prijs en een praktische aanpak. Het doel is simpel:
-                  een website neerzetten die professioneel oogt en sneller tot actie leidt.
-                </p>
-
-                <p>
-                  Heb je nog geen bestaande website, geen reviews of nog geen uitgebreide content? Dan bouwen we juist
-                  vanuit eenvoud en duidelijkheid een sterke basis.
-                </p>
-
-                <div className="founder-points">
-                  {FOUNDER_POINTS.map((item) => (
-                    <div key={item} className="founder-point">
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="founder-mini-testimonial">
-                  <div className="founder-mini-head">
-                    <img
-                      src="/images/founder.jpeg"
-                      alt="Rishwi van Vedantix"
-                      className="founder-mini-avatar"
-                    />
-
-                    <div className="founder-mini-meta">
-                      <strong>Rishwi</strong>
-                      <span>Founder van Vedantix</span>
-                    </div>
+              <div className="difference-grid">
+                {DIFFERENCE_POINTS.map(([icon, title, text]) => (
+                  <div key={title} className="difference-card">
+                    <div className="difference-icon">{icon}</div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
                   </div>
-
-                  <p className="founder-mini-quote">
-                    Ik help lokale ondernemers aan een website die niet alleen mooi oogt, maar vooral
-                    duidelijker vertrouwen opwekt en sneller tot contact of aanvragen leidt.
-                  </p>
-                </div>
+                ))}
               </div>
             </div>
           </section>
@@ -1912,7 +1687,7 @@ export default function Home() {
                 <div className="section-label">Waarom niet zelf bouwen?</div>
                 <h2 className="section-h2">Het verschil zit niet in de tool, maar in het resultaat</h2>
                 <p className="section-p">
-                  Veel ondernemers vergelijken zichzelf onbewust met hostingpartijen of websitebuilders. Maar de echte keuze is vaak:
+                  Veel ondernemers vergelijken zichzelf onbewust met goedkope builders of hostingpartijen. Maar de echte keuze is vaak:
                   zelf uitzoeken of alles in één keer goed laten regelen.
                 </p>
               </div>
@@ -1939,25 +1714,119 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="niche-pages-section">
+          <section id="demo" className="demo-section anchor-section">
             <div className="section-wrap">
               <div className="section-header centered">
-                <div className="section-label">Per branche uitgewerkt</div>
-                <h2 className="section-h2">Specifieke pagina’s voor jouw niche maken deze keuze nog makkelijker</h2>
+                <div className="section-label">Demo concepten</div>
+                <h2 className="section-h2">Voorbeelden van richtingen die wij kunnen bouwen</h2>
                 <p className="section-p">
-                  Deze nichepagina’s zijn sterk voor SEO én conversie. Bezoekers herkennen zichzelf sneller en zien direct waarom jouw
-                  aanpak juist voor hun branche werkt.
+                  Goede demo’s laten snel zien welke stijl, opbouw en richting mogelijk is voor jouw branche, ook als je nog geen groot portfolio hebt bekeken.
                 </p>
               </div>
 
-              <div className="niche-pages-grid">
-                {NICHE_OPTIONS.map((item) => (
-                  <div key={item.key} className="niche-page-card">
-                    <h3>Website voor {item.name.toLowerCase()}</h3>
-                    <p>{item.problem}</p>
-                    <a href={item.href}>Bekijk nichepagina →</a>
+              <NicheCarousel />
+            </div>
+          </section>
+
+          <section id="how" className="how-section anchor-section">
+            <div className="section-wrap">
+              <div className="section-header centered">
+                <div className="section-label">Werkwijze</div>
+                <h2 className="section-h2">Van eerste bericht naar live website in 4 stappen</h2>
+                <p className="section-p">
+                  Een duidelijk proces werkt beter dan vage beloftes. Zo weet een klant precies wat hij kan verwachten.
+                </p>
+              </div>
+
+              <div className="how-steps">
+                {HOW_STEPS.map(([number, title, text]) => (
+                  <div key={number} className="how-step">
+                    <div className="step-num">{number}</div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
                   </div>
                 ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="results-section">
+            <div className="section-wrap">
+              <div className="section-header">
+                <div className="section-label">Wat dit oplevert</div>
+                <h2 className="section-h2">Een betere eerste indruk, meer actie en minder twijfel</h2>
+                <p className="section-p">
+                  Je website hoeft niet alleen mooi te zijn. Hij moet iemand snel overtuigen om te bellen, appen, reserveren of een aanvraag te doen.
+                </p>
+              </div>
+
+              <div className="results-row">
+                {RESULTS.map(([number, label]) => (
+                  <div key={number} className="result-item">
+                    <div className="result-num">{number}</div>
+                    <div className="result-label">{label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="founder-section">
+            <div className="founder-grid">
+              <div className="founder-photo">
+                <img
+                  src="/images/founder_long.jpeg"
+                  alt="Rishwi van Vedantix"
+                  className="founder-image"
+                />
+              </div>
+
+              <div className="founder-card">
+                <div className="section-label">Achter Vedantix</div>
+                <h2 className="section-h2">Persoonlijk contact, snelle oplevering en focus op resultaat</h2>
+
+                <p>
+                  Vedantix is er voor lokale ondernemers die een professionele website willen zonder lang traject,
+                  vage communicatie of technisch gedoe.
+                </p>
+
+                <p>
+                  Je hebt direct contact, een duidelijke prijs en een praktische aanpak. Het doel is simpel:
+                  een website neerzetten die professioneel oogt en sneller tot actie leidt.
+                </p>
+
+                <p>
+                  Heb je nog geen bestaande website, geen reviews of nog geen uitgebreide content? Dan bouwen we juist
+                  vanuit eenvoud en duidelijkheid een sterke basis.
+                </p>
+
+                <div className="founder-points">
+                  {FOUNDER_POINTS.map((item) => (
+                    <div key={item} className="founder-point">
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="founder-mini-testimonial">
+                  <div className="founder-mini-head">
+                    <img
+                      src="/images/founder.jpeg"
+                      alt="Rishwi van Vedantix"
+                      className="founder-mini-avatar"
+                    />
+
+                    <div className="founder-mini-meta">
+                      <strong>Rishwi</strong>
+                      <span>Founder van Vedantix</span>
+                    </div>
+                  </div>
+
+                  <p className="founder-mini-quote">
+                    Ik help lokale ondernemers aan een website die niet alleen mooi oogt, maar vooral
+                    duidelijker vertrouwen opwekt en sneller tot contact of aanvragen leidt.
+                  </p>
+                </div>
               </div>
             </div>
           </section>
@@ -2044,28 +1913,6 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-          </section>
-
-          <section id="how" className="how-section anchor-section">
-            <div className="section-wrap">
-              <div className="section-header centered">
-                <div className="section-label">Werkwijze</div>
-                <h2 className="section-h2">Van eerste bericht naar live website in 4 stappen</h2>
-                <p className="section-p">
-                  Een duidelijk proces werkt beter dan vage beloftes. Zo weet een klant precies wat hij kan verwachten.
-                </p>
-              </div>
-
-              <div className="how-steps">
-                {HOW_STEPS.map(([number, title, text]) => (
-                  <div key={number} className="how-step">
-                    <div className="step-num">{number}</div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
-                  </div>
-                ))}
               </div>
             </div>
           </section>

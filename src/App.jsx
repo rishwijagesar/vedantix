@@ -24,6 +24,7 @@ const WebsiteKlusbedrijf = lazy(() => import("./pages/WebsiteKlusbedrijf"));
 const WebsiteRestaurant = lazy(() => import("./pages/WebsiteRestaurant"));
 const WebsiteFotograaf = lazy(() => import("./pages/WebsiteFotograaf"));
 const WebsiteSchoonmaakbedrijf = lazy(() => import("./pages/WebsiteSchoonmaakbedrijf"));
+const WebsiteZZP = lazy(() => import("./pages/WebsiteZZP"));
 
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/blog/BlogPost"));
@@ -56,6 +57,7 @@ function App() {
             <Route path="/website-restaurant" element={<WebsiteRestaurant />} />
             <Route path="/website-fotograaf" element={<WebsiteFotograaf />} />
             <Route path="/website-schoonmaakbedrijf" element={<WebsiteSchoonmaakbedrijf />} />
+            <Route path="/website-zzp" element={<WebsiteZZP />} />
 
             <Route path="/website/:niche/:stad" element={<SeoCityPage />} />
             <Route path="/blog" element={<Blog />} />
