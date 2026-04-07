@@ -3,143 +3,113 @@ import { useEffect, useRef, useState } from "react";
 const CLIENT_CASES = [
   {
     name: "Horeca Topper",
-    logo: "/images/HorecaToppers.svg",
+    logo: "/logos/horeca-topper.png",
     website: "https://www.horeca-topper.nl/",
     domainLabel: "horeca-topper.nl",
     branch: "Horeca / dienstverlening",
     status: "Live",
     summary:
-      "Professionele website gerealiseerd met een duidelijke uitstraling, logische structuur en sterke mobiele weergave.",
+      "Professionele website met sterke uitstraling, duidelijke structuur en optimale mobiele weergave.",
   },
 ];
 
 export default function ClientCasesSection() {
   const trackRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
+  const [canLeft, setCanLeft] = useState(false);
+  const [canRight, setCanRight] = useState(false);
 
-  const updateScrollState = () => {
+  const update = () => {
     const el = trackRef.current;
     if (!el) return;
 
-    setCanScrollLeft(el.scrollLeft > 4);
-    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+    setCanLeft(el.scrollLeft > 4);
+    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
   };
 
   useEffect(() => {
-    updateScrollState();
-
+    update();
     const el = trackRef.current;
     if (!el) return;
 
-    el.addEventListener("scroll", updateScrollState);
-    window.addEventListener("resize", updateScrollState);
+    el.addEventListener("scroll", update);
+    window.addEventListener("resize", update);
 
     return () => {
-      el.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
     };
   }, []);
 
-  const scrollByAmount = (direction) => {
+  const scroll = (dir) => {
     const el = trackRef.current;
     if (!el) return;
 
-    const amount = Math.min(380, el.clientWidth * 0.9);
-
     el.scrollBy({
-      left: direction === "left" ? -amount : amount,
+      left: dir === "left" ? -360 : 360,
       behavior: "smooth",
     });
   };
 
   return (
     <section style={styles.section}>
-      <div style={styles.glowOne} />
-      <div style={styles.glowTwo} />
-
       <div style={styles.container}>
-        <div style={styles.headerRow}>
-          <div style={styles.headerContent}>
-            <div style={styles.eyebrow}>KLANTEN</div>
-            <h2 style={styles.title}>Websites die al live staan</h2>
-            <p style={styles.subtitle}>
-              Echte klanten, echte websites. Een compacte selectie van projecten
-              die we hebben gerealiseerd.
-            </p>
-          </div>
-
-          <div style={styles.controls}>
-            <button
-              type="button"
-              onClick={() => scrollByAmount("left")}
-              style={{
-                ...styles.navButton,
-                ...(!canScrollLeft ? styles.navButtonDisabled : {}),
-              }}
-              disabled={!canScrollLeft}
-              aria-label="Scroll naar links"
-            >
-              ←
-            </button>
-
-            <button
-              type="button"
-              onClick={() => scrollByAmount("right")}
-              style={{
-                ...styles.navButton,
-                ...(!canScrollRight ? styles.navButtonDisabled : {}),
-              }}
-              disabled={!canScrollRight}
-              aria-label="Scroll naar rechts"
-            >
-              →
-            </button>
-          </div>
+        {/* HEADER */}
+        <div style={styles.header}>
+          <div style={styles.eyebrow}>KLANTEN</div>
+          <h2 style={styles.title}>Websites die al live staan</h2>
+          <p style={styles.subtitle}>
+            Echte klanten, echte resultaten. Een selectie van projecten die we
+            recent hebben opgeleverd.
+          </p>
         </div>
 
-        <div ref={trackRef} style={styles.carousel} aria-label="Klantcases">
-          {CLIENT_CASES.map((client) => (
-            <article key={client.name} style={styles.card}>
+        {/* CONTROLS */}
+        <div style={styles.controls}>
+          <button
+            onClick={() => scroll("left")}
+            style={{
+              ...styles.navBtn,
+              ...(!canLeft ? styles.disabled : {}),
+            }}
+          >
+            ←
+          </button>
+          <button
+            onClick={() => scroll("right")}
+            style={{
+              ...styles.navBtn,
+              ...(!canRight ? styles.disabled : {}),
+            }}
+          >
+            →
+          </button>
+        </div>
+
+        {/* CAROUSEL */}
+        <div ref={trackRef} style={styles.carousel}>
+          {CLIENT_CASES.map((c) => (
+            <div key={c.name} style={styles.card}>
               <div style={styles.logoWrap}>
-                <img
-                  src={client.logo}
-                  alt={`${client.name} logo`}
-                  style={styles.logo}
-                />
+                <img src={c.logo} alt={c.name} style={styles.logo} />
               </div>
 
-              <div style={styles.cardTop}>
-                <div style={styles.metaRow}>
-                  <span style={styles.statusBadge}>{client.status}</span>
-                  <span style={styles.branch}>{client.branch}</span>
-                </div>
-
-                <h3 style={styles.cardTitle}>{client.name}</h3>
-
-                <a
-                  href={client.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={styles.domainLink}
-                >
-                  {client.domainLabel}
-                </a>
+              <div style={styles.meta}>
+                <span style={styles.status}>{c.status}</span>
+                <span style={styles.branch}>{c.branch}</span>
               </div>
 
-              <p style={styles.summary}>{client.summary}</p>
+              <h3 style={styles.name}>{c.name}</h3>
 
-              <div style={styles.cardFooter}>
-                <a
-                  href={client.website}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={styles.primaryButton}
-                >
-                  Bekijk website
-                </a>
-              </div>
-            </article>
+              <a href={c.website} target="_blank" style={styles.link}>
+                {c.domainLabel}
+              </a>
+
+              <p style={styles.summary}>{c.summary}</p>
+
+              <a href={c.website} target="_blank" style={styles.button}>
+                Bekijk website
+              </a>
+            </div>
           ))}
         </div>
       </div>
@@ -150,205 +120,117 @@ export default function ClientCasesSection() {
 /** @type {Record<string, import("react").CSSProperties>} */
 const styles = {
   section: {
-    position: "relative",
-    overflow: "hidden",
-    padding: "88px 20px",
-    background: `
-      linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
-      radial-gradient(circle at 20% 20%, rgba(59,130,246,0.06), transparent 40%),
-      radial-gradient(circle at 80% 80%, rgba(168,85,247,0.06), transparent 40%)
-    `,
-    color: "#ffffff",
-  },
-  glowOne: {
-    position: "absolute",
-    top: "-120px",
-    left: "-120px",
-    width: "300px",
-    height: "300px",
-    borderRadius: "999px",
-    background: "rgba(59,130,246,0.12)",
-    filter: "blur(90px)",
-    pointerEvents: "none",
-  },
-  glowTwo: {
-    position: "absolute",
-    right: "-100px",
-    bottom: "-100px",
-    width: "260px",
-    height: "260px",
-    borderRadius: "999px",
-    background: "rgba(168,85,247,0.12)",
-    filter: "blur(90px)",
-    pointerEvents: "none",
+    padding: "80px 20px",
+    background: "#f8fafc",
   },
   container: {
-    position: "relative",
-    zIndex: 1,
-    maxWidth: "1240px",
+    maxWidth: "1200px",
     margin: "0 auto",
   },
-  headerRow: {
-    display: "flex",
-    alignItems: "flex-end",
-    justifyContent: "space-between",
-    gap: "20px",
-    flexWrap: "wrap",
-    marginBottom: "28px",
-  },
-  headerContent: {
-    maxWidth: "760px",
+  header: {
+    maxWidth: "700px",
+    marginBottom: "30px",
   },
   eyebrow: {
-    display: "inline-flex",
-    alignItems: "center",
-    minHeight: "34px",
-    padding: "0 12px",
-    borderRadius: "999px",
-    border: "1px solid rgba(255,255,255,0.12)",
-    background: "rgba(255,255,255,0.05)",
     fontSize: "12px",
-    fontWeight: 800,
-    letterSpacing: "0.14em",
-    color: "rgba(255,255,255,0.78)",
-    marginBottom: "16px",
+    fontWeight: 700,
+    color: "#64748b",
+    marginBottom: "10px",
   },
   title: {
-    margin: "0 0 12px 0",
-    fontSize: "clamp(30px, 4vw, 46px)",
-    lineHeight: 1.08,
+    fontSize: "36px",
     fontWeight: 800,
-    letterSpacing: "-0.03em",
+    marginBottom: "10px",
+    color: "#0f172a",
   },
   subtitle: {
-    margin: 0,
-    fontSize: "17px",
-    lineHeight: 1.75,
-    color: "rgba(255,255,255,0.72)",
+    color: "#475569",
+    lineHeight: 1.6,
   },
   controls: {
     display: "flex",
-    alignItems: "center",
     gap: "10px",
+    marginBottom: "20px",
   },
-  navButton: {
-    width: "46px",
-    height: "46px",
-    borderRadius: "14px",
-    border: "1px solid rgba(255,255,255,0.12)",
-    background: "rgba(255,255,255,0.06)",
-    color: "#ffffff",
-    fontSize: "18px",
+  navBtn: {
+    width: "40px",
+    height: "40px",
+    borderRadius: "10px",
+    border: "1px solid #e2e8f0",
+    background: "#ffffff",
     cursor: "pointer",
-    backdropFilter: "blur(8px)",
-    WebkitBackdropFilter: "blur(8px)",
   },
-  navButtonDisabled: {
-    opacity: 0.35,
+  disabled: {
+    opacity: 0.4,
     cursor: "not-allowed",
   },
   carousel: {
     display: "flex",
-    gap: "18px",
+    gap: "16px",
     overflowX: "auto",
     scrollBehavior: "smooth",
-    paddingBottom: "8px",
-    scrollbarWidth: "none",
-    msOverflowStyle: "none",
   },
   card: {
-    flex: "0 0 360px",
-    minHeight: "100%",
-    borderRadius: "26px",
-    border: "1px solid rgba(255,255,255,0.10)",
-    background:
-      "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04))",
-    boxShadow: "0 24px 60px rgba(0,0,0,0.26)",
-    padding: "22px",
+    flex: "0 0 320px",
+    background: "#0f172a",
+    borderRadius: "20px",
+    padding: "20px",
+    color: "#ffffff",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-between",
-    backdropFilter: "blur(14px)",
-    WebkitBackdropFilter: "blur(14px)",
+    gap: "10px",
+    boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
+    transition: "all 0.2s ease",
   },
   logoWrap: {
-    width: "72px",
-    height: "72px",
-    borderRadius: "18px",
+    width: "60px",
+    height: "60px",
+    borderRadius: "14px",
     background: "#ffffff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "12px",
-    marginBottom: "18px",
-    overflow: "hidden",
+    padding: "8px",
   },
   logo: {
-    maxWidth: "100%",
-    maxHeight: "100%",
+    width: "100%",
+    height: "100%",
     objectFit: "contain",
-    display: "block",
   },
-  cardTop: {
-    marginBottom: "14px",
-  },
-  metaRow: {
+  meta: {
     display: "flex",
-    alignItems: "center",
     gap: "10px",
-    flexWrap: "wrap",
-    marginBottom: "12px",
-  },
-  statusBadge: {
-    display: "inline-flex",
     alignItems: "center",
-    minHeight: "30px",
-    padding: "0 10px",
-    borderRadius: "999px",
-    background: "rgba(34,197,94,0.12)",
-    border: "1px solid rgba(34,197,94,0.26)",
-    color: "#86efac",
     fontSize: "12px",
-    fontWeight: 700,
+  },
+  status: {
+    background: "rgba(34,197,94,0.2)",
+    padding: "4px 8px",
+    borderRadius: "999px",
+    color: "#4ade80",
   },
   branch: {
-    fontSize: "13px",
-    color: "rgba(255,255,255,0.68)",
+    color: "rgba(255,255,255,0.6)",
   },
-  cardTitle: {
-    margin: "0 0 6px 0",
-    fontSize: "24px",
-    lineHeight: 1.15,
-    fontWeight: 800,
-    letterSpacing: "-0.02em",
+  name: {
+    fontSize: "20px",
+    fontWeight: 700,
   },
-  domainLink: {
-    display: "inline-block",
+  link: {
+    color: "#60a5fa",
     fontSize: "14px",
-    color: "#93c5fd",
     textDecoration: "none",
-    wordBreak: "break-word",
   },
   summary: {
-    margin: "0 0 18px 0",
-    fontSize: "15px",
-    lineHeight: 1.75,
-    color: "rgba(255,255,255,0.82)",
+    fontSize: "14px",
+    color: "rgba(255,255,255,0.8)",
+    lineHeight: 1.6,
   },
-  cardFooter: {
+  button: {
     marginTop: "auto",
-  },
-  primaryButton: {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: "44px",
-    padding: "0 16px",
-    borderRadius: "12px",
     background: "#ffffff",
-    color: "#09111f",
+    color: "#0f172a",
+    padding: "10px",
+    borderRadius: "10px",
+    textAlign: "center",
     textDecoration: "none",
-    fontWeight: 700,
-    whiteSpace: "nowrap",
+    fontWeight: 600,
   },
 };
