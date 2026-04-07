@@ -11,105 +11,143 @@ const CLIENT_CASES = [
     summary:
       "Professionele website met sterke uitstraling, duidelijke structuur en optimale mobiele weergave.",
   },
+  // Voeg later hier meer klanten toe
+  // {
+  //   name: "Nieuwe klant",
+  //   logo: "/logos/nieuwe-klant.png",
+  //   website: "https://www.nieuweklant.nl/",
+  //   domainLabel: "nieuweklant.nl",
+  //   branch: "Kapper / salon",
+  //   status: "Live",
+  //   summary: "Korte omschrijving van het project.",
+  // },
 ];
 
 export default function ClientCasesSection() {
   const trackRef = useRef(null);
-  const [canLeft, setCanLeft] = useState(false);
-  const [canRight, setCanRight] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
-  const update = () => {
+  const updateScrollState = () => {
     const el = trackRef.current;
     if (!el) return;
 
-    setCanLeft(el.scrollLeft > 4);
-    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 4);
   };
 
   useEffect(() => {
-    update();
+    updateScrollState();
+
     const el = trackRef.current;
     if (!el) return;
 
-    el.addEventListener("scroll", update);
-    window.addEventListener("resize", update);
+    el.addEventListener("scroll", updateScrollState);
+    window.addEventListener("resize", updateScrollState);
 
     return () => {
-      el.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
+      el.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
     };
   }, []);
 
-  const scroll = (dir) => {
+  const scrollByAmount = (direction) => {
     const el = trackRef.current;
     if (!el) return;
 
+    const amount = Math.min(360, el.clientWidth * 0.9);
+
     el.scrollBy({
-      left: dir === "left" ? -360 : 360,
+      left: direction === "left" ? -amount : amount,
       behavior: "smooth",
     });
   };
 
   return (
     <section style={styles.section}>
+      <div style={styles.glowOne} />
+      <div style={styles.glowTwo} />
+
       <div style={styles.container}>
-        {/* HEADER */}
-        <div style={styles.header}>
-          <div style={styles.eyebrow}>KLANTEN</div>
-          <h2 style={styles.title}>Websites die al live staan</h2>
-          <p style={styles.subtitle}>
-            Echte klanten, echte resultaten. Een selectie van projecten die we
-            recent hebben opgeleverd.
-          </p>
+        <div style={styles.headerRow}>
+          <div style={styles.headerContent}>
+            <div style={styles.eyebrow}>KLANTEN</div>
+            <h2 style={styles.title}>Websites die al live staan</h2>
+            <p style={styles.subtitle}>
+              Echte klanten, echte resultaten. Een compacte selectie van
+              projecten die we recent hebben opgeleverd.
+            </p>
+          </div>
+
+          <div style={styles.controls}>
+            <button
+              type="button"
+              onClick={() => scrollByAmount("left")}
+              style={{
+                ...styles.navButton,
+                ...(!canScrollLeft ? styles.navButtonDisabled : {}),
+              }}
+              disabled={!canScrollLeft}
+              aria-label="Scroll naar links"
+            >
+              ←
+            </button>
+
+            <button
+              type="button"
+              onClick={() => scrollByAmount("right")}
+              style={{
+                ...styles.navButton,
+                ...(!canScrollRight ? styles.navButtonDisabled : {}),
+              }}
+              disabled={!canScrollRight}
+              aria-label="Scroll naar rechts"
+            >
+              →
+            </button>
+          </div>
         </div>
 
-        {/* CONTROLS */}
-        <div style={styles.controls}>
-          <button
-            onClick={() => scroll("left")}
-            style={{
-              ...styles.navBtn,
-              ...(!canLeft ? styles.disabled : {}),
-            }}
-          >
-            ←
-          </button>
-          <button
-            onClick={() => scroll("right")}
-            style={{
-              ...styles.navBtn,
-              ...(!canRight ? styles.disabled : {}),
-            }}
-          >
-            →
-          </button>
-        </div>
-
-        {/* CAROUSEL */}
-        <div ref={trackRef} style={styles.carousel}>
-          {CLIENT_CASES.map((c) => (
-            <div key={c.name} style={styles.card}>
+        <div ref={trackRef} style={styles.carousel} aria-label="Klantcases">
+          {CLIENT_CASES.map((client) => (
+            <article key={client.name} style={styles.card}>
               <div style={styles.logoWrap}>
-                <img src={c.logo} alt={c.name} style={styles.logo} />
+                <img
+                  src={client.logo}
+                  alt={`${client.name} logo`}
+                  style={styles.logo}
+                />
               </div>
 
-              <div style={styles.meta}>
-                <span style={styles.status}>{c.status}</span>
-                <span style={styles.branch}>{c.branch}</span>
+              <div style={styles.metaRow}>
+                <span style={styles.statusBadge}>{client.status}</span>
+                <span style={styles.branch}>{client.branch}</span>
               </div>
 
-              <h3 style={styles.name}>{c.name}</h3>
+              <h3 style={styles.cardTitle}>{client.name}</h3>
 
-              <a href={c.website} target="_blank" style={styles.link}>
-                {c.domainLabel}
+              <a
+                href={client.website}
+                target="_blank"
+                rel="noreferrer"
+                style={styles.domainLink}
+              >
+                {client.domainLabel}
               </a>
 
-              <p style={styles.summary}>{c.summary}</p>
+              <p style={styles.summary}>{client.summary}</p>
 
-              <a href={c.website} target="_blank" style={styles.button}>
-                Bekijk website
-              </a>
-            </div>
+              <div style={styles.cardFooter}>
+                <a
+                  href={client.website}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={styles.primaryButton}
+                >
+                  Bekijk website
+                </a>
+              </div>
+            </article>
           ))}
         </div>
       </div>
@@ -120,117 +158,195 @@ export default function ClientCasesSection() {
 /** @type {Record<string, import("react").CSSProperties>} */
 const styles = {
   section: {
-    padding: "80px 20px",
-    background: "#f8fafc",
+    position: "relative",
+    overflow: "hidden",
+    padding: "84px 20px",
+    background:
+      "linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)",
+  },
+  glowOne: {
+    position: "absolute",
+    top: "-140px",
+    left: "-120px",
+    width: "280px",
+    height: "280px",
+    borderRadius: "999px",
+    background: "rgba(59,130,246,0.08)",
+    filter: "blur(90px)",
+    pointerEvents: "none",
+  },
+  glowTwo: {
+    position: "absolute",
+    right: "-100px",
+    bottom: "-100px",
+    width: "240px",
+    height: "240px",
+    borderRadius: "999px",
+    background: "rgba(168,85,247,0.08)",
+    filter: "blur(90px)",
+    pointerEvents: "none",
   },
   container: {
+    position: "relative",
+    zIndex: 1,
     maxWidth: "1200px",
     margin: "0 auto",
   },
-  header: {
-    maxWidth: "700px",
-    marginBottom: "30px",
+  headerRow: {
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+    gap: "20px",
+    flexWrap: "wrap",
+    marginBottom: "28px",
+  },
+  headerContent: {
+    maxWidth: "760px",
   },
   eyebrow: {
+    display: "inline-flex",
+    alignItems: "center",
+    minHeight: "32px",
+    padding: "0 12px",
+    borderRadius: "999px",
+    background: "rgba(15,23,42,0.04)",
+    border: "1px solid rgba(15,23,42,0.06)",
     fontSize: "12px",
-    fontWeight: 700,
+    fontWeight: 800,
+    letterSpacing: "0.12em",
     color: "#64748b",
-    marginBottom: "10px",
+    marginBottom: "14px",
   },
   title: {
-    fontSize: "36px",
+    margin: "0 0 12px 0",
+    fontSize: "clamp(30px, 4vw, 48px)",
+    lineHeight: 1.08,
     fontWeight: 800,
-    marginBottom: "10px",
+    letterSpacing: "-0.03em",
     color: "#0f172a",
   },
   subtitle: {
+    margin: 0,
+    fontSize: "18px",
+    lineHeight: 1.7,
     color: "#475569",
-    lineHeight: 1.6,
   },
   controls: {
     display: "flex",
+    alignItems: "center",
     gap: "10px",
-    marginBottom: "20px",
   },
-  navBtn: {
-    width: "40px",
-    height: "40px",
-    borderRadius: "10px",
-    border: "1px solid #e2e8f0",
-    background: "#ffffff",
+  navButton: {
+    width: "44px",
+    height: "44px",
+    borderRadius: "12px",
+    border: "1px solid rgba(15,23,42,0.08)",
+    background: "rgba(255,255,255,0.8)",
+    color: "#0f172a",
+    fontSize: "18px",
     cursor: "pointer",
+    boxShadow: "0 6px 20px rgba(15,23,42,0.06)",
   },
-  disabled: {
+  navButtonDisabled: {
     opacity: 0.4,
     cursor: "not-allowed",
   },
   carousel: {
     display: "flex",
-    gap: "16px",
+    gap: "18px",
     overflowX: "auto",
     scrollBehavior: "smooth",
+    paddingBottom: "8px",
+    scrollbarWidth: "none",
+    msOverflowStyle: "none",
   },
   card: {
     flex: "0 0 320px",
-    background: "#0f172a",
-    borderRadius: "20px",
-    padding: "20px",
+    borderRadius: "24px",
+    padding: "22px",
+    background: "linear-gradient(180deg, #1e293b, #0f172a)",
     color: "#ffffff",
+    border: "1px solid rgba(255,255,255,0.06)",
+    boxShadow: "0 12px 30px rgba(15,23,42,0.12)",
     display: "flex",
     flexDirection: "column",
-    gap: "10px",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-    transition: "all 0.2s ease",
+    gap: "12px",
   },
   logoWrap: {
     width: "60px",
     height: "60px",
-    borderRadius: "14px",
+    borderRadius: "16px",
     background: "#ffffff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     padding: "8px",
+    marginBottom: "4px",
+    overflow: "hidden",
   },
   logo: {
     width: "100%",
     height: "100%",
     objectFit: "contain",
+    display: "block",
   },
-  meta: {
+  metaRow: {
     display: "flex",
-    gap: "10px",
     alignItems: "center",
-    fontSize: "12px",
+    gap: "10px",
+    flexWrap: "wrap",
   },
-  status: {
-    background: "rgba(34,197,94,0.2)",
-    padding: "4px 8px",
+  statusBadge: {
+    display: "inline-flex",
+    alignItems: "center",
+    minHeight: "30px",
+    padding: "0 10px",
     borderRadius: "999px",
+    background: "rgba(34,197,94,0.15)",
     color: "#4ade80",
-  },
-  branch: {
-    color: "rgba(255,255,255,0.6)",
-  },
-  name: {
-    fontSize: "20px",
+    fontSize: "12px",
     fontWeight: 700,
   },
-  link: {
-    color: "#60a5fa",
+  branch: {
+    fontSize: "13px",
+    color: "rgba(255,255,255,0.68)",
+  },
+  cardTitle: {
+    margin: "0",
+    fontSize: "20px",
+    lineHeight: 1.2,
+    fontWeight: 800,
+    letterSpacing: "-0.02em",
+    color: "#ffffff",
+  },
+  domainLink: {
+    display: "inline-block",
     fontSize: "14px",
+    color: "#60a5fa",
     textDecoration: "none",
+    wordBreak: "break-word",
   },
   summary: {
-    fontSize: "14px",
-    color: "rgba(255,255,255,0.8)",
-    lineHeight: 1.6,
+    margin: 0,
+    fontSize: "15px",
+    lineHeight: 1.7,
+    color: "rgba(255,255,255,0.82)",
   },
-  button: {
+  cardFooter: {
     marginTop: "auto",
-    background: "#ffffff",
+    paddingTop: "6px",
+  },
+  primaryButton: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: "44px",
+    width: "100%",
+    borderRadius: "12px",
+    background: "rgba(255,255,255,0.92)",
     color: "#0f172a",
-    padding: "10px",
-    borderRadius: "10px",
-    textAlign: "center",
     textDecoration: "none",
-    fontWeight: 600,
+    fontWeight: 700,
+    boxShadow: "0 6px 18px rgba(255,255,255,0.08)",
   },
 };
