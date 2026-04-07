@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 const CLIENT_CASES = [
   {
     name: "Horeca Topper",
-    logo: "/logos/horeca-topper.png",
+    logo: "/logos/horeca-topper.svg",
     website: "https://www.horeca-topper.nl/",
     domainLabel: "horeca-topper.nl",
     branch: "Horeca / dienstverlening",
