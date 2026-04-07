@@ -153,8 +153,11 @@ const styles = {
     position: "relative",
     overflow: "hidden",
     padding: "88px 20px",
-    background:
-      "radial-gradient(circle at top left, rgba(59,130,246,0.10), transparent 28%), #07111f",
+    background: `
+      linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
+      radial-gradient(circle at 20% 20%, rgba(59,130,246,0.08), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(168,85,247,0.08), transparent 40%)
+    `,
     color: "#ffffff",
   },
   glowOne: {
