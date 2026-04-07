@@ -3,8 +3,8 @@ export const HOME_HERO_STYLES = `
     position:relative;
     overflow:hidden;
     background:
-      radial-gradient(circle at 14% 18%, rgba(99,102,241,.18), transparent 28%),
-      radial-gradient(circle at 88% 24%, rgba(59,130,246,.10), transparent 22%),
+      radial-gradient(circle at 14% 18%, rgba(99,102,241,.16), transparent 28%),
+      radial-gradient(circle at 86% 20%, rgba(59,130,246,.08), transparent 22%),
       linear-gradient(160deg,#0b1530 0%, #0f172a 58%, #111827 100%);
     color:#fff;
   }
@@ -21,9 +21,9 @@ export const HOME_HERO_STYLES = `
     max-width:1240px;
     margin:0 auto;
     padding:
-      clamp(86px, 10vh, 112px)
+      clamp(82px, 9vh, 108px)
       24px
-      clamp(42px, 6vh, 60px);
+      clamp(38px, 5vh, 54px);
     min-height:calc(100svh - 72px);
     display:grid;
     align-items:center;
@@ -33,8 +33,8 @@ export const HOME_HERO_STYLES = `
 
   .home-hero-grid{
     display:grid;
-    grid-template-columns:minmax(0,1.3fr) minmax(320px,.78fr);
-    gap:42px;
+    grid-template-columns:minmax(0,1.18fr) minmax(280px,.62fr);
+    gap:32px;
     align-items:center;
   }
 
@@ -70,11 +70,11 @@ export const HOME_HERO_STYLES = `
 
   .home-hero-title{
     margin:0 0 18px;
-    font-size:clamp(2.5rem, 5vw, 5.2rem);
-    line-height:.92;
-    letter-spacing:-2.6px;
+    font-size:clamp(2.5rem, 5vw, 5rem);
+    line-height:.94;
+    letter-spacing:-2.4px;
     font-weight:900;
-    max-width:12ch;
+    max-width:11ch;
   }
 
   .home-hero-title .accent{
@@ -84,8 +84,8 @@ export const HOME_HERO_STYLES = `
 
   .home-hero-text{
     margin:0;
-    max-width:60ch;
-    font-size:clamp(1rem, 1.2vw, 1.08rem);
+    max-width:58ch;
+    font-size:clamp(1rem, 1.15vw, 1.06rem);
     line-height:1.82;
     color:rgba(255,255,255,.74);
   }
@@ -188,47 +188,48 @@ export const HOME_HERO_STYLES = `
   .home-hero-card{
     background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
     border:1px solid rgba(255,255,255,.10);
-    border-radius:24px;
-    padding:24px;
+    border-radius:22px;
+    padding:22px;
     backdrop-filter:blur(14px);
-    box-shadow:0 24px 70px rgba(2,6,23,.24);
-    max-width:420px;
+    box-shadow:0 20px 56px rgba(2,6,23,.22);
+    max-width:360px;
     width:100%;
     justify-self:end;
   }
 
   .home-hero-card-label{
     display:inline-flex;
-    padding:8px 12px;
+    padding:7px 11px;
     border-radius:999px;
     background:rgba(99,102,241,.16);
     color:#c7d2fe;
-    font-size:.7rem;
+    font-size:.68rem;
     font-weight:800;
     text-transform:uppercase;
     letter-spacing:1px;
-    margin-bottom:14px;
+    margin-bottom:12px;
   }
 
   .home-hero-card-title{
     margin:0 0 10px;
-    font-size:1.28rem;
-    line-height:1.16;
+    font-size:1.16rem;
+    line-height:1.2;
     font-weight:900;
     color:#fff;
+    max-width:16ch;
   }
 
   .home-hero-card-text{
     margin:0;
     color:rgba(255,255,255,.68);
-    font-size:.86rem;
-    line-height:1.72;
+    font-size:.84rem;
+    line-height:1.7;
   }
 
   .home-hero-card-list{
     list-style:none;
     padding:0;
-    margin:20px 0 0 0;
+    margin:18px 0 0 0;
     display:flex;
     flex-direction:column;
     gap:12px;
@@ -248,22 +249,22 @@ export const HOME_HERO_STYLES = `
   }
 
   .home-hero-card-icon{
-    width:36px;
-    height:36px;
-    border-radius:12px;
+    width:34px;
+    height:34px;
+    border-radius:11px;
     display:flex;
     align-items:center;
     justify-content:center;
     background:rgba(255,255,255,.08);
     color:#c7d2fe;
-    font-size:.92rem;
+    font-size:.88rem;
     flex-shrink:0;
   }
 
   .home-hero-card-item strong{
     display:block;
     color:#fff;
-    font-size:.9rem;
+    font-size:.88rem;
     font-weight:800;
     margin-bottom:4px;
   }
@@ -271,38 +272,17 @@ export const HOME_HERO_STYLES = `
   .home-hero-card-item span{
     display:block;
     color:rgba(255,255,255,.64);
-    font-size:.8rem;
+    font-size:.79rem;
+    line-height:1.58;
+  }
+
+  .home-hero-card-note{
+    margin-top:18px;
+    padding-top:14px;
+    border-top:1px solid rgba(255,255,255,.08);
+    color:rgba(255,255,255,.58);
+    font-size:.76rem;
     line-height:1.6;
-  }
-
-  .home-hero-card-footer{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-    margin-top:20px;
-  }
-
-  .home-hero-mini-stat{
-    padding:12px 10px;
-    border-radius:14px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(255,255,255,.06);
-    text-align:center;
-  }
-
-  .home-hero-mini-stat strong{
-    display:block;
-    color:#fff;
-    font-size:.96rem;
-    font-weight:900;
-    margin-bottom:4px;
-  }
-
-  .home-hero-mini-stat span{
-    display:block;
-    color:rgba(255,255,255,.56);
-    font-size:.7rem;
-    line-height:1.45;
   }
 
   @media (max-width: 1120px){
@@ -314,7 +294,7 @@ export const HOME_HERO_STYLES = `
 
     .home-hero-grid{
       grid-template-columns:1fr;
-      gap:28px;
+      gap:26px;
     }
 
     .home-hero-copy{
@@ -322,12 +302,12 @@ export const HOME_HERO_STYLES = `
     }
 
     .home-hero-title{
-      max-width:13ch;
+      max-width:12ch;
     }
 
     .home-hero-card{
       justify-self:start;
-      max-width:760px;
+      max-width:520px;
     }
   }
 
@@ -340,7 +320,7 @@ export const HOME_HERO_STYLES = `
       font-size:clamp(2.05rem, 8vw, 3.2rem);
       line-height:.96;
       letter-spacing:-1.6px;
-      max-width:12ch;
+      max-width:11.5ch;
     }
 
     .home-hero-text{
@@ -371,14 +351,11 @@ export const HOME_HERO_STYLES = `
     .home-hero-card{
       padding:20px;
       border-radius:20px;
+      max-width:none;
     }
 
     .home-hero-card-title{
-      font-size:1.18rem;
-    }
-
-    .home-hero-card-footer{
-      grid-template-columns:1fr;
+      font-size:1.08rem;
     }
   }
 
@@ -394,7 +371,7 @@ export const HOME_HERO_STYLES = `
     }
 
     .home-hero-title{
-      max-width:11.8ch;
+      max-width:11ch;
     }
   }
 `;
@@ -410,17 +387,12 @@ const HERO_CARD_ITEMS = [
   {
     icon: "⚡",
     title: "Snel live",
-    text: "Geen lang traject. Voor veel standaard websites kun je snel online staan.",
+    text: "Voor veel standaard websites kun je snel online staan zonder lang traject.",
   },
   {
     icon: "🎯",
     title: "Gericht op actie",
-    text: "Niet alleen mooi, maar gebouwd om te laten bellen, appen of aanvragen.",
-  },
-  {
-    icon: "🤝",
-    title: "Alles in één",
-    text: "Website, updates en support geregeld zonder losse partijen of technisch gedoe.",
+    text: "Gebouwd om bezoekers sneller te laten bellen, appen of aanvragen.",
   },
 ];
 
@@ -478,14 +450,12 @@ export default function HomeHero() {
             <div className="home-hero-card-label">Waarom Vedantix</div>
 
             <h2 className="home-hero-card-title">
-              Geen losse tool.
-              <br />
-              Gewoon goed geregeld.
+              Snel live, duidelijk geregeld.
             </h2>
 
             <p className="home-hero-card-text">
-              Voor lokale ondernemers die geen tijd willen verliezen aan builders, hosting, plugins of losse partijen.
-              Je krijgt een duidelijke website die professioneel oogt en sneller tot actie leidt.
+              Geen gedoe met builders, hosting, plugins of losse partijen.
+              Je krijgt een professionele website die duidelijk oogt en sneller tot actie leidt.
             </p>
 
             <div className="home-hero-card-list">
@@ -501,21 +471,8 @@ export default function HomeHero() {
               ))}
             </div>
 
-            <div className="home-hero-card-footer">
-              <div className="home-hero-mini-stat">
-                <strong>48 uur</strong>
-                <span>Snel live</span>
-              </div>
-
-              <div className="home-hero-mini-stat">
-                <strong>1 partij</strong>
-                <span>Alles onder één dak</span>
-              </div>
-
-              <div className="home-hero-mini-stat">
-                <strong>Meer actie</strong>
-                <span>Bellen, appen, aanvragen</span>
-              </div>
+            <div className="home-hero-card-note">
+              Website, updates en support onder één dak. Duidelijk, snel en zonder losse technische puzzelstukken.
             </div>
           </div>
         </div>
