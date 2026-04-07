@@ -1,868 +1,566 @@
-const HERO_CHECKS = [
-  "Binnen 48 uur een sterke eerste versie live",
-  "Gebouwd voor contact, aanvragen of afspraken",
-  "Hosting, onderhoud en support onder één partij",
-  "Pas verder als de richting goed voelt",
-];
-
-const MOCKUP_SERVICES = [
-  ["✂️", "Knippen", "vanaf €18"],
-  ["🧔", "Baardverzorging", "vanaf €12"],
-  ["💈", "Fade & Styling", "vanaf €22"],
-];
-
 export const HOME_HERO_STYLES = `
-  .btn-primary{
-    background:#fff;
-    color:#0f172a;
-    padding:15px 30px;
-    border-radius:10px;
-    font-weight:800;
-    font-size:.92rem;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    transition:all .25s cubic-bezier(.4,0,.2,1);
-    border:none;
-    cursor:pointer;
-    letter-spacing:-.1px;
-    box-shadow:0 4px 16px rgba(0,0,0,.25);
-    min-height:52px;
-    white-space:nowrap;
-  }
-  .btn-primary:hover{
-    background:#f1f5f9;
-    transform:translateY(-2px);
-    box-shadow:0 10px 32px rgba(0,0,0,.35)
-  }
-
-  .btn-wa{
-    background:#25d366;
-    color:#fff;
-    padding:15px 30px;
-    border-radius:10px;
-    font-weight:800;
-    font-size:.92rem;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    transition:all .25s cubic-bezier(.4,0,.2,1);
-    border:none;
-    cursor:pointer;
-    box-shadow:0 4px 20px rgba(37,211,102,.3);
-    min-height:52px;
-    white-space:nowrap;
-  }
-  .btn-wa:hover{
-    background:#22c55e;
-    transform:translateY(-2px);
-    box-shadow:0 10px 32px rgba(37,211,102,.4)
-  }
-
-  .btn-ghost{
-    background:rgba(255,255,255,.06);
-    color:#fff;
-    border:1.5px solid rgba(255,255,255,.18);
-    padding:14px 28px;
-    border-radius:10px;
-    font-weight:800;
-    font-size:.92rem;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    transition:all .25s;
-    cursor:pointer;
-    backdrop-filter:blur(4px);
-    min-height:52px;
-    white-space:nowrap;
-  }
-  .btn-ghost:hover{
-    background:rgba(255,255,255,.12);
-    border-color:rgba(255,255,255,.28);
-    color:#fff;
-    transform:translateY(-2px)
-  }
-
-  .hero{
-    background:linear-gradient(150deg,#060c1a 0%,#0a1428 40%,#0d1f3c 70%,#0f1e38 100%);
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    padding:132px 5% 72px;
+  .home-hero{
     position:relative;
+    background:
+      radial-gradient(circle at top left, rgba(99,102,241,.12), transparent 28%),
+      radial-gradient(circle at bottom right, rgba(59,130,246,.10), transparent 24%),
+      linear-gradient(160deg,#0d1a3a 0%,#111827 100%);
+    color:#fff;
     overflow:hidden;
   }
-  .hero::before{
+
+  .home-hero::before{
     content:'';
     position:absolute;
     inset:0;
     background:
-      radial-gradient(ellipse at 65% 38%,rgba(59,130,246,.13) 0%,transparent 58%),
-      radial-gradient(ellipse at 20% 80%,rgba(99,102,241,.07) 0%,transparent 50%);
-    pointer-events:none
+      linear-gradient(to bottom, rgba(255,255,255,.02), rgba(255,255,255,0));
+    pointer-events:none;
   }
 
-  .hero-container{
-    max-width:1280px;
+  .home-hero-shell{
+    max-width:1160px;
     margin:0 auto;
-    width:100%;
+    padding:
+      clamp(88px, 11vh, 128px)
+      20px
+      clamp(40px, 6vh, 64px);
+    min-height:calc(100svh - 72px);
     display:grid;
-    grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);
-    gap:56px;
     align-items:center;
   }
 
-  .hero-content{
-    min-width:0;
-    position:relative;
-    z-index:2;
+  .home-hero-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);
+    gap:34px;
+    align-items:center;
   }
 
-  .hero-eyebrow{
+  .home-hero-copy{
+    max-width:620px;
+  }
+
+  .home-hero-badge{
     display:inline-flex;
     align-items:center;
     gap:8px;
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.1);
-    color:rgba(255,255,255,.78);
-    font-size:.7rem;
-    font-weight:700;
+    padding:8px 14px;
+    border-radius:999px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    color:rgba(255,255,255,.88);
+    font-size:.74rem;
+    font-weight:800;
+    letter-spacing:1px;
     text-transform:uppercase;
-    letter-spacing:1.8px;
-    padding:8px 18px;
-    border-radius:100px;
-    margin-bottom:22px
+    margin-bottom:16px;
+    backdrop-filter:blur(8px);
   }
-  .hero-eyebrow::before{
+
+  .home-hero-badge::before{
     content:'';
-    width:6px;
-    height:6px;
+    width:8px;
+    height:8px;
+    border-radius:50%;
     background:#22c55e;
-    border-radius:50%;
-    animation:pulse 2s infinite;
-    flex-shrink:0
+    box-shadow:0 0 0 6px rgba(34,197,94,.14);
   }
 
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-  .hero h1{
-    font-size:clamp(2.7rem,4.8vw,4.2rem);
+  .home-hero-title{
+    margin:0 0 16px;
+    font-size:clamp(2.2rem, 4vw, 4.1rem);
+    line-height:.98;
+    letter-spacing:-1.8px;
     font-weight:900;
-    line-height:1.02;
-    color:#fff;
-    margin-bottom:18px;
-    letter-spacing:-2px;
-    max-width:760px;
-  }
-  .hero h1 span{
-    background:linear-gradient(125deg,#60a5fa 0%,#818cf8 50%,#a78bfa 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text
+    max-width:11ch;
   }
 
-  .hero-sub{
-    font-size:1rem;
-    color:rgba(255,255,255,.68);
-    line-height:1.72;
-    margin-bottom:14px;
-    max-width:610px;
-    font-weight:400
-  }
-  .hero-sub strong{color:#fff;font-weight:700}
-
-  .hero-microcopy{
-    font-size:.81rem;
-    color:rgba(255,255,255,.45);
-    margin-bottom:22px;
-    font-weight:600
+  .home-hero-title .accent{
+    display:block;
+    color:#a5b4fc;
   }
 
-  .hero-checks{
-    margin-bottom:24px;
+  .home-hero-text{
+    margin:0;
+    max-width:58ch;
+    font-size:clamp(.98rem, 1.3vw, 1.08rem);
+    line-height:1.78;
+    color:rgba(255,255,255,.74);
+  }
+
+  .home-hero-points{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px 16px;
-    max-width:700px
-  }
-  .hero-check{
-    display:flex;
-    align-items:flex-start;
-    gap:12px;
-    font-size:.86rem;
-    color:rgba(255,255,255,.78);
-    font-weight:600;
-    letter-spacing:.1px
-  }
-  .hero-check::before{
-    content:'✓';
-    color:#22c55e;
-    font-weight:900;
-    font-size:.82rem;
-    flex-shrink:0;
-    background:rgba(34,197,94,.12);
-    width:20px;
-    height:20px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    line-height:20px;
-    margin-top:1px
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px 12px;
+    margin-top:24px;
+    max-width:620px;
   }
 
-  .hero-ctas{
+  .home-hero-point{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    padding:12px 14px;
+    border-radius:14px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+    font-size:.84rem;
+    color:rgba(255,255,255,.84);
+    line-height:1.55;
+  }
+
+  .home-hero-point::before{
+    content:'✓';
+    color:#86efac;
+    font-weight:900;
+    flex-shrink:0;
+    margin-top:1px;
+  }
+
+  .home-hero-ctas{
     display:flex;
     gap:12px;
     flex-wrap:wrap;
+    margin-top:28px;
+  }
+
+  .home-hero-btn-primary,
+  .home-hero-btn-secondary{
+    display:inline-flex;
     align-items:center;
-    margin-bottom:14px
-  }
-
-  .hero-ctas a{
-    flex:0 0 auto;
-  }
-
-  .hero-cta-note{
-    font-size:.76rem;
-    color:rgba(255,255,255,.42);
-    font-weight:600;
-    margin-bottom:22px
-  }
-
-  .hero-social-proof{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    padding-top:18px;
-    border-top:1px solid rgba(255,255,255,.07)
-  }
-  .hero-sp-stat{
-    font-size:.98rem;
+    justify-content:center;
+    min-height:50px;
+    padding:0 20px;
+    border-radius:12px;
+    text-decoration:none;
     font-weight:800;
-    color:#fff;
-    line-height:1;
-    margin-bottom:6px
-  }
-  .hero-sp-text{
-    font-size:.75rem;
-    color:rgba(255,255,255,.42);
-    font-weight:500;
-    line-height:1.45
+    font-size:.92rem;
+    transition:all .2s ease;
   }
 
-  .hero-mockup-wrap{
-    position:relative;
-    z-index:1;
-    width:100%;
-  }
-  .hero-mockup-wrap::before{
-    content:'';
-    position:absolute;
-    top:-24px;
-    left:-24px;
-    right:-24px;
-    bottom:-24px;
-    background:radial-gradient(ellipse at center,rgba(99,102,241,.18) 0%,rgba(59,130,246,.06) 45%,transparent 70%);
-    pointer-events:none;
-    z-index:0;
-    border-radius:40px
-  }
-  .hero-mockup{
+  .home-hero-btn-primary{
     background:#fff;
-    border-radius:22px;
-    overflow:hidden;
-    box-shadow:0 0 0 1px rgba(255,255,255,.07),0 32px 80px rgba(0,0,0,.55),0 8px 24px rgba(0,0,0,.3);
-    animation:float 5s ease-in-out infinite;
-    position:relative;
-    z-index:1;
-    width:100%;
-    max-width:540px;
-    margin-left:auto;
+    color:#111827;
+    box-shadow:0 12px 28px rgba(0,0,0,.18);
   }
 
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .home-hero-btn-primary:hover{
+    transform:translateY(-1px);
+    background:#f8fafc;
+  }
 
-  .mockup-bar{
-    background:#141a27;
-    padding:11px 16px;
+  .home-hero-btn-secondary{
+    color:#fff;
+    border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.04);
+    backdrop-filter:blur(10px);
+  }
+
+  .home-hero-btn-secondary:hover{
+    background:rgba(255,255,255,.08);
+    transform:translateY(-1px);
+  }
+
+  .home-hero-meta{
     display:flex;
+    flex-wrap:wrap;
+    gap:10px 18px;
+    margin-top:18px;
+  }
+
+  .home-hero-meta-item{
+    font-size:.78rem;
+    color:rgba(255,255,255,.56);
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:7px;
+  }
+
+  .home-hero-meta-item::before{
+    content:'•';
+    color:#60a5fa;
+    font-size:1rem;
+    line-height:1;
+  }
+
+  .home-hero-panel{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:24px;
+    padding:22px;
+    backdrop-filter:blur(12px);
+    box-shadow:0 20px 60px rgba(2,6,23,.24);
+  }
+
+  .home-hero-panel-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    margin-bottom:16px;
+  }
+
+  .home-hero-panel-label{
+    font-size:.76rem;
+    color:#c7d2fe;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+  }
+
+  .home-hero-panel-chip{
+    padding:7px 10px;
+    border-radius:999px;
+    background:rgba(34,197,94,.12);
+    border:1px solid rgba(34,197,94,.22);
+    color:#bbf7d0;
+    font-size:.72rem;
+    font-weight:800;
+    white-space:nowrap;
+  }
+
+  .home-hero-panel-title{
+    margin:0 0 8px;
+    font-size:1.18rem;
+    line-height:1.25;
+    font-weight:900;
+    color:#fff;
+  }
+
+  .home-hero-panel-text{
+    margin:0 0 18px;
+    color:rgba(255,255,255,.68);
+    font-size:.88rem;
+    line-height:1.7;
+  }
+
+  .home-hero-choice-grid{
+    display:grid;
+    gap:12px;
+  }
+
+  .home-hero-choice{
+    display:block;
+    padding:16px;
+    border-radius:16px;
+    background:rgba(255,255,255,.05);
+    border:1px solid rgba(255,255,255,.08);
+  }
+
+  .home-hero-choice-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:6px;
+  }
+
+  .home-hero-choice-title{
+    font-size:.96rem;
+    font-weight:900;
+    color:#fff;
+  }
+
+  .home-hero-choice-badge{
+    padding:5px 9px;
+    border-radius:999px;
+    background:rgba(99,102,241,.16);
+    color:#c7d2fe;
+    font-size:.68rem;
+    font-weight:800;
+    white-space:nowrap;
+  }
+
+  .home-hero-choice-text{
+    font-size:.82rem;
+    line-height:1.65;
+    color:rgba(255,255,255,.68);
+  }
+
+  .home-hero-choice-link{
+    margin-top:10px;
+    display:inline-flex;
     align-items:center;
     gap:6px;
-    border-bottom:1px solid rgba(255,255,255,.04)
-  }
-  .mockup-dot{width:9px;height:9px;border-radius:50%}
-  .mockup-url{
-    flex:1;
-    background:rgba(255,255,255,.06);
-    border-radius:5px;
-    height:20px;
-    margin:0 14px;
-    display:flex;
-    align-items:center;
-    padding:0 10px
-  }
-  .mockup-url span{
-    font-size:.6rem;
-    color:rgba(255,255,255,.35);
-    font-weight:500
+    text-decoration:none;
+    color:#a5b4fc;
+    font-size:.8rem;
+    font-weight:800;
   }
 
-  .hero-sticky-cta{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    z-index:999;
-    display:none
+  .home-hero-bottom{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-top:16px;
   }
 
-  @media (min-width: 1440px) {
-    .hero{
-      padding:144px 5% 92px;
-    }
+  .home-hero-stat{
+    padding:14px 12px;
+    border-radius:16px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+    text-align:center;
   }
 
-  @media (max-width: 1280px) {
-    .hero{
+  .home-hero-stat strong{
+    display:block;
+    font-size:1.02rem;
+    font-weight:900;
+    color:#fff;
+    margin-bottom:4px;
+  }
+
+  .home-hero-stat span{
+    font-size:.74rem;
+    color:rgba(255,255,255,.56);
+    line-height:1.45;
+  }
+
+  @media (max-width: 1080px){
+    .home-hero-shell{
       min-height:auto;
-      align-items:flex-start;
-      padding:104px 5% 44px;
+      padding-top:96px;
+      padding-bottom:44px;
     }
 
-    .hero-container{
-      grid-template-columns:minmax(0,1fr) 400px;
-      gap:28px;
-      align-items:start;
-    }
-
-    .hero h1{
-      font-size:clamp(2.2rem,4vw,2.95rem);
-      max-width:640px;
-      margin-bottom:14px;
-    }
-
-    .hero-sub{
-      font-size:.94rem;
-      line-height:1.66;
-      margin-bottom:10px;
-      max-width:560px;
-    }
-
-    .hero-microcopy{
-      display:none;
-    }
-
-    .hero-checks{
-      display:none;
-    }
-
-    .hero-cta-note{
-      display:none;
-    }
-
-    .hero-social-proof{
-      display:none;
-    }
-
-    .hero-ctas{
-      margin-top:8px;
-      margin-bottom:0;
-      gap:10px;
-    }
-
-    .btn-primary,
-    .btn-wa,
-    .btn-ghost{
-      padding:13px 20px;
-      min-height:48px;
-      font-size:.84rem;
-    }
-
-    .hero-mockup{
-      max-width:400px;
-    }
-  }
-
-  @media (max-width: 1180px) {
-    .hero{
-      padding:96px 5% 38px;
-    }
-
-    .hero-container{
-      grid-template-columns:minmax(0,1fr) 360px;
+    .home-hero-grid{
+      grid-template-columns:1fr;
       gap:24px;
     }
 
-    .hero h1{
-      font-size:2.45rem;
-      max-width:560px;
+    .home-hero-copy{
+      max-width:none;
     }
 
-    .hero-sub{
-      font-size:.9rem;
-      max-width:520px;
+    .home-hero-title{
+      max-width:13ch;
     }
 
-    .btn-primary,
-    .btn-wa,
-    .btn-ghost{
-      padding:12px 16px;
-      min-height:46px;
-      font-size:.8rem;
-    }
-
-    .hero-mockup{
-      max-width:360px;
+    .home-hero-panel{
+      max-width:760px;
     }
   }
 
-  @media(max-width:1024px){
-    .hero{
-      padding:92px 5% 60px;
-      min-height:auto;
+  @media (max-width: 768px){
+    .home-hero-shell{
+      padding:
+        88px
+        16px
+        34px;
+    }
+
+    .home-hero-title{
+      font-size:clamp(1.95rem, 8vw, 2.8rem);
+      max-width:12ch;
+      margin-bottom:14px;
+    }
+
+    .home-hero-text{
+      font-size:.95rem;
+      line-height:1.72;
+    }
+
+    .home-hero-points{
+      grid-template-columns:1fr;
+      margin-top:20px;
+    }
+
+    .home-hero-ctas{
+      flex-direction:column;
+      margin-top:22px;
+    }
+
+    .home-hero-btn-primary,
+    .home-hero-btn-secondary{
+      width:100%;
+    }
+
+    .home-hero-panel{
+      padding:18px;
+      border-radius:20px;
+    }
+
+    .home-hero-bottom{
+      grid-template-columns:1fr;
+    }
+
+    .home-hero-meta{
+      gap:8px 14px;
+    }
+  }
+
+  @media (max-width: 480px){
+    .home-hero-shell{
+      padding-top:82px;
+      padding-bottom:28px;
+    }
+
+    .home-hero-badge{
+      font-size:.68rem;
+      margin-bottom:14px;
+    }
+
+    .home-hero-title{
+      letter-spacing:-1.2px;
+      max-width:11ch;
+    }
+
+    .home-hero-point{
+      padding:11px 12px;
+      font-size:.82rem;
+    }
+
+    .home-hero-panel-top{
+      flex-direction:column;
       align-items:flex-start;
     }
 
-    .hero-container{
-      grid-template-columns:1fr;
-      gap:38px;
-      text-align:center;
+    .home-hero-choice{
+      padding:14px;
     }
 
-    .hero-content{
-      display:flex;
+    .home-hero-choice-top{
+      align-items:flex-start;
       flex-direction:column;
-      align-items:center;
-    }
-
-    .hero h1{
-      font-size:2.35rem;
-      max-width:700px;
-      margin-bottom:16px;
-    }
-
-    .hero-sub{
-      margin-left:auto;
-      margin-right:auto;
-      max-width:640px;
-      font-size:.95rem;
-      margin-bottom:12px;
-    }
-
-    .hero-microcopy{
-      display:block;
-      margin-bottom:18px;
-    }
-
-    .hero-checks{
-      display:grid;
-      grid-template-columns:1fr;
-      max-width:420px;
-      margin:18px auto 24px;
-      text-align:left;
-    }
-
-    .hero-cta-note{
-      display:block;
-      margin-bottom:18px;
-    }
-
-    .hero-social-proof{
-      display:flex;
-      justify-content:center;
-      width:100%;
-    }
-
-    .hero-ctas{
-      justify-content:center;
-      margin-bottom:14px;
-    }
-
-    .btn-primary,
-    .btn-wa,
-    .btn-ghost{
-      padding:13px 20px;
-      min-height:48px;
-      font-size:.86rem;
-    }
-
-    .hero-mockup-wrap{
-      max-width:560px;
-      margin:0 auto;
-      width:100%;
-    }
-
-    .hero-mockup{
-      max-width:560px;
-      margin:0 auto;
-    }
-  }
-
-  @media(max-width:768px){
-    .hero{
-      padding:84px 5% 52px;
-    }
-
-    .hero h1{
-      font-size:1.95rem;
-      line-height:1.1;
-      letter-spacing:-1px;
-      margin-bottom:14px;
-    }
-
-    .hero-sub{
-      font-size:.9rem;
-      line-height:1.68;
-      margin-bottom:10px;
-    }
-
-    .hero-microcopy{
-      font-size:.78rem;
-      margin-bottom:14px;
-    }
-
-    .hero-checks{
-      display:none;
-    }
-
-    .hero-social-proof{
-      display:none;
-    }
-
-    .hero-cta-note{
-      display:none;
-    }
-
-    .hero-ctas{
-      flex-direction:column;
-      width:100%;
-      gap:10px;
-      margin-bottom:0;
-    }
-
-    .hero-ctas a{
-      width:100%;
-      text-align:center;
-    }
-
-    .btn-primary,
-    .btn-wa,
-    .btn-ghost{
-      width:100%;
-      min-height:48px;
-      font-size:.86rem;
-      padding:13px 18px;
-    }
-
-    .hero-mockup-wrap{
-      max-width:100%;
-    }
-
-    .hero-mockup{
-      max-width:100%;
-    }
-  }
-
-  @media(max-width:640px){
-    .hero{
-      padding:78px 5% 46px;
-    }
-
-    .hero-eyebrow{
-      font-size:.62rem;
-      letter-spacing:1.4px;
-      padding:8px 14px;
-      margin-bottom:18px;
-    }
-
-    .hero h1{
-      font-size:1.8rem;
-    }
-
-    .hero-sub{
-      font-size:.88rem;
-    }
-
-    .hero-microcopy{
-      display:none;
-    }
-
-    .hero-mockup-wrap::before{
-      display:none;
-    }
-
-    .mockup-bar{
-      padding:10px 12px;
-    }
-  }
-
-  @media(max-width:480px){
-    .hero{
-      padding:74px 5% 40px;
-    }
-
-    .hero h1{
-      font-size:1.68rem;
-      letter-spacing:-.7px;
-    }
-
-    .hero-sub{
-      font-size:.86rem;
-    }
-
-    .hero-sticky-cta{
-      left:16px;
-      right:16px;
-      bottom:16px;
-      display:block;
-    }
-
-    .hero-sticky-cta .btn-wa{
-      width:100%;
-      text-align:center;
-      display:flex;
-      padding:14px 18px;
-      box-shadow:0 12px 30px rgba(37,211,102,.28);
+      gap:8px;
     }
   }
 `;
 
+const HERO_POINTS = [
+  "Binnen 48 uur live",
+  "Gebouwd voor lokale ondernemers",
+  "Gericht op meer aanvragen",
+  "Onderhoud en support inbegrepen",
+];
+
+const HERO_CHOICES = [
+  {
+    title: "Zichtbaar",
+    badge: "€99/m",
+    text: "Voor ondernemers die snel professioneel online willen staan zonder gedoe.",
+    href: "#pricing",
+  },
+  {
+    title: "Groei",
+    badge: "Meest gekozen",
+    text: "Voor ondernemers die hun website echt willen inzetten voor meer klanten en aanvragen.",
+    href: "#pricing",
+  },
+  {
+    title: "Automatiseren",
+    badge: "Vanaf €249/m",
+    text: "Voor reserveringen, intake of processen die via je website moeten meewerken.",
+    href: "#pricing",
+  },
+];
+
 export default function HomeHero() {
   return (
-    <>
-      <section className="hero">
-        <div className="hero-container">
-          <div className="hero-content">
-            <div className="hero-eyebrow">Voor kappers, salons, restaurants en lokale bedrijven</div>
-
-            <h1>
-              Meer klanten via jouw website —
-              <br />
-              <span>binnen 48 uur live</span>
-            </h1>
-
-            <p className="hero-sub">
-              Vedantix bouwt websites voor lokale ondernemers die <strong>professioneel willen overkomen en sneller aanvragen,
-              afspraken of contactmomenten</strong> willen binnenhalen. Geen lang traject, geen technisch gedoe, wel een website
-              die direct duidelijk maakt waarom iemand voor jou moet kiezen.
-            </p>
-
-            <div className="hero-microcopy">
-              Ook geschikt als je nog geen bestaande website, reviews of uitgebreide content hebt.
+    <section className="home-hero">
+      <div className="home-hero-shell">
+        <div className="home-hero-grid">
+          <div className="home-hero-copy">
+            <div className="home-hero-badge">
+              Websites voor kappers, restaurants, salons, fotografen en zzp’ers
             </div>
 
-            <div className="hero-checks">
-              {HERO_CHECKS.map((item) => (
-                <div key={item} className="hero-check">
-                  {item}
+            <h1 className="home-hero-title">
+              Een website die niet alleen mooi is,
+              <span className="accent">maar klanten oplevert.</span>
+            </h1>
+
+            <p className="home-hero-text">
+              Vedantix bouwt websites voor lokale ondernemers die snel live moeten, professioneel willen overkomen
+              en meer aanvragen willen krijgen — zonder technisch gedoe of losse partijen.
+            </p>
+
+            <div className="home-hero-points">
+              {HERO_POINTS.map((point) => (
+                <div key={point} className="home-hero-point">
+                  <span>{point}</span>
                 </div>
               ))}
             </div>
 
-            <div className="hero-ctas">
+            <div className="home-hero-ctas">
               <a
                 href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
                 target="_blank"
                 rel="noreferrer"
-                className="btn-primary"
-                style={{ textAlign: "center" }}
+                className="home-hero-btn-primary"
               >
                 Plan gratis intake →
               </a>
 
-              <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag%20over%20een%20website."
-                target="_blank"
-                rel="noreferrer"
-                className="btn-wa"
-                style={{ textAlign: "center" }}
-              >
-                💬 Stel je vraag via WhatsApp
-              </a>
-
-              <a
-                href="#demo"
-                className="btn-ghost"
-                style={{ textAlign: "center" }}
-              >
-                Bekijk demo’s →
+              <a href="#voor-wie" className="home-hero-btn-secondary">
+                Bekijk wat bij jou past →
               </a>
             </div>
 
-            <div className="hero-cta-note">
-              Vrijblijvend gesprek · duidelijke pakketten · pas verder als de richting goed voelt
-            </div>
-
-            <div className="hero-social-proof">
-              <div>
-                <div className="hero-sp-stat">Duidelijk</div>
-                <div className="hero-sp-text">Sterke boodschap en betere eerste indruk</div>
-              </div>
-              <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />
-              <div>
-                <div className="hero-sp-stat">Praktisch</div>
-                <div className="hero-sp-text">Gebouwd voor contact, aanvragen en afspraken</div>
-              </div>
-              <div style={{ width: 1, height: 36, background: "rgba(255,255,255,0.08)" }} />
-              <div>
-                <div className="hero-sp-stat">Zonder gedoe</div>
-                <div className="hero-sp-text">Hosting, onderhoud en support blijven geregeld</div>
-              </div>
+            <div className="home-hero-meta">
+              <div className="home-hero-meta-item">Duidelijke maandprijs</div>
+              <div className="home-hero-meta-item">Persoonlijk contact</div>
+              <div className="home-hero-meta-item">Geen technisch gedoe</div>
             </div>
           </div>
 
-          <div className="hero-mockup-wrap">
-            <div className="hero-mockup">
-              <div className="mockup-bar">
-                <div className="mockup-dot" style={{ background: "#ff5f57" }} />
-                <div className="mockup-dot" style={{ background: "#febc2e" }} />
-                <div className="mockup-dot" style={{ background: "#28c840" }} />
-                <div className="mockup-url">
-                  <span>barbershop-amsterdam.nl</span>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  background: "linear-gradient(135deg,#0a1628,#0d2146)",
-                  padding: "28px 24px",
-                  color: "#fff",
-                  textAlign: "center",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "0.65rem",
-                    fontWeight: 800,
-                    color: "rgba(255,255,255,0.45)",
-                    textTransform: "uppercase",
-                    letterSpacing: 1.5,
-                    marginBottom: 10,
-                  }}
-                >
-                  Demo concept voor kapper / barber
-                </div>
-
-                <div style={{ fontSize: "1.4rem", fontWeight: 900, marginBottom: 6, letterSpacing: -0.5 }}>
-                  Barbershop Amsterdam
-                </div>
-
-                <div style={{ fontSize: "0.82rem", color: "rgba(255,255,255,0.68)", marginBottom: 16 }}>
-                  Duidelijk. Snel. Gericht op afspraak of WhatsApp.
-                </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: 16,
-                    paddingTop: 12,
-                    borderTop: "1px solid rgba(255,255,255,0.08)",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>
-                    ⭐ Professionele eerste indruk
-                  </span>
-                  <span style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>
-                    📱 Mobielvriendelijk
-                  </span>
-                </div>
-              </div>
-
-              <div style={{ padding: "20px 20px", background: "#f9fafb" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {MOCKUP_SERVICES.map(([icon, name, price]) => (
-                    <div
-                      key={name}
-                      style={{
-                        background: "#fff",
-                        padding: "10px 13px",
-                        borderRadius: 10,
-                        display: "flex",
-                        gap: 10,
-                        alignItems: "center",
-                        boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-                        border: "1px solid #f3f4f6",
-                      }}
-                    >
-                      <span style={{ fontSize: "1rem" }}>{icon}</span>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: "0.78rem", fontWeight: 800, color: "#111827" }}>{name}</div>
-                      </div>
-                      <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "#6366f1" }}>{price}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ padding: "14px 20px", background: "#fff", borderTop: "1px solid #f3f4f6" }}>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <button
-                    type="button"
-                    style={{
-                      flex: 1,
-                      background: "#111827",
-                      color: "#fff",
-                      padding: "9px 10px",
-                      borderRadius: 9,
-                      border: "none",
-                      fontWeight: 800,
-                      fontSize: "0.72rem",
-                      cursor: "pointer",
-                    }}
-                  >
-                    📅 Afspraak maken
-                  </button>
-                  <button
-                    type="button"
-                    style={{
-                      flex: 1,
-                      background: "#25d366",
-                      color: "#fff",
-                      padding: "9px 10px",
-                      borderRadius: 9,
-                      border: "none",
-                      fontWeight: 800,
-                      fontSize: "0.72rem",
-                      cursor: "pointer",
-                    }}
-                  >
-                    💬 WhatsApp
-                  </button>
-                </div>
-              </div>
+          <div className="home-hero-panel">
+            <div className="home-hero-panel-top">
+              <div className="home-hero-panel-label">Snel kiezen</div>
+              <div className="home-hero-panel-chip">Wat past bij jou?</div>
             </div>
 
-            <p
-              style={{
-                marginTop: 16,
-                fontSize: "0.75rem",
-                color: "rgba(255,255,255,0.35)",
-                textAlign: "center",
-                fontWeight: 600,
-              }}
-            >
-              Demo mockup • bedoeld om richting en stijl te laten zien
+            <h2 className="home-hero-panel-title">
+              Kies niet eerst een techniek.
+              <br />
+              Kies eerst je doel.
+            </h2>
+
+            <p className="home-hero-panel-text">
+              De meeste bezoekers willen direct weten: wil ik vooral professioneel online staan, meer klanten krijgen
+              of processen laten meewerken? Hieronder zie je meteen de drie richtingen.
             </p>
+
+            <div className="home-hero-choice-grid">
+              {HERO_CHOICES.map((choice) => (
+                <div key={choice.title} className="home-hero-choice">
+                  <div className="home-hero-choice-top">
+                    <div className="home-hero-choice-title">{choice.title}</div>
+                    <div className="home-hero-choice-badge">{choice.badge}</div>
+                  </div>
+
+                  <div className="home-hero-choice-text">{choice.text}</div>
+
+                  <a href={choice.href} className="home-hero-choice-link">
+                    Bekijk pakket →
+                  </a>
+                </div>
+              ))}
+            </div>
+
+            <div className="home-hero-bottom">
+              <div className="home-hero-stat">
+                <strong>48 uur</strong>
+                <span>Snel live voor veel standaard websites</span>
+              </div>
+
+              <div className="home-hero-stat">
+                <strong>1 partij</strong>
+                <span>Website, updates en support onder één dak</span>
+              </div>
+
+              <div className="home-hero-stat">
+                <strong>Meer actie</strong>
+                <span>Gericht op bellen, appen en aanvragen</span>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
-
-      <div className="hero-sticky-cta">
-        <a
-          href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20meer%20weten%20over%20een%20website."
-          target="_blank"
-          rel="noreferrer"
-          className="btn-wa"
-        >
-          💬 Start gesprek
-        </a>
       </div>
-    </>
+    </section>
   );
 }
