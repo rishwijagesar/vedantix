@@ -3,8 +3,8 @@ export const HOME_HERO_STYLES = `
     position:relative;
     overflow:hidden;
     background:
-      radial-gradient(circle at 15% 20%, rgba(99,102,241,.18), transparent 30%),
-      radial-gradient(circle at 85% 30%, rgba(59,130,246,.12), transparent 26%),
+      radial-gradient(circle at 14% 18%, rgba(99,102,241,.18), transparent 28%),
+      radial-gradient(circle at 88% 24%, rgba(59,130,246,.10), transparent 22%),
       linear-gradient(160deg,#0b1530 0%, #0f172a 58%, #111827 100%);
     color:#fff;
   }
@@ -13,18 +13,17 @@ export const HOME_HERO_STYLES = `
     content:'';
     position:absolute;
     inset:0;
-    background:
-      linear-gradient(to bottom, rgba(255,255,255,.03), rgba(255,255,255,0));
+    background:linear-gradient(to bottom, rgba(255,255,255,.03), rgba(255,255,255,0));
     pointer-events:none;
   }
 
   .home-hero-shell{
-    max-width:1160px;
+    max-width:1240px;
     margin:0 auto;
     padding:
-      clamp(88px, 10vh, 118px)
-      20px
-      clamp(48px, 7vh, 70px);
+      clamp(86px, 10vh, 112px)
+      24px
+      clamp(42px, 6vh, 60px);
     min-height:calc(100svh - 72px);
     display:grid;
     align-items:center;
@@ -34,13 +33,13 @@ export const HOME_HERO_STYLES = `
 
   .home-hero-grid{
     display:grid;
-    grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);
-    gap:44px;
+    grid-template-columns:minmax(0,1.3fr) minmax(320px,.78fr);
+    gap:42px;
     align-items:center;
   }
 
   .home-hero-copy{
-    max-width:640px;
+    max-width:760px;
   }
 
   .home-hero-badge{
@@ -52,11 +51,11 @@ export const HOME_HERO_STYLES = `
     background:rgba(255,255,255,.08);
     border:1px solid rgba(255,255,255,.10);
     color:rgba(255,255,255,.88);
-    font-size:.73rem;
+    font-size:.72rem;
     font-weight:800;
     text-transform:uppercase;
     letter-spacing:1px;
-    margin-bottom:18px;
+    margin-bottom:20px;
     backdrop-filter:blur(8px);
   }
 
@@ -71,11 +70,11 @@ export const HOME_HERO_STYLES = `
 
   .home-hero-title{
     margin:0 0 18px;
-    font-size:clamp(2.4rem, 5vw, 5rem);
-    line-height:.95;
-    letter-spacing:-2.4px;
+    font-size:clamp(2.5rem, 5vw, 5.2rem);
+    line-height:.92;
+    letter-spacing:-2.6px;
     font-weight:900;
-    max-width:10.5ch;
+    max-width:12ch;
   }
 
   .home-hero-title .accent{
@@ -85,9 +84,9 @@ export const HOME_HERO_STYLES = `
 
   .home-hero-text{
     margin:0;
-    max-width:56ch;
-    font-size:clamp(1rem, 1.3vw, 1.08rem);
-    line-height:1.8;
+    max-width:60ch;
+    font-size:clamp(1rem, 1.2vw, 1.08rem);
+    line-height:1.82;
     color:rgba(255,255,255,.74);
   }
 
@@ -96,6 +95,7 @@ export const HOME_HERO_STYLES = `
     flex-wrap:wrap;
     gap:12px;
     margin-top:24px;
+    max-width:760px;
   }
 
   .home-hero-benefit{
@@ -107,7 +107,7 @@ export const HOME_HERO_STYLES = `
     background:rgba(255,255,255,.06);
     border:1px solid rgba(255,255,255,.08);
     color:rgba(255,255,255,.86);
-    font-size:.82rem;
+    font-size:.81rem;
     font-weight:700;
     line-height:1.4;
   }
@@ -170,7 +170,7 @@ export const HOME_HERO_STYLES = `
   }
 
   .home-hero-meta-item{
-    font-size:.78rem;
+    font-size:.77rem;
     color:rgba(255,255,255,.56);
     font-weight:700;
     display:flex;
@@ -186,13 +186,15 @@ export const HOME_HERO_STYLES = `
   }
 
   .home-hero-card{
-    position:relative;
-    background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+    background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
     border:1px solid rgba(255,255,255,.10);
-    border-radius:28px;
-    padding:28px;
-    backdrop-filter:blur(16px);
-    box-shadow:0 24px 80px rgba(2,6,23,.28);
+    border-radius:24px;
+    padding:24px;
+    backdrop-filter:blur(14px);
+    box-shadow:0 24px 70px rgba(2,6,23,.24);
+    max-width:420px;
+    width:100%;
+    justify-self:end;
   }
 
   .home-hero-card-label{
@@ -201,17 +203,17 @@ export const HOME_HERO_STYLES = `
     border-radius:999px;
     background:rgba(99,102,241,.16);
     color:#c7d2fe;
-    font-size:.72rem;
+    font-size:.7rem;
     font-weight:800;
     text-transform:uppercase;
     letter-spacing:1px;
-    margin-bottom:16px;
+    margin-bottom:14px;
   }
 
   .home-hero-card-title{
     margin:0 0 10px;
-    font-size:1.45rem;
-    line-height:1.15;
+    font-size:1.28rem;
+    line-height:1.16;
     font-weight:900;
     color:#fff;
   }
@@ -219,24 +221,24 @@ export const HOME_HERO_STYLES = `
   .home-hero-card-text{
     margin:0;
     color:rgba(255,255,255,.68);
-    font-size:.9rem;
-    line-height:1.75;
+    font-size:.86rem;
+    line-height:1.72;
   }
 
   .home-hero-card-list{
     list-style:none;
     padding:0;
-    margin:22px 0 0 0;
+    margin:20px 0 0 0;
     display:flex;
     flex-direction:column;
-    gap:14px;
+    gap:12px;
   }
 
   .home-hero-card-item{
     display:flex;
     gap:12px;
     align-items:flex-start;
-    padding:14px 0;
+    padding-top:12px;
     border-top:1px solid rgba(255,255,255,.08);
   }
 
@@ -246,22 +248,22 @@ export const HOME_HERO_STYLES = `
   }
 
   .home-hero-card-icon{
-    width:38px;
-    height:38px;
+    width:36px;
+    height:36px;
     border-radius:12px;
     display:flex;
     align-items:center;
     justify-content:center;
     background:rgba(255,255,255,.08);
     color:#c7d2fe;
-    font-size:.95rem;
+    font-size:.92rem;
     flex-shrink:0;
   }
 
   .home-hero-card-item strong{
     display:block;
     color:#fff;
-    font-size:.92rem;
+    font-size:.9rem;
     font-weight:800;
     margin-bottom:4px;
   }
@@ -269,7 +271,7 @@ export const HOME_HERO_STYLES = `
   .home-hero-card-item span{
     display:block;
     color:rgba(255,255,255,.64);
-    font-size:.82rem;
+    font-size:.8rem;
     line-height:1.6;
   }
 
@@ -277,12 +279,12 @@ export const HOME_HERO_STYLES = `
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:10px;
-    margin-top:22px;
+    margin-top:20px;
   }
 
   .home-hero-mini-stat{
-    padding:14px 10px;
-    border-radius:16px;
+    padding:12px 10px;
+    border-radius:14px;
     background:rgba(255,255,255,.05);
     border:1px solid rgba(255,255,255,.06);
     text-align:center;
@@ -291,7 +293,7 @@ export const HOME_HERO_STYLES = `
   .home-hero-mini-stat strong{
     display:block;
     color:#fff;
-    font-size:1rem;
+    font-size:.96rem;
     font-weight:900;
     margin-bottom:4px;
   }
@@ -299,15 +301,15 @@ export const HOME_HERO_STYLES = `
   .home-hero-mini-stat span{
     display:block;
     color:rgba(255,255,255,.56);
-    font-size:.72rem;
+    font-size:.7rem;
     line-height:1.45;
   }
 
-  @media (max-width: 1080px){
+  @media (max-width: 1120px){
     .home-hero-shell{
       min-height:auto;
-      padding-top:92px;
-      padding-bottom:42px;
+      padding-top:90px;
+      padding-bottom:40px;
     }
 
     .home-hero-grid{
@@ -320,23 +322,24 @@ export const HOME_HERO_STYLES = `
     }
 
     .home-hero-title{
-      max-width:11.5ch;
+      max-width:13ch;
     }
 
     .home-hero-card{
+      justify-self:start;
       max-width:760px;
     }
   }
 
   @media (max-width: 768px){
     .home-hero-shell{
-      padding:84px 16px 32px;
+      padding:82px 16px 30px;
     }
 
     .home-hero-title{
-      font-size:clamp(2rem, 8vw, 3rem);
-      line-height:.98;
-      letter-spacing:-1.5px;
+      font-size:clamp(2.05rem, 8vw, 3.2rem);
+      line-height:.96;
+      letter-spacing:-1.6px;
       max-width:12ch;
     }
 
@@ -366,12 +369,12 @@ export const HOME_HERO_STYLES = `
     }
 
     .home-hero-card{
-      padding:22px;
-      border-radius:22px;
+      padding:20px;
+      border-radius:20px;
     }
 
     .home-hero-card-title{
-      font-size:1.25rem;
+      font-size:1.18rem;
     }
 
     .home-hero-card-footer{
@@ -381,21 +384,17 @@ export const HOME_HERO_STYLES = `
 
   @media (max-width: 480px){
     .home-hero-shell{
-      padding-top:78px;
-      padding-bottom:26px;
+      padding-top:76px;
+      padding-bottom:24px;
     }
 
     .home-hero-badge{
-      font-size:.67rem;
+      font-size:.66rem;
       margin-bottom:14px;
     }
 
     .home-hero-title{
-      max-width:10.8ch;
-    }
-
-    .home-hero-card{
-      padding:18px;
+      max-width:11.8ch;
     }
   }
 `;
