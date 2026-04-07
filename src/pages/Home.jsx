@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
 import BigFooter from "../components/BigFooter";
@@ -238,6 +239,147 @@ const HOME_STYLES = `
     line-height:1.6
   }
 
+  .niche-fit-section{
+    padding:100px 5%;
+    background:#f8fafc;
+    border-top:1px solid #f3f4f6;
+    border-bottom:1px solid #f3f4f6
+  }
+  .niche-fit-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-top:28px
+  }
+  .niche-fit-card{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:20px;
+    padding:24px;
+    transition:all .25s;
+    cursor:pointer
+  }
+  .niche-fit-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(15,23,42,.06);
+    border-color:#c7d2fe
+  }
+  .niche-fit-card.active{
+    border-color:#6366f1;
+    background:linear-gradient(160deg,#fafbff,#f5f3ff);
+    box-shadow:0 16px 36px rgba(99,102,241,.1)
+  }
+  .niche-fit-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:14px
+  }
+  .niche-fit-name{
+    font-size:1rem;
+    font-weight:900;
+    color:#111827
+  }
+  .niche-fit-icon{
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    background:#eef2ff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.1rem
+  }
+  .niche-fit-problem{
+    font-size:.84rem;
+    color:#6b7280;
+    line-height:1.7;
+    margin-bottom:16px
+  }
+  .niche-fit-tag{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 12px;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-size:.73rem;
+    font-weight:800;
+    margin-bottom:12px
+  }
+  .niche-fit-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    text-decoration:none;
+    color:#6366f1;
+    font-size:.84rem;
+    font-weight:800
+  }
+
+  .niche-highlight{
+    margin-top:28px;
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:24px;
+    padding:30px;
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:24px;
+    align-items:start
+  }
+  .niche-highlight-box{
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    padding:22px
+  }
+  .niche-highlight-box h3{
+    font-size:1rem;
+    font-weight:900;
+    color:#111827;
+    margin-bottom:8px
+  }
+  .niche-highlight-box p{
+    font-size:.88rem;
+    color:#6b7280;
+    line-height:1.75
+  }
+  .niche-highlight-points{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-top:14px
+  }
+  .niche-highlight-point{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    font-size:.84rem;
+    color:#374151;
+    line-height:1.6
+  }
+  .niche-highlight-point::before{
+    content:'✓';
+    color:#6366f1;
+    font-weight:900;
+    flex-shrink:0
+  }
+  .niche-highlight-cta{
+    display:flex;
+    flex-direction:column;
+    gap:12px
+  }
+  .niche-highlight-cta .btn-lead{
+    text-align:center
+  }
+  .niche-highlight-note{
+    font-size:.8rem;
+    color:#9ca3af;
+    line-height:1.6
+  }
+
   .founder-section{padding:100px 5%;background:#f9fafb}
   .founder-grid{
     max-width:1100px;
@@ -360,6 +502,23 @@ const HOME_STYLES = `
   }
 
   .pricing-section{padding:100px 5%;background:#fff}
+  .pricing-intro{
+    max-width:820px;
+    margin:0 auto 18px;
+    text-align:center
+  }
+  .pricing-kicker{
+    display:inline-block;
+    margin-bottom:12px;
+    padding:8px 14px;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-size:.72rem;
+    font-weight:800;
+    letter-spacing:1px;
+    text-transform:uppercase
+  }
   .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
   .pricing-card{
     border-radius:20px;
@@ -414,9 +573,27 @@ const HOME_STYLES = `
   .p-sub{
     font-size:.8rem;
     color:#9ca3af;
-    margin-bottom:20px;
+    margin-bottom:16px;
     line-height:1.5;
     font-weight:600
+  }
+  .p-fit{
+    display:inline-flex;
+    align-items:center;
+    padding:7px 12px;
+    border-radius:999px;
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    color:#475569;
+    font-size:.72rem;
+    font-weight:800;
+    line-height:1.4;
+    margin-bottom:18px
+  }
+  .pricing-card.featured .p-fit{
+    background:#eef2ff;
+    border-color:#c7d2fe;
+    color:#4338ca
   }
   .p-price{
     font-size:3rem;
@@ -479,7 +656,6 @@ const HOME_STYLES = `
     min-height:32px
   }
   .pricing-card.featured .p-features li{color:#374151}
-
   .p-terms{
     margin-bottom:18px;
     padding:12px 14px;
@@ -538,6 +714,119 @@ const HOME_STYLES = `
     text-decoration:none
   }
   .pricing-help a:hover{text-decoration:underline}
+
+  .pricing-decision{
+    max-width:860px;
+    margin:28px auto 0;
+    padding:24px 26px;
+    border-radius:20px;
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    text-align:center
+  }
+  .pricing-decision h3{
+    font-size:1.05rem;
+    font-weight:900;
+    color:#111827;
+    margin-bottom:8px
+  }
+  .pricing-decision p{
+    font-size:.88rem;
+    color:#6b7280;
+    line-height:1.75
+  }
+
+  .comparison-section{
+    padding:100px 5%;
+    background:#f9fafb
+  }
+  .comparison-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px
+  }
+  .comparison-col{
+    border-radius:20px;
+    padding:32px 28px
+  }
+  .comparison-col.self{
+    background:#fff;
+    border:1px solid #e5e7eb
+  }
+  .comparison-col.vedantix{
+    background:linear-gradient(135deg,#eef2ff,#f5f3ff);
+    border:1px solid #c7d2fe
+  }
+  .comparison-col h3{
+    font-size:1rem;
+    font-weight:900;
+    margin-bottom:18px
+  }
+  .comparison-col.self h3{color:#9ca3af}
+  .comparison-col.vedantix h3{color:#4338ca}
+  .comparison-item{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    margin-bottom:12px;
+    font-size:.84rem;
+    line-height:1.6
+  }
+  .comparison-item:last-child{margin-bottom:0}
+  .comparison-col.self .comparison-item{color:#6b7280}
+  .comparison-col.vedantix .comparison-item{color:#374151}
+  .comparison-col.self .comparison-item::before{
+    content:'×';
+    color:#f87171;
+    font-weight:900;
+    flex-shrink:0
+  }
+  .comparison-col.vedantix .comparison-item::before{
+    content:'✓';
+    color:#6366f1;
+    font-weight:900;
+    flex-shrink:0
+  }
+
+  .niche-pages-section{
+    padding:90px 5%;
+    background:#fff
+  }
+  .niche-pages-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px
+  }
+  .niche-page-card{
+    border-radius:18px;
+    border:1px solid #e5e7eb;
+    background:#fff;
+    padding:22px;
+    transition:all .25s
+  }
+  .niche-page-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(15,23,42,.06);
+    border-color:#c7d2fe
+  }
+  .niche-page-card h3{
+    font-size:.98rem;
+    font-weight:900;
+    color:#111827;
+    margin-bottom:8px
+  }
+  .niche-page-card p{
+    font-size:.84rem;
+    color:#6b7280;
+    line-height:1.7;
+    margin-bottom:14px
+  }
+  .niche-page-card a{
+    color:#6366f1;
+    font-weight:800;
+    font-size:.84rem;
+    text-decoration:none
+  }
 
   .trust-strip{
     background:#f9fafb;
@@ -934,8 +1223,8 @@ const HOME_STYLES = `
   }
 
   @media(max-width:1024px){
-    .pricing-grid,.difference-grid{grid-template-columns:1fr;max-width:520px;margin:0 auto}
-    .solution-grid,.why-grid{grid-template-columns:1fr;max-width:560px;margin:0 auto}
+    .pricing-grid,.difference-grid,.niche-fit-grid,.niche-pages-grid{grid-template-columns:1fr;max-width:640px;margin:0 auto}
+    .solution-grid,.why-grid,.comparison-grid,.niche-highlight{grid-template-columns:1fr;max-width:720px;margin:0 auto}
     .results-row{grid-template-columns:1fr 1fr}
     .results-row .result-item:nth-child(2){border-right:none}
     .results-row .result-item:nth-child(3){border-right:none;border-top:1px solid #f3f4f6;grid-column:1/-1}
@@ -956,7 +1245,7 @@ const HOME_STYLES = `
     .results-row{grid-template-columns:1fr;border-radius:16px}
     .result-item{border-right:none;border-bottom:1px solid #f3f4f6;padding:28px}
     .result-item:last-child{border-bottom:none}
-    .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.founder-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:80px 5%}
+    .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.founder-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section,.comparison-section,.niche-fit-section,.niche-pages-section{padding:80px 5%}
     .founder-card{padding:32px 24px}
     .founder-points{grid-template-columns:1fr}
     .founder-mini-head{align-items:center}
@@ -969,7 +1258,7 @@ const HOME_STYLES = `
   }
 
   @media(max-width:480px){
-    .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.founder-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section{padding:60px 5%}
+    .problem-section,.difference-section,.demo-section,.solution-section,.results-section,.founder-section,.pricing-section,.roi-section,.why-section,.how-section,.urgency-section,.comparison-section,.niche-fit-section,.niche-pages-section{padding:60px 5%}
     .trusted-inner{gap:12px}
     .guarantee-box{flex-direction:column;gap:10px;padding:20px}
     .cta-section h2{font-size:1.8rem}
@@ -985,6 +1274,105 @@ const HOME_STYLES = `
 `;
 
 const TRUSTED_BY = ["Kappers", "Restaurants", "Klusbedrijven", "Schoonheidssalons", "Fotografen", "ZZP'ers"];
+
+const NICHE_OPTIONS = [
+  {
+    key: "kappers",
+    icon: "✂️",
+    name: "Kappers",
+    problem: "Je wilt meer afspraken en een website die direct vertrouwen geeft.",
+    bestFit: "Groei past het vaakst bij kappers",
+    href: "/website-kapper",
+    highlightTitle: "Meer afspraken zonder gedoe met je website",
+    highlightText:
+      "Voor kappers draait je website niet alleen om mooi zijn, maar vooral om sneller overtuigen en makkelijker contact laten opnemen.",
+    points: [
+      "Duidelijke knoppen voor bellen, WhatsApp of afspraak aanvragen",
+      "Professionele uitstraling die past bij jouw salon",
+      "Meer ruimte voor behandelingen, tarieven en reviews",
+    ],
+  },
+  {
+    key: "restaurants",
+    icon: "🍽️",
+    name: "Restaurants",
+    problem: "Je wilt meer reserveringen en minder afhankelijk zijn van externe platforms.",
+    bestFit: "Automatiseren of Groei past vaak het best",
+    href: "/website-restaurant",
+    highlightTitle: "Meer reserveringen via je eigen website",
+    highlightText:
+      "Een restaurantwebsite moet sfeer uitstralen, maar vooral gasten overtuigen om direct te reserveren of contact op te nemen.",
+    points: [
+      "Duidelijke menukaart, sfeer en contactopties",
+      "Sterkere focus op reserveringen en directe omzet",
+      "Mogelijkheid om reserveringsflow later uit te bouwen",
+    ],
+  },
+  {
+    key: "klusbedrijven",
+    icon: "🔨",
+    name: "Klusbedrijven",
+    problem: "Je wilt meer offerte-aanvragen en professioneler overkomen bij nieuwe klanten.",
+    bestFit: "Groei past het vaakst bij klusbedrijven",
+    href: "/website-klusbedrijf",
+    highlightTitle: "Meer aanvragen voor klussen en offertes",
+    highlightText:
+      "Voor een klusbedrijf moet je website direct duidelijk maken wat je doet, waar je werkt en hoe iemand je kan inschakelen.",
+    points: [
+      "Sterke dienstenpagina’s en lokale zichtbaarheid",
+      "Duidelijke focus op aanvragen en offerteformulieren",
+      "Meer vertrouwen bij nieuwe klanten",
+    ],
+  },
+  {
+    key: "schoonheidssalons",
+    icon: "💅",
+    name: "Schoonheidssalons",
+    problem: "Je wilt meer boekingen en een uitstraling die rust, kwaliteit en vertrouwen uitstraalt.",
+    bestFit: "Groei past het vaakst bij salons",
+    href: "/website-schoonheidssalon",
+    highlightTitle: "Meer boekingen met een rustige, luxe uitstraling",
+    highlightText:
+      "Voor een schoonheidssalon moet je website professioneel ogen, behandelingen duidelijk tonen en klanten soepel naar contact of boeking leiden.",
+    points: [
+      "Duidelijke behandelingen en contactopties",
+      "Sterke uitstraling voor mobiel en desktop",
+      "Minder chaos via losse DM’s en berichten",
+    ],
+  },
+  {
+    key: "fotografen",
+    icon: "📸",
+    name: "Fotografen",
+    problem: "Je wilt portfolio en vertrouwen combineren met meer boekingen.",
+    bestFit: "Groei past het vaakst bij fotografen",
+    href: "/website-fotograaf",
+    highlightTitle: "Portfolio én meer boekingen in één website",
+    highlightText:
+      "Voor fotografen moet je website niet alleen werk tonen, maar vooral bezoekers overtuigen om een shoot of opdracht aan te vragen.",
+    points: [
+      "Sterke portfolio-opbouw met duidelijke CTA’s",
+      "Professionelere uitstraling dan alleen social media",
+      "Meer aanvragen voor shoots en opdrachten",
+    ],
+  },
+  {
+    key: "zzpers",
+    icon: "🧑‍💼",
+    name: "ZZP'ers",
+    problem: "Je wilt professioneler overkomen en makkelijker nieuwe klanten aantrekken.",
+    bestFit: "Zichtbaar of Groei past vaak het best",
+    href: "/website-zzp",
+    highlightTitle: "Meer vertrouwen en meer leads voor zelfstandigen",
+    highlightText:
+      "Als zzp’er is je website vaak je eerste indruk. Die moet meteen duidelijk maken wat je doet en waarom iemand juist jou moet benaderen.",
+    points: [
+      "Sterke eerste indruk zonder technisch gedoe",
+      "Meer focus op leads, bellen of aanvragen",
+      "Makkelijk mee te laten groeien met je bedrijf",
+    ],
+  },
+];
 
 const PROBLEMS = [
   [
@@ -1060,9 +1448,10 @@ const FOUNDER_POINTS = [
 
 const PACKAGES = [
   {
-    tier: "Starter",
-    name: "Voor starters en kleine lokale bedrijven",
-    subtitle: "Voor ondernemers die snel professioneel online zichtbaar willen zijn zonder ingewikkeld traject.",
+    tier: "Zichtbaar",
+    name: "Professioneel online zonder gedoe",
+    subtitle: "Voor ondernemers die gewoon goed online willen staan en direct vertrouwen willen uitstralen.",
+    fit: "Past vaak bij starters, zzp’ers en kleine bedrijven",
     price: "99",
     setup: "€500 eenmalige setup",
     featured: false,
@@ -1074,44 +1463,46 @@ const PACKAGES = [
       "Onderhoud en kleine updates inbegrepen",
       "1 zakelijk mailadres",
     ],
-    note: "Ideaal als je vooral professioneel zichtbaar wilt zijn en een lage instap zoekt.",
-    cta: "Plan kennismaking →",
+    note: "Ideaal als je snel professioneel zichtbaar wilt zijn zonder onnodige complexiteit.",
+    cta: "Ik wil goed online staan →",
   },
   {
-    tier: "Growth",
-    name: "Voor bedrijven die meer aanvragen willen",
-    subtitle: "Voor ondernemers die hun website actiever willen inzetten voor zichtbaarheid, inhoud en groei.",
+    tier: "Groei",
+    name: "Meer aanvragen via je website",
+    subtitle: "Voor ondernemers die hun website actief willen inzetten om meer klanten, afspraken of leads te krijgen.",
+    fit: "Meest gekozen door kappers, salons, fotografen en klusbedrijven",
     price: "149",
     setup: "€750 eenmalige setup",
     featured: true,
     cancelNote: "Maandelijks opzegbaar vanaf 6 maanden · daarna zonder lange contractduur",
     bullets: [
-      "Alles uit Starter",
+      "Alles uit Zichtbaar",
       "Meer pagina’s en sterkere SEO-structuur",
       "Blog of FAQ mogelijk",
       "Meer ruimte voor diensten en landingspagina’s",
       "5 zakelijke mailadressen",
     ],
-    note: "Beste keuze voor de meeste lokale ondernemers die serieus online willen groeien.",
-    cta: "Plan kennismaking →",
+    note: "Beste keuze voor de meeste lokale ondernemers die serieus willen groeien zonder dat het complex wordt.",
+    cta: "Ik wil meer klanten →",
   },
   {
-    tier: "Pro",
-    name: "Voor bedrijven die online processen willen automatiseren",
-    subtitle: "Voor ondernemers die meer nodig hebben dan alleen een website, zoals intake, reserveringen of klantomgeving.",
+    tier: "Automatiseren",
+    name: "Je website laten meewerken",
+    subtitle: "Voor ondernemers die meer nodig hebben dan alleen zichtbaarheid, zoals reserveringen, intake of workflows.",
+    fit: "Past vaak bij restaurants en bedrijven met reserveringen of intake",
     price: "249",
     setup: "€1000 eenmalige setup",
     featured: false,
     cancelNote: "Maandelijks opzegbaar vanaf maand 3",
     bullets: [
-      "Alles uit Growth",
+      "Alles uit Groei",
       "Klantomgeving of dashboard mogelijk",
       "Reserveringen, intake of workflows mogelijk",
       "Meer maatwerk en doorontwikkeling",
       "10 zakelijke mailadressen",
     ],
     note: "Geschikt als je website echt een actief onderdeel van je bedrijfsproces wordt.",
-    cta: "Plan kennismaking →",
+    cta: "Ik wil tijd besparen →",
   },
 ];
 
@@ -1146,6 +1537,22 @@ const HOW_STEPS = [
   ["4", "Onderhoud & updates", "Na livegang blijven we betrokken voor beheer, kleine wijzigingen en doorontwikkeling."],
 ];
 
+const COMPARE_SELF = [
+  "Zelf tools, hosting of bouwers uitzoeken",
+  "Tijd kwijt aan ontwerp, inhoud en techniek",
+  "Geen duidelijke structuur voor meer aanvragen",
+  "Bij problemen zelf zoeken wie iets oplost",
+  "Vaak starten met goedkoop, maar later alsnog gedoe",
+];
+
+const COMPARE_VEDANTIX = [
+  "Alles vanuit één partij geregeld",
+  "Gebouwd met focus op aanvragen, contact en vertrouwen",
+  "Persoonlijke hulp in plaats van een anoniem ticketsysteem",
+  "Onderhoud en kleine updates blijven doorlopen",
+  "Snel live en makkelijk op te schalen als je groeit",
+];
+
 const URGENCY_SPOTS = [1, 2, 3, 4, 5];
 const CTA_META = [
   "Vrijblijvende kennismaking",
@@ -1155,11 +1562,18 @@ const CTA_META = [
 ];
 
 export default function Home() {
+  const [selectedNiche, setSelectedNiche] = useState(NICHE_OPTIONS[0].key);
+
+  const activeNiche = useMemo(
+    () => NICHE_OPTIONS.find((item) => item.key === selectedNiche) || NICHE_OPTIONS[0],
+    [selectedNiche]
+  );
+
   return (
     <>
       <SEO
-        title="Website laten maken voor kappers, salons en lokale bedrijven | Vedantix"
-        description="Binnen 48 uur een professionele website voor kappers, salons, restaurants en lokale ondernemers. Inclusief onderhoud, support en doorlopende ondersteuning."
+        title="Website laten maken voor kappers, restaurants en lokale bedrijven | Vedantix"
+        description="Binnen 48 uur een professionele website voor kappers, restaurants, klusbedrijven, salons, fotografen en zzp’ers. Gericht op meer aanvragen, minder gedoe en doorlopende ondersteuning."
         canonical="https://vedantix.nl/"
       />
 
@@ -1224,6 +1638,70 @@ export default function Home() {
                     <p>{text}</p>
                   </div>
                 ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="niche-fit-section anchor-section" id="voor-wie">
+            <div className="section-wrap">
+              <div className="section-header centered">
+                <div className="section-label">Wat past bij jou?</div>
+                <h2 className="section-h2">Kies jouw branche en zie direct wat het beste past</h2>
+                <p className="section-p">
+                  Een kapper, restaurant of zzp’er zoekt niet hetzelfde. Daarom zie je hieronder per niche meteen waar de meeste winst zit
+                  en welk pakket meestal het beste aansluit.
+                </p>
+              </div>
+
+              <div className="niche-fit-grid">
+                {NICHE_OPTIONS.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    className={`niche-fit-card ${selectedNiche === item.key ? "active" : ""}`}
+                    onClick={() => setSelectedNiche(item.key)}
+                    style={{ textAlign: "left" }}
+                  >
+                    <div className="niche-fit-top">
+                      <div className="niche-fit-name">{item.name}</div>
+                      <div className="niche-fit-icon">{item.icon}</div>
+                    </div>
+
+                    <p className="niche-fit-problem">{item.problem}</p>
+                    <div className="niche-fit-tag">{item.bestFit}</div>
+                    <div className="niche-fit-link">Bekijk richting →</div>
+                  </button>
+                ))}
+              </div>
+
+              <div className="niche-highlight">
+                <div className="niche-highlight-box">
+                  <div className="section-label" style={{ marginBottom: 10 }}>
+                    Voor {activeNiche.name.toLowerCase()}
+                  </div>
+                  <h3>{activeNiche.highlightTitle}</h3>
+                  <p>{activeNiche.highlightText}</p>
+
+                  <div className="niche-highlight-points">
+                    {activeNiche.points.map((point) => (
+                      <div key={point} className="niche-highlight-point">
+                        <span>{point}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="niche-highlight-cta">
+                  <a href="#pricing" className="btn-lead">
+                    Bekijk passende pakketten →
+                  </a>
+                  <a href={activeNiche.href} className="btn-lead" style={{ background: "#fff", color: "#111827", border: "1px solid #e5e7eb", boxShadow: "none" }}>
+                    Bekijk pagina voor {activeNiche.name.toLowerCase()} →
+                  </a>
+                  <div className="niche-highlight-note">
+                    Aanrader: maak voor elke branche ook een eigen landingspagina. Dat converteert sterker en helpt SEO.
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -1359,12 +1837,16 @@ export default function Home() {
 
           <section id="pricing" className="pricing-section anchor-section">
             <div className="section-wrap">
+              <div className="pricing-intro">
+                <div className="pricing-kicker">Je kiest geen website. Je kiest hoeveel je eruit wilt halen.</div>
+              </div>
+
               <div className="section-header centered">
                 <div className="section-label">Pakketten</div>
                 <h2 className="section-h2">Kies het pakket dat bij jouw bedrijf past</h2>
                 <p className="section-p">
-                  Kies wat past bij jouw fase: snel professioneel online, meer aanvragen genereren of een website die ook processen ondersteunt.
-                  Elk pakket is duidelijk, praktisch en gericht op lokale ondernemers.
+                  Eerst professioneel zichtbaar zijn, daarna meer aanvragen of uiteindelijk processen laten meewerken.
+                  De pakketten zijn bewust simpel gehouden zodat je snel ziet wat bij jouw fase past.
                 </p>
               </div>
 
@@ -1376,6 +1858,7 @@ export default function Home() {
                     <div className="p-tier">{pkg.tier}</div>
                     <div className="p-name">{pkg.name}</div>
                     <div className="p-sub">{pkg.subtitle}</div>
+                    <div className="p-fit">{pkg.fit}</div>
 
                     <div className="p-price">
                       <sup>€</sup>
@@ -1384,9 +1867,7 @@ export default function Home() {
                     </div>
 
                     <div className="p-setup">+ {pkg.setup}</div>
-
                     <div className="p-terms">{pkg.cancelNote}</div>
-
                     <div className="p-divider" />
 
                     <ul className="p-features">
@@ -1411,8 +1892,72 @@ export default function Home() {
                 ))}
               </div>
 
+              <div className="pricing-decision">
+                <h3>Twijfel je?</h3>
+                <p>
+                  De meeste ondernemers kiezen voor <strong>Groei</strong>. Daar zit meestal alles in om meer klanten, afspraken of aanvragen
+                  te krijgen zonder dat het meteen complex wordt.
+                </p>
+              </div>
+
               <div className="pricing-help">
                 <a href="/pakketvergelijking">Bekijk de uitgebreide pakketvergelijking →</a>
+              </div>
+            </div>
+          </section>
+
+          <section className="comparison-section">
+            <div className="section-wrap">
+              <div className="section-header centered">
+                <div className="section-label">Waarom niet zelf bouwen?</div>
+                <h2 className="section-h2">Het verschil zit niet in de tool, maar in het resultaat</h2>
+                <p className="section-p">
+                  Veel ondernemers vergelijken zichzelf onbewust met hostingpartijen of websitebuilders. Maar de echte keuze is vaak:
+                  zelf uitzoeken of alles in één keer goed laten regelen.
+                </p>
+              </div>
+
+              <div className="comparison-grid">
+                <div className="comparison-col self">
+                  <h3>Zelf doen of losse tools combineren</h3>
+                  {COMPARE_SELF.map((item) => (
+                    <div key={item} className="comparison-item">
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="comparison-col vedantix">
+                  <h3>Vedantix</h3>
+                  {COMPARE_VEDANTIX.map((item) => (
+                    <div key={item} className="comparison-item">
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="niche-pages-section">
+            <div className="section-wrap">
+              <div className="section-header centered">
+                <div className="section-label">Per branche uitgewerkt</div>
+                <h2 className="section-h2">Specifieke pagina’s voor jouw niche maken deze keuze nog makkelijker</h2>
+                <p className="section-p">
+                  Deze nichepagina’s zijn sterk voor SEO én conversie. Bezoekers herkennen zichzelf sneller en zien direct waarom jouw
+                  aanpak juist voor hun branche werkt.
+                </p>
+              </div>
+
+              <div className="niche-pages-grid">
+                {NICHE_OPTIONS.map((item) => (
+                  <div key={item.key} className="niche-page-card">
+                    <h3>Website voor {item.name.toLowerCase()}</h3>
+                    <p>{item.problem}</p>
+                    <a href={item.href}>Bekijk nichepagina →</a>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
@@ -1508,7 +2053,9 @@ export default function Home() {
               <div className="section-header centered">
                 <div className="section-label">Werkwijze</div>
                 <h2 className="section-h2">Van eerste bericht naar live website in 4 stappen</h2>
-                <p className="section-p">Een duidelijk proces werkt beter dan vage beloftes. Zo weet een klant precies wat hij kan verwachten.</p>
+                <p className="section-p">
+                  Een duidelijk proces werkt beter dan vage beloftes. Zo weet een klant precies wat hij kan verwachten.
+                </p>
               </div>
 
               <div className="how-steps">
@@ -1600,8 +2147,8 @@ export default function Home() {
                 💬 Stel je vraag via WhatsApp
               </a>
 
-              <a href="#demo" className="btn-ghost" style={{ textAlign: "center" }}>
-                Bekijk demo’s →
+              <a href="#voor-wie" className="btn-ghost" style={{ textAlign: "center" }}>
+                Bekijk wat bij jou past →
               </a>
             </div>
 
