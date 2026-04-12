@@ -1,122 +1,104 @@
 export const NICHE_DEMOS = [
-    {
-      slug: "kapper",
-      theme: "barber",
-      label: "Demo concept",
-      title: "Barbershop / kapper",
-      subtitle: "Voor ondernemers die meer afspraken en een sterkere eerste indruk willen.",
-      bullets: [
-        "Hero met directe CTA naar afspraak of WhatsApp",
-        "Prijslijst en behandelingen overzichtelijk in beeld",
-        "Mobiel eerst ontworpen voor snelle actie",
-        "Galerij en openingstijden duidelijk zichtbaar",
-      ],
-      outcome: "Sterk voor kappers en barbershops die professioneel willen ogen zonder onnodige complexiteit.",
-      whatsappText: "Hallo Vedantix, ik wil graag een website voor mijn kapper / barbershop bespreken.",
-    },
-    {
-      slug: "restaurant",
-      theme: "restaurant",
-      label: "Demo concept",
-      title: "Restaurant / food concept",
-      subtitle: "Voor zaken die sfeer willen tonen én reserveringen of contact willen stimuleren.",
-      bullets: [
-        "Visuele homepage met menukaart en sfeerbeelden",
-        "CTA naar reserveren, bellen of route",
-        "Secties voor reviews, openingstijden en specials",
-        "Heldere opbouw voor mobiel gebruik onderweg",
-      ],
-      outcome: "Geschikt voor restaurants, lunchrooms en afhaalconcepten die beter zichtbaar willen zijn.",
-      whatsappText: "Hallo Vedantix, ik wil graag een website voor mijn restaurant bespreken.",
-    },
-    {
-      slug: "salon",
-      theme: "salon",
-      label: "Demo concept",
-      title: "Salon / beauty",
-      subtitle: "Voor salons die rust, kwaliteit en vertrouwen willen uitstralen.",
-      bullets: [
-        "Rustige premium uitstraling met duidelijke diensten",
-        "CTA’s voor intake, WhatsApp en offerte",
-        "Ruimte voor behandelingen, FAQ en resultaten",
-        "Later uit te breiden met reserveringen of intakeflows",
-      ],
-      outcome: "Sterk voor schoonheidssalons en andere servicebedrijven die professioneel willen overkomen.",
-      whatsappText: "Hallo Vedantix, ik wil graag een website voor mijn salon bespreken.",
-    },
-    {
-      slug: "fotograaf",
-      theme: "photography",
-      label: "Demo concept",
-      title: "Fotograaf",
-      subtitle: "Voor fotografen die portfolio, stijl en aanvragen centraal willen zetten.",
-      bullets: [
-        "Sterke fullscreen header met portfoliofocus",
-        "Duidelijke CTA naar offerte of contact",
-        "Ruimte voor shoots, pakketten en FAQ",
-        "Mobiel nette galerijweergave",
-      ],
-      outcome: "Geschikt voor fotografen die professioneel willen overkomen en meer aanvragen willen krijgen.",
-      whatsappText: "Hallo Vedantix, ik wil graag een website voor mijn fotografiebedrijf bespreken.",
-    },
-    {
-      slug: "klusbedrijf",
-      theme: "services",
-      label: "Demo concept",
-      title: "Klusbedrijf",
-      subtitle: "Voor bedrijven die snel vertrouwen willen opbouwen en makkelijk benaderbaar willen zijn.",
-      bullets: [
-        "Duidelijke diensten en werkgebied op homepage",
-        "CTA’s naar bellen, WhatsApp en offerte",
-        "Sectie voor eerdere projecten en werkwijze",
-        "Sterke mobiele contactfocus",
-      ],
-      outcome: "Sterk voor klusbedrijven die lokaal beter zichtbaar willen zijn en sneller leads willen krijgen.",
-      whatsappText: "Hallo Vedantix, ik wil graag een website voor mijn klusbedrijf bespreken.",
-    },
-    {
-      slug: "schilder",
-      theme: "services",
-      label: "Demo concept",
-      title: "Schilder",
-      subtitle: "Voor schilders die strak werk en betrouwbaarheid online willen uitstralen.",
-      bullets: [
-        "Diensten overzichtelijk gegroepeerd",
-        "CTA naar offerte aanvragen",
-        "Voor/na projectsecties mogelijk",
-        "Lokale SEO-pagina’s makkelijk uitbreidbaar",
-      ],
-      outcome: "Geschikt voor schilders die professioneler zichtbaar willen zijn in hun regio.",
-      whatsappText: "Hallo Vedantix, ik wil graag een website voor mijn schildersbedrijf bespreken.",
-    },
-    {
-      slug: "dakdekker",
-      theme: "services",
-      label: "Demo concept",
-      title: "Dakdekker",
-      subtitle: "Voor bedrijven waar snelheid, vertrouwen en direct contact belangrijk zijn.",
-      bullets: [
-        "Spoed-CTA direct zichtbaar in hero",
-        "Diensten, regio en contact slim opgebouwd",
-        "Mobiel geoptimaliseerd voor snel bellen",
-        "Sterke lokale vindbaarheid per regio mogelijk",
-      ],
-      outcome: "Sterk voor dakdekkers die direct leads willen genereren en professioneel gevonden willen worden.",
-      whatsappText: "Hallo Vedantix, ik wil graag een website voor mijn dakdekkersbedrijf bespreken.",
-    },
-    {
-      slug: "coach",
-      theme: "coach",
-      label: "Demo concept",
-      title: "Coach / begeleider",
-      subtitle: "Voor coaches die vertrouwen, persoonlijkheid en intake centraal willen zetten.",
-      bullets: [
-        "Persoonlijke hero met heldere positionering",
-        "CTA naar kennismakingsgesprek",
-        "Ruimte voor aanbod, werkwijze en testimonials",
-        "Intakeformulieren later uitbreidbaar",
-      ],
-      outcome: "Geschikt voor coaches die een professionele en rustige online uitstraling willen.",
-      whatsappText: "Hallo Vedantix, ik wil graag een website voor mijn coachpraktijk bespreken.",
-    },
-  ];
+  {
+    slug: "kapper",
+    theme: "barber",
+    label: "Kappers / barbers",
+    title: "Meer afspraken met een website die direct vertrouwen geeft",
+    subtitle:
+      "Voor kappers en barbers die professioneler willen overkomen en sneller afspraken via WhatsApp of formulier willen binnenhalen.",
+    bullets: [
+      "Duidelijke focus op afspraak maken of WhatsApp",
+      "Sterke eerste indruk die past bij je salon",
+      "Ruimte voor behandelingen, tarieven en reviews",
+    ],
+    outcome:
+      "Een website die bezoekers sneller overtuigt om een afspraak te maken in plaats van alleen even rond te kijken.",
+    whatsappText:
+      "Hallo Vedantix, ik wil graag een website zoals het kapper/barber voorbeeld bespreken.",
+  },
+  {
+    slug: "restaurant",
+    theme: "restaurant",
+    label: "Restaurants",
+    title: "Meer reserveringen via je eigen website",
+    subtitle:
+      "Voor restaurants die minder afhankelijk willen zijn van externe platforms en meer directe reserveringen willen krijgen.",
+    bullets: [
+      "Sfeer, menukaart en contact duidelijk in beeld",
+      "Sterke opbouw voor reserveren of bellen",
+      "Professionele uitstraling op mobiel en desktop",
+    ],
+    outcome:
+      "Een website die gasten sneller laat reserveren en je restaurant sterker neerzet dan alleen social media of een platformpagina.",
+    whatsappText:
+      "Hallo Vedantix, ik wil graag een website zoals het restaurant voorbeeld bespreken.",
+  },
+  {
+    slug: "salon",
+    theme: "salon",
+    label: "Schoonheidssalons",
+    title: "Meer boekingen met een rustige, luxe uitstraling",
+    subtitle:
+      "Voor salons die kwaliteit willen uitstralen en bezoekers soepeler richting boeking of contact willen sturen.",
+    bullets: [
+      "Duidelijke behandelingen en contactopties",
+      "Luxe uitstraling zonder onrustige opbouw",
+      "Mobielvriendelijk voor snelle beslissers",
+    ],
+    outcome:
+      "Een website die meer vertrouwen geeft, professioneler aanvoelt en klanten sneller laat boeken.",
+    whatsappText:
+      "Hallo Vedantix, ik wil graag een website zoals het schoonheidssalon voorbeeld bespreken.",
+  },
+  {
+    slug: "fotograaf",
+    theme: "photography",
+    label: "Fotografen",
+    title: "Portfolio dat ook echt aanvragen oplevert",
+    subtitle:
+      "Voor fotografen die niet alleen werk willen tonen, maar bezoekers ook willen overtuigen om contact op te nemen.",
+    bullets: [
+      "Portfolio-opbouw met duidelijke call-to-actions",
+      "Sterkere indruk dan alleen Instagram of social media",
+      "Meer ruimte voor shoots, pakketten en contact",
+    ],
+    outcome:
+      "Een website die je werk professioneel presenteert én meer boekingen of offerte-aanvragen ondersteunt.",
+    whatsappText:
+      "Hallo Vedantix, ik wil graag een website zoals het fotograaf voorbeeld bespreken.",
+  },
+  {
+    slug: "klusbedrijf",
+    theme: "services",
+    label: "Klusbedrijven",
+    title: "Meer offerte-aanvragen uit je regio",
+    subtitle:
+      "Voor klusbedrijven die duidelijk willen laten zien wat ze doen, waar ze werken en waarom klanten juist hen moeten kiezen.",
+    bullets: [
+      "Sterke dienstenpagina’s en duidelijke structuur",
+      "Focus op offerte aanvragen, bellen en vertrouwen",
+      "Goede basis voor lokale vindbaarheid",
+    ],
+    outcome:
+      "Een website die nieuwe klanten sneller vertrouwen geeft en meer offerte-aanvragen uit je werkgebied oplevert.",
+    whatsappText:
+      "Hallo Vedantix, ik wil graag een website zoals het klusbedrijf voorbeeld bespreken.",
+  },
+  {
+    slug: "zzp",
+    theme: "coach",
+    label: "ZZP'ers / dienstverleners",
+    title: "Een professionele website zonder technisch gedoe",
+    subtitle:
+      "Voor zelfstandigen die serieuzer willen overkomen en makkelijker nieuwe klanten willen aantrekken.",
+    bullets: [
+      "Heldere eerste indruk voor nieuwe bezoekers",
+      "Meer focus op leads, intake of contact",
+      "Later makkelijk uit te breiden als je groeit",
+    ],
+    outcome:
+      "Een website die je bedrijf professioneler neerzet en meer ruimte geeft om nieuwe opdrachten of klanten binnen te halen.",
+    whatsappText:
+      "Hallo Vedantix, ik wil graag een website zoals het zzp/dienstverlener voorbeeld bespreken.",
+  },
+];

@@ -1,12 +1,13 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, Suspense, lazy } from "react";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
 import BigFooter from "../components/BigFooter";
 import HomeHero, { HOME_HERO_STYLES } from "./HomeHero";
-import HomePricing from "./HomePricing";
-import HomeDemoSection from "./HomeDemoSection";
-import HomeFounderSection from "./HomeFounderSection";
-import ClientCasesSection from "../components/home/ClientCasesSection";
+
+const HomePricing = lazy(() => import("./HomePricing"));
+const HomeDemoSection = lazy(() => import("./HomeDemoSection"));
+const HomeFounderSection = lazy(() => import("./HomeFounderSection"));
+const ClientCasesSection = lazy(() => import("../components/home/ClientCasesSection"));
 
 const HOME_STYLES = `
   *{box-sizing:border-box;margin:0;padding:0}
@@ -822,7 +823,9 @@ const HOME_STYLES = `
 
   @media(max-width:768px){
     .section-shell,
-    .cta-section{padding:80px 5%}
+    .cta-section{
+      padding:80px 5%;
+    }
 
     .problem-grid,
     .proof-grid,
@@ -1063,7 +1066,9 @@ export default function Home() {
             <div className="micro-proof-inner">
               <span className="micro-proof-label">Geschikt voor</span>
               {FITS.map((item) => (
-                <span key={item} className="micro-proof-pill">{item}</span>
+                <span key={item} className="micro-proof-pill">
+                  {item}
+                </span>
               ))}
             </div>
           </div>
@@ -1083,6 +1088,50 @@ export default function Home() {
           </section>
 
           <ClientCasesSection />
+
+          <section className="section-shell">
+            <div className="section-wrap">
+              <div className="section-header">
+                <div className="section-label">Het probleem</div>
+                <h2 className="section-h2">Veel websites van lokale ondernemers laten onnodig klanten liggen</h2>
+                <p className="section-p">
+                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen geeft, te weinig richting biedt en daarna vaak stil blijft staan.
+                </p>
+              </div>
+
+              <div className="problem-grid">
+                {PROBLEMS.map(([icon, title, text]) => (
+                  <div key={title} className="problem-card">
+                    <div className="problem-icon">{icon}</div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="section-shell alt">
+            <div className="section-wrap">
+              <div className="section-header center">
+                <div className="section-label">Waarom Vedantix</div>
+                <h2 className="section-h2">Geen technische rompslomp, maar een website die beter verkoopt</h2>
+                <p className="section-p">
+                  Vedantix is voor ondernemers die geen zin hebben in losse tools, lange trajecten of vage communicatie. Je krijgt snelheid, duidelijkheid en doorlopende ondersteuning.
+                </p>
+              </div>
+
+              <div className="proof-grid">
+                {PROOF_POINTS.map(([icon, title, text]) => (
+                  <div key={title} className="proof-card">
+                    <div className="proof-icon">{icon}</div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
 
           <section className="section-shell alt anchor-section" id="voor-wie">
             <div className="section-wrap">
@@ -1131,8 +1180,12 @@ export default function Home() {
                 </div>
 
                 <div className="industry-side">
-                  <a href="#pricing" className="btn-lead">Bekijk passende pakketten →</a>
-                  <a href={activeNiche.href} className="btn-outline">Bekijk branchepagina →</a>
+                  <a href="#pricing" className="btn-lead">
+                    Bekijk passende pakketten →
+                  </a>
+                  <a href={activeNiche.href} className="btn-outline">
+                    Bekijk branchepagina →
+                  </a>
                   <div className="industry-note">
                     De branchepagina’s helpen bezoekers zichzelf sneller herkennen en ondersteunen ook je SEO-structuur.
                   </div>
@@ -1141,46 +1194,36 @@ export default function Home() {
             </div>
           </section>
 
+          <HomeDemoSection />
+
           <section className="section-shell">
             <div className="section-wrap">
-              <div className="section-header">
-                <div className="section-label">Het probleem</div>
-                <h2 className="section-h2">Veel websites van lokale ondernemers laten onnodig klanten liggen</h2>
-                <p className="section-p">
-                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen geeft, te weinig richting biedt en daarna vaak stil blijft staan.
-                </p>
-              </div>
-
-              <div className="problem-grid">
-                {PROBLEMS.map(([icon, title, text]) => (
-                  <div key={title} className="problem-card">
-                    <div className="problem-icon">{icon}</div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="section-shell alt">
-            <div className="section-wrap">
               <div className="section-header center">
-                <div className="section-label">Waarom Vedantix</div>
-                <h2 className="section-h2">Geen technische rompslomp, maar een website die beter verkoopt</h2>
+                <div className="section-label">Vindbaarheid</div>
+                <h2 className="section-h2">Niet alleen mooi, maar ook beter vindbaar</h2>
                 <p className="section-p">
-                  Vedantix is voor ondernemers die geen zin hebben in losse tools, lange trajecten of vage communicatie. Je krijgt snelheid, duidelijkheid en doorlopende ondersteuning.
+                  Een goede website moet niet alleen professioneel ogen, maar ook helpen om beter gevonden te worden in Google en lokaal meer zichtbaar te zijn.
                 </p>
               </div>
 
               <div className="proof-grid">
-                {PROOF_POINTS.map(([icon, title, text]) => (
-                  <div key={title} className="proof-card">
-                    <div className="proof-icon">{icon}</div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
-                  </div>
-                ))}
+                <div className="proof-card">
+                  <div className="proof-icon">🔎</div>
+                  <h3>Slimme SEO-basis</h3>
+                  <p>We bouwen een duidelijke pagina-opbouw en inhoudsstructuur die helpt om beter gevonden te worden.</p>
+                </div>
+
+                <div className="proof-card">
+                  <div className="proof-icon">📍</div>
+                  <h3>Lokale vindbaarheid</h3>
+                  <p>Voor lokale ondernemers is plaats + dienst belangrijk. Daar richten we de website-opbouw slim op in.</p>
+                </div>
+
+                <div className="proof-card">
+                  <div className="proof-icon">📈</div>
+                  <h3>Klaar voor groei</h3>
+                  <p>De website blijft later makkelijk uitbreidbaar met extra pagina’s, FAQ’s, dienstenpagina’s of lokale landingspagina’s.</p>
+                </div>
               </div>
             </div>
           </section>
@@ -1219,7 +1262,37 @@ export default function Home() {
             </div>
           </section>
 
-          <HomeDemoSection />
+          <section className="section-shell alt">
+            <div className="section-wrap">
+              <div className="section-header center">
+                <div className="section-label">Na livegang</div>
+                <h2 className="section-h2">Geen oplevering en klaar. Wij blijven betrokken.</h2>
+                <p className="section-p">
+                  Na livegang stopt het niet. We blijven actief met je meekijken, stellen verbeteringen voor en zorgen dat je website actueel en sterk blijft.
+                </p>
+              </div>
+
+              <div className="proof-grid">
+                <div className="proof-card">
+                  <div className="proof-icon">01</div>
+                  <h3>Periodiek contact</h3>
+                  <p>We blijven regelmatig in gesprek om te kijken wat beter kan, wat je doelgroep nodig heeft en welke nieuwe wensen er zijn.</p>
+                </div>
+
+                <div className="proof-card">
+                  <div className="proof-icon">02</div>
+                  <h3>Continue optimalisatie</h3>
+                  <p>Een website hoeft niet stil te staan na oplevering. We blijven kijken naar duidelijkheid, conversie en verbeterkansen.</p>
+                </div>
+
+                <div className="proof-card">
+                  <div className="proof-icon">03</div>
+                  <h3>Warme samenwerking</h3>
+                  <p>We willen geen losse transactie, maar een relatie waarin we betrokken blijven en waarin klanten je later ook makkelijker aanbevelen.</p>
+                </div>
+              </div>
+            </div>
+          </section>
 
           <section className="section-shell anchor-section" id="how">
             <div className="section-wrap">

@@ -2,8 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import Home from "./pages/Home";
-
+const Home = lazy(() => import("./pages/Home"));
 const Planning = lazy(() => import("./pages/Planning"));
 const Prijzen = lazy(() => import("./pages/Prijzen"));
 const Privacy = lazy(() => import("./pages/Privacy"));

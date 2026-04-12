@@ -9,7 +9,9 @@ const CLIENT_CASES = [
     branch: "Horeca / dienstverlening",
     status: "Live",
     summary:
-      "Professionele website met sterke uitstraling, duidelijke structuur en optimale mobiele weergave.",
+      "Professionele website met duidelijke structuur, sterke mobiele weergave en een uitstraling die direct meer vertrouwen geeft.",
+    outcome:
+      "Sterkere eerste indruk, duidelijkere opbouw en een betere basis voor aanvragen en online zichtbaarheid.",
   },
   // Voeg later hier meer klanten toe
   // {
@@ -20,6 +22,7 @@ const CLIENT_CASES = [
   //   branch: "Kapper / salon",
   //   status: "Live",
   //   summary: "Korte omschrijving van het project.",
+  //   outcome: "Concreet resultaat of voordeel van het project.",
   // },
 ];
 
@@ -71,11 +74,11 @@ export default function ClientCasesSection() {
       <div style={styles.container}>
         <div style={styles.headerRow}>
           <div style={styles.headerContent}>
-            <div style={styles.eyebrow}>KLANTEN</div>
-            <h2 style={styles.title}>Websites die al live staan</h2>
+            <div style={styles.eyebrow}>KLANTCASES</div>
+            <h2 style={styles.title}>Websites die al voor echte bedrijven werken</h2>
             <p style={styles.subtitle}>
-              Echte klanten, echte resultaten. Een compacte selectie van
-              projecten die we recent hebben opgeleverd.
+              Geen loze beloftes, maar voorbeelden van websites die al live staan en bijdragen aan een sterkere eerste indruk,
+              meer duidelijkheid en een betere basis voor aanvragen.
             </p>
           </div>
 
@@ -136,6 +139,10 @@ export default function ClientCasesSection() {
               </a>
 
               <p style={styles.summary}>{client.summary}</p>
+
+              <div style={styles.outcomeBox}>
+                {client.outcome}
+              </div>
 
               <div style={styles.cardFooter}>
                 <a
@@ -333,6 +340,16 @@ const styles = {
     fontSize: "15px",
     lineHeight: 1.7,
     color: "#475569",
+  },
+  outcomeBox: {
+    padding: "12px 14px",
+    borderRadius: "12px",
+    background: "#f8fafc",
+    border: "1px solid #e2e8f0",
+    fontSize: "14px",
+    lineHeight: 1.65,
+    color: "#334155",
+    fontWeight: 700,
   },
   cardFooter: {
     marginTop: "auto",

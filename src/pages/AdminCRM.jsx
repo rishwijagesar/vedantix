@@ -952,14 +952,16 @@ export default function AdminCRM() {
         addOns: customer.extras,
       });
 
-      requestEntries.push({
+      const deployEntry = {
         id:
           (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
           `req-${Date.now()}-1`,
         at: new Date().toISOString(),
         type: "CREATE_DEPLOYMENT",
         result: deployResult,
-      });
+      };
+
+      requestEntries.push(deployEntry);
 
       const deploymentId =
         (deployResult &&
@@ -977,6 +979,41 @@ export default function AdminCRM() {
         (deployResult && deployResult.data && deployResult.data.status) ||
         (deployResult.ok ? "PENDING" : "FAILED");
 
+      let nextStatus = deployResult.ok ? "provisioning" : "failed";
+      let mailProvisioned = false;
+
+      if (settings.autoProvisionMail) {
+        const mailResult = await apiRequest(
+          settings,
+          "POST",
+          `/api/customers/${customer.id}/provision-mail`,
+          {
+            domain: customer.domain,
+            packageCode: customer.packageCode,
+          }
+        );
+
+        const mailEntry = {
+          id:
+            (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+            `req-${Date.now()}-2`,
+          at: new Date().toISOString(),
+          type: "PROVISION_MAIL",
+          result: mailResult,
+        };
+
+        requestEntries.push(mailEntry);
+
+        mailProvisioned = mailResult.ok;
+        nextStatus = deployResult.ok
+          ? mailResult.ok
+            ? "active"
+            : "warning"
+          : "failed";
+      } else {
+        nextStatus = deployResult.ok ? "active" : "failed";
+      }
+
       setCustomers((prev) =>
         prev.map((item) =>
           item.id === customer.id
@@ -991,64 +1028,16 @@ export default function AdminCRM() {
                     deployResult.data.data.currentStage) ||
                   (deployResult && deployResult.data && deployResult.data.currentStage) ||
                   null,
-                status: deployResult.ok ? "provisioning" : "failed",
+                mailProvisioned,
+                status: nextStatus,
                 requestHistory: requestEntries,
               }
             : item
         )
       );
 
-      if (settings.autoProvisionMail) {
-        const mailResult = await apiRequest(
-          settings,
-          "POST",
-          `/api/customers/${customer.id}/provision-mail`,
-          {
-            domain: customer.domain,
-            packageCode: customer.packageCode,
-          }
-        );
+      pushRequestLogEntries(requestEntries);
 
-        requestEntries.push({
-          id:
-            (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-            `req-${Date.now()}-2`,
-          at: new Date().toISOString(),
-          type: "PROVISION_MAIL",
-          result: mailResult,
-        });
-
-        setCustomers((prev) =>
-          prev.map((item) =>
-            item.id === customer.id
-              ? {
-                  ...item,
-                  mailProvisioned: mailResult.ok,
-                  status: deployResult.ok
-                    ? mailResult.ok
-                      ? "active"
-                      : "warning"
-                    : "failed",
-                  requestHistory: requestEntries,
-                }
-              : item
-          )
-        );
-      } else {
-        setCustomers((prev) =>
-          prev.map((item) =>
-            item.id === customer.id
-              ? {
-                  ...item,
-                  status: deployResult.ok ? "active" : "failed",
-                  requestHistory: requestEntries,
-                }
-              : item
-          )
-        );
-      }
-
-      setRequestLog((prev) => [...requestEntries, ...prev].slice(0, 100));
       resetCustomerForm();
       setIsCreateCustomerOpen(false);
       setActiveTab("customers");
@@ -1069,7 +1058,6 @@ export default function AdminCRM() {
       };
 
       requestEntries.push(failedEntry);
-      setRequestLog((prev) => [failedEntry, ...prev].slice(0, 100));
 
       setCustomers((prev) =>
         prev.map((item) =>
@@ -1082,9 +1070,19 @@ export default function AdminCRM() {
             : item
         )
       );
+
+      pushRequestLogEntries(requestEntries);
     } finally {
       setIsProvisioning(false);
     }
+  }
+
+  function pushRequestLogEntries(entries) {
+    const nextEntries = Array.isArray(entries) ? entries.filter(Boolean) : [entries].filter(Boolean);
+
+    if (nextEntries.length === 0) return;
+
+    setRequestLog((prev) => [...nextEntries, ...prev].slice(0, 100));
   }
 
   async function refreshCustomerDeployment(customer) {
@@ -1129,7 +1127,7 @@ export default function AdminCRM() {
       )
     );
 
-    setRequestLog((prev) => [historyEntry, ...prev].slice(0, 100));
+    pushRequestLogEntries(historyEntry);
   }
 
   async function redeployCustomer(customer) {
@@ -1163,7 +1161,7 @@ export default function AdminCRM() {
       )
     );
 
-    setRequestLog((prev) => [historyEntry, ...prev].slice(0, 100));
+    pushRequestLogEntries(historyEntry);
   }
 
   function saveCustomerEdits(nextCustomer) {
