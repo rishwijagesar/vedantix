@@ -13,13 +13,15 @@ import {
 } from "recharts";
 
 const STORAGE_KEYS = {
-  settings: "vedantix_admin_settings_v7",
-  customers: "vedantix_admin_customers_v7",
-  expenses: "vedantix_admin_expenses_v7",
-  requestLog: "vedantix_admin_request_log_v7",
+  settings: "vedantix_admin_settings_v8",
+  customers: "vedantix_admin_customers_v8",
+  expenses: "vedantix_admin_expenses_v8",
+  requestLog: "vedantix_admin_request_log_v8",
+  packageOptions: "vedantix_package_options_v2",
+  extraOptions: "vedantix_extra_options_v2",
 };
 
-const PACKAGE_OPTIONS = [
+const DEFAULT_PACKAGE_OPTIONS = [
   {
     code: "STARTER",
     label: "Starter",
@@ -58,7 +60,7 @@ const PACKAGE_OPTIONS = [
   },
 ];
 
-const EXTRA_OPTIONS = [
+const DEFAULT_EXTRA_OPTIONS = [
   {
     code: "BLOG",
     label: "Blog / FAQ",
@@ -241,12 +243,6 @@ function dateLabel(value) {
   return new Date(value).toLocaleDateString("nl-NL");
 }
 
-function packageMeta(packageCode) {
-  return (
-    PACKAGE_OPTIONS.find((item) => item.code === packageCode) || PACKAGE_OPTIONS[0]
-  );
-}
-
 function activePackageOptions(options) {
   return [...options]
     .filter((item) => item.isActive !== false)
@@ -259,49 +255,57 @@ function activeExtraOptions(options) {
     .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0));
 }
 
-function extraMeta(code) {
-  return EXTRA_OPTIONS.find((item) => item.code === code) || null;
+function packageMeta(packageCode, packageOptions) {
+  return (
+    packageOptions.find((item) => item.code === packageCode) ||
+    packageOptions[0] ||
+    DEFAULT_PACKAGE_OPTIONS[0]
+  );
 }
 
-function extrasSetupPrice(extras) {
+function extraMeta(code, extraOptions) {
+  return extraOptions.find((item) => item.code === code) || null;
+}
+
+function extrasMonthlyPrice(extras, extraOptions) {
   return (extras || []).reduce((sum, code) => {
-    const item = extraMeta(code);
+    const item = extraMeta(code, extraOptions);
+    return sum + Number(item?.monthlyPrice || 0);
+  }, 0);
+}
+
+function extrasSetupPrice(extras, extraOptions) {
+  return (extras || []).reduce((sum, code) => {
+    const item = extraMeta(code, extraOptions);
     return sum + Number(item?.setupPrice || 0);
   }, 0);
 }
 
-function extrasInfraCost(extras) {
+function extrasInfraCost(extras, extraOptions) {
   return (extras || []).reduce((sum, code) => {
-    const item = extraMeta(code);
+    const item = extraMeta(code, extraOptions);
     return sum + Number(item?.monthlyInfraCost || 0);
   }, 0);
 }
 
-function calcSetupRevenue(customer) {
+function calcMonthlyRevenue(customer, packageOptions, extraOptions) {
   return (
-    Number(packageMeta(customer.packageCode).setupPrice || 0) +
-    extrasSetupPrice(customer.extras || [])
+    Number(packageMeta(customer.packageCode, packageOptions).monthlyPrice || 0) +
+    extrasMonthlyPrice(customer.extras || [], extraOptions)
   );
 }
 
-function calcMonthlyInfraCost(customer) {
+function calcSetupRevenue(customer, packageOptions, extraOptions) {
   return (
-    Number(packageMeta(customer.packageCode).monthlyInfraCost || 0) +
-    extrasInfraCost(customer.extras || [])
+    Number(packageMeta(customer.packageCode, packageOptions).setupPrice || 0) +
+    extrasSetupPrice(customer.extras || [], extraOptions)
   );
 }
 
-function extrasPrice(extras) {
-  return (extras || []).reduce((sum, code) => {
-    const item = EXTRA_OPTIONS.find((extra) => extra.code === code);
-    return sum + (item?.monthlyPrice || 0);
-  }, 0);
-}
-
-function calcMonthlyRevenue(customer) {
+function calcMonthlyInfraCost(customer, packageOptions, extraOptions) {
   return (
-    Number(packageMeta(customer.packageCode).monthlyPrice || 0) +
-    extrasPrice(customer.extras || [])
+    Number(packageMeta(customer.packageCode, packageOptions).monthlyInfraCost || 0) +
+    extrasInfraCost(customer.extras || [], extraOptions)
   );
 }
 
@@ -372,10 +376,16 @@ function isWithinFilter(dateString, filterKey) {
   return diffMs <= 366 * dayMs;
 }
 
-function buildCustomerPeriodStats(customer, expenses, filterKey) {
+function buildCustomerPeriodStats(
+  customer,
+  expenses,
+  filterKey,
+  packageOptions,
+  extraOptions
+) {
   const multiplier = periodMultiplier(filterKey);
-  const revenue = calcMonthlyRevenue(customer) * multiplier;
-  const infraCost = calcMonthlyInfraCost(customer) * multiplier;
+  const revenue = calcMonthlyRevenue(customer, packageOptions, extraOptions) * multiplier;
+  const infraCost = calcMonthlyInfraCost(customer, packageOptions, extraOptions) * multiplier;
 
   const directExpenses = expenses
     .filter((expense) => expense.customerId === customer.id)
@@ -393,7 +403,13 @@ function buildCustomerPeriodStats(customer, expenses, filterKey) {
   };
 }
 
-function buildCustomerTrendData(customer, expenses, filterKey) {
+function buildCustomerTrendData(
+  customer,
+  expenses,
+  filterKey,
+  packageOptions,
+  extraOptions
+) {
   const useMonths =
     filterKey === "quarter" || filterKey === "halfyear" || filterKey === "year";
 
@@ -420,8 +436,8 @@ function buildCustomerTrendData(customer, expenses, filterKey) {
       const month = base.getMonth();
       const year = base.getFullYear();
 
-      const revenue = calcMonthlyRevenue(customer);
-      const infraCost = calcMonthlyInfraCost(customer);
+      const revenue = calcMonthlyRevenue(customer, packageOptions, extraOptions);
+      const infraCost = calcMonthlyInfraCost(customer, packageOptions, extraOptions);
 
       const directExpenses = expenses
         .filter((expense) => expense.customerId === customer.id)
@@ -443,8 +459,8 @@ function buildCustomerTrendData(customer, expenses, filterKey) {
     } else {
       base.setDate(base.getDate() - i);
       const iso = base.toISOString().slice(0, 10);
-      const revenue = calcMonthlyRevenue(customer) / 30;
-      const infraCost = calcMonthlyInfraCost(customer) / 30;
+      const revenue = calcMonthlyRevenue(customer, packageOptions, extraOptions) / 30;
+      const infraCost = calcMonthlyInfraCost(customer, packageOptions, extraOptions) / 30;
 
       const directExpenses = expenses
         .filter((expense) => expense.customerId === customer.id)
@@ -466,7 +482,13 @@ function buildCustomerTrendData(customer, expenses, filterKey) {
   return rows;
 }
 
-function buildDashboardTrendData(customers, expenses, filterKey) {
+function buildDashboardTrendData(
+  customers,
+  expenses,
+  filterKey,
+  packageOptions,
+  extraOptions
+) {
   const useMonths =
     filterKey === "quarter" || filterKey === "halfyear" || filterKey === "year";
 
@@ -494,11 +516,12 @@ function buildDashboardTrendData(customers, expenses, filterKey) {
       const year = base.getFullYear();
 
       const revenue = customers.reduce(
-        (sum, customer) => sum + calcMonthlyRevenue(customer),
+        (sum, customer) => sum + calcMonthlyRevenue(customer, packageOptions, extraOptions),
         0
       );
+
       const infraCost = customers.reduce(
-        (sum, customer) => sum + calcMonthlyInfraCost(customer),
+        (sum, customer) => sum + calcMonthlyInfraCost(customer, packageOptions, extraOptions),
         0
       );
 
@@ -523,10 +546,16 @@ function buildDashboardTrendData(customers, expenses, filterKey) {
       const iso = base.toISOString().slice(0, 10);
 
       const revenue =
-        customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0) / 30;
+        customers.reduce(
+          (sum, customer) => sum + calcMonthlyRevenue(customer, packageOptions, extraOptions),
+          0
+        ) / 30;
 
       const infraCost =
-        customers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0) / 30;
+        customers.reduce(
+          (sum, customer) => sum + calcMonthlyInfraCost(customer, packageOptions, extraOptions),
+          0
+        ) / 30;
 
       const directExpenses = expenses
         .filter((expense) => String(expense.date).slice(0, 10) === iso)
@@ -889,10 +918,10 @@ function Modal({ open, title, children, onClose, maxWidth = 900 }) {
 
 export default function AdminCRM() {
   const [packageOptions, setPackageOptions] = useState(() =>
-    loadJson("vedantix_package_options_v1", PACKAGE_OPTIONS)
+    loadJson(STORAGE_KEYS.packageOptions, DEFAULT_PACKAGE_OPTIONS)
   );
   const [extraOptions, setExtraOptions] = useState(() =>
-    loadJson("vedantix_extra_options_v1", EXTRA_OPTIONS)
+    loadJson(STORAGE_KEYS.extraOptions, DEFAULT_EXTRA_OPTIONS)
   );
   const [pricingTab, setPricingTab] = useState("packages");
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -923,8 +952,8 @@ export default function AdminCRM() {
   useEffect(() => saveJson(STORAGE_KEYS.customers, customers), [customers]);
   useEffect(() => saveJson(STORAGE_KEYS.expenses, expenses), [expenses]);
   useEffect(() => saveJson(STORAGE_KEYS.requestLog, requestLog), [requestLog]);
-  useEffect(() => saveJson("vedantix_package_options_v1", packageOptions), [packageOptions]);
-  useEffect(() => saveJson("vedantix_extra_options_v1", extraOptions), [extraOptions]);
+  useEffect(() => saveJson(STORAGE_KEYS.packageOptions, packageOptions), [packageOptions]);
+  useEffect(() => saveJson(STORAGE_KEYS.extraOptions, extraOptions), [extraOptions]);
 
   const filteredCustomers = useMemo(() => {
     const q = customerSearch.trim().toLowerCase();
@@ -954,12 +983,15 @@ export default function AdminCRM() {
   }, [expenses, financeFilter]);
 
   const totalMonthlyRevenue = useMemo(() => {
-    return customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0);
-  }, [customers]);
+    return customers.reduce(
+      (sum, customer) => sum + calcMonthlyRevenue(customer, packageOptions, extraOptions),
+      0
+    );
+  }, [customers, packageOptions, extraOptions]);
 
   const totalMonthlyCosts = useMemo(() => {
     const infra = customers.reduce(
-      (sum, customer) => sum + Number(customer.monthlyInfraCost || 0),
+      (sum, customer) => sum + Number(calcMonthlyInfraCost(customer, packageOptions, extraOptions) || 0),
       0
     );
     const manual = financeExpenses.reduce(
@@ -967,7 +999,7 @@ export default function AdminCRM() {
       0
     );
     return infra + manual;
-  }, [customers, financeExpenses]);
+  }, [customers, financeExpenses, packageOptions, extraOptions]);
 
   const activeCustomers = useMemo(() => {
     return customers.filter((item) => item.status === "active").length;
@@ -992,23 +1024,54 @@ export default function AdminCRM() {
       klanten: grouped[option.code] || 0,
       omzet: customers
         .filter((customer) => customer.packageCode === option.code)
-        .reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0),
+        .reduce(
+          (sum, customer) => sum + calcMonthlyRevenue(customer, packageOptions, extraOptions),
+          0
+        ),
     }));
-  }, [customers, packageOptions]);
+  }, [customers, packageOptions, extraOptions]);
 
   const dashboardTrendData = useMemo(() => {
-    return buildDashboardTrendData(customers, expenses, financeFilter);
-  }, [customers, expenses, financeFilter]);
+    return buildDashboardTrendData(
+      customers,
+      expenses,
+      financeFilter,
+      packageOptions,
+      extraOptions
+    );
+  }, [customers, expenses, financeFilter, packageOptions, extraOptions]);
 
   const selectedCustomerStats = useMemo(() => {
     if (!selectedCustomer) return null;
-    return buildCustomerPeriodStats(selectedCustomer, expenses, detailFilter);
-  }, [selectedCustomer, expenses, detailFilter]);
+    return buildCustomerPeriodStats(
+      selectedCustomer,
+      expenses,
+      detailFilter,
+      packageOptions,
+      extraOptions
+    );
+  }, [selectedCustomer, expenses, detailFilter, packageOptions, extraOptions]);
 
   const selectedCustomerTrendData = useMemo(() => {
     if (!selectedCustomer) return [];
-    return buildCustomerTrendData(selectedCustomer, expenses, detailFilter);
-  }, [selectedCustomer, expenses, detailFilter]);
+    return buildCustomerTrendData(
+      selectedCustomer,
+      expenses,
+      detailFilter,
+      packageOptions,
+      extraOptions
+    );
+  }, [selectedCustomer, expenses, detailFilter, packageOptions, extraOptions]);
+
+  function pushRequestLogEntries(entries) {
+    const nextEntries = Array.isArray(entries)
+      ? entries.filter(Boolean)
+      : [entries].filter(Boolean);
+
+    if (nextEntries.length === 0) return;
+
+    setRequestLog((prev) => [...nextEntries, ...prev].slice(0, 100));
+  }
 
   function updateCustomerForm(key, value) {
     setCustomerForm((prev) => ({ ...prev, [key]: value }));
@@ -1034,6 +1097,44 @@ export default function AdminCRM() {
     setCustomerForm(DEFAULT_CUSTOMER_FORM);
   }
 
+  function updatePackageOption(code, key, value) {
+    setPackageOptions((prev) =>
+      prev.map((item) =>
+        item.code === code
+          ? {
+              ...item,
+              [key]:
+                key === "monthlyPrice" ||
+                key === "setupPrice" ||
+                key === "monthlyInfraCost" ||
+                key === "sortOrder"
+                  ? Number(value)
+                  : value,
+            }
+          : item
+      )
+    );
+  }
+
+  function updateExtraOption(code, key, value) {
+    setExtraOptions((prev) =>
+      prev.map((item) =>
+        item.code === code
+          ? {
+              ...item,
+              [key]:
+                key === "monthlyPrice" ||
+                key === "setupPrice" ||
+                key === "monthlyInfraCost" ||
+                key === "sortOrder"
+                  ? Number(value)
+                  : value,
+            }
+          : item
+      )
+    );
+  }
+
   function createCustomerDraft() {
     const companySlug = slugify(customerForm.companyName);
     const domainSlug = slugify(
@@ -1041,6 +1142,22 @@ export default function AdminCRM() {
     );
 
     const customerId = `cust_${companySlug || domainSlug || Date.now()}`;
+    const selectedPackage = packageMeta(customerForm.packageCode, packageOptions);
+    const selectedExtras = (customerForm.extras || [])
+      .map((code) => extraMeta(code, extraOptions))
+      .filter(Boolean);
+
+    const monthlyRevenue =
+      Number(selectedPackage?.monthlyPrice || 0) +
+      selectedExtras.reduce((sum, item) => sum + Number(item.monthlyPrice || 0), 0);
+
+    const monthlyInfraCost =
+      Number(selectedPackage?.monthlyInfraCost || 0) +
+      selectedExtras.reduce((sum, item) => sum + Number(item.monthlyInfraCost || 0), 0);
+
+    const oneTimeSetupCost =
+      Number(selectedPackage?.setupPrice || 0) +
+      selectedExtras.reduce((sum, item) => sum + Number(item.setupPrice || 0), 0);
 
     return {
       id: customerId,
@@ -1052,9 +1169,10 @@ export default function AdminCRM() {
       packageCode: customerForm.packageCode,
       extras: customerForm.extras,
       notes: customerForm.notes,
-      monthlyInfraCost: Number(customerForm.monthlyInfraCost || 0),
-      oneTimeSetupCost: Number(customerForm.oneTimeSetupCost || 0),
+      monthlyInfraCost,
+      oneTimeSetupCost,
       address: customerForm.address,
+      postalCode: customerForm.postalCode,
       city: customerForm.city,
       country: customerForm.country,
       status: "intake",
@@ -1067,7 +1185,7 @@ export default function AdminCRM() {
       documents: [],
       requestHistory: [],
       finance: {
-        monthlyRevenue: calcMonthlyRevenue(customerForm),
+        monthlyRevenue,
       },
     };
   }
@@ -1222,14 +1340,6 @@ export default function AdminCRM() {
     } finally {
       setIsProvisioning(false);
     }
-  }
-
-  function pushRequestLogEntries(entries) {
-    const nextEntries = Array.isArray(entries) ? entries.filter(Boolean) : [entries].filter(Boolean);
-
-    if (nextEntries.length === 0) return;
-
-    setRequestLog((prev) => [...nextEntries, ...prev].slice(0, 100));
   }
 
   async function refreshCustomerDeployment(customer) {
@@ -1448,6 +1558,7 @@ export default function AdminCRM() {
               ["dashboard", "Dashboard"],
               ["customers", "Klanten"],
               ["finance", "Financiën"],
+              ["pricing", "Prijzen"],
               ["settings", "Instellingen"],
             ].map(([key, label]) => (
               <button
@@ -1739,7 +1850,7 @@ export default function AdminCRM() {
                           {customer.domain}
                         </td>
                         <td style={{ padding: "18px" }}>
-                          {packageMeta(customer.packageCode).label}
+                          {packageMeta(customer.packageCode, packageOptions).label}
                         </td>
                         <td style={{ padding: "18px" }}>
                           <span
@@ -1757,7 +1868,7 @@ export default function AdminCRM() {
                           </span>
                         </td>
                         <td style={{ padding: "18px", fontWeight: 900 }}>
-                          {currency(calcMonthlyRevenue(customer))}
+                          {currency(calcMonthlyRevenue(customer, packageOptions, extraOptions))}
                         </td>
                         <td
                           style={{ padding: "18px" }}
@@ -1824,21 +1935,27 @@ export default function AdminCRM() {
                 <div
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                    gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
                     gap: 16,
                     marginBottom: 20,
                   }}
                 >
                   <StatCard
-                    title="Omzet"
-                    value={currency(selectedCustomerStats ? selectedCustomerStats.revenue : 0)}
-                    subtitle={`Per ${TIME_FILTERS.find((item) => item.key === detailFilter)?.label.toLowerCase()}`}
+                    title="Maandprijs"
+                    value={currency(calcMonthlyRevenue(selectedCustomer, packageOptions, extraOptions))}
+                    subtitle="Pakket + extra's"
                     tone="#0ea5e9"
+                  />
+                  <StatCard
+                    title="Setup"
+                    value={currency(calcSetupRevenue(selectedCustomer, packageOptions, extraOptions))}
+                    subtitle="Eenmalige opbrengst"
+                    tone="#8b5cf6"
                   />
                   <StatCard
                     title="Kosten"
                     value={currency(selectedCustomerStats ? selectedCustomerStats.cost : 0)}
-                    subtitle="Infra + extra kosten"
+                    subtitle="Per gekozen periode"
                     tone="#f97316"
                   />
                   <StatCard
@@ -1944,7 +2061,7 @@ export default function AdminCRM() {
                             })
                           }
                         >
-                          {PACKAGE_OPTIONS.map((item) => (
+                          {activePackageOptions(packageOptions).map((item) => (
                             <option key={item.code} value={item.code}>
                               {item.label}
                             </option>
@@ -1959,6 +2076,18 @@ export default function AdminCRM() {
                             saveCustomerEdits({
                               ...selectedCustomer,
                               address: e.target.value,
+                            })
+                          }
+                        />
+                      </Field>
+
+                      <Field label="Postcode">
+                        <Input
+                          value={selectedCustomer.postalCode || ""}
+                          onChange={(e) =>
+                            saveCustomerEdits({
+                              ...selectedCustomer,
+                              postalCode: e.target.value,
                             })
                           }
                         />
@@ -1998,6 +2127,13 @@ export default function AdminCRM() {
 
                       <Field label="Aangemaakt op">
                         <Input value={dateLabel(selectedCustomer.createdAt)} readOnly />
+                      </Field>
+
+                      <Field label="Setup prijs">
+                        <Input
+                          value={currency(calcSetupRevenue(selectedCustomer, packageOptions, extraOptions))}
+                          readOnly
+                        />
                       </Field>
 
                       <div style={{ gridColumn: "1 / -1" }}>
@@ -2167,7 +2303,7 @@ export default function AdminCRM() {
                     <StatCard
                       title="Infra"
                       value={currency(selectedCustomerStats ? selectedCustomerStats.infraCost : 0)}
-                      subtitle="Terugkerende kosten"
+                      subtitle="Automatisch vanuit pakket + extra's"
                       tone="#8b5cf6"
                     />
                     <StatCard
@@ -2374,6 +2510,235 @@ export default function AdminCRM() {
                   <div style={{ color: "#64748b" }}>Nog geen uitgaven toegevoegd.</div>
                 ) : null}
               </div>
+            </Card>
+          </div>
+        )}
+
+        {activeTab === "pricing" && (
+          <div style={{ display: "grid", gap: 18 }}>
+            <Card>
+              <SectionTitle
+                title="Prijzen beheren"
+                subtitle="Centrale plek voor pakketten en extra's."
+                action={
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <Button
+                      tone={pricingTab === "packages" ? "primary" : "default"}
+                      onClick={() => setPricingTab("packages")}
+                    >
+                      Pakketten
+                    </Button>
+                    <Button
+                      tone={pricingTab === "extras" ? "primary" : "default"}
+                      onClick={() => setPricingTab("extras")}
+                    >
+                      Extra's
+                    </Button>
+                  </div>
+                }
+              />
+
+              {pricingTab === "packages" && (
+                <div style={{ display: "grid", gap: 12 }}>
+                  {packageOptions
+                    .slice()
+                    .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0))
+                    .map((item) => (
+                      <div
+                        key={item.code}
+                        style={{
+                          border: "1px solid #dbe4ef",
+                          borderRadius: 20,
+                          padding: 18,
+                          background: "#ffffff",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: "1.2fr 1fr 1fr 1fr auto auto",
+                            gap: 12,
+                            alignItems: "end",
+                          }}
+                        >
+                          <Field label="Naam">
+                            <Input
+                              value={item.label}
+                              onChange={(e) =>
+                                updatePackageOption(item.code, "label", e.target.value)
+                              }
+                            />
+                          </Field>
+
+                          <Field label="Prijs p/m">
+                            <Input
+                              type="number"
+                              min="0"
+                              value={item.monthlyPrice}
+                              onChange={(e) =>
+                                updatePackageOption(item.code, "monthlyPrice", e.target.value)
+                              }
+                            />
+                          </Field>
+
+                          <Field label="Setup prijs">
+                            <Input
+                              type="number"
+                              min="0"
+                              value={item.setupPrice}
+                              onChange={(e) =>
+                                updatePackageOption(item.code, "setupPrice", e.target.value)
+                              }
+                            />
+                          </Field>
+
+                          <Field label="Infra kosten p/m">
+                            <Input
+                              type="number"
+                              min="0"
+                              value={item.monthlyInfraCost}
+                              onChange={(e) =>
+                                updatePackageOption(item.code, "monthlyInfraCost", e.target.value)
+                              }
+                            />
+                          </Field>
+
+                          <Field label="Volgorde">
+                            <Input
+                              type="number"
+                              min="0"
+                              value={item.sortOrder}
+                              onChange={(e) =>
+                                updatePackageOption(item.code, "sortOrder", e.target.value)
+                              }
+                            />
+                          </Field>
+
+                          <label
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 8,
+                              color: "#334155",
+                              fontWeight: 800,
+                              minHeight: 54,
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={item.isActive !== false}
+                              onChange={(e) =>
+                                updatePackageOption(item.code, "isActive", e.target.checked)
+                              }
+                            />
+                            Actief
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+
+              {pricingTab === "extras" && (
+                <div style={{ display: "grid", gap: 12 }}>
+                  {extraOptions
+                    .slice()
+                    .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0))
+                    .map((item) => (
+                      <div
+                        key={item.code}
+                        style={{
+                          border: "1px solid #dbe4ef",
+                          borderRadius: 20,
+                          padding: 18,
+                          background: "#ffffff",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "grid",
+                            gridTemplateColumns: "1.2fr 1fr 1fr 1fr auto auto",
+                            gap: 12,
+                            alignItems: "end",
+                          }}
+                        >
+                          <Field label="Naam">
+                            <Input
+                              value={item.label}
+                              onChange={(e) =>
+                                updateExtraOption(item.code, "label", e.target.value)
+                              }
+                            />
+                          </Field>
+
+                          <Field label="Prijs p/m">
+                            <Input
+                              type="number"
+                              min="0"
+                              value={item.monthlyPrice}
+                              onChange={(e) =>
+                                updateExtraOption(item.code, "monthlyPrice", e.target.value)
+                              }
+                            />
+                          </Field>
+
+                          <Field label="Setup prijs">
+                            <Input
+                              type="number"
+                              min="0"
+                              value={item.setupPrice}
+                              onChange={(e) =>
+                                updateExtraOption(item.code, "setupPrice", e.target.value)
+                              }
+                            />
+                          </Field>
+
+                          <Field label="Infra kosten p/m">
+                            <Input
+                              type="number"
+                              min="0"
+                              value={item.monthlyInfraCost}
+                              onChange={(e) =>
+                                updateExtraOption(item.code, "monthlyInfraCost", e.target.value)
+                              }
+                            />
+                          </Field>
+
+                          <Field label="Volgorde">
+                            <Input
+                              type="number"
+                              min="0"
+                              value={item.sortOrder}
+                              onChange={(e) =>
+                                updateExtraOption(item.code, "sortOrder", e.target.value)
+                              }
+                            />
+                          </Field>
+
+                          <label
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 8,
+                              color: "#334155",
+                              fontWeight: 800,
+                              minHeight: 54,
+                            }}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={item.isActive !== false}
+                              onChange={(e) =>
+                                updateExtraOption(item.code, "isActive", e.target.checked)
+                              }
+                            />
+                            Actief
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
             </Card>
           </div>
         )}
@@ -2594,9 +2959,9 @@ export default function AdminCRM() {
               value={customerForm.packageCode}
               onChange={(e) => updateCustomerForm("packageCode", e.target.value)}
             >
-              {PACKAGE_OPTIONS.map((item) => (
+              {activePackageOptions(packageOptions).map((item) => (
                 <option key={item.code} value={item.code}>
-                  {item.label} — {currency(item.monthlyPrice)}/m
+                  {item.label} — {currency(item.monthlyPrice)}/m — setup {currency(item.setupPrice)}
                 </option>
               ))}
             </Select>
@@ -2607,6 +2972,14 @@ export default function AdminCRM() {
               value={customerForm.address}
               onChange={(e) => updateCustomerForm("address", e.target.value)}
               placeholder="Straat 1"
+            />
+          </Field>
+
+          <Field label="Postcode">
+            <Input
+              value={customerForm.postalCode}
+              onChange={(e) => updateCustomerForm("postalCode", e.target.value)}
+              placeholder="1234 AB"
             />
           </Field>
 
@@ -2626,24 +2999,6 @@ export default function AdminCRM() {
             />
           </Field>
 
-          <Field label="Infra kosten p/m">
-            <Input
-              type="number"
-              min="0"
-              value={customerForm.monthlyInfraCost}
-              onChange={(e) => updateCustomerForm("monthlyInfraCost", e.target.value)}
-            />
-          </Field>
-
-          <Field label="Eenmalige setup kosten">
-            <Input
-              type="number"
-              min="0"
-              value={customerForm.oneTimeSetupCost}
-              onChange={(e) => updateCustomerForm("oneTimeSetupCost", e.target.value)}
-            />
-          </Field>
-
           <div style={{ gridColumn: "1 / -1" }}>
             <Field label="Extra's">
               <div
@@ -2657,7 +3012,7 @@ export default function AdminCRM() {
                   background: "#ffffff",
                 }}
               >
-                {EXTRA_OPTIONS.map((extra) => (
+                {activeExtraOptions(extraOptions).map((extra) => (
                   <label
                     key={extra.code}
                     style={{
@@ -2674,12 +3029,93 @@ export default function AdminCRM() {
                       onChange={() => toggleExtra(extra.code)}
                     />
                     <span>
-                      {extra.label} ({currency(extra.monthlyPrice)})
+                      {extra.label} ({currency(extra.monthlyPrice)}/m · setup {currency(extra.setupPrice)})
                     </span>
                   </label>
                 ))}
               </div>
             </Field>
+          </div>
+
+          <div style={{ gridColumn: "1 / -1" }}>
+            <Card
+              style={{
+                borderRadius: 20,
+                padding: 18,
+                background:
+                  "linear-gradient(180deg, rgba(239,246,255,0.85) 0%, rgba(255,255,255,0.98) 100%)",
+              }}
+            >
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                  gap: 14,
+                }}
+              >
+                <div>
+                  <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800 }}>
+                    Maandprijs
+                  </div>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: "#0f172a" }}>
+                    {currency(
+                      calcMonthlyRevenue(
+                        customerForm,
+                        packageOptions,
+                        extraOptions
+                      )
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800 }}>
+                    Setup prijs
+                  </div>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: "#0f172a" }}>
+                    {currency(
+                      calcSetupRevenue(
+                        customerForm,
+                        packageOptions,
+                        extraOptions
+                      )
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800 }}>
+                    Infra p/m
+                  </div>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: "#0f172a" }}>
+                    {currency(
+                      calcMonthlyInfraCost(
+                        customerForm,
+                        packageOptions,
+                        extraOptions
+                      )
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800 }}>
+                    Brutomarge p/m
+                  </div>
+                  <div style={{ fontSize: 22, fontWeight: 900, color: "#10b981" }}>
+                    {currency(
+                      calcMonthlyRevenue(
+                        customerForm,
+                        packageOptions,
+                        extraOptions
+                      ) -
+                        calcMonthlyInfraCost(
+                          customerForm,
+                          packageOptions,
+                          extraOptions
+                        )
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Card>
           </div>
 
           <div style={{ gridColumn: "1 / -1" }}>
