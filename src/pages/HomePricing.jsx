@@ -312,7 +312,7 @@ const PACKAGES = [
     price: "99",
     setup: "€500 setup",
     featured: false,
-    cancelNote: "Opzegbaar vanaf 6 maanden",
+    cancelNote: "Betaling pas na oplevering · opzegbaar vanaf 6 maanden",
     bullets: [
       "Professionele website tot 5 pagina’s",
       "Mobielvriendelijk ontwerp",
@@ -328,7 +328,7 @@ const PACKAGES = [
     price: "149",
     setup: "€750 setup",
     featured: true,
-    cancelNote: "Opzegbaar vanaf 6 maanden",
+    cancelNote: "Betaling pas na oplevering · opzegbaar vanaf 6 maanden",
     bullets: [
       "Alles uit Starter",
       "Meer pagina’s en sterkere SEO-structuur",
@@ -344,7 +344,7 @@ const PACKAGES = [
     price: "249",
     setup: "€1000 setup",
     featured: false,
-    cancelNote: "Opzegbaar vanaf maand 3",
+    cancelNote: "Betaling pas na oplevering · opzegbaar vanaf maand 3",
     bullets: [
       "Alles uit Growth",
       "Dashboard of klantomgeving mogelijk",

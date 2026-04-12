@@ -13,10 +13,10 @@ import {
 } from "recharts";
 
 const STORAGE_KEYS = {
-  settings: "vedantix_admin_settings_v6",
-  customers: "vedantix_admin_customers_v6",
-  expenses: "vedantix_admin_expenses_v6",
-  requestLog: "vedantix_admin_request_log_v6",
+  settings: "vedantix_admin_settings_v7",
+  customers: "vedantix_admin_customers_v7",
+  expenses: "vedantix_admin_expenses_v7",
+  requestLog: "vedantix_admin_request_log_v7",
 };
 
 const PACKAGE_OPTIONS = [
@@ -219,6 +219,20 @@ function periodMultiplier(filterKey) {
   return 12;
 }
 
+function isWithinFilter(dateString, filterKey) {
+  const d = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const dayMs = 24 * 60 * 60 * 1000;
+
+  if (filterKey === "day") return diffMs <= dayMs;
+  if (filterKey === "week") return diffMs <= 7 * dayMs;
+  if (filterKey === "month") return diffMs <= 31 * dayMs;
+  if (filterKey === "quarter") return diffMs <= 92 * dayMs;
+  if (filterKey === "halfyear") return diffMs <= 183 * dayMs;
+  return diffMs <= 366 * dayMs;
+}
+
 function buildCustomerPeriodStats(customer, expenses, filterKey) {
   const multiplier = periodMultiplier(filterKey);
   const revenue = calcMonthlyRevenue(customer) * multiplier;
@@ -238,20 +252,6 @@ function buildCustomerPeriodStats(customer, expenses, filterKey) {
     directExpenses,
     infraCost,
   };
-}
-
-function isWithinFilter(dateString, filterKey) {
-  const d = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - d.getTime();
-  const dayMs = 24 * 60 * 60 * 1000;
-
-  if (filterKey === "day") return diffMs <= dayMs;
-  if (filterKey === "week") return diffMs <= 7 * dayMs;
-  if (filterKey === "month") return diffMs <= 31 * dayMs;
-  if (filterKey === "quarter") return diffMs <= 92 * dayMs;
-  if (filterKey === "halfyear") return diffMs <= 183 * dayMs;
-  return diffMs <= 366 * dayMs;
 }
 
 function buildCustomerTrendData(customer, expenses, filterKey) {
@@ -409,24 +409,76 @@ function buildDashboardTrendData(customers, expenses, filterKey) {
   return rows;
 }
 
+function BrandLogo() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+      <div
+        style={{
+          width: 54,
+          height: 54,
+          borderRadius: 18,
+          background:
+            "linear-gradient(135deg, #0f172a 0%, #1d4ed8 50%, #38bdf8 100%)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow: "0 16px 40px rgba(29,78,216,0.24)",
+          color: "#ffffff",
+          fontWeight: 900,
+          fontSize: 24,
+          letterSpacing: "-0.03em",
+        }}
+      >
+        V
+      </div>
+
+      <div>
+        <div
+          style={{
+            fontSize: 18,
+            fontWeight: 900,
+            color: "#0f172a",
+            lineHeight: 1,
+            marginBottom: 4,
+          }}
+        >
+          Vedantix
+        </div>
+        <div
+          style={{
+            fontSize: 12,
+            fontWeight: 700,
+            color: "#64748b",
+            letterSpacing: "0.08em",
+            textTransform: "uppercase",
+          }}
+        >
+          Admin dashboard
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function StatCard({ title, value, subtitle, tone = "#0ea5e9" }) {
   return (
     <div
       style={{
-        background: "#ffffff",
-        border: "1px solid #e2e8f0",
-        borderRadius: 18,
-        padding: 18,
-        boxShadow: "0 10px 30px rgba(15,23,42,0.05)",
+        background:
+          "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.98) 100%)",
+        border: "1px solid #dbe4ef",
+        borderRadius: 22,
+        padding: 20,
+        boxShadow: "0 18px 40px rgba(15,23,42,0.06)",
       }}
     >
-      <div style={{ color: "#64748b", fontSize: 13, fontWeight: 700, marginBottom: 10 }}>
+      <div style={{ color: "#64748b", fontSize: 13, fontWeight: 800, marginBottom: 10 }}>
         {title}
       </div>
-      <div style={{ color: "#0f172a", fontSize: 28, fontWeight: 900, marginBottom: 8 }}>
+      <div style={{ color: "#0f172a", fontSize: 30, fontWeight: 900, marginBottom: 8 }}>
         {value}
       </div>
-      <div style={{ color: tone, fontSize: 13, fontWeight: 700 }}>{subtitle}</div>
+      <div style={{ color: tone, fontSize: 13, fontWeight: 800 }}>{subtitle}</div>
     </div>
   );
 }
@@ -435,11 +487,12 @@ function Card({ children, style = {} }) {
   return (
     <div
       style={{
-        background: "#ffffff",
-        border: "1px solid #e2e8f0",
-        borderRadius: 22,
-        padding: 20,
-        boxShadow: "0 10px 30px rgba(15,23,42,0.05)",
+        background:
+          "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(250,252,255,0.98) 100%)",
+        border: "1px solid #dbe4ef",
+        borderRadius: 28,
+        padding: 22,
+        boxShadow: "0 18px 40px rgba(15,23,42,0.06)",
         ...style,
       }}
     >
@@ -456,16 +509,24 @@ function SectionTitle({ title, subtitle, action = null }) {
         justifyContent: "space-between",
         alignItems: "flex-start",
         gap: 16,
-        marginBottom: 18,
+        marginBottom: 20,
         flexWrap: "wrap",
       }}
     >
       <div>
-        <h2 style={{ fontSize: 24, fontWeight: 900, color: "#0f172a", marginBottom: 6 }}>
+        <h2
+          style={{
+            fontSize: 28,
+            fontWeight: 900,
+            color: "#0f172a",
+            marginBottom: 8,
+            letterSpacing: "-0.03em",
+          }}
+        >
           {title}
         </h2>
         {subtitle ? (
-          <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.5 }}>{subtitle}</p>
+          <p style={{ color: "#64748b", fontSize: 15, lineHeight: 1.6 }}>{subtitle}</p>
         ) : null}
       </div>
       {action}
@@ -490,26 +551,31 @@ function Button(props) {
       background: "#ffffff",
       color: "#0f172a",
       border: "1px solid #cbd5e1",
+      boxShadow: "0 8px 20px rgba(15,23,42,0.05)",
     },
     primary: {
-      background: "#0f172a",
+      background: "linear-gradient(135deg, #0f172a 0%, #172554 100%)",
       color: "#ffffff",
       border: "1px solid #0f172a",
+      boxShadow: "0 14px 30px rgba(15,23,42,0.18)",
     },
     success: {
-      background: "#10b981",
-      color: "#052e16",
-      border: "1px solid #10b981",
+      background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+      color: "#ffffff",
+      border: "1px solid #059669",
+      boxShadow: "0 14px 30px rgba(16,185,129,0.2)",
     },
     danger: {
-      background: "#ef4444",
+      background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
       color: "#ffffff",
-      border: "1px solid #ef4444",
+      border: "1px solid #dc2626",
+      boxShadow: "0 14px 30px rgba(239,68,68,0.16)",
     },
     soft: {
-      background: "#eff6ff",
+      background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
       color: "#1d4ed8",
       border: "1px solid #bfdbfe",
+      boxShadow: "0 10px 22px rgba(59,130,246,0.08)",
     },
   };
 
@@ -521,11 +587,13 @@ function Button(props) {
       disabled={disabled}
       onClick={onClick}
       style={{
-        padding: "10px 14px",
-        borderRadius: 12,
+        padding: "11px 16px",
+        borderRadius: 14,
         fontWeight: 800,
+        fontSize: 14,
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.6 : 1,
+        transition: "all 0.18s ease",
         ...selected,
         ...style,
       }}
@@ -541,12 +609,14 @@ function Input(props) {
       {...props}
       style={{
         width: "100%",
-        borderRadius: 14,
+        borderRadius: 18,
         border: "1px solid #cbd5e1",
-        background: "#ffffff",
-        padding: "12px 14px",
+        background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
+        padding: "14px 16px",
         color: "#0f172a",
         outline: "none",
+        fontSize: 15,
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
         ...(props.style || {}),
       }}
     />
@@ -560,12 +630,13 @@ function Textarea(props) {
       style={{
         width: "100%",
         minHeight: 100,
-        borderRadius: 14,
+        borderRadius: 18,
         border: "1px solid #cbd5e1",
-        background: "#ffffff",
-        padding: "12px 14px",
+        background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
+        padding: "14px 16px",
         color: "#0f172a",
         outline: "none",
+        fontSize: 15,
         resize: "vertical",
         ...(props.style || {}),
       }}
@@ -579,12 +650,13 @@ function Select(props) {
       {...props}
       style={{
         width: "100%",
-        borderRadius: 14,
+        borderRadius: 18,
         border: "1px solid #cbd5e1",
-        background: "#ffffff",
-        padding: "12px 14px",
+        background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
+        padding: "14px 16px",
         color: "#0f172a",
         outline: "none",
+        fontSize: 15,
         ...(props.style || {}),
       }}
     />
@@ -600,7 +672,7 @@ function Field({ label, children }) {
   );
 }
 
-function Modal({ open, title, children, onClose }) {
+function Modal({ open, title, children, onClose, maxWidth = 900 }) {
   if (!open) return null;
 
   return (
@@ -610,6 +682,7 @@ function Modal({ open, title, children, onClose }) {
         position: "fixed",
         inset: 0,
         background: "rgba(15,23,42,0.45)",
+        backdropFilter: "blur(8px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -621,13 +694,15 @@ function Modal({ open, title, children, onClose }) {
         onClick={(e) => e.stopPropagation()}
         style={{
           width: "100%",
-          maxWidth: 900,
+          maxWidth,
           maxHeight: "90vh",
           overflow: "auto",
-          background: "#ffffff",
-          borderRadius: 24,
-          padding: 24,
-          boxShadow: "0 30px 80px rgba(15,23,42,0.22)",
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.98) 100%)",
+          borderRadius: 30,
+          padding: 26,
+          border: "1px solid rgba(219,228,239,0.95)",
+          boxShadow: "0 40px 100px rgba(15,23,42,0.22)",
         }}
       >
         <div
@@ -636,22 +711,33 @@ function Modal({ open, title, children, onClose }) {
             justifyContent: "space-between",
             alignItems: "center",
             gap: 16,
-            marginBottom: 20,
+            marginBottom: 22,
           }}
         >
-          <h3 style={{ fontSize: 26, fontWeight: 900, margin: 0 }}>{title}</h3>
+          <h3
+            style={{
+              fontSize: 28,
+              fontWeight: 900,
+              margin: 0,
+              color: "#0f172a",
+              letterSpacing: "-0.03em",
+            }}
+          >
+            {title}
+          </h3>
           <button
             type="button"
             onClick={onClose}
             style={{
-              border: "none",
-              background: "#f1f5f9",
-              width: 42,
-              height: 42,
-              borderRadius: 12,
+              border: "1px solid #dbe4ef",
+              background: "#ffffff",
+              width: 44,
+              height: 44,
+              borderRadius: 14,
               cursor: "pointer",
               fontSize: 18,
               fontWeight: 900,
+              boxShadow: "0 10px 20px rgba(15,23,42,0.06)",
             }}
           >
             ×
@@ -686,6 +772,7 @@ export default function AdminCRM() {
   const [detailFilter, setDetailFilter] = useState("month");
   const [isProvisioning, setIsProvisioning] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
+  const [deleteCandidate, setDeleteCandidate] = useState(null);
 
   useEffect(() => saveJson(STORAGE_KEYS.settings, settings), [settings]);
   useEffect(() => saveJson(STORAGE_KEYS.customers, customers), [customers]);
@@ -1085,11 +1172,21 @@ export default function AdminCRM() {
     );
   }
 
-  function removeCustomer(customerId) {
+  function requestDeleteCustomer(customer) {
+    setDeleteCandidate(customer);
+  }
+
+  function confirmDeleteCustomer() {
+    if (!deleteCandidate) return;
+
+    const customerId = deleteCandidate.id;
     setCustomers((prev) => prev.filter((item) => item.id !== customerId));
+
     if (selectedCustomerId === customerId) {
       setSelectedCustomerId(null);
     }
+
+    setDeleteCandidate(null);
   }
 
   function addExpense() {
@@ -1151,7 +1248,8 @@ export default function AdminCRM() {
     <div
       style={{
         minHeight: "100vh",
-        background: "#f8fafc",
+        background:
+          "radial-gradient(circle at top left, rgba(59,130,246,0.12) 0%, transparent 26%), radial-gradient(circle at top right, rgba(14,165,233,0.08) 0%, transparent 22%), linear-gradient(180deg, #f8fbff 0%, #f5f7fb 100%)",
         color: "#0f172a",
         fontFamily:
           "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -1165,23 +1263,27 @@ export default function AdminCRM() {
             gap: 20,
             alignItems: "center",
             flexWrap: "wrap",
-            marginBottom: 22,
+            marginBottom: 26,
           }}
         >
           <div>
-            <h1
-              style={{
-                fontSize: 34,
-                fontWeight: 900,
-                color: "#0f172a",
-                marginBottom: 8,
-              }}
-            >
-              Vedantix Admin Dashboard
-            </h1>
-            <p style={{ color: "#64748b", fontSize: 15 }}>
-              CRM, deployment monitoring en financieel overzicht.
-            </p>
+            <BrandLogo />
+            <div style={{ marginTop: 14 }}>
+              <h1
+                style={{
+                  fontSize: 42,
+                  fontWeight: 900,
+                  color: "#0f172a",
+                  marginBottom: 10,
+                  letterSpacing: "-0.04em",
+                }}
+              >
+                Vedantix Admin Dashboard
+              </h1>
+              <p style={{ color: "#64748b", fontSize: 16 }}>
+                CRM, deployment monitoring en financieel overzicht.
+              </p>
+            </div>
           </div>
 
           <div
@@ -1189,11 +1291,12 @@ export default function AdminCRM() {
               display: "flex",
               gap: 10,
               flexWrap: "wrap",
-              background: "#ffffff",
-              border: "1px solid #e2e8f0",
-              borderRadius: 18,
-              padding: 8,
-              boxShadow: "0 10px 30px rgba(15,23,42,0.05)",
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.98) 100%)",
+              border: "1px solid #dbe4ef",
+              borderRadius: 22,
+              padding: 10,
+              boxShadow: "0 18px 40px rgba(15,23,42,0.06)",
             }}
           >
             {[
@@ -1208,12 +1311,20 @@ export default function AdminCRM() {
                 onClick={() => setActiveTab(key)}
                 style={{
                   border: "none",
-                  borderRadius: 12,
-                  padding: "12px 14px",
+                  borderRadius: 16,
+                  padding: "13px 18px",
                   fontWeight: 800,
+                  fontSize: 15,
                   cursor: "pointer",
-                  background: activeTab === key ? "#0f172a" : "transparent",
+                  background:
+                    activeTab === key
+                      ? "linear-gradient(135deg, #0f172a 0%, #172554 100%)"
+                      : "transparent",
                   color: activeTab === key ? "#ffffff" : "#475569",
+                  boxShadow:
+                    activeTab === key
+                      ? "0 14px 30px rgba(15,23,42,0.18)"
+                      : "none",
                 }}
               >
                 {label}
@@ -1354,16 +1465,54 @@ export default function AdminCRM() {
                 title="Klanten"
                 subtitle="Overzicht van alle klanten met snelle acties."
                 action={
-                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                    <Input
-                      value={customerSearch}
-                      onChange={(e) => setCustomerSearch(e.target.value)}
-                      placeholder="Zoek op bedrijf, contact, domein..."
-                      style={{ minWidth: 280 }}
-                    />
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: 12,
+                      flexWrap: "wrap",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        minWidth: 360,
+                        position: "relative",
+                      }}
+                    >
+                      <Input
+                        value={customerSearch}
+                        onChange={(e) => setCustomerSearch(e.target.value)}
+                        placeholder="Zoek op bedrijf, contact, domein..."
+                        style={{
+                          paddingLeft: 44,
+                          borderRadius: 18,
+                          minHeight: 54,
+                          boxShadow: "0 12px 30px rgba(15,23,42,0.05)",
+                        }}
+                      />
+                      <span
+                        style={{
+                          position: "absolute",
+                          left: 16,
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          color: "#94a3b8",
+                          fontSize: 16,
+                        }}
+                      >
+                        ⌕
+                      </span>
+                    </div>
+
                     <Button
                       tone="primary"
                       onClick={() => setIsCreateCustomerOpen(true)}
+                      style={{
+                        minHeight: 54,
+                        paddingLeft: 20,
+                        paddingRight: 20,
+                        borderRadius: 18,
+                      }}
                     >
                       + Klant aanmaken
                     </Button>
@@ -1374,8 +1523,9 @@ export default function AdminCRM() {
               <div
                 style={{
                   overflowX: "auto",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: 18,
+                  border: "1px solid #dbe4ef",
+                  borderRadius: 22,
+                  background: "#ffffff",
                 }}
               >
                 <table
@@ -1387,7 +1537,12 @@ export default function AdminCRM() {
                   }}
                 >
                   <thead>
-                    <tr style={{ background: "#f8fafc" }}>
+                    <tr
+                      style={{
+                        background:
+                          "linear-gradient(180deg, #f8fbff 0%, #f1f5f9 100%)",
+                      }}
+                    >
                       {[
                         "Bedrijf",
                         "Contact",
@@ -1401,12 +1556,13 @@ export default function AdminCRM() {
                           key={header}
                           style={{
                             textAlign: "left",
-                            padding: "14px 16px",
+                            padding: "16px 18px",
                             color: "#475569",
                             fontSize: 12,
-                            letterSpacing: 0.4,
+                            fontWeight: 900,
+                            letterSpacing: 0.5,
                             textTransform: "uppercase",
-                            borderBottom: "1px solid #e2e8f0",
+                            borderBottom: "1px solid #dbe4ef",
                           }}
                         >
                           {header}
@@ -1419,44 +1575,47 @@ export default function AdminCRM() {
                       <tr
                         key={customer.id}
                         style={{
-                          borderBottom: "1px solid #e2e8f0",
+                          borderBottom: "1px solid #edf2f7",
                           cursor: "pointer",
                         }}
                         onClick={() => setSelectedCustomerId(customer.id)}
                       >
-                        <td style={{ padding: "16px" }}>
+                        <td style={{ padding: "18px" }}>
                           <div style={{ fontWeight: 900 }}>{customer.companyName}</div>
                           <div style={{ color: "#64748b", fontSize: 13 }}>{customer.id}</div>
                         </td>
-                        <td style={{ padding: "16px" }}>
+                        <td style={{ padding: "18px" }}>
                           <div>{customer.contactName}</div>
                           <div style={{ color: "#64748b", fontSize: 13 }}>
                             {customer.email}
                           </div>
                         </td>
-                        <td style={{ padding: "16px" }}>{customer.domain}</td>
-                        <td style={{ padding: "16px" }}>
+                        <td style={{ padding: "18px", fontWeight: 700 }}>
+                          {customer.domain}
+                        </td>
+                        <td style={{ padding: "18px" }}>
                           {packageMeta(customer.packageCode).label}
                         </td>
-                        <td style={{ padding: "16px" }}>
+                        <td style={{ padding: "18px" }}>
                           <span
                             style={{
-                              padding: "6px 10px",
+                              padding: "7px 12px",
                               borderRadius: 999,
-                              background: `${STATUS_COLORS[customer.status] || "#94a3b8"}20`,
+                              background: `${STATUS_COLORS[customer.status] || "#94a3b8"}18`,
                               color: STATUS_COLORS[customer.status] || "#94a3b8",
                               fontWeight: 900,
                               fontSize: 12,
+                              border: `1px solid ${STATUS_COLORS[customer.status] || "#94a3b8"}25`,
                             }}
                           >
                             {STATUS_LABELS[customer.status] || customer.status}
                           </span>
                         </td>
-                        <td style={{ padding: "16px", fontWeight: 800 }}>
+                        <td style={{ padding: "18px", fontWeight: 900 }}>
                           {currency(calcMonthlyRevenue(customer))}
                         </td>
                         <td
-                          style={{ padding: "16px" }}
+                          style={{ padding: "18px" }}
                           onClick={(e) => e.stopPropagation()}
                         >
                           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -1466,14 +1625,12 @@ export default function AdminCRM() {
                             >
                               Beheren
                             </Button>
-                            <Button
-                              onClick={() => refreshCustomerDeployment(customer)}
-                            >
+                            <Button onClick={() => refreshCustomerDeployment(customer)}>
                               Refresh
                             </Button>
                             <Button
                               tone="danger"
-                              onClick={() => removeCustomer(customer.id)}
+                              onClick={() => requestDeleteCustomer(customer)}
                             >
                               Verwijderen
                             </Button>
@@ -1487,9 +1644,10 @@ export default function AdminCRM() {
                         <td
                           colSpan={7}
                           style={{
-                            padding: "28px 16px",
+                            padding: "34px 16px",
                             color: "#64748b",
                             textAlign: "center",
+                            fontSize: 15,
                           }}
                         >
                           Geen klanten gevonden.
@@ -1554,7 +1712,12 @@ export default function AdminCRM() {
                     marginBottom: 18,
                   }}
                 >
-                  <Card style={{ background: "#f8fafc" }}>
+                  <Card
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(248,250,252,0.9) 0%, rgba(255,255,255,0.9) 100%)",
+                    }}
+                  >
                     <SectionTitle
                       title="Algemene gegevens"
                       subtitle="Wijzigbare klantinformatie."
@@ -1708,7 +1871,12 @@ export default function AdminCRM() {
                     </div>
                   </Card>
 
-                  <Card style={{ background: "#f8fafc" }}>
+                  <Card
+                    style={{
+                      background:
+                        "linear-gradient(180deg, rgba(248,250,252,0.9) 0%, rgba(255,255,255,0.9) 100%)",
+                    }}
+                  >
                     <SectionTitle
                       title="Documenten"
                       subtitle="Upload bijvoorbeeld contracten of intakebestanden."
@@ -1718,12 +1886,13 @@ export default function AdminCRM() {
                             display: "inline-flex",
                             alignItems: "center",
                             gap: 8,
-                            padding: "10px 14px",
-                            borderRadius: 12,
-                            border: "1px solid #cbd5e1",
+                            padding: "11px 14px",
+                            borderRadius: 14,
+                            border: "1px solid #dbe4ef",
                             background: "#ffffff",
                             cursor: "pointer",
                             fontWeight: 800,
+                            boxShadow: "0 10px 24px rgba(15,23,42,0.05)",
                           }}
                         >
                           Upload document
@@ -1749,7 +1918,7 @@ export default function AdminCRM() {
                             gap: 16,
                             alignItems: "center",
                             padding: 14,
-                            borderRadius: 14,
+                            borderRadius: 16,
                             background: "#ffffff",
                             border: "1px solid #e2e8f0",
                           }}
@@ -1873,7 +2042,12 @@ export default function AdminCRM() {
                   </div>
                 </Card>
 
-                <Card style={{ background: "#f8fafc" }}>
+                <Card
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(248,250,252,0.9) 0%, rgba(255,255,255,0.9) 100%)",
+                  }}
+                >
                   <SectionTitle
                     title="Backend acties"
                     subtitle="Laatste calls voor deze klant."
@@ -1883,7 +2057,7 @@ export default function AdminCRM() {
                       <div
                         key={entry.id}
                         style={{
-                          borderRadius: 14,
+                          borderRadius: 16,
                           border: "1px solid #e2e8f0",
                           background: "#ffffff",
                           padding: 14,
@@ -2034,8 +2208,9 @@ export default function AdminCRM() {
                         justifyContent: "space-between",
                         gap: 12,
                         padding: 14,
-                        borderRadius: 14,
+                        borderRadius: 16,
                         border: "1px solid #e2e8f0",
+                        background: "#ffffff",
                       }}
                     >
                       <div>
@@ -2331,9 +2506,9 @@ export default function AdminCRM() {
                   display: "grid",
                   gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
                   gap: 10,
-                  border: "1px solid #cbd5e1",
-                  borderRadius: 14,
-                  padding: 12,
+                  border: "1px solid #dbe4ef",
+                  borderRadius: 18,
+                  padding: 14,
                   background: "#ffffff",
                 }}
               >
@@ -2378,7 +2553,7 @@ export default function AdminCRM() {
             display: "flex",
             justifyContent: "flex-end",
             gap: 10,
-            marginTop: 22,
+            marginTop: 24,
           }}
         >
           <Button
@@ -2392,6 +2567,64 @@ export default function AdminCRM() {
           <Button tone="primary" onClick={addCustomerAndProvision} disabled={isProvisioning}>
             {isProvisioning ? "Bezig..." : "Klant aanmaken"}
           </Button>
+        </div>
+      </Modal>
+
+      <Modal
+        open={Boolean(deleteCandidate)}
+        title="Klant verwijderen?"
+        onClose={() => setDeleteCandidate(null)}
+        maxWidth={560}
+      >
+        <div
+          style={{
+            padding: 4,
+            display: "grid",
+            gap: 18,
+          }}
+        >
+          <div
+            style={{
+              borderRadius: 20,
+              padding: 18,
+              background: "linear-gradient(180deg, #fff1f2 0%, #ffffff 100%)",
+              border: "1px solid #fecdd3",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 16,
+                fontWeight: 900,
+                color: "#991b1b",
+                marginBottom: 8,
+              }}
+            >
+              Let op
+            </div>
+            <div style={{ color: "#475569", lineHeight: 1.7 }}>
+              Je staat op het punt om{" "}
+              <strong>{deleteCandidate ? deleteCandidate.companyName : ""}</strong>{" "}
+              te verwijderen uit het dashboard. Dit kan niet automatisch ongedaan worden gemaakt.
+            </div>
+          </div>
+
+          <div style={{ color: "#475569", lineHeight: 1.7 }}>
+            Controleer eerst of je echt deze klant wilt verwijderen. Gebruik{" "}
+            <strong>Beheren</strong> als je alleen gegevens wilt aanpassen.
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: 10,
+            }}
+          >
+            <Button onClick={() => setDeleteCandidate(null)}>Annuleren</Button>
+            <Button tone="danger" onClick={confirmDeleteCustomer}>
+              Ja, verwijder klant
+            </Button>
+          </div>
         </div>
       </Modal>
     </div>

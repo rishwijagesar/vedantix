@@ -2,20 +2,29 @@ import { useEffect, useMemo, useState } from "react";
 import { NICHE_DEMOS } from "../data/nicheDemoData";
 
 const CAROUSEL_STYLES = `
-  .niche-carousel{width:100%}
+  .niche-carousel{
+    width:100%;
+  }
 
   .niche-carousel-top{
     display:flex;
-    justify-content:flex-end;
+    justify-content:space-between;
     align-items:center;
     gap:16px;
-    margin-bottom:24px
+    margin-bottom:24px;
+    flex-wrap:wrap;
+  }
+
+  .niche-carousel-meta{
+    font-size:.82rem;
+    color:#64748b;
+    font-weight:700;
   }
 
   .niche-carousel-controls{
     display:flex;
     align-items:center;
-    gap:10px
+    gap:10px;
   }
 
   .niche-carousel-btn{
@@ -29,20 +38,20 @@ const CAROUSEL_STYLES = `
     font-weight:800;
     cursor:pointer;
     transition:all .2s;
-    box-shadow:0 4px 12px rgba(0,0,0,.04)
+    box-shadow:0 4px 12px rgba(0,0,0,.04);
   }
 
   .niche-carousel-btn:hover{
     transform:translateY(-1px);
     border-color:#d1d5db;
-    box-shadow:0 8px 18px rgba(0,0,0,.06)
+    box-shadow:0 8px 18px rgba(0,0,0,.06);
   }
 
   .niche-carousel-track{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:20px;
-    align-items:stretch
+    align-items:stretch;
   }
 
   .niche-card{
@@ -54,17 +63,17 @@ const CAROUSEL_STYLES = `
     transition:all .25s;
     height:100%;
     display:flex;
-    flex-direction:column
+    flex-direction:column;
   }
 
   .niche-card:hover{
     transform:translateY(-3px);
-    box-shadow:0 16px 40px rgba(0,0,0,.08)
+    box-shadow:0 16px 40px rgba(0,0,0,.08);
   }
 
   .niche-card-top{
     padding:24px 22px;
-    color:#fff
+    color:#fff;
   }
 
   .niche-card-top.barber{background:linear-gradient(135deg,#0f172a,#1d4ed8)}
@@ -81,29 +90,29 @@ const CAROUSEL_STYLES = `
     letter-spacing:1.4px;
     text-transform:uppercase;
     color:rgba(255,255,255,.72);
-    margin-bottom:10px
+    margin-bottom:10px;
   }
 
   .niche-card-title{
-    font-size:1.2rem;
+    font-size:1.16rem;
     font-weight:900;
     line-height:1.2;
     margin-bottom:8px;
-    min-height:2.9em
+    min-height:2.8em;
   }
 
   .niche-card-sub{
     font-size:.82rem;
-    color:rgba(255,255,255,.75);
+    color:rgba(255,255,255,.78);
     line-height:1.6;
-    min-height:4.8em
+    min-height:4.5em;
   }
 
   .niche-card-body{
     padding:22px;
     display:flex;
     flex-direction:column;
-    flex:1
+    flex:1;
   }
 
   .niche-card-list{
@@ -113,7 +122,7 @@ const CAROUSEL_STYLES = `
     gap:10px;
     margin-bottom:18px;
     padding:0;
-    flex:1
+    flex:1;
   }
 
   .niche-card-list li{
@@ -122,14 +131,14 @@ const CAROUSEL_STYLES = `
     align-items:flex-start;
     font-size:.84rem;
     color:#4b5563;
-    line-height:1.55
+    line-height:1.55;
   }
 
   .niche-card-list li::before{
     content:'✓';
     color:#6366f1;
     font-weight:900;
-    flex-shrink:0
+    flex-shrink:0;
   }
 
   .niche-card-outcome{
@@ -141,7 +150,7 @@ const CAROUSEL_STYLES = `
     color:#334155;
     font-weight:700;
     line-height:1.55;
-    min-height:88px
+    min-height:88px;
   }
 
   .niche-card-cta{
@@ -154,14 +163,20 @@ const CAROUSEL_STYLES = `
     color:#fff;
     font-size:.85rem;
     font-weight:800;
-    text-decoration:none
+    text-decoration:none;
+    transition:all .2s;
+  }
+
+  .niche-card-cta:hover{
+    background:#0f172a;
+    transform:translateY(-1px);
   }
 
   .niche-carousel-dots{
     display:flex;
     justify-content:center;
     gap:8px;
-    margin-top:22px
+    margin-top:22px;
   }
 
   .niche-carousel-dot{
@@ -171,33 +186,37 @@ const CAROUSEL_STYLES = `
     background:#d1d5db;
     border:none;
     cursor:pointer;
-    transition:all .2s
+    transition:all .2s;
   }
 
   .niche-carousel-dot.active{
     background:#6366f1;
-    transform:scale(1.08)
+    transform:scale(1.08);
   }
 
   @media(max-width:1024px){
     .niche-carousel-track{
-      grid-template-columns:repeat(2,1fr)
+      grid-template-columns:repeat(2,1fr);
     }
 
     .niche-card-title,
     .niche-card-sub,
     .niche-card-outcome{
-      min-height:auto
+      min-height:auto;
     }
   }
 
   @media(max-width:768px){
     .niche-carousel-top{
-      justify-content:flex-end
+      justify-content:flex-end;
+    }
+
+    .niche-carousel-meta{
+      width:100%;
     }
 
     .niche-carousel-track{
-      grid-template-columns:1fr
+      grid-template-columns:1fr;
     }
   }
 `;
@@ -264,12 +283,16 @@ export default function NicheCarousel() {
       <style>{CAROUSEL_STYLES}</style>
 
       <div className="niche-carousel-top">
+        <div className="niche-carousel-meta">
+          Kies een branche en krijg sneller gevoel bij wat voor jouw bedrijf werkt.
+        </div>
+
         <div className="niche-carousel-controls">
           <button
             type="button"
             className="niche-carousel-btn"
             onClick={handlePrev}
-            aria-label="Vorige niches"
+            aria-label="Vorige voorbeelden"
           >
             ←
           </button>
@@ -277,7 +300,7 @@ export default function NicheCarousel() {
             type="button"
             className="niche-carousel-btn"
             onClick={handleNext}
-            aria-label="Volgende niches"
+            aria-label="Volgende voorbeelden"
           >
             →
           </button>
@@ -308,7 +331,7 @@ export default function NicheCarousel() {
                 rel="noreferrer"
                 className="niche-card-cta"
               >
-                Bespreek deze richting →
+                Bespreek dit voorbeeld →
               </a>
             </div>
           </div>
@@ -323,7 +346,7 @@ export default function NicheCarousel() {
               type="button"
               className={`niche-carousel-dot ${index === currentPage ? "active" : ""}`}
               onClick={() => goToPage(index)}
-              aria-label={`Ga naar nichepagina ${index + 1}`}
+              aria-label={`Ga naar voorbeeld ${index + 1}`}
             />
           ))}
         </div>

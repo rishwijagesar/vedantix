@@ -2,7 +2,7 @@ const HERO_CHECKS = [
   "Sterke eerste versie binnen 48 uur",
   "Gebouwd voor afspraken, aanvragen en WhatsApp",
   "Hosting, onderhoud en support inbegrepen",
-  "Niet tevreden? Je betaalt niets",
+  "Betaling na oplevering — niet tevreden, niet betalen",
 ];
 
 const MOCKUP_SERVICES = [
@@ -31,6 +31,7 @@ export const HOME_HERO_STYLES = `
     min-height:50px;
     white-space:nowrap;
   }
+
   .btn-primary:hover{
     background:#f1f5f9;
     transform:translateY(-2px);
@@ -55,6 +56,7 @@ export const HOME_HERO_STYLES = `
     min-height:50px;
     white-space:nowrap;
   }
+
   .btn-wa:hover{
     background:#22c55e;
     transform:translateY(-2px);
@@ -79,6 +81,7 @@ export const HOME_HERO_STYLES = `
     min-height:50px;
     white-space:nowrap;
   }
+
   .btn-ghost:hover{
     background:rgba(255,255,255,.1);
     border-color:rgba(255,255,255,.28);
@@ -153,6 +156,11 @@ export const HOME_HERO_STYLES = `
   @keyframes pulse{
     0%,100%{opacity:1}
     50%{opacity:.35}
+  }
+
+  @keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-8px)}
   }
 
   .hero h1{
@@ -308,11 +316,6 @@ export const HOME_HERO_STYLES = `
     max-width:470px;
     margin-left:auto;
     animation:float 5s ease-in-out infinite;
-  }
-
-  @keyframes float{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-8px)}
   }
 
   .mockup-bar{
@@ -654,7 +657,7 @@ export default function HomeHero() {
               <br />
               <span>vertrouwen wekt</span>
               <br />
-              en klanten aantrekt
+              en meer aanvragen oplevert
             </h1>
 
             <p className="hero-sub">
@@ -699,7 +702,7 @@ export default function HomeHero() {
             </div>
 
             <div className="hero-cta-note">
-              Vrijblijvend · binnen 48 uur eerste versie · geen risico
+              Betaling na oplevering · duidelijke afspraken · geen risico
             </div>
 
             <div className="hero-social-proof">
