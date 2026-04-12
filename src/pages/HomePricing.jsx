@@ -306,7 +306,7 @@ const PRICING_STYLES = `
 
 const PACKAGES = [
   {
-    tier: "Basic",
+    tier: "Starter",
     name: "Voor professioneel online zichtbaar zijn",
     fit: "Voor starters, zzp’ers en kleine lokale bedrijven",
     price: "99",
@@ -319,7 +319,7 @@ const PACKAGES = [
       "WhatsApp, bellen en formulier",
       "Onderhoud en kleine updates inbegrepen",
     ],
-    cta: "Kies Basic →",
+    cta: "Kies Starter →",
   },
   {
     tier: "Growth",

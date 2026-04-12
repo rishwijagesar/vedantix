@@ -15,1116 +15,843 @@ const HOME_STYLES = `
 
   .home-page{
     font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-    color:#111827;
-    background:#fff;
+    color:#0f172a;
+    background:#ffffff;
     line-height:1.6;
-    overflow-x:hidden
+    overflow-x:hidden;
   }
 
   .anchor-section{scroll-margin-top:100px}
 
   .section-wrap{
-    max-width:1140px;
+    width:100%;
+    max-width:1160px;
     margin:0 auto;
-    width:100%
+  }
+
+  .section-shell{
+    padding:96px 5%;
+  }
+
+  .section-shell.alt{
+    background:#f8fafc;
+    border-top:1px solid #eef2f7;
+    border-bottom:1px solid #eef2f7;
   }
 
   .section-header{
     max-width:760px;
-    margin-bottom:56px;
-    text-align:left
+    margin-bottom:48px;
   }
 
-  .section-header.centered{
+  .section-header.center{
     margin-left:auto;
     margin-right:auto;
-    text-align:center
+    text-align:center;
   }
 
-  .section-header.centered .section-p{
+  .section-header.center .section-p{
     margin-left:auto;
-    margin-right:auto
-  }
-
-  .section-h2{
-    font-size:clamp(1.95rem,3vw,2.75rem);
-    font-weight:900;
-    color:#111827;
-    letter-spacing:-.8px;
-    line-height:1.15;
-    margin-bottom:14px
-  }
-
-  .section-p{
-    font-size:.96rem;
-    color:#6b7280;
-    line-height:1.75;
-    max-width:680px
+    margin-right:auto;
   }
 
   .section-label{
+    display:inline-block;
+    margin-bottom:14px;
     font-size:.72rem;
-    font-weight:800;
+    font-weight:900;
     text-transform:uppercase;
     letter-spacing:2px;
-    color:#6366f1;
-    margin-bottom:14px
+    color:#4f46e5;
   }
 
-  .btn-lead{
+  .section-h2{
+    font-size:clamp(2rem,3.2vw,3rem);
+    line-height:1.08;
+    letter-spacing:-1px;
+    font-weight:900;
+    color:#0f172a;
+    margin-bottom:14px;
+  }
+
+  .section-p{
+    font-size:1rem;
+    color:#64748b;
+    line-height:1.8;
+    max-width:680px;
+  }
+
+  .btn-lead,
+  .btn-outline,
+  .btn-dark,
+  .btn-ghost,
+  .btn-wa{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:800;
+    transition:all .2s ease;
+    white-space:nowrap;
+  }
+
+  .btn-lead,
+  .btn-dark{
     background:#0f172a;
     color:#fff;
-    padding:15px 28px;
-    border-radius:10px;
-    font-weight:800;
-    font-size:.92rem;
-    text-decoration:none;
-    display:inline-block;
-    transition:all .2s;
-    box-shadow:0 4px 16px rgba(0,0,0,.15)
+    padding:15px 24px;
+    box-shadow:0 10px 24px rgba(15,23,42,.12);
   }
 
-  .btn-lead:hover{
-    background:#1e293b;
+  .btn-lead:hover,
+  .btn-dark:hover{
     transform:translateY(-2px);
-    box-shadow:0 8px 24px rgba(0,0,0,.2)
+    background:#111827;
   }
 
   .btn-outline{
-    background:#fff;
-    color:#111827;
     padding:14px 22px;
-    border-radius:10px;
-    border:1px solid #e5e7eb;
-    font-weight:800;
-    font-size:.88rem;
-    text-decoration:none;
-    display:inline-block;
-    transition:all .2s
+    color:#0f172a;
+    background:#fff;
+    border:1px solid #dbe4ee;
   }
 
   .btn-outline:hover{
+    border-color:#cbd5e1;
     background:#f8fafc;
-    border-color:#cbd5e1
   }
 
-  .trusted{
-    background:#f9fafb;
-    padding:22px 5%;
-    border-bottom:1px solid #f3f4f6;
-    margin-top:0
+  .btn-ghost{
+    padding:14px 22px;
+    color:#fff;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.16);
   }
 
-  .trusted-inner{
-    max-width:1100px;
+  .btn-ghost:hover{
+    background:rgba(255,255,255,.12);
+  }
+
+  .btn-wa{
+    padding:15px 24px;
+    color:#052e16;
+    background:#dcfce7;
+    border:1px solid #bbf7d0;
+  }
+
+  .btn-wa:hover{
+    background:#cff7db;
+    transform:translateY(-2px);
+  }
+
+  .micro-proof{
+    background:#f8fafc;
+    border-bottom:1px solid #eef2f7;
+    padding:18px 5%;
+  }
+
+  .micro-proof-inner{
+    max-width:1160px;
     margin:0 auto;
     display:flex;
     align-items:center;
-    gap:24px;
-    flex-wrap:wrap
+    gap:12px;
+    flex-wrap:wrap;
   }
 
-  .trusted-label{
+  .micro-proof-label{
     font-size:.72rem;
-    font-weight:700;
-    color:#9ca3af;
+    font-weight:900;
     text-transform:uppercase;
-    letter-spacing:1px;
-    white-space:nowrap;
-    margin-right:8px
+    letter-spacing:1.7px;
+    color:#94a3b8;
+    margin-right:4px;
   }
 
-  .trusted-pill{
+  .micro-proof-pill{
+    display:inline-flex;
+    align-items:center;
+    padding:8px 14px;
+    border-radius:999px;
     background:#fff;
-    border:1px solid #e5e7eb;
-    border-radius:8px;
-    padding:7px 14px;
-    font-size:.78rem;
-    font-weight:700;
-    color:#6b7280
+    border:1px solid #e2e8f0;
+    color:#475569;
+    font-size:.8rem;
+    font-weight:800;
   }
 
-  .niche-fit-section{
-    padding:96px 5%;
-    background:#fff
-  }
-
-  .niche-fit-grid{
+  .promise-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:18px;
-    margin-top:28px
   }
 
-  .niche-fit-card{
+  .promise-card{
     background:#fff;
-    border:1px solid #e5e7eb;
-    border-radius:20px;
-    padding:24px;
-    transition:all .25s;
-    cursor:pointer
+    border:1px solid #e8eef5;
+    border-radius:22px;
+    padding:28px 24px;
+    box-shadow:0 10px 30px rgba(15,23,42,.04);
   }
 
-  .niche-fit-card:hover{
-    transform:translateY(-2px);
-    box-shadow:0 12px 30px rgba(15,23,42,.06);
-    border-color:#c7d2fe
-  }
-
-  .niche-fit-card.active{
-    border-color:#6366f1;
-    background:linear-gradient(160deg,#fafbff,#f5f3ff);
-    box-shadow:0 16px 36px rgba(99,102,241,.1)
-  }
-
-  .niche-fit-top{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    margin-bottom:14px
-  }
-
-  .niche-fit-name{
-    font-size:1rem;
-    font-weight:900;
-    color:#111827
-  }
-
-  .niche-fit-icon{
-    width:42px;
-    height:42px;
-    border-radius:12px;
+  .promise-icon{
+    width:44px;
+    height:44px;
+    border-radius:14px;
     background:#eef2ff;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:1.1rem
+    margin-bottom:16px;
+    font-weight:900;
+    color:#4338ca;
   }
 
-  .niche-fit-problem{
-    font-size:.84rem;
-    color:#6b7280;
+  .promise-card h3{
+    font-size:1rem;
+    font-weight:900;
+    margin-bottom:8px;
+    color:#0f172a;
+  }
+
+  .promise-card p{
+    font-size:.9rem;
+    color:#64748b;
+    line-height:1.75;
+  }
+
+  .industry-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:18px;
+    margin-bottom:28px;
+  }
+
+  .industry-card{
+    width:100%;
+    border:none;
+    text-align:left;
+    cursor:pointer;
+    background:#fff;
+    border:1px solid #e2e8f0;
+    border-radius:22px;
+    padding:24px;
+    transition:all .2s ease;
+  }
+
+  .industry-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px rgba(15,23,42,.06);
+  }
+
+  .industry-card.active{
+    border-color:#6366f1;
+    background:linear-gradient(180deg,#ffffff,#f6f7ff);
+    box-shadow:0 16px 34px rgba(99,102,241,.1);
+  }
+
+  .industry-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:14px;
+  }
+
+  .industry-name{
+    font-size:1rem;
+    font-weight:900;
+    color:#0f172a;
+  }
+
+  .industry-icon{
+    width:44px;
+    height:44px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#eef2ff;
+    font-size:1.1rem;
+  }
+
+  .industry-problem{
+    color:#64748b;
+    font-size:.87rem;
     line-height:1.7;
-    margin-bottom:16px
+    margin-bottom:14px;
   }
 
-  .niche-fit-tag{
+  .industry-tag{
     display:inline-flex;
     align-items:center;
     padding:7px 12px;
     border-radius:999px;
     background:#eef2ff;
     color:#4338ca;
-    font-size:.73rem;
-    font-weight:800;
-    margin-bottom:12px
+    font-size:.72rem;
+    font-weight:900;
   }
 
-  .niche-fit-link{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    text-decoration:none;
-    color:#6366f1;
-    font-size:.84rem;
-    font-weight:800
-  }
-
-  .niche-highlight{
-    margin-top:28px;
+  .industry-highlight{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:22px;
     background:#fff;
-    border:1px solid #e5e7eb;
-    border-radius:24px;
+    border:1px solid #e2e8f0;
+    border-radius:26px;
     padding:30px;
-    display:grid;
-    grid-template-columns:1.15fr .85fr;
-    gap:24px;
-    align-items:start
   }
 
-  .niche-highlight-box{
+  .industry-main{
     background:#f8fafc;
-    border:1px solid #e5e7eb;
+    border:1px solid #e2e8f0;
     border-radius:18px;
-    padding:22px
+    padding:24px;
   }
 
-  .niche-highlight-box h3{
-    font-size:1rem;
+  .industry-main h3{
+    font-size:1.1rem;
     font-weight:900;
-    color:#111827;
-    margin-bottom:8px
+    color:#0f172a;
+    margin-bottom:10px;
   }
 
-  .niche-highlight-box p{
-    font-size:.88rem;
-    color:#6b7280;
-    line-height:1.75
+  .industry-main p{
+    color:#64748b;
+    font-size:.92rem;
+    line-height:1.8;
+    margin-bottom:18px;
   }
 
-  .niche-highlight-points{
+  .bullet-list{
     display:flex;
     flex-direction:column;
     gap:10px;
-    margin-top:14px
   }
 
-  .niche-highlight-point{
+  .bullet-item{
     display:flex;
-    gap:10px;
     align-items:flex-start;
-    font-size:.84rem;
-    color:#374151;
-    line-height:1.6
+    gap:10px;
+    font-size:.88rem;
+    color:#334155;
+    line-height:1.65;
   }
 
-  .niche-highlight-point::before{
+  .bullet-item::before{
     content:'✓';
-    color:#6366f1;
+    color:#4f46e5;
     font-weight:900;
-    flex-shrink:0
+    flex-shrink:0;
   }
 
-  .niche-highlight-cta{
+  .industry-side{
     display:flex;
     flex-direction:column;
-    gap:12px
+    gap:12px;
+    justify-content:center;
   }
 
-  .niche-highlight-note{
+  .industry-note{
     font-size:.8rem;
-    color:#9ca3af;
-    line-height:1.6
+    color:#94a3b8;
+    line-height:1.65;
   }
 
-  .problem-section{
-    padding:96px 5%;
-    background:#f8fafc
-  }
-
-  .problem-grid{
+  .problem-grid,
+  .proof-grid,
+  .outcome-grid,
+  .compare-grid,
+  .faq-grid{
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:16px
+    gap:18px;
   }
 
-  .problem-card{
-    padding:32px 28px;
+  .problem-grid{grid-template-columns:repeat(2,1fr)}
+  .proof-grid{grid-template-columns:repeat(3,1fr)}
+  .outcome-grid{grid-template-columns:repeat(3,1fr)}
+  .compare-grid{grid-template-columns:1fr 1fr}
+  .faq-grid{grid-template-columns:1fr 1fr}
+
+  .problem-card,
+  .proof-card,
+  .outcome-card,
+  .faq-card{
     background:#fff;
-    border:1px solid #f3f4f6;
-    border-radius:16px;
-    transition:all .25s
-  }
-
-  .problem-card:hover{
-    box-shadow:0 8px 32px rgba(0,0,0,.06);
-    transform:translateY(-2px)
-  }
-
-  .problem-icon{
-    font-size:1.6rem;
-    margin-bottom:14px
-  }
-
-  .problem-card h3{
-    font-size:1rem;
-    font-weight:800;
-    color:#111827;
-    margin-bottom:8px
-  }
-
-  .problem-card p{
-    font-size:.86rem;
-    color:#6b7280;
-    line-height:1.7
-  }
-
-  .difference-section{
-    padding:96px 5%;
-    background:#fff
-  }
-
-  .difference-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px
-  }
-
-  .difference-card{
-    background:linear-gradient(180deg,#ffffff,#fafbff);
-    border:1px solid #eef2ff;
-    border-radius:18px;
+    border:1px solid #e2e8f0;
+    border-radius:22px;
     padding:28px 24px;
-    box-shadow:0 8px 32px rgba(99,102,241,.04)
   }
 
-  .difference-icon{
-    width:42px;
-    height:42px;
-    border-radius:12px;
-    background:#eef2ff;
-    color:#6366f1;
+  .problem-card h3,
+  .proof-card h3,
+  .outcome-card h3,
+  .faq-card h3{
+    font-size:1rem;
+    font-weight:900;
+    color:#0f172a;
+    margin-bottom:10px;
+  }
+
+  .problem-card p,
+  .proof-card p,
+  .outcome-card p,
+  .faq-card p{
+    font-size:.9rem;
+    line-height:1.75;
+    color:#64748b;
+  }
+
+  .problem-icon,
+  .proof-icon,
+  .outcome-icon{
+    width:44px;
+    height:44px;
+    border-radius:14px;
     display:flex;
     align-items:center;
     justify-content:center;
+    margin-bottom:16px;
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
     font-size:1.1rem;
-    font-weight:800;
-    margin-bottom:16px
   }
 
-  .difference-card h3{
-    font-size:.98rem;
-    font-weight:800;
-    color:#111827;
-    margin-bottom:8px
+  .compare-col{
+    border-radius:24px;
+    padding:32px 28px;
   }
 
-  .difference-card p{
-    font-size:.86rem;
-    color:#6b7280;
-    line-height:1.7
-  }
-
-  .comparison-section{
-    padding:96px 5%;
-    background:#f9fafb
-  }
-
-  .comparison-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px
-  }
-
-  .comparison-col{
-    border-radius:20px;
-    padding:32px 28px
-  }
-
-  .comparison-col.self{
+  .compare-col.old{
     background:#fff;
-    border:1px solid #e5e7eb
+    border:1px solid #e2e8f0;
   }
 
-  .comparison-col.vedantix{
-    background:linear-gradient(135deg,#eef2ff,#f5f3ff);
-    border:1px solid #c7d2fe
+  .compare-col.new{
+    background:linear-gradient(180deg,#eef2ff,#f8faff);
+    border:1px solid #c7d2fe;
   }
 
-  .comparison-col h3{
+  .compare-col h3{
     font-size:1rem;
     font-weight:900;
-    margin-bottom:18px
+    margin-bottom:18px;
   }
 
-  .comparison-col.self h3{color:#9ca3af}
-  .comparison-col.vedantix h3{color:#4338ca}
+  .compare-col.old h3{color:#64748b}
+  .compare-col.new h3{color:#4338ca}
 
-  .comparison-item{
+  .compare-item{
     display:flex;
-    gap:10px;
     align-items:flex-start;
+    gap:10px;
+    font-size:.88rem;
+    line-height:1.7;
     margin-bottom:12px;
-    font-size:.84rem;
-    line-height:1.6
   }
 
-  .comparison-item:last-child{margin-bottom:0}
+  .compare-item:last-child{margin-bottom:0}
 
-  .comparison-col.self .comparison-item{color:#6b7280}
-  .comparison-col.vedantix .comparison-item{color:#374151}
+  .compare-col.old .compare-item{color:#64748b}
+  .compare-col.new .compare-item{color:#334155}
 
-  .comparison-col.self .comparison-item::before{
+  .compare-col.old .compare-item::before{
     content:'×';
     color:#f87171;
     font-weight:900;
-    flex-shrink:0
+    flex-shrink:0;
   }
 
-  .comparison-col.vedantix .comparison-item::before{
+  .compare-col.new .compare-item::before{
     content:'✓';
-    color:#6366f1;
+    color:#4f46e5;
     font-weight:900;
-    flex-shrink:0
+    flex-shrink:0;
   }
 
-  .how-section{
-    padding:96px 5%;
-    background:#fff
-  }
-
-  .how-steps{
+  .steps-wrap{
     display:grid;
     grid-template-columns:repeat(4,1fr);
-    gap:0;
-    margin-top:56px;
-    position:relative
+    gap:18px;
   }
 
-  .how-steps::before{
-    content:'';
-    position:absolute;
-    top:24px;
-    left:calc(12.5% + 20px);
-    right:calc(12.5% + 20px);
-    height:1px;
-    background:linear-gradient(90deg,#e0e7ff,#c7d2fe,#e0e7ff);
-    z-index:0
-  }
-
-  .how-step{
-    text-align:center;
-    padding:0 20px;
-    position:relative;
-    z-index:1
-  }
-
-  .step-num{
-    width:48px;
-    height:48px;
+  .step-card{
     background:#fff;
-    border:2px solid #e0e7ff;
+    border:1px solid #e2e8f0;
+    border-radius:22px;
+    padding:26px 22px;
+  }
+
+  .step-no{
+    width:42px;
+    height:42px;
     border-radius:50%;
-    font-size:.95rem;
-    font-weight:900;
-    color:#6366f1;
     display:flex;
     align-items:center;
     justify-content:center;
-    margin:0 auto 20px;
-    box-shadow:0 4px 12px rgba(99,102,241,.12)
-  }
-
-  .how-step h3{
-    font-size:.88rem;
-    font-weight:800;
-    color:#111827;
-    margin-bottom:8px
-  }
-
-  .how-step p{
-    font-size:.78rem;
-    color:#9ca3af;
-    line-height:1.6
-  }
-
-  .results-section{
-    padding:96px 5%;
-    background:#fff
-  }
-
-  .results-row{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:0;
-    border:1px solid #f3f4f6;
-    border-radius:20px;
-    overflow:hidden
-  }
-
-  .result-item{
-    padding:40px 32px;
-    text-align:center;
-    border-right:1px solid #f3f4f6
-  }
-
-  .result-item:last-child{border-right:none}
-
-  .result-num{
-    font-size:2rem;
+    margin-bottom:16px;
+    background:#eef2ff;
+    color:#4338ca;
+    font-size:.95rem;
     font-weight:900;
-    color:#111827;
-    letter-spacing:-1px;
-    margin-bottom:8px;
-    line-height:1.1
   }
 
-  .result-label{
-    font-size:.84rem;
-    color:#6b7280;
-    font-weight:600;
-    line-height:1.6
+  .step-card h3{
+    font-size:.96rem;
+    font-weight:900;
+    color:#0f172a;
+    margin-bottom:8px;
+  }
+
+  .step-card p{
+    color:#64748b;
+    font-size:.86rem;
+    line-height:1.7;
   }
 
   .trust-strip{
-    background:#f9fafb;
-    border-top:1px solid #f3f4f6;
-    border-bottom:1px solid #f3f4f6;
-    padding:24px 5%
+    padding:24px 5%;
+    background:#0f172a;
   }
 
-  .trust-items{
-    max-width:1100px;
+  .trust-strip-inner{
+    max-width:1160px;
     margin:0 auto;
     display:flex;
+    flex-wrap:wrap;
     justify-content:center;
-    gap:40px;
-    flex-wrap:wrap
+    gap:14px 26px;
   }
 
-  .trust-item{
+  .trust-chip{
     display:flex;
     align-items:center;
     gap:8px;
     font-size:.82rem;
-    font-weight:700;
-    color:#374151
-  }
-
-  .trust-icon{font-size:.95rem}
-
-  .roi-section{
-    padding:100px 5%;
-    background:#fff
-  }
-
-  .roi-inner{
-    max-width:760px;
-    margin:0 auto;
-    text-align:center
-  }
-
-  .roi-title{
-    font-size:clamp(1.8rem,3vw,2.4rem);
-    font-weight:900;
-    color:#0f172a;
-    letter-spacing:-1px;
-    line-height:1.15;
-    margin-bottom:16px
-  }
-
-  .roi-subtitle{
-    font-size:.97rem;
-    color:#6b7280;
-    line-height:1.7;
-    max-width:520px;
-    margin:0 auto 64px
-  }
-
-  .roi-comparison{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:0;
-    margin-bottom:48px
-  }
-
-  .roi-block{
-    flex:1;
-    max-width:260px
-  }
-
-  .roi-value{
-    font-size:clamp(2.4rem,5vw,3.6rem);
-    font-weight:900;
-    letter-spacing:-2px;
-    line-height:1;
-    margin-bottom:10px
-  }
-
-  .roi-value.invest{color:#0f172a}
-  .roi-value.gain{color:#16a34a}
-
-  .roi-block-label{
-    font-size:.72rem;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:1.5px;
-    color:#9ca3af
-  }
-
-  .roi-divider{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:4px;
-    padding:0 32px;
-    flex-shrink:0
-  }
-
-  .roi-arrow-line{
-    width:48px;
-    height:2px;
-    background:linear-gradient(90deg,#e5e7eb,#6366f1)
-  }
-
-  .roi-arrow-head{
-    width:0;
-    height:0;
-    border-top:6px solid transparent;
-    border-bottom:6px solid transparent;
-    border-left:8px solid #6366f1;
-    margin-left:-1px
-  }
-
-  .roi-bottom-line{
-    font-size:1rem;
     font-weight:800;
-    color:#0f172a;
-    margin-bottom:8px
+    color:rgba(255,255,255,.78);
   }
 
-  .roi-note{
-    font-size:.78rem;
-    color:#9ca3af
-  }
-
-  .why-section{
-    padding:96px 5%;
-    background:#f9fafb
-  }
-
-  .why-grid{
+  .lead-box{
+    background:linear-gradient(135deg,#fff7ed,#ffffff);
+    border:1px solid #fed7aa;
+    border-radius:26px;
+    padding:34px;
     display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px
-  }
-
-  .why-col{
-    padding:40px;
-    border-radius:18px
-  }
-
-  .why-col.old{
-    background:#fff;
-    border:1px solid #f3f4f6
-  }
-
-  .why-col.new{
-    background:linear-gradient(135deg,#eef2ff,#f5f3ff);
-    border:1px solid #e0e7ff
-  }
-
-  .why-col h3{
-    font-size:.9rem;
-    font-weight:800;
-    margin-bottom:20px;
-    padding-bottom:14px;
-    border-bottom:1px solid #f3f4f6
-  }
-
-  .why-col.old h3{color:#9ca3af}
-
-  .why-col.new h3{
-    color:#6366f1;
-    border-color:#e0e7ff
-  }
-
-  .why-li{
-    display:flex;
-    gap:9px;
-    align-items:flex-start;
-    margin-bottom:12px;
-    font-size:.83rem;
-    line-height:1.6
-  }
-
-  .why-li:last-child{margin-bottom:0}
-
-  .why-col.old .why-li{color:#9ca3af}
-  .why-col.new .why-li{color:#374151}
-
-  .why-col.old .why-li::before{
-    content:'×';
-    color:#fca5a5;
-    font-weight:700;
-    flex-shrink:0
-  }
-
-  .why-col.new .why-li::before{
-    content:'✓';
-    color:#6366f1;
-    font-weight:700;
-    flex-shrink:0
-  }
-
-  .lead-magnet-section{
-    padding:80px 5%;
-    background:#f8fafc;
-    border-top:1px solid #f3f4f6;
-    border-bottom:1px solid #f3f4f6
-  }
-
-  .lead-magnet-inner{
-    max-width:860px;
-    margin:0 auto;
-    display:flex;
+    grid-template-columns:1.05fr .95fr;
+    gap:24px;
     align-items:center;
-    gap:48px;
-    flex-wrap:wrap
   }
 
-  .lead-magnet-text{
-    flex:1;
-    min-width:260px
-  }
-
-  .lead-magnet-badge{
+  .lead-badge{
     display:inline-flex;
     align-items:center;
-    gap:6px;
-    background:#fef3c7;
-    border:1px solid #fde68a;
-    color:#92400e;
-    font-size:.7rem;
-    font-weight:800;
+    gap:8px;
+    padding:6px 12px;
+    border-radius:999px;
+    background:#fff7ed;
+    border:1px solid #fdba74;
+    color:#9a3412;
+    font-size:.72rem;
+    font-weight:900;
     text-transform:uppercase;
-    letter-spacing:1.5px;
-    padding:5px 12px;
-    border-radius:100px;
-    margin-bottom:14px
+    letter-spacing:1.4px;
+    margin-bottom:14px;
   }
 
-  .lead-magnet-title{
-    font-size:1.6rem;
+  .lead-title{
+    font-size:1.8rem;
+    line-height:1.15;
     font-weight:900;
     color:#0f172a;
-    letter-spacing:-.5px;
-    line-height:1.2;
-    margin-bottom:10px
+    margin-bottom:10px;
+    letter-spacing:-.7px;
   }
 
-  .lead-magnet-sub{
+  .lead-text{
+    font-size:.95rem;
+    color:#64748b;
+    line-height:1.8;
+  }
+
+  .lead-side{
+    background:#0f172a;
+    color:#fff;
+    border-radius:22px;
+    padding:26px;
+  }
+
+  .lead-side h3{
+    font-size:1rem;
+    font-weight:900;
+    margin-bottom:10px;
+  }
+
+  .lead-side p{
+    color:rgba(255,255,255,.72);
     font-size:.88rem;
-    color:#6b7280;
-    line-height:1.7
+    line-height:1.75;
+    margin-bottom:18px;
   }
 
-  .lead-magnet-cta{
-    flex-shrink:0
+  .lead-side ul{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:20px;
   }
 
-  .lead-magnet-note{
-    font-size:.75rem;
-    color:#9ca3af;
-    margin-top:8px;
-    text-align:center
+  .lead-side li{
+    display:flex;
+    gap:10px;
+    font-size:.84rem;
+    color:rgba(255,255,255,.84);
+    line-height:1.65;
   }
 
-  .urgency-section{
-    padding:80px 5%;
-    background:#fff
+  .lead-side li::before{
+    content:'✓';
+    color:#86efac;
+    font-weight:900;
+    flex-shrink:0;
   }
 
-  .urgency-inner{
-    max-width:840px;
-    margin:0 auto
+  .lead-note{
+    font-size:.76rem;
+    color:#94a3b8;
+    margin-top:10px;
+  }
+
+  .urgency-wrap{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:20px;
   }
 
   .urgency-box{
     background:#0f172a;
-    border-radius:16px;
-    padding:40px 48px;
-    text-align:center;
-    margin-bottom:20px;
+    color:#fff;
+    border-radius:24px;
+    padding:34px;
     position:relative;
-    overflow:hidden
+    overflow:hidden;
   }
 
   .urgency-box::before{
     content:'';
     position:absolute;
     inset:0;
-    background:radial-gradient(ellipse at 50% 0%,rgba(239,68,68,.12) 0%,transparent 65%);
-    pointer-events:none
+    background:radial-gradient(circle at top,rgba(239,68,68,.16),transparent 58%);
+    pointer-events:none;
   }
 
-  .urgency-pulse{
+  .urgency-badge{
     display:inline-flex;
     align-items:center;
     gap:8px;
-    background:rgba(239,68,68,.12);
-    border:1px solid rgba(239,68,68,.25);
-    color:#fca5a5;
-    font-size:.7rem;
-    font-weight:800;
-    text-transform:uppercase;
-    letter-spacing:1.5px;
     padding:6px 14px;
-    border-radius:100px;
-    margin-bottom:16px
+    border-radius:999px;
+    background:rgba(239,68,68,.14);
+    border:1px solid rgba(239,68,68,.24);
+    color:#fca5a5;
+    font-size:.72rem;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:1.6px;
+    margin-bottom:16px;
   }
 
-  .urgency-pulse::before{
+  .urgency-badge::before{
     content:'';
-    width:7px;
-    height:7px;
-    background:#ef4444;
+    width:8px;
+    height:8px;
     border-radius:50%;
-    animation:pulse 1.5s infinite
+    background:#ef4444;
   }
 
   .urgency-box h3{
-    color:#fff;
-    font-size:1.3rem;
+    position:relative;
+    font-size:1.25rem;
+    line-height:1.2;
     font-weight:900;
-    margin-bottom:10px;
-    letter-spacing:-.5px
+    margin-bottom:12px;
   }
 
-  .urgency-spots{
+  .urgency-box p{
+    position:relative;
+    color:rgba(255,255,255,.72);
+    font-size:.9rem;
+    line-height:1.75;
+  }
+
+  .spots{
+    position:relative;
     display:flex;
-    justify-content:center;
     gap:8px;
-    margin-bottom:16px
+    margin:18px 0 14px;
   }
 
   .spot{
-    width:36px;
+    width:38px;
     height:8px;
-    border-radius:100px
+    border-radius:999px;
   }
 
-  .spot.taken{background:#ef4444}
-  .spot.free{background:rgba(255,255,255,.15)}
+  .spot.full{background:#ef4444}
+  .spot.open{background:rgba(255,255,255,.16)}
 
-  .urgency-box p{
-    color:rgba(255,255,255,.5);
-    font-size:.85rem;
-    line-height:1.65;
-    max-width:480px;
-    margin:0 auto
-  }
-
-  .guarantee-box{
+  .guarantee-card{
     background:#f0fdf4;
-    border-radius:14px;
-    padding:24px 32px;
-    display:flex;
-    gap:16px;
-    align-items:flex-start;
-    border:1px solid #bbf7d0
+    border:1px solid #bbf7d0;
+    border-radius:24px;
+    padding:28px;
   }
 
-  .guarantee-icon{
-    font-size:1.4rem;
-    flex-shrink:0;
-    margin-top:2px
-  }
-
-  .guarantee-box strong{
-    display:block;
+  .guarantee-card h3{
     color:#166534;
-    font-size:.88rem;
-    font-weight:800;
-    margin-bottom:4px
+    font-size:1rem;
+    font-weight:900;
+    margin-bottom:10px;
   }
 
-  .guarantee-box p{
+  .guarantee-card p{
     color:#166534;
-    font-size:.82rem;
-    margin:0;
-    line-height:1.6;
-    opacity:.8
+    opacity:.84;
+    font-size:.9rem;
+    line-height:1.75;
   }
 
   .cta-section{
-    padding:120px 5%;
-    background:linear-gradient(160deg,#0d1a3a 0%,#111827 100%);
+    padding:110px 5%;
+    background:linear-gradient(160deg,#0b1228 0%,#111827 100%);
     position:relative;
     overflow:hidden;
-    text-align:center
   }
 
   .cta-section::before{
     content:'';
     position:absolute;
     inset:0;
-    background:radial-gradient(ellipse at center,rgba(99,102,241,.1) 0%,transparent 65%);
-    pointer-events:none
+    background:radial-gradient(circle at center,rgba(99,102,241,.16),transparent 60%);
+    pointer-events:none;
+  }
+
+  .cta-inner{
+    max-width:860px;
+    margin:0 auto;
+    text-align:center;
+    position:relative;
   }
 
   .cta-section h2{
-    font-size:clamp(2rem,4vw,3rem);
+    font-size:clamp(2rem,4vw,3.2rem);
+    line-height:1.05;
     font-weight:900;
-    color:#fff;
     letter-spacing:-1px;
-    margin-bottom:16px;
-    position:relative
+    color:#fff;
+    margin-bottom:14px;
   }
 
   .cta-section p{
-    font-size:.95rem;
-    color:rgba(255,255,255,.58);
     max-width:620px;
-    margin:0 auto 48px;
-    line-height:1.7;
-    position:relative
+    margin:0 auto 34px;
+    color:rgba(255,255,255,.68);
+    font-size:1rem;
+    line-height:1.8;
   }
 
-  .cta-btns{
+  .cta-actions{
     display:flex;
+    flex-wrap:wrap;
     gap:12px;
     justify-content:center;
+    margin-bottom:24px;
+  }
+
+  .cta-meta{
+    display:flex;
     flex-wrap:wrap;
-    position:relative
+    gap:12px 18px;
+    justify-content:center;
+    margin-bottom:28px;
+  }
+
+  .cta-meta-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:rgba(255,255,255,.45);
+    font-size:.8rem;
+    font-weight:800;
   }
 
   .cta-phone{
-    margin-top:48px;
-    color:rgba(255,255,255,.35);
-    font-size:.82rem;
-    position:relative
+    color:rgba(255,255,255,.45);
+    font-size:.84rem;
   }
 
   .cta-phone strong{
-    color:#60a5fa;
     display:block;
-    font-size:1.05rem;
     margin-top:8px;
-    font-weight:800
+    color:#93c5fd;
+    font-size:1.05rem;
+    font-weight:900;
   }
 
   @media(max-width:1024px){
-    .niche-fit-grid,
-    .difference-grid{
-      grid-template-columns:1fr;
-      max-width:620px;
-      margin:0 auto
-    }
-
-    .problem-grid,
-    .comparison-grid,
-    .why-grid,
-    .niche-highlight{
-      grid-template-columns:1fr;
-      max-width:720px;
-      margin:0 auto
-    }
-
-    .results-row{
-      grid-template-columns:1fr 1fr
-    }
-
-    .results-row .result-item:nth-child(2){
-      border-right:none
-    }
-
-    .results-row .result-item:nth-child(3){
-      border-right:none;
-      border-top:1px solid #f3f4f6;
-      grid-column:1/-1
-    }
-
-    .how-steps{
+    .promise-grid,
+    .proof-grid,
+    .outcome-grid,
+    .industry-grid,
+    .steps-wrap{
       grid-template-columns:1fr 1fr;
-      gap:32px
     }
 
-    .how-steps::before{
-      display:none
+    .industry-highlight,
+    .lead-box,
+    .urgency-wrap,
+    .compare-grid,
+    .faq-grid{
+      grid-template-columns:1fr;
     }
   }
 
   @media(max-width:768px){
-    .how-steps{
-      grid-template-columns:1fr
-    }
+    .section-shell,
+    .cta-section{padding:80px 5%}
 
-    .trust-items{
-      gap:20px
-    }
-
-    .urgency-box{
-      padding:28px 20px
-    }
-
-    .cta-section{
-      padding:80px 5%
-    }
-
-    .cta-btns{
-      flex-direction:column
-    }
-
-    .cta-btns a{
-      width:100%;
-      max-width:420px;
-      margin:0 auto;
-      text-align:center
-    }
-
-    .results-row{
+    .problem-grid,
+    .proof-grid,
+    .outcome-grid,
+    .industry-grid,
+    .steps-wrap,
+    .promise-grid,
+    .faq-grid{
       grid-template-columns:1fr;
-      border-radius:16px
     }
 
-    .result-item{
-      border-right:none;
-      border-bottom:1px solid #f3f4f6;
-      padding:28px
+    .lead-box,
+    .industry-highlight,
+    .urgency-box,
+    .guarantee-card{
+      padding:24px;
     }
 
-    .result-item:last-child{
-      border-bottom:none
-    }
-
-    .problem-section,
-    .difference-section,
-    .roi-section,
-    .why-section,
-    .how-section,
-    .urgency-section,
-    .comparison-section,
-    .niche-fit-section,
-    .results-section{
-      padding:80px 5%
-    }
-  }
-
-  @media(max-width:640px){
-    .lead-magnet-inner{
+    .cta-actions{
       flex-direction:column;
-      gap:24px;
-      text-align:center
     }
 
-    .lead-magnet-cta{
-      width:100%
-    }
-
-    .btn-lead,
-    .btn-outline{
-      display:block;
-      text-align:center
-    }
-  }
-
-  @media(max-width:480px){
-    .problem-section,
-    .difference-section,
-    .roi-section,
-    .why-section,
-    .how-section,
-    .urgency-section,
-    .comparison-section,
-    .niche-fit-section,
-    .results-section{
-      padding:60px 5%
-    }
-
-    .trusted-inner{
-      gap:12px
-    }
-
-    .guarantee-box{
-      flex-direction:column;
-      gap:10px;
-      padding:20px
-    }
-
-    .cta-section h2{
-      font-size:1.8rem
-    }
-
-    .section-header{
-      margin-bottom:40px
+    .cta-actions a{
+      width:100%;
     }
   }
 `;
 
-const TRUSTED_BY = [
+const FITS = [
   "Kappers",
   "Restaurants",
   "Klusbedrijven",
@@ -1133,45 +860,23 @@ const TRUSTED_BY = [
   "ZZP'ers",
 ];
 
-const PROBLEMS = [
-  [
-    "🔍",
-    "Je eerste indruk gebeurt online",
-    "Voor veel lokale ondernemers is de website het eerste serieuze contactmoment. Als die niet duidelijk of professioneel voelt, verlies je al vertrouwen voordat iemand belt of appt.",
-  ],
-  [
-    "📱",
-    "Een verouderde site kost je aanvragen",
-    "Een website die traag, rommelig of verouderd oogt, laat bezoekers sneller afhaken. Zeker op mobiel wordt daar hard op afgerekend.",
-  ],
-  [
-    "📞",
-    "Te weinig sturing naar actie",
-    "Als bellen, WhatsAppen, reserveren of aanvragen niet duidelijk genoeg naar voren komt, verdwijnt interesse zonder dat je het merkt.",
-  ],
-  [
-    "🛠️",
-    "Na oplevering begint vaak het gedoe",
-    "Veel ondernemers willen geen tijd verliezen aan wijzigingen, beheer of technische vragen. Dat moet gewoon geregeld blijven.",
-  ],
+const PROMISES = [
+  ["48u", "Snel eerste concept", "Geen lang traject of maanden wachten. Je hebt snel iets sterks om op te reageren en mee verder te bouwen."],
+  ["€", "Duidelijke maandprijs", "Geen vaag gedoe met losse technische kosten. Je weet vooraf waar je aan toe bent."],
+  ["✓", "Doorlopende ondersteuning", "Na livegang stopt het niet. Onderhoud, kleine updates en hulp blijven gewoon geregeld."],
 ];
 
-const DIFFERENCE_POINTS = [
-  [
-    "01",
-    "Gebouwd voor lokale ondernemers",
-    "Geen algemene websites voor iedereen, maar een aanpak voor bedrijven die lokaal gevonden willen worden en meer aanvragen willen krijgen.",
-  ],
-  [
-    "02",
-    "Snel live en makkelijk starten",
-    "Je hoeft niet eerst een groot traject in. We houden het simpel, duidelijk en praktisch zodat je snel online staat.",
-  ],
-  [
-    "03",
-    "Maandelijkse ondersteuning in plaats van losse oplevering",
-    "Je website blijft niet aan je lot overgelaten. Updates, onderhoud en kleine wijzigingen blijven gewoon doorlopen.",
-  ],
+const PROBLEMS = [
+  ["🔍", "Je website overtuigt niet snel genoeg", "Bezoekers beslissen in seconden. Is je site onduidelijk of verouderd, dan haken ze af voordat ze bellen of appen."],
+  ["📱", "Mobiel laat vaak kansen liggen", "Veel lokale klanten bekijken je website op hun telefoon. Als dat niet strak en duidelijk werkt, verlies je directe actie."],
+  ["📞", "Te weinig sturing naar contact", "Zonder sterke call-to-actions verdwijnen bezoekers zonder reservering, aanvraag of WhatsApp-bericht."],
+  ["🧩", "Na oplevering begint vaak het gedoe", "Veel ondernemers willen geen losse partijen, technische vragen of een website die daarna stilstaat."],
+];
+
+const PROOF_POINTS = [
+  ["01", "Gebouwd voor lokale bedrijven", "De focus ligt op vertrouwen, contact en aanvragen. Niet op overbodige complexiteit."],
+  ["02", "Van bezoeker naar actie", "Elke sectie stuurt op duidelijkheid: bellen, WhatsApp, offerte, reservering of intake."],
+  ["03", "Geen losse oplevering", "Je krijgt niet alleen een website, maar ook onderhoud, ondersteuning en ruimte om door te groeien."],
 ];
 
 const NICHE_OPTIONS = [
@@ -1180,15 +885,14 @@ const NICHE_OPTIONS = [
     icon: "✂️",
     name: "Kappers",
     problem: "Je wilt meer afspraken en een website die direct vertrouwen geeft.",
-    bestFit: "Groei past het vaakst bij kappers",
+    bestFit: "Growth past vaak het best",
     href: "/website-kapper",
-    highlightTitle: "Meer afspraken zonder gedoe met je website",
-    highlightText:
-      "Voor kappers draait je website niet alleen om mooi zijn, maar vooral om sneller overtuigen en makkelijker contact laten opnemen.",
+    title: "Meer afspraken, minder afhaken",
+    text: "Voor kappers moet een website niet alleen mooi zijn, maar vooral snel vertrouwen opwekken en direct naar contact of afspraak leiden.",
     points: [
-      "Duidelijke knoppen voor bellen, WhatsApp of afspraak aanvragen",
-      "Professionele uitstraling die past bij jouw salon",
-      "Meer ruimte voor behandelingen, tarieven en reviews",
+      "Duidelijke CTA’s voor bellen, WhatsApp of afspraak aanvragen",
+      "Sterke eerste indruk die past bij je salon en doelgroep",
+      "Ruimte voor behandelingen, tarieven, reviews en sfeer",
     ],
   },
   {
@@ -1196,30 +900,28 @@ const NICHE_OPTIONS = [
     icon: "🍽️",
     name: "Restaurants",
     problem: "Je wilt meer reserveringen en minder afhankelijk zijn van externe platforms.",
-    bestFit: "Automatiseren of Groei past vaak het best",
+    bestFit: "Growth of Pro past vaak het best",
     href: "/website-restaurant",
-    highlightTitle: "Meer reserveringen via je eigen website",
-    highlightText:
-      "Een restaurantwebsite moet sfeer uitstralen, maar vooral gasten overtuigen om direct te reserveren of contact op te nemen.",
+    title: "Meer reserveringen via je eigen website",
+    text: "Een restaurantwebsite moet sfeer neerzetten, maar vooral direct helpen bij reserveren, bellen en oriënteren.",
     points: [
-      "Duidelijke menukaart, sfeer en contactopties",
-      "Sterkere focus op reserveringen en directe omzet",
-      "Mogelijkheid om reserveringsflow later uit te bouwen",
+      "Sterke menukaart-, sfeer- en contactsecties",
+      "Duidelijke focus op reserveren en directe omzet",
+      "Later uitbreidbaar met reserveringsflow of extra pagina’s",
     ],
   },
   {
     key: "klusbedrijven",
     icon: "🔨",
     name: "Klusbedrijven",
-    problem: "Je wilt meer offerte-aanvragen en professioneler overkomen bij nieuwe klanten.",
-    bestFit: "Groei past het vaakst bij klusbedrijven",
+    problem: "Je wilt meer offerte-aanvragen en professioneler overkomen.",
+    bestFit: "Growth past vaak het best",
     href: "/website-klusbedrijf",
-    highlightTitle: "Meer aanvragen voor klussen en offertes",
-    highlightText:
-      "Voor een klusbedrijf moet je website direct duidelijk maken wat je doet, waar je werkt en hoe iemand je kan inschakelen.",
+    title: "Meer offerte-aanvragen uit je regio",
+    text: "Voor klusbedrijven moet meteen duidelijk zijn wat je doet, waar je werkt en waarom iemand jou moet kiezen.",
     points: [
       "Sterke dienstenpagina’s en lokale zichtbaarheid",
-      "Duidelijke focus op aanvragen en offerteformulieren",
+      "Focus op offerte, bellen en snelle leadopvolging",
       "Meer vertrouwen bij nieuwe klanten",
     ],
   },
@@ -1227,15 +929,14 @@ const NICHE_OPTIONS = [
     key: "schoonheidssalons",
     icon: "💅",
     name: "Schoonheidssalons",
-    problem: "Je wilt meer boekingen en een uitstraling die rust, kwaliteit en vertrouwen uitstraalt.",
-    bestFit: "Groei past het vaakst bij salons",
+    problem: "Je wilt meer boekingen met een rustige, luxe uitstraling.",
+    bestFit: "Growth past vaak het best",
     href: "/website-salon",
-    highlightTitle: "Meer boekingen met een rustige, luxe uitstraling",
-    highlightText:
-      "Voor een schoonheidssalon moet je website professioneel ogen, behandelingen duidelijk tonen en klanten soepel naar contact of boeking leiden.",
+    title: "Meer boekingen met een rustige, professionele uitstraling",
+    text: "Voor salons moet je website kwaliteit uitstralen en soepel naar boeking of contact sturen.",
     points: [
       "Duidelijke behandelingen en contactopties",
-      "Sterke uitstraling voor mobiel en desktop",
+      "Sterke mobiele ervaring voor snelle beslissers",
       "Minder chaos via losse DM’s en berichten",
     ],
   },
@@ -1244,94 +945,94 @@ const NICHE_OPTIONS = [
     icon: "📸",
     name: "Fotografen",
     problem: "Je wilt portfolio en vertrouwen combineren met meer boekingen.",
-    bestFit: "Groei past het vaakst bij fotografen",
+    bestFit: "Growth past vaak het best",
     href: "/website-fotograaf",
-    highlightTitle: "Portfolio én meer boekingen in één website",
-    highlightText:
-      "Voor fotografen moet je website niet alleen werk tonen, maar vooral bezoekers overtuigen om een shoot of opdracht aan te vragen.",
+    title: "Portfolio dat ook echt aanvragen oplevert",
+    text: "Voor fotografen moet een website niet alleen mooi tonen wat je maakt, maar ook overtuigen om contact op te nemen.",
     points: [
-      "Sterke portfolio-opbouw met duidelijke CTA’s",
-      "Professionelere uitstraling dan alleen social media",
-      "Meer aanvragen voor shoots en opdrachten",
+      "Portfolio-opbouw met duidelijke CTA’s",
+      "Professionelere indruk dan alleen social media",
+      "Meer aanvragen voor shoots, events of opdrachten",
     ],
   },
   {
     key: "zzpers",
     icon: "🧑‍💼",
     name: "ZZP'ers",
-    problem: "Je wilt professioneler overkomen en makkelijker nieuwe klanten aantrekken.",
-    bestFit: "Zichtbaar of Groei past vaak het best",
+    problem: "Je wilt professioneler overkomen en makkelijker klanten aantrekken.",
+    bestFit: "Starter of Growth past vaak het best",
     href: "/website-zzp",
-    highlightTitle: "Meer vertrouwen en meer leads voor zelfstandigen",
-    highlightText:
-      "Als zzp’er is je website vaak je eerste indruk. Die moet meteen duidelijk maken wat je doet en waarom iemand juist jou moet benaderen.",
+    title: "Een sterke eerste indruk zonder technisch gedoe",
+    text: "Als zzp’er is je website vaak je eerste serieuze contactmoment. Die moet meteen duidelijk maken wat je doet en wat iemand kan verwachten.",
     points: [
-      "Sterke eerste indruk zonder technisch gedoe",
-      "Meer focus op leads, bellen of aanvragen",
-      "Makkelijk mee te laten groeien met je bedrijf",
+      "Snelle professionele uitstraling",
+      "Meer focus op leads, bellen of intake aanvragen",
+      "Makkelijk later uit te breiden als je groeit",
     ],
   },
 ];
 
-const COMPARE_SELF = [
-  "Zelf tools, hosting of bouwers uitzoeken",
-  "Tijd kwijt aan ontwerp, inhoud en techniek",
-  "Geen duidelijke structuur voor meer aanvragen",
+const COMPARE_OLD = [
+  "Zelf tools, hosting en aanpassingen uitzoeken",
+  "Tijd kwijt aan design, tekst en techniek",
+  "Geen duidelijke opbouw richting contact of aanvraag",
   "Bij problemen zelf zoeken wie iets oplost",
-  "Vaak starten met goedkoop, maar later alsnog gedoe",
+  "Vaak goedkoop gestart, later alsnog duur en rommelig",
 ];
 
-const COMPARE_VEDANTIX = [
-  "Alles vanuit één partij geregeld",
-  "Gebouwd met focus op aanvragen, contact en vertrouwen",
-  "Persoonlijke hulp in plaats van een anoniem ticketsysteem",
+const COMPARE_NEW = [
+  "Alles rondom je website geregeld vanuit één partij",
+  "Gebouwd met focus op vertrouwen, contact en conversie",
   "Onderhoud en kleine updates blijven doorlopen",
-  "Snel live en makkelijk op te schalen als je groeit",
+  "Snelle communicatie zonder anoniem ticketsysteem",
+  "Makkelijk op te schalen zodra je bedrijf groeit",
 ];
 
-const RESULTS = [
-  ["Meer vertrouwen", "Een website die professioneler en duidelijker overkomt"],
-  ["Meer actie", "Sterkere focus op bellen, WhatsAppen of aanvragen"],
-  ["Meer rust", "Onderhoud, updates en support blijven geregeld"],
+const OUTCOMES = [
+  ["✔", "Meer vertrouwen", "Een website die professioneler overkomt en sneller serieus genomen wordt."],
+  ["⚡", "Meer actie", "Meer kans op bellen, appen, reserveren of een aanvraag."],
+  ["🛡️", "Meer rust", "Onderhoud, kleine wijzigingen en doorlopende ondersteuning blijven geregeld."],
+];
+
+const STEPS = [
+  ["1", "Korte kennismaking", "We bespreken je bedrijf, doelgroep en wat je website praktisch moet opleveren."],
+  ["2", "Concept en opbouw", "Je krijgt een sterke eerste richting die past bij jouw branche en uitstraling."],
+  ["3", "Aanscherpen en live zetten", "We verwerken feedback, maken het scherp en zetten alles netjes live."],
+  ["4", "Doorlopend verbeteren", "Na livegang blijven we beschikbaar voor onderhoud, updates en vervolgstappen."],
 ];
 
 const TRUST_ITEMS = [
-  ["✔", "Gebouwd voor lokale ondernemers"],
-  ["✔", "Duidelijke maandprijs"],
-  ["✔", "Persoonlijk contact"],
-  ["✔", "Onderhoud inbegrepen"],
-  ["✔", "Flexibel op te schalen"],
+  "Gebouwd voor lokale ondernemers",
+  "Duidelijke maandprijs",
+  "Persoonlijk contact",
+  "Onderhoud inbegrepen",
+  "Snel opschaalbaar",
 ];
 
-const WHY_OLD = [
-  "Na oplevering zelf alles regelen",
-  "Los betalen voor hosting, onderhoud en wijzigingen",
-  "Technische zaken bij meerdere partijen onderbrengen",
-  "Onzekerheid over wie verantwoordelijk is bij problemen",
-  "Website veroudert sneller zonder doorlopend beheer",
+const FAQS = [
+  [
+    "Hoe snel kan mijn website live zijn?",
+    "In veel gevallen staat de eerste sterke versie binnen 48 uur klaar. Daarna scherpen we die samen aan en zetten we hem live zodra de richting goed staat.",
+  ],
+  [
+    "Moet ik zelf teksten en beelden aanleveren?",
+    "Dat helpt, maar het hoeft niet perfect te zijn. We kunnen ook meedenken over structuur, richting en wat er vooral wél op moet staan om sneller te overtuigen.",
+  ],
+  [
+    "Is dit geschikt als ik later meer wil?",
+    "Ja. De opzet is juist bedoeld om later makkelijker uit te breiden met extra pagina’s, formulieren, reserveringen of andere functionaliteit.",
+  ],
+  [
+    "Waarom werken jullie met een maandmodel?",
+    "Omdat veel ondernemers vooral rust willen. Niet alleen een site die gebouwd wordt, maar ook iemand die hem blijft onderhouden en kleine dingen snel oppakt.",
+  ],
 ];
 
-const WHY_NEW = [
-  "Je website blijft onderhouden en actueel",
-  "Je hebt één partij voor alles rondom je website",
-  "Kleine wijzigingen kunnen snel worden opgepakt",
-  "Je weet vooraf wat je maandelijks betaalt",
-  "Je kunt later makkelijk doorgroeien naar meer functionaliteit",
-];
-
-const HOW_STEPS = [
-  ["1", "Kennismaking", "We bespreken kort je bedrijf, doelgroep en wat je website praktisch moet doen."],
-  ["2", "Ontwerp & opbouw", "Wij bouwen een professionele basis die past bij jouw branche en uitstraling."],
-  ["3", "Feedback & livegang", "Je geeft feedback, wij scherpen aan en zetten je website netjes live."],
-  ["4", "Onderhoud & updates", "Na livegang blijven we betrokken voor beheer, kleine wijzigingen en doorontwikkeling."],
-];
-
-const URGENCY_SPOTS = [1, 2, 3, 4, 5];
 const CTA_META = [
   "Vrijblijvende kennismaking",
   "Heldere maandprijs",
   "Onderhoud inbegrepen",
-  "Snel schakelen via WhatsApp",
+  "Snel contact via WhatsApp",
 ];
 
 export default function Home() {
@@ -1345,8 +1046,8 @@ export default function Home() {
   return (
     <>
       <SEO
-        title="Website laten maken voor kappers, restaurants en lokale bedrijven | Vedantix"
-        description="Binnen 48 uur een professionele website voor kappers, restaurants, klusbedrijven, schoonheidssalons, fotografen en zzp’ers. Gericht op meer aanvragen, minder gedoe en doorlopende ondersteuning."
+        title="Website laten maken voor lokale ondernemers | Vedantix"
+        description="Binnen 48 uur een professionele website voor kappers, restaurants, klusbedrijven, salons, fotografen en zzp’ers. Gericht op meer aanvragen, minder gedoe en doorlopende ondersteuning."
         canonical="https://vedantix.nl/"
       />
 
@@ -1358,93 +1059,95 @@ export default function Home() {
         <main>
           <HomeHero />
 
-          <div className="trusted">
-            <div className="trusted-inner">
-              <span className="trusted-label">Geschikt voor</span>
-              {TRUSTED_BY.map((item) => (
-                <span key={item} className="trusted-pill">
-                  {item}
-                </span>
+          <div className="micro-proof">
+            <div className="micro-proof-inner">
+              <span className="micro-proof-label">Geschikt voor</span>
+              {FITS.map((item) => (
+                <span key={item} className="micro-proof-pill">{item}</span>
               ))}
             </div>
           </div>
 
+          <section className="section-shell">
+            <div className="section-wrap">
+              <div className="promise-grid">
+                {PROMISES.map(([icon, title, text]) => (
+                  <div key={title} className="promise-card">
+                    <div className="promise-icon">{icon}</div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
           <ClientCasesSection />
 
-          <section className="niche-fit-section anchor-section" id="voor-wie">
+          <section className="section-shell alt anchor-section" id="voor-wie">
             <div className="section-wrap">
-              <div className="section-header centered">
-                <div className="section-label">Wat past bij jou?</div>
-                <h2 className="section-h2">Kies jouw branche en zie direct wat meestal het beste past</h2>
+              <div className="section-header center">
+                <div className="section-label">Voor wie dit past</div>
+                <h2 className="section-h2">Kies jouw branche en zie waar de meeste winst zit</h2>
                 <p className="section-p">
-                  Een kapper, restaurant of zzp’er zoekt niet hetzelfde. Daarom zie je hieronder per niche meteen waar de meeste winst zit
-                  en welk pakket meestal het beste aansluit.
+                  Niet elke ondernemer heeft dezelfde website nodig. Kies je branche en zie direct welke richting meestal het beste aansluit.
                 </p>
               </div>
 
-              <div className="niche-fit-grid">
+              <div className="industry-grid">
                 {NICHE_OPTIONS.map((item) => (
                   <button
                     key={item.key}
                     type="button"
-                    className={`niche-fit-card ${selectedNiche === item.key ? "active" : ""}`}
+                    className={`industry-card ${selectedNiche === item.key ? "active" : ""}`}
                     onClick={() => setSelectedNiche(item.key)}
-                    style={{ textAlign: "left" }}
                   >
-                    <div className="niche-fit-top">
-                      <div className="niche-fit-name">{item.name}</div>
-                      <div className="niche-fit-icon">{item.icon}</div>
+                    <div className="industry-head">
+                      <div className="industry-name">{item.name}</div>
+                      <div className="industry-icon">{item.icon}</div>
                     </div>
 
-                    <p className="niche-fit-problem">{item.problem}</p>
-                    <div className="niche-fit-tag">{item.bestFit}</div>
-                    <div className="niche-fit-link">Bekijk richting →</div>
+                    <p className="industry-problem">{item.problem}</p>
+                    <span className="industry-tag">{item.bestFit}</span>
                   </button>
                 ))}
               </div>
 
-              <div className="niche-highlight">
-                <div className="niche-highlight-box">
+              <div className="industry-highlight">
+                <div className="industry-main">
                   <div className="section-label" style={{ marginBottom: 10 }}>
                     Voor {activeNiche.name.toLowerCase()}
                   </div>
-                  <h3>{activeNiche.highlightTitle}</h3>
-                  <p>{activeNiche.highlightText}</p>
+                  <h3>{activeNiche.title}</h3>
+                  <p>{activeNiche.text}</p>
 
-                  <div className="niche-highlight-points">
+                  <div className="bullet-list">
                     {activeNiche.points.map((point) => (
-                      <div key={point} className="niche-highlight-point">
+                      <div key={point} className="bullet-item">
                         <span>{point}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                <div className="niche-highlight-cta">
-                  <a href="#pricing" className="btn-lead">
-                    Bekijk passende pakketten →
-                  </a>
-
-                  <a href={activeNiche.href} className="btn-outline">
-                    Bekijk pagina voor {activeNiche.name.toLowerCase()} →
-                  </a>
-
-                  <div className="niche-highlight-note">
-                    Deze nichepagina’s helpen bezoekers zichzelf sneller te herkennen en werken ook sterk voor SEO.
+                <div className="industry-side">
+                  <a href="#pricing" className="btn-lead">Bekijk passende pakketten →</a>
+                  <a href={activeNiche.href} className="btn-outline">Bekijk branchepagina →</a>
+                  <div className="industry-note">
+                    De branchepagina’s helpen bezoekers zichzelf sneller herkennen en ondersteunen ook je SEO-structuur.
                   </div>
                 </div>
               </div>
             </div>
           </section>
 
-          <section className="problem-section">
+          <section className="section-shell">
             <div className="section-wrap">
               <div className="section-header">
                 <div className="section-label">Het probleem</div>
-                <h2 className="section-h2">De meeste websites van lokale ondernemers laten klanten liggen</h2>
+                <h2 className="section-h2">Veel websites van lokale ondernemers laten onnodig klanten liggen</h2>
                 <p className="section-p">
-                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen opwekt, te weinig richting geeft en
-                  na oplevering vaak stil blijft staan.
+                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen geeft, te weinig richting biedt en daarna vaak stil blijft staan.
                 </p>
               </div>
 
@@ -1460,21 +1163,20 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="difference-section">
+          <section className="section-shell alt">
             <div className="section-wrap">
-              <div className="section-header centered">
+              <div className="section-header center">
                 <div className="section-label">Waarom Vedantix</div>
-                <h2 className="section-h2">Geen tool of los product, maar een website die beter verkoopt</h2>
+                <h2 className="section-h2">Geen technische rompslomp, maar een website die beter verkoopt</h2>
                 <p className="section-p">
-                  Vedantix is er voor lokale ondernemers die geen zin hebben in technisch gedoe, lange trajecten of vage prijzen.
-                  Je krijgt een website die duidelijk oogt, sneller tot actie leidt en gewoon doorlopend wordt bijgehouden.
+                  Vedantix is voor ondernemers die geen zin hebben in losse tools, lange trajecten of vage communicatie. Je krijgt snelheid, duidelijkheid en doorlopende ondersteuning.
                 </p>
               </div>
 
-              <div className="difference-grid">
-                {DIFFERENCE_POINTS.map(([icon, title, text]) => (
-                  <div key={title} className="difference-card">
-                    <div className="difference-icon">{icon}</div>
+              <div className="proof-grid">
+                {PROOF_POINTS.map(([icon, title, text]) => (
+                  <div key={title} className="proof-card">
+                    <div className="proof-icon">{icon}</div>
                     <h3>{title}</h3>
                     <p>{text}</p>
                   </div>
@@ -1485,31 +1187,30 @@ export default function Home() {
 
           <HomePricing />
 
-          <section className="comparison-section">
+          <section className="section-shell alt">
             <div className="section-wrap">
-              <div className="section-header centered">
-                <div className="section-label">Waarom niet zelf bouwen?</div>
-                <h2 className="section-h2">Het verschil zit niet in de tool, maar in het resultaat</h2>
+              <div className="section-header center">
+                <div className="section-label">De echte keuze</div>
+                <h2 className="section-h2">Zelf puzzelen of alles in één keer goed geregeld hebben</h2>
                 <p className="section-p">
-                  Veel ondernemers vergelijken zichzelf onbewust met goedkope builders of hostingpartijen. Maar de echte keuze is vaak:
-                  zelf uitzoeken of alles in één keer goed laten regelen.
+                  De vergelijking is meestal niet met een goedkope builder. De echte vergelijking is of je alles zelf wilt uitzoeken of liever snel iets goeds neerzet met ondersteuning.
                 </p>
               </div>
 
-              <div className="comparison-grid">
-                <div className="comparison-col self">
+              <div className="compare-grid">
+                <div className="compare-col old">
                   <h3>Zelf doen of losse tools combineren</h3>
-                  {COMPARE_SELF.map((item) => (
-                    <div key={item} className="comparison-item">
+                  {COMPARE_OLD.map((item) => (
+                    <div key={item} className="compare-item">
                       <span>{item}</span>
                     </div>
                   ))}
                 </div>
 
-                <div className="comparison-col vedantix">
+                <div className="compare-col new">
                   <h3>Vedantix</h3>
-                  {COMPARE_VEDANTIX.map((item) => (
-                    <div key={item} className="comparison-item">
+                  {COMPARE_NEW.map((item) => (
+                    <div key={item} className="compare-item">
                       <span>{item}</span>
                     </div>
                   ))}
@@ -1520,20 +1221,20 @@ export default function Home() {
 
           <HomeDemoSection />
 
-          <section id="how" className="how-section anchor-section">
+          <section className="section-shell anchor-section" id="how">
             <div className="section-wrap">
-              <div className="section-header centered">
+              <div className="section-header center">
                 <div className="section-label">Werkwijze</div>
-                <h2 className="section-h2">Van eerste bericht naar live website in 4 stappen</h2>
+                <h2 className="section-h2">Van eerste bericht naar live website in 4 heldere stappen</h2>
                 <p className="section-p">
-                  Een duidelijk proces werkt beter dan vage beloftes. Zo weet een klant precies wat hij kan verwachten.
+                  Geen vaag proces. Je weet vooraf hoe we werken, wat je kunt verwachten en hoe snel we kunnen schakelen.
                 </p>
               </div>
 
-              <div className="how-steps">
-                {HOW_STEPS.map(([number, title, text]) => (
-                  <div key={number} className="how-step">
-                    <div className="step-num">{number}</div>
+              <div className="steps-wrap">
+                {STEPS.map(([number, title, text]) => (
+                  <div key={number} className="step-card">
+                    <div className="step-no">{number}</div>
                     <h3>{title}</h3>
                     <p>{text}</p>
                   </div>
@@ -1542,21 +1243,22 @@ export default function Home() {
             </div>
           </section>
 
-          <section className="results-section">
+          <section className="section-shell alt">
             <div className="section-wrap">
               <div className="section-header">
                 <div className="section-label">Wat dit oplevert</div>
-                <h2 className="section-h2">Een betere eerste indruk, meer actie en minder twijfel</h2>
+                <h2 className="section-h2">Meer vertrouwen, meer actie en minder gedoe</h2>
                 <p className="section-p">
-                  Je website hoeft niet alleen mooi te zijn. Hij moet iemand snel overtuigen om te bellen, appen, reserveren of een aanvraag te doen.
+                  Een goede website moet niet alleen netjes ogen. Hij moet iemand overtuigen om contact op te nemen, te reserveren of een aanvraag te sturen.
                 </p>
               </div>
 
-              <div className="results-row">
-                {RESULTS.map(([number, label]) => (
-                  <div key={number} className="result-item">
-                    <div className="result-num">{number}</div>
-                    <div className="result-label">{label}</div>
+              <div className="outcome-grid">
+                {OUTCOMES.map(([icon, title, text]) => (
+                  <div key={title} className="outcome-card">
+                    <div className="outcome-icon">{icon}</div>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
                   </div>
                 ))}
               </div>
@@ -1566,203 +1268,140 @@ export default function Home() {
           <HomeFounderSection />
 
           <div className="trust-strip">
-            <div className="trust-items">
-              {TRUST_ITEMS.map(([icon, text]) => (
-                <div key={text} className="trust-item">
-                  <span className="trust-icon">{icon}</span>
-                  <span>{text}</span>
+            <div className="trust-strip-inner">
+              {TRUST_ITEMS.map((item) => (
+                <div key={item} className="trust-chip">
+                  <span style={{ color: "#22c55e" }}>✓</span>
+                  <span>{item}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <section className="roi-section">
-            <div className="roi-inner">
-              <h2 className="roi-title">Waarom dit voor veel ondernemers fijner werkt dan een losse oplevering</h2>
-              <p className="roi-subtitle">
-                Je betaalt niet alleen voor het bouwen van een website, maar ook voor het bijhouden, ondersteunen en verbeteren ervan.
-              </p>
-
-              <div className="roi-comparison">
-                <div className="roi-block" style={{ textAlign: "right" }}>
-                  <div className="roi-value invest">
-                    Vast
-                    <span style={{ fontSize: "1.2rem", fontWeight: 700, color: "#9ca3af" }}> per maand</span>
-                  </div>
-                  <div className="roi-block-label">Duidelijke kosten</div>
+          <section className="section-shell">
+            <div className="section-wrap">
+              <div className="lead-box">
+                <div>
+                  <div className="lead-badge">Gratis · vrijblijvend</div>
+                  <div className="lead-title">Ontvang een eerlijke scan van je huidige website</div>
+                  <p className="lead-text">
+                    We laten concreet zien waar winst zit in duidelijkheid, uitstraling, mobiele gebruikservaring en call-to-actions. Geen vaag advies, maar punten waar je echt iets aan hebt.
+                  </p>
                 </div>
 
-                <div className="roi-divider">
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <div className="roi-arrow-line" />
-                    <div className="roi-arrow-head" />
-                  </div>
-                </div>
-
-                <div className="roi-block" style={{ textAlign: "left" }}>
-                  <div className="roi-value gain">
-                    Rust
-                    <span style={{ fontSize: "1.2rem", fontWeight: 700, color: "#86efac" }}> & continuïteit</span>
-                  </div>
-                  <div className="roi-block-label">Doorlopend geregeld</div>
-                </div>
-              </div>
-
-              <div style={{ borderTop: "1px solid #f3f4f6", paddingTop: 32 }}>
-                <div className="roi-bottom-line">
-                  Geen losse website die je daarna zelf moet beheren of ergens anders moet onderbrengen.
-                </div>
-                <div className="roi-note">
-                  Vooral voor drukke ondernemers is het prettig als onderhoud, updates en ondersteuning gewoon doorlopen.
+                <div className="lead-side">
+                  <h3>Wat je terugkrijgt</h3>
+                  <p>Een korte, duidelijke beoordeling met verbeterpunten waar je direct mee verder kunt.</p>
+                  <ul>
+                    <li>Heldere feedback op je eerste indruk</li>
+                    <li>Verbeterpunten voor mobiel en CTA’s</li>
+                    <li>Reactie binnen 24 uur</li>
+                  </ul>
+                  <a
+                    href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20website%20scan."
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn-wa"
+                  >
+                    Vraag gratis website scan aan →
+                  </a>
+                  <div className="lead-note">Helemaal vrijblijvend. Geen verplichtingen.</div>
                 </div>
               </div>
             </div>
           </section>
 
-          <section className="why-section">
+          <section className="section-shell alt">
             <div className="section-wrap">
-              <div className="section-header">
-                <div className="section-label">Waarom abonnement</div>
-                <h2 className="section-h2">Waarom dit model prettig werkt</h2>
+              <div className="urgency-wrap">
+                <div className="urgency-box">
+                  <div className="urgency-badge">Beperkte capaciteit</div>
+                  <h3>We werken bewust met een beperkt aantal trajecten tegelijk</h3>
+                  <div className="spots">
+                    {[1, 2, 3, 4, 5].map((item) => (
+                      <div key={item} className={`spot ${item <= 3 ? "full" : "open"}`} />
+                    ))}
+                  </div>
+                  <p>
+                    Zo blijft er ruimte voor snelle communicatie, kwaliteit in de uitwerking en aandacht na livegang. Dat werkt beter dan zoveel mogelijk projecten tegelijk aannemen.
+                  </p>
+                </div>
+
+                <div className="guarantee-card">
+                  <h3>Geen druk, wel duidelijkheid</h3>
+                  <p>
+                    Eerst bespreken we wat bij jouw bedrijf past. Daarna beslis jij rustig of je verder wilt. Het doel is een website die echt bijdraagt aan je bedrijf, niet een snelle verkoop om het verkopen.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="section-shell">
+            <div className="section-wrap">
+              <div className="section-header center">
+                <div className="section-label">Veelgestelde vragen</div>
+                <h2 className="section-h2">Praktische vragen, direct beantwoord</h2>
                 <p className="section-p">
-                  Voor veel ondernemers is een abonnement overzichtelijker: één partij, één maandprijs en doorlopende ondersteuning.
+                  Juist bij een eerste websiteproject wil je vooraf weten hoe snel het gaat, wat je zelf moet doen en hoe flexibel het later nog is.
                 </p>
               </div>
 
-              <div className="why-grid">
-                <div className="why-col old">
-                  <h3>Losse website zonder vervolg</h3>
-                  {WHY_OLD.map((item) => (
-                    <div key={item} className="why-li">
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="why-col new">
-                  <h3>Abonnement met doorlopende ondersteuning</h3>
-                  {WHY_NEW.map((item) => (
-                    <div key={item} className="why-li">
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="lead-magnet-section">
-            <div className="lead-magnet-inner">
-              <div className="lead-magnet-text">
-                <div className="lead-magnet-badge">🎁 Gratis — geen verplichtingen</div>
-                <div className="lead-magnet-title">Ontvang een eerlijke scan van je huidige website</div>
-                <div className="lead-magnet-sub">
-                  We kijken vrijblijvend naar je online presentatie en laten concreet zien waar winst zit in duidelijkheid,
-                  uitstraling, mobiele gebruikservaring en call-to-actions.
-                </div>
-              </div>
-
-              <div className="lead-magnet-cta">
-                <a
-                  href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20website%20scan."
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-lead"
-                >
-                  Vraag gratis website scan aan →
-                </a>
-                <div className="lead-magnet-note">Reactie binnen 24 uur · Helemaal vrijblijvend</div>
-              </div>
-            </div>
-          </section>
-
-          <section className="urgency-section">
-            <div className="urgency-inner">
-              <div className="urgency-box">
-                <div className="urgency-pulse">Persoonlijke aanpak</div>
-                <h3>Wij werken bewust met een beperkt aantal trajecten tegelijk</h3>
-
-                <div className="urgency-spots">
-                  {URGENCY_SPOTS.map((item) => (
-                    <div key={item} className={`spot ${item <= 3 ? "taken" : "free"}`} />
-                  ))}
-                </div>
-
-                <p>Zo houden we ruimte voor kwaliteit, snelle communicatie en doorlopende aandacht na livegang.</p>
-              </div>
-
-              <div className="guarantee-box">
-                <div className="guarantee-icon">🤝</div>
-                <div>
-                  <strong>Geen druk, wel duidelijkheid</strong>
-                  <p>Eerst bespreken we wat bij jouw bedrijf past. Daarna beslis jij rustig of je verder wilt.</p>
-                </div>
+              <div className="faq-grid">
+                {FAQS.map(([question, answer]) => (
+                  <div key={question} className="faq-card">
+                    <h3>{question}</h3>
+                    <p>{answer}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </section>
 
           <section id="cta" className="cta-section anchor-section">
-            <h2>Klaar om je website professioneler en overtuigender neer te zetten?</h2>
-            <p>
-              Plan een vrijblijvende intake en ontdek welk pakket, welke stijl en welke richting het beste past bij jouw bedrijf.
-            </p>
+            <div className="cta-inner">
+              <h2>Klaar voor een website die wél vertrouwen wekt en actie uitlokt?</h2>
+              <p>
+                Plan een vrijblijvende kennismaking en ontdek welke richting, stijl en opbouw het beste past bij jouw bedrijf.
+              </p>
 
-            <div className="cta-btns">
-              <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
-                target="_blank"
-                rel="noreferrer"
-                className="btn-primary"
-                style={{ textAlign: "center" }}
-              >
-                Plan gratis intake →
-              </a>
-
-              <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag%20over%20een%20website."
-                target="_blank"
-                rel="noreferrer"
-                className="btn-wa"
-                style={{ textAlign: "center" }}
-              >
-                💬 Stel je vraag via WhatsApp
-              </a>
-
-              <a href="#voor-wie" className="btn-ghost" style={{ textAlign: "center" }}>
-                Bekijk wat bij jou past →
-              </a>
-            </div>
-
-            <div
-              style={{
-                marginTop: 32,
-                display: "flex",
-                justifyContent: "center",
-                gap: 12,
-                flexWrap: "wrap",
-                position: "relative",
-              }}
-            >
-              {CTA_META.map((item) => (
-                <span
-                  key={item}
-                  style={{
-                    fontSize: "0.78rem",
-                    color: "rgba(255,255,255,0.4)",
-                    fontWeight: 700,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                  }}
+              <div className="cta-actions">
+                <a
+                  href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-dark"
                 >
-                  <span style={{ color: "#22c55e" }}>✓</span> {item}
-                </span>
-              ))}
-            </div>
+                  Plan gratis kennismaking →
+                </a>
 
-            <div className="cta-phone">
-              Liever direct bellen?
-              <strong>+31 6 26 21 99 89</strong>
+                <a
+                  href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag%20over%20een%20website."
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-wa"
+                >
+                  Stel je vraag via WhatsApp
+                </a>
+
+                <a href="#voor-wie" className="btn-ghost">
+                  Bekijk wat bij jou past →
+                </a>
+              </div>
+
+              <div className="cta-meta">
+                {CTA_META.map((item) => (
+                  <div key={item} className="cta-meta-item">
+                    <span style={{ color: "#22c55e" }}>✓</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="cta-phone">
+                Liever direct bellen?
+                <strong>+31 6 26 21 99 89</strong>
+              </div>
             </div>
           </section>
         </main>
