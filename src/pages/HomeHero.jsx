@@ -1,8 +1,8 @@
 const HERO_CHECKS = [
-  "Binnen 48 uur een sterke eerste versie live",
-  "Gebouwd voor contact, aanvragen of afspraken",
-  "Hosting, onderhoud en support onder één partij",
-  "Pas verder als de richting goed voelt",
+  "Sterke eerste versie binnen 48 uur",
+  "Gebouwd voor aanvragen, afspraken en WhatsApp",
+  "Hosting, onderhoud en support geregeld",
+  "Je beslist pas verder als de richting klopt",
 ];
 
 const MOCKUP_SERVICES = [
@@ -16,7 +16,7 @@ export const HOME_HERO_STYLES = `
     background:#fff;
     color:#0f172a;
     padding:14px 24px;
-    border-radius:10px;
+    border-radius:12px;
     font-weight:800;
     font-size:.9rem;
     text-decoration:none;
@@ -27,21 +27,21 @@ export const HOME_HERO_STYLES = `
     border:none;
     cursor:pointer;
     letter-spacing:-.1px;
-    box-shadow:0 4px 16px rgba(0,0,0,.22);
-    min-height:48px;
+    box-shadow:0 8px 24px rgba(0,0,0,.24);
+    min-height:50px;
     white-space:nowrap;
   }
   .btn-primary:hover{
     background:#f1f5f9;
     transform:translateY(-2px);
-    box-shadow:0 10px 28px rgba(0,0,0,.30)
+    box-shadow:0 14px 30px rgba(0,0,0,.30)
   }
 
   .btn-wa{
     background:#25d366;
     color:#fff;
     padding:14px 24px;
-    border-radius:10px;
+    border-radius:12px;
     font-weight:800;
     font-size:.9rem;
     text-decoration:none;
@@ -51,22 +51,22 @@ export const HOME_HERO_STYLES = `
     transition:all .25s cubic-bezier(.4,0,.2,1);
     border:none;
     cursor:pointer;
-    box-shadow:0 4px 18px rgba(37,211,102,.28);
-    min-height:48px;
+    box-shadow:0 8px 24px rgba(37,211,102,.24);
+    min-height:50px;
     white-space:nowrap;
   }
   .btn-wa:hover{
     background:#22c55e;
     transform:translateY(-2px);
-    box-shadow:0 10px 28px rgba(37,211,102,.38)
+    box-shadow:0 14px 30px rgba(37,211,102,.34)
   }
 
   .btn-ghost{
     background:rgba(255,255,255,.06);
     color:#fff;
-    border:1.5px solid rgba(255,255,255,.18);
+    border:1.5px solid rgba(255,255,255,.16);
     padding:13px 22px;
-    border-radius:10px;
+    border-radius:12px;
     font-weight:800;
     font-size:.9rem;
     text-decoration:none;
@@ -76,22 +76,22 @@ export const HOME_HERO_STYLES = `
     transition:all .25s;
     cursor:pointer;
     backdrop-filter:blur(4px);
-    min-height:48px;
+    min-height:50px;
     white-space:nowrap;
   }
   .btn-ghost:hover{
-    background:rgba(255,255,255,.12);
+    background:rgba(255,255,255,.1);
     border-color:rgba(255,255,255,.28);
     color:#fff;
     transform:translateY(-2px)
   }
 
   .hero{
-    background:linear-gradient(150deg,#060c1a 0%,#0a1428 40%,#0d1f3c 70%,#0f1e38 100%);
+    background:linear-gradient(150deg,#060c1a 0%,#0a1428 38%,#0d1f3c 72%,#0f1e38 100%);
     min-height:calc(100svh - 72px);
     display:flex;
     align-items:center;
-    padding:104px 5% 40px;
+    padding:104px 5% 44px;
     position:relative;
     overflow:hidden;
   }
@@ -100,8 +100,8 @@ export const HOME_HERO_STYLES = `
     position:absolute;
     inset:0;
     background:
-      radial-gradient(ellipse at 65% 38%,rgba(59,130,246,.13) 0%,transparent 58%),
-      radial-gradient(ellipse at 20% 80%,rgba(99,102,241,.07) 0%,transparent 50%);
+      radial-gradient(ellipse at 68% 36%,rgba(59,130,246,.14) 0%,transparent 58%),
+      radial-gradient(ellipse at 20% 80%,rgba(99,102,241,.08) 0%,transparent 52%);
     pointer-events:none
   }
 
@@ -110,8 +110,8 @@ export const HOME_HERO_STYLES = `
     margin:0 auto;
     width:100%;
     display:grid;
-    grid-template-columns:minmax(0,1.02fr) minmax(320px,.84fr);
-    gap:34px;
+    grid-template-columns:minmax(0,1.04fr) minmax(320px,.84fr);
+    gap:36px;
     align-items:center;
   }
 
@@ -127,13 +127,13 @@ export const HOME_HERO_STYLES = `
     gap:8px;
     background:rgba(255,255,255,.06);
     border:1px solid rgba(255,255,255,.1);
-    color:rgba(255,255,255,.78);
+    color:rgba(255,255,255,.8);
     font-size:.66rem;
-    font-weight:700;
+    font-weight:800;
     text-transform:uppercase;
     letter-spacing:1.7px;
     padding:8px 16px;
-    border-radius:100px;
+    border-radius:999px;
     margin-bottom:18px
   }
   .hero-eyebrow::before{
@@ -147,15 +147,16 @@ export const HOME_HERO_STYLES = `
   }
 
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
   .hero h1{
-    font-size:clamp(2.45rem,4.4vw,3.8rem);
+    font-size:clamp(2.5rem,4.4vw,4rem);
     font-weight:900;
     line-height:1.02;
     color:#fff;
-    margin-bottom:14px;
+    margin-bottom:16px;
     letter-spacing:-1.8px;
-    max-width:690px;
+    max-width:720px;
   }
   .hero h1 span{
     background:linear-gradient(125deg,#60a5fa 0%,#818cf8 50%,#a78bfa 100%);
@@ -165,37 +166,36 @@ export const HOME_HERO_STYLES = `
   }
 
   .hero-sub{
-    font-size:.96rem;
-    color:rgba(255,255,255,.68);
-    line-height:1.68;
+    font-size:1rem;
+    color:rgba(255,255,255,.72);
+    line-height:1.72;
     margin-bottom:10px;
-    max-width:590px;
+    max-width:610px;
     font-weight:400
   }
   .hero-sub strong{color:#fff;font-weight:700}
 
   .hero-microcopy{
     font-size:.78rem;
-    color:rgba(255,255,255,.45);
-    margin-bottom:16px;
+    color:rgba(255,255,255,.46);
+    margin-bottom:18px;
     font-weight:600
   }
 
   .hero-checks{
-    margin-bottom:18px;
+    margin-bottom:20px;
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:8px 14px;
-    max-width:660px
+    max-width:680px
   }
   .hero-check{
     display:flex;
     align-items:flex-start;
     gap:10px;
-    font-size:.82rem;
-    color:rgba(255,255,255,.78);
+    font-size:.83rem;
+    color:rgba(255,255,255,.8);
     font-weight:600;
-    letter-spacing:.05px;
     line-height:1.45;
   }
   .hero-check::before{
@@ -211,8 +211,6 @@ export const HOME_HERO_STYLES = `
     display:flex;
     align-items:center;
     justify-content:center;
-    text-align:center;
-    line-height:18px;
     margin-top:1px
   }
 
@@ -221,18 +219,16 @@ export const HOME_HERO_STYLES = `
     gap:10px;
     flex-wrap:wrap;
     align-items:center;
-    margin-bottom:10px
+    margin-bottom:12px
   }
 
-  .hero-ctas a{
-    flex:0 0 auto;
-  }
+  .hero-ctas a{flex:0 0 auto}
 
   .hero-cta-note{
-    font-size:.72rem;
-    color:rgba(255,255,255,.42);
+    font-size:.74rem;
+    color:rgba(255,255,255,.44);
     font-weight:600;
-    margin-bottom:16px
+    margin-bottom:18px
   }
 
   .hero-social-proof{
@@ -243,18 +239,18 @@ export const HOME_HERO_STYLES = `
     border-top:1px solid rgba(255,255,255,.07)
   }
   .hero-sp-stat{
-    font-size:.9rem;
+    font-size:.92rem;
     font-weight:800;
     color:#fff;
     line-height:1;
     margin-bottom:4px
   }
   .hero-sp-text{
-    font-size:.71rem;
-    color:rgba(255,255,255,.42);
+    font-size:.72rem;
+    color:rgba(255,255,255,.44);
     font-weight:500;
     line-height:1.4;
-    max-width:150px;
+    max-width:170px;
   }
 
   .hero-mockup-wrap{
@@ -276,7 +272,7 @@ export const HOME_HERO_STYLES = `
   }
   .hero-mockup{
     background:#fff;
-    border-radius:20px;
+    border-radius:22px;
     overflow:hidden;
     box-shadow:0 0 0 1px rgba(255,255,255,.07),0 24px 64px rgba(0,0,0,.45),0 8px 24px rgba(0,0,0,.22);
     animation:float 5s ease-in-out infinite;
@@ -286,8 +282,6 @@ export const HOME_HERO_STYLES = `
     max-width:470px;
     margin-left:auto;
   }
-
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
   .mockup-bar{
     background:#141a27;
@@ -322,17 +316,11 @@ export const HOME_HERO_STYLES = `
     display:none
   }
 
-  @media (min-width: 1440px) {
-    .hero{
-      padding:112px 5% 48px;
-    }
-  }
-
   @media (max-width: 1280px) {
     .hero{
       min-height:auto;
       align-items:flex-start;
-      padding:96px 5% 38px;
+      padding:96px 5% 40px;
     }
 
     .hero-container{
@@ -342,38 +330,27 @@ export const HOME_HERO_STYLES = `
     }
 
     .hero h1{
-      font-size:clamp(2.1rem,4vw,2.9rem);
+      font-size:clamp(2.15rem,4vw,3rem);
       max-width:620px;
       margin-bottom:12px;
     }
 
     .hero-sub{
-      font-size:.92rem;
-      line-height:1.62;
-      margin-bottom:8px;
+      font-size:.94rem;
+      line-height:1.64;
       max-width:540px;
     }
 
-    .hero-microcopy{
-      display:none;
-    }
-
-    .hero-checks{
-      display:none;
-    }
-
-    .hero-cta-note{
-      display:none;
-    }
-
+    .hero-microcopy,
+    .hero-checks,
+    .hero-cta-note,
     .hero-social-proof{
       display:none;
     }
 
     .hero-ctas{
-      margin-top:8px;
+      margin-top:10px;
       margin-bottom:0;
-      gap:10px;
     }
 
     .btn-primary,
@@ -381,7 +358,7 @@ export const HOME_HERO_STYLES = `
     .btn-ghost{
       padding:12px 18px;
       min-height:46px;
-      font-size:.82rem;
+      font-size:.84rem;
     }
 
     .hero-mockup{
@@ -391,7 +368,7 @@ export const HOME_HERO_STYLES = `
 
   @media (max-width: 1024px){
     .hero{
-      padding:90px 5% 52px;
+      padding:90px 5% 54px;
       min-height:auto;
       align-items:flex-start;
     }
@@ -409,16 +386,16 @@ export const HOME_HERO_STYLES = `
     }
 
     .hero h1{
-      font-size:2.3rem;
-      max-width:700px;
+      font-size:2.35rem;
+      max-width:720px;
       margin-bottom:14px;
     }
 
     .hero-sub{
       margin-left:auto;
       margin-right:auto;
-      max-width:620px;
-      font-size:.94rem;
+      max-width:640px;
+      font-size:.95rem;
       margin-bottom:12px;
     }
 
@@ -430,7 +407,7 @@ export const HOME_HERO_STYLES = `
     .hero-checks{
       display:grid;
       grid-template-columns:1fr;
-      max-width:420px;
+      max-width:440px;
       margin:16px auto 20px;
       text-align:left;
     }
@@ -451,14 +428,6 @@ export const HOME_HERO_STYLES = `
       margin-bottom:12px;
     }
 
-    .btn-primary,
-    .btn-wa,
-    .btn-ghost{
-      padding:13px 20px;
-      min-height:48px;
-      font-size:.86rem;
-    }
-
     .hero-mockup-wrap{
       max-width:540px;
       margin:0 auto;
@@ -477,7 +446,7 @@ export const HOME_HERO_STYLES = `
     }
 
     .hero h1{
-      font-size:1.95rem;
+      font-size:1.98rem;
       line-height:1.08;
       letter-spacing:-1px;
       margin-bottom:12px;
@@ -485,23 +454,13 @@ export const HOME_HERO_STYLES = `
 
     .hero-sub{
       font-size:.9rem;
-      line-height:1.66;
+      line-height:1.68;
       margin-bottom:10px;
     }
 
-    .hero-microcopy{
-      font-size:.76rem;
-      margin-bottom:14px;
-    }
-
-    .hero-checks{
-      display:none;
-    }
-
-    .hero-social-proof{
-      display:none;
-    }
-
+    .hero-microcopy,
+    .hero-checks,
+    .hero-social-proof,
     .hero-cta-note{
       display:none;
     }
@@ -513,26 +472,12 @@ export const HOME_HERO_STYLES = `
       margin-bottom:0;
     }
 
-    .hero-ctas a{
-      width:100%;
-      text-align:center;
-    }
-
+    .hero-ctas a,
     .btn-primary,
     .btn-wa,
     .btn-ghost{
       width:100%;
-      min-height:48px;
-      font-size:.86rem;
-      padding:13px 18px;
-    }
-
-    .hero-mockup-wrap{
-      max-width:100%;
-    }
-
-    .hero-mockup{
-      max-width:100%;
+      text-align:center;
     }
   }
 
@@ -549,23 +494,15 @@ export const HOME_HERO_STYLES = `
     }
 
     .hero h1{
-      font-size:1.78rem;
+      font-size:1.8rem;
     }
 
     .hero-sub{
       font-size:.88rem;
     }
 
-    .hero-microcopy{
-      display:none;
-    }
-
     .hero-mockup-wrap::before{
       display:none;
-    }
-
-    .mockup-bar{
-      padding:10px 12px;
     }
   }
 
@@ -575,7 +512,7 @@ export const HOME_HERO_STYLES = `
     }
 
     .hero h1{
-      font-size:1.62rem;
+      font-size:1.64rem;
       letter-spacing:-.7px;
     }
 
@@ -606,18 +543,16 @@ export default function HomeHero() {
       <section className="hero">
         <div className="hero-container">
           <div className="hero-content">
-            <div className="hero-eyebrow">Voor kappers, salons, restaurants en lokale bedrijven</div>
+            <div className="hero-eyebrow">Voor lokale ondernemers die meer aanvragen willen</div>
 
             <h1>
-              Meer klanten via jouw website —
+              Een website die <span>vertrouwen wekt</span>
               <br />
-              <span>binnen 48 uur live</span>
+              en sneller klanten oplevert
             </h1>
 
             <p className="hero-sub">
-              Vedantix bouwt websites voor lokale ondernemers die <strong>professioneel willen overkomen en sneller aanvragen,
-                afspraken of contactmomenten</strong> willen binnenhalen. Geen lang traject, geen technisch gedoe, wel een website
-              die direct duidelijk maakt waarom iemand voor jou moet kiezen.
+              Vedantix bouwt websites voor lokale ondernemers die <strong>professioneler willen overkomen en meer afspraken, aanvragen of contactmomenten</strong> willen binnenhalen. Snel opgezet, duidelijk gepositioneerd en zonder technisch gedoe.
             </p>
 
             <div className="hero-microcopy">
@@ -640,23 +575,21 @@ export default function HomeHero() {
                 className="btn-primary"
                 style={{ textAlign: "center" }}
               >
-                Plan gratis intake →
+                Plan gratis kennismaking →
               </a>
 
               <a
-                href="#demo"
-                className="btn-ghost"
+                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20website%20scan."
+                target="_blank"
+                rel="noreferrer"
+                className="btn-wa"
                 style={{ textAlign: "center" }}
               >
+                Vraag gratis website scan aan
+              </a>
+
+              <a href="#demo" className="btn-ghost" style={{ textAlign: "center" }}>
                 Bekijk demo’s →
-              </a>
-
-              <a
-                href="#prijzen"
-                className="btn-ghost"
-                style={{ textAlign: "center" }}
-              >
-                Bekijk pakketten →
               </a>
             </div>
 
@@ -666,18 +599,18 @@ export default function HomeHero() {
 
             <div className="hero-social-proof">
               <div>
-                <div className="hero-sp-stat">Duidelijk</div>
-                <div className="hero-sp-text">Sterke boodschap en betere eerste indruk</div>
+                <div className="hero-sp-stat">Sterkere eerste indruk</div>
+                <div className="hero-sp-text">Professioneler overkomen vanaf het eerste bezoek</div>
               </div>
               <div style={{ width: 1, height: 32, background: "rgba(255,255,255,0.08)" }} />
               <div>
-                <div className="hero-sp-stat">Praktisch</div>
-                <div className="hero-sp-text">Gebouwd voor contact, aanvragen en afspraken</div>
+                <div className="hero-sp-stat">Meer actie</div>
+                <div className="hero-sp-text">Gebouwd voor bellen, WhatsApp, offerte of afspraak</div>
               </div>
               <div style={{ width: 1, height: 32, background: "rgba(255,255,255,0.08)" }} />
               <div>
-                <div className="hero-sp-stat">Zonder gedoe</div>
-                <div className="hero-sp-text">Hosting, onderhoud en support blijven geregeld</div>
+                <div className="hero-sp-stat">Minder gedoe</div>
+                <div className="hero-sp-text">Hosting, onderhoud en support onder één partij</div>
               </div>
             </div>
           </div>
