@@ -654,7 +654,7 @@ export default function HomeHero() {
               <br />
               <span>vertrouwen wekt</span>
               <br />
-              en meer aanvragen oplevert
+              en klanten aantrekt
             </h1>
 
             <p className="hero-sub">
