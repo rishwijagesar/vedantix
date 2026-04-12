@@ -1,13 +1,13 @@
 const PRICING_STYLES = `
   .pricing-section{
     padding:88px 5%;
-    background:#fff
+    background:#fff;
   }
 
   .pricing-intro{
     max-width:760px;
     margin:0 auto 14px;
-    text-align:center
+    text-align:center;
   }
 
   .pricing-kicker{
@@ -20,14 +20,14 @@ const PRICING_STYLES = `
     font-size:.72rem;
     font-weight:800;
     letter-spacing:1px;
-    text-transform:uppercase
+    text-transform:uppercase;
   }
 
   .pricing-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:18px;
-    align-items:stretch
+    align-items:stretch;
   }
 
   .pricing-card{
@@ -39,19 +39,19 @@ const PRICING_STYLES = `
     background:#fff;
     display:flex;
     flex-direction:column;
-    min-height:100%
+    min-height:100%;
   }
 
   .pricing-card:hover{
     border-color:#dbe4ff;
     box-shadow:0 18px 46px rgba(99,102,241,.08);
-    transform:translateY(-2px)
+    transform:translateY(-2px);
   }
 
   .pricing-card.featured{
     border-color:#6366f1;
     background:linear-gradient(160deg,#fafbff,#f4f3ff);
-    box-shadow:0 20px 56px rgba(99,102,241,.14)
+    box-shadow:0 20px 56px rgba(99,102,241,.14);
   }
 
   .pricing-badge{
@@ -68,7 +68,7 @@ const PRICING_STYLES = `
     text-transform:uppercase;
     letter-spacing:1px;
     white-space:nowrap;
-    box-shadow:0 4px 12px rgba(99,102,241,.3)
+    box-shadow:0 4px 12px rgba(99,102,241,.3);
   }
 
   .p-tier{
@@ -77,20 +77,20 @@ const PRICING_STYLES = `
     text-transform:uppercase;
     letter-spacing:1.5px;
     color:#9ca3af;
-    margin-bottom:8px
+    margin-bottom:8px;
   }
 
   .pricing-card.featured .p-tier{
-    color:#6366f1
+    color:#6366f1;
   }
 
   .p-name{
-    font-size:1.22rem;
+    font-size:1.18rem;
     font-weight:900;
     color:#111827;
     letter-spacing:-.5px;
     line-height:1.2;
-    margin-bottom:10px
+    margin-bottom:10px;
   }
 
   .p-fit{
@@ -104,20 +104,20 @@ const PRICING_STYLES = `
     font-size:.72rem;
     font-weight:800;
     line-height:1.45;
-    margin-bottom:18px
+    margin-bottom:18px;
   }
 
   .pricing-card.featured .p-fit{
     background:#eef2ff;
     border-color:#c7d2fe;
-    color:#4338ca
+    color:#4338ca;
   }
 
   .p-price-row{
     display:flex;
     align-items:flex-end;
     gap:10px;
-    margin-bottom:8px
+    margin-bottom:8px;
   }
 
   .p-price{
@@ -125,28 +125,28 @@ const PRICING_STYLES = `
     font-weight:900;
     color:#111827;
     letter-spacing:-2px;
-    line-height:1
+    line-height:1;
   }
 
   .p-price sup{
     font-size:1rem;
     font-weight:700;
     vertical-align:super;
-    letter-spacing:0
+    letter-spacing:0;
   }
 
   .p-price span{
     font-size:.96rem;
     font-weight:700;
     color:#9ca3af;
-    letter-spacing:0
+    letter-spacing:0;
   }
 
   .p-setup{
     font-size:.78rem;
     color:#94a3b8;
     font-weight:700;
-    margin-bottom:14px
+    margin-bottom:14px;
   }
 
   .p-terms{
@@ -158,23 +158,23 @@ const PRICING_STYLES = `
     font-size:.74rem;
     color:#475569;
     line-height:1.5;
-    font-weight:700
+    font-weight:700;
   }
 
   .pricing-card.featured .p-terms{
     background:#eef2ff;
     border-color:#c7d2fe;
-    color:#4338ca
+    color:#4338ca;
   }
 
   .p-divider{
     height:1px;
     background:#eef2f7;
-    margin-bottom:18px
+    margin-bottom:18px;
   }
 
   .pricing-card.featured .p-divider{
-    background:#dbe4ff
+    background:#dbe4ff;
   }
 
   .p-features{
@@ -184,7 +184,7 @@ const PRICING_STYLES = `
     display:flex;
     flex-direction:column;
     gap:10px;
-    flex:1
+    flex:1;
   }
 
   .p-features li{
@@ -193,7 +193,7 @@ const PRICING_STYLES = `
     display:flex;
     gap:8px;
     align-items:flex-start;
-    line-height:1.55
+    line-height:1.55;
   }
 
   .p-features li::before{
@@ -202,11 +202,11 @@ const PRICING_STYLES = `
     font-weight:900;
     flex-shrink:0;
     margin-top:1px;
-    font-size:.8rem
+    font-size:.8rem;
   }
 
   .pricing-card.featured .p-features li{
-    color:#374151
+    color:#374151;
   }
 
   .p-cta{
@@ -218,46 +218,46 @@ const PRICING_STYLES = `
     font-size:.88rem;
     text-decoration:none;
     transition:all .25s;
-    margin-top:auto
+    margin-top:auto;
   }
 
   .p-cta.default{
     background:#f8fafc;
     color:#374151;
-    border:1.5px solid #e5e7eb
+    border:1.5px solid #e5e7eb;
   }
 
   .p-cta.default:hover{
     background:#f3f4f6;
-    border-color:#d1d5db
+    border-color:#d1d5db;
   }
 
   .p-cta.featured{
     background:linear-gradient(135deg,#6366f1,#8b5cf6);
     color:#fff;
-    box-shadow:0 4px 16px rgba(99,102,241,.25)
+    box-shadow:0 4px 16px rgba(99,102,241,.25);
   }
 
   .p-cta.featured:hover{
     box-shadow:0 8px 24px rgba(99,102,241,.34);
-    transform:translateY(-1px)
+    transform:translateY(-1px);
   }
 
   .pricing-help{
     margin-top:22px;
     font-size:.84rem;
     color:#6b7280;
-    text-align:center
+    text-align:center;
   }
 
   .pricing-help a{
     color:#6366f1;
     font-weight:800;
-    text-decoration:none
+    text-decoration:none;
   }
 
   .pricing-help a:hover{
-    text-decoration:underline
+    text-decoration:underline;
   }
 
   .pricing-decision{
@@ -267,39 +267,39 @@ const PRICING_STYLES = `
     border-radius:18px;
     background:#f8fafc;
     border:1px solid #e5e7eb;
-    text-align:center
+    text-align:center;
   }
 
   .pricing-decision h3{
     font-size:1rem;
     font-weight:900;
     color:#111827;
-    margin-bottom:8px
+    margin-bottom:8px;
   }
 
   .pricing-decision p{
     font-size:.86rem;
     color:#6b7280;
-    line-height:1.7
+    line-height:1.7;
   }
 
   @media(max-width:1024px){
     .pricing-grid{
       grid-template-columns:1fr;
       max-width:620px;
-      margin:0 auto
+      margin:0 auto;
     }
   }
 
   @media(max-width:768px){
     .pricing-section{
-      padding:80px 5%
+      padding:80px 5%;
     }
   }
 
   @media(max-width:480px){
     .pricing-section{
-      padding:60px 5%
+      padding:60px 5%;
     }
   }
 `;
@@ -307,7 +307,7 @@ const PRICING_STYLES = `
 const PACKAGES = [
   {
     tier: "Starter",
-    name: "Voor professioneel online zichtbaar zijn",
+    name: "Voor een sterke eerste indruk",
     fit: "Voor starters, zzp’ers en kleine lokale bedrijven",
     price: "99",
     setup: "€500 setup",
@@ -316,10 +316,10 @@ const PACKAGES = [
     bullets: [
       "Professionele website tot 5 pagina’s",
       "Mobielvriendelijk ontwerp",
-      "WhatsApp, bellen en formulier",
+      "WhatsApp, bellen en contactformulier",
       "Onderhoud en kleine updates inbegrepen",
     ],
-    cta: "Kies Starter →",
+    cta: "Bespreek Starter →",
   },
   {
     tier: "Growth",
@@ -330,16 +330,16 @@ const PACKAGES = [
     featured: true,
     cancelNote: "Opzegbaar vanaf 6 maanden",
     bullets: [
-      "Alles uit Basic",
+      "Alles uit Starter",
       "Meer pagina’s en sterkere SEO-structuur",
-      "Blog of FAQ mogelijk",
-      "Meer ruimte voor diensten en landingspagina’s",
+      "Blog, FAQ of extra landingspagina’s mogelijk",
+      "Meer ruimte om diensten duidelijker te verkopen",
     ],
-    cta: "Kies Growth →",
+    cta: "Bespreek Growth →",
   },
   {
     tier: "Pro",
-    name: "Voor functionaliteit en doorontwikkeling",
+    name: "Voor websites die meer werk uit handen nemen",
     fit: "Voor reserveringen, intake, dashboards en workflows",
     price: "249",
     setup: "€1000 setup",
@@ -348,10 +348,10 @@ const PACKAGES = [
     bullets: [
       "Alles uit Growth",
       "Dashboard of klantomgeving mogelijk",
-      "Reserveringen of intake mogelijk",
+      "Reserveringen, intake of formulieren met logica",
       "Meer maatwerk en doorontwikkeling",
     ],
-    cta: "Kies Pro →",
+    cta: "Bespreek Pro →",
   },
 ];
 
@@ -362,15 +362,17 @@ export default function HomePricing() {
 
       <div className="section-wrap">
         <div className="pricing-intro">
-          <div className="pricing-kicker">Je kiest geen website. Je kiest hoeveel je eruit wilt halen.</div>
+          <div className="pricing-kicker">
+            Kies niet alleen een website — kies hoeveel hij voor je moet doen
+          </div>
         </div>
 
         <div className="section-header centered">
           <div className="section-label">Pakketten</div>
-          <h2 className="section-h2">Van professioneel zichtbaar naar website die echt meewerkt</h2>
+          <h2 className="section-h2">Van professioneel zichtbaar naar een website die actief meewerkt</h2>
           <p className="section-p">
-            Basic is voor een sterke online basis. Growth is voor ondernemers die meer aanvragen willen.
-            Pro is voor bedrijven die hun website ook processen willen laten ondersteunen.
+            Starter is voor een sterke basis. Growth is voor ondernemers die meer aanvragen willen halen uit hun website.
+            Pro is voor bedrijven die ook processen willen ondersteunen of automatiseren.
           </p>
         </div>
 
@@ -402,7 +404,9 @@ export default function HomePricing() {
               </ul>
 
               <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20meer%20weten%20over%20het%20pakket%20dat%20bij%20mijn%20bedrijf%20past."
+                href={`https://wa.me/310626219989?text=${encodeURIComponent(
+                  `Hallo Vedantix, ik wil graag meer weten over het ${pkg.tier} pakket en of dit bij mijn bedrijf past.`
+                )}`}
                 target="_blank"
                 rel="noreferrer"
                 className={`p-cta ${pkg.featured ? "featured" : "default"}`}

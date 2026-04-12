@@ -7,19 +7,16 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  PieChart,
-  Pie,
-  Cell,
   BarChart,
   Bar,
   Legend,
 } from "recharts";
 
 const STORAGE_KEYS = {
-  settings: "vedantix_admin_settings_v5",
-  customers: "vedantix_admin_customers_v5",
-  expenses: "vedantix_admin_expenses_v5",
-  requestLog: "vedantix_admin_request_log_v5",
+  settings: "vedantix_admin_settings_v6",
+  customers: "vedantix_admin_customers_v6",
+  expenses: "vedantix_admin_expenses_v6",
+  requestLog: "vedantix_admin_request_log_v6",
 };
 
 const PACKAGE_OPTIONS = [
@@ -81,7 +78,6 @@ const DEFAULT_SETTINGS = {
   source: "ADMIN_PANEL",
   autoIdempotency: true,
   autoProvisionMail: true,
-  defaultMailboxLocalPart: "info",
 };
 
 const DEFAULT_CUSTOMER_FORM = {
@@ -94,6 +90,10 @@ const DEFAULT_CUSTOMER_FORM = {
   extras: [],
   notes: "",
   monthlyInfraCost: 15,
+  oneTimeSetupCost: 0,
+  address: "",
+  city: "",
+  country: "Nederland",
 };
 
 const DEFAULT_EXPENSE_FORM = {
@@ -101,6 +101,7 @@ const DEFAULT_EXPENSE_FORM = {
   amount: "",
   date: new Date().toISOString().slice(0, 10),
   category: "Overig",
+  customerId: "",
 };
 
 function loadJson(key, fallback) {
@@ -160,7 +161,7 @@ function extrasPrice(extras) {
 
 function calcMonthlyRevenue(customer) {
   return (
-    (packageMeta(customer.packageCode).monthlyPrice || 0) +
+    Number(packageMeta(customer.packageCode).monthlyPrice || 0) +
     extrasPrice(customer.extras || [])
   );
 }
@@ -209,7 +210,37 @@ async function apiRequest(settings, method, path, body) {
   };
 }
 
-function withinFilter(dateString, filterKey) {
+function periodMultiplier(filterKey) {
+  if (filterKey === "day") return 1 / 30;
+  if (filterKey === "week") return 7 / 30;
+  if (filterKey === "month") return 1;
+  if (filterKey === "quarter") return 3;
+  if (filterKey === "halfyear") return 6;
+  return 12;
+}
+
+function buildCustomerPeriodStats(customer, expenses, filterKey) {
+  const multiplier = periodMultiplier(filterKey);
+  const revenue = calcMonthlyRevenue(customer) * multiplier;
+  const infraCost = Number(customer.monthlyInfraCost || 0) * multiplier;
+
+  const directExpenses = expenses
+    .filter((expense) => expense.customerId === customer.id)
+    .filter((expense) => isWithinFilter(expense.date, filterKey))
+    .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+
+  const totalCost = infraCost + directExpenses;
+
+  return {
+    revenue,
+    cost: totalCost,
+    profit: revenue - totalCost,
+    directExpenses,
+    infraCost,
+  };
+}
+
+function isWithinFilter(dateString, filterKey) {
   const d = new Date(dateString);
   const now = new Date();
   const diffMs = now.getTime() - d.getTime();
@@ -223,8 +254,11 @@ function withinFilter(dateString, filterKey) {
   return diffMs <= 366 * dayMs;
 }
 
-function buildTrendData(customers, expenses, filterKey) {
-  const days =
+function buildCustomerTrendData(customer, expenses, filterKey) {
+  const useMonths =
+    filterKey === "quarter" || filterKey === "halfyear" || filterKey === "year";
+
+  const points =
     filterKey === "day"
       ? 1
       : filterKey === "week"
@@ -232,17 +266,14 @@ function buildTrendData(customers, expenses, filterKey) {
         : filterKey === "month"
           ? 30
           : filterKey === "quarter"
-            ? 12
+            ? 3
             : filterKey === "halfyear"
               ? 6
               : 12;
 
-  const useMonths =
-    filterKey === "quarter" || filterKey === "halfyear" || filterKey === "year";
-
   const rows = [];
 
-  for (let i = days - 1; i >= 0; i -= 1) {
+  for (let i = points - 1; i >= 0; i -= 1) {
     const base = new Date();
 
     if (useMonths) {
@@ -250,14 +281,11 @@ function buildTrendData(customers, expenses, filterKey) {
       const month = base.getMonth();
       const year = base.getFullYear();
 
-      const income = customers
-        .filter((customer) => {
-          const start = new Date(customer.createdAt);
-          return start.getMonth() <= month || start.getFullYear() < year;
-        })
-        .reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0);
+      const revenue = calcMonthlyRevenue(customer);
+      const infraCost = Number(customer.monthlyInfraCost || 0);
 
-      const outgoing = expenses
+      const directExpenses = expenses
+        .filter((expense) => expense.customerId === customer.id)
         .filter((expense) => {
           const d = new Date(expense.date);
           return d.getMonth() === month && d.getFullYear() === year;
@@ -269,21 +297,18 @@ function buildTrendData(customers, expenses, filterKey) {
           month: "short",
           year: filterKey === "year" ? "2-digit" : undefined,
         }),
-        omzet: income,
-        uitgaven: outgoing,
-        winst: income - outgoing,
+        omzet: revenue,
+        kosten: infraCost + directExpenses,
+        winst: revenue - (infraCost + directExpenses),
       });
     } else {
       base.setDate(base.getDate() - i);
       const iso = base.toISOString().slice(0, 10);
+      const revenue = calcMonthlyRevenue(customer) / 30;
+      const infraCost = Number(customer.monthlyInfraCost || 0) / 30;
 
-      const income = customers
-        .filter((customer) => {
-          return new Date(customer.createdAt) <= new Date(`${iso}T23:59:59`);
-        })
-        .reduce((sum, customer) => sum + calcMonthlyRevenue(customer) / 30, 0);
-
-      const outgoing = expenses
+      const directExpenses = expenses
+        .filter((expense) => expense.customerId === customer.id)
         .filter((expense) => String(expense.date).slice(0, 10) === iso)
         .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
 
@@ -292,9 +317,91 @@ function buildTrendData(customers, expenses, filterKey) {
           day: "2-digit",
           month: "2-digit",
         }),
-        omzet: Math.round(income),
-        uitgaven: outgoing,
-        winst: Math.round(income - outgoing),
+        omzet: Math.round(revenue),
+        kosten: Math.round(infraCost + directExpenses),
+        winst: Math.round(revenue - (infraCost + directExpenses)),
+      });
+    }
+  }
+
+  return rows;
+}
+
+function buildDashboardTrendData(customers, expenses, filterKey) {
+  const useMonths =
+    filterKey === "quarter" || filterKey === "halfyear" || filterKey === "year";
+
+  const points =
+    filterKey === "day"
+      ? 1
+      : filterKey === "week"
+        ? 7
+        : filterKey === "month"
+          ? 30
+          : filterKey === "quarter"
+            ? 3
+            : filterKey === "halfyear"
+              ? 6
+              : 12;
+
+  const rows = [];
+
+  for (let i = points - 1; i >= 0; i -= 1) {
+    const base = new Date();
+
+    if (useMonths) {
+      base.setMonth(base.getMonth() - i);
+      const month = base.getMonth();
+      const year = base.getFullYear();
+
+      const revenue = customers.reduce(
+        (sum, customer) => sum + calcMonthlyRevenue(customer),
+        0
+      );
+      const infraCost = customers.reduce(
+        (sum, customer) => sum + Number(customer.monthlyInfraCost || 0),
+        0
+      );
+
+      const directExpenses = expenses
+        .filter((expense) => {
+          const d = new Date(expense.date);
+          return d.getMonth() === month && d.getFullYear() === year;
+        })
+        .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+
+      rows.push({
+        label: base.toLocaleDateString("nl-NL", {
+          month: "short",
+          year: filterKey === "year" ? "2-digit" : undefined,
+        }),
+        omzet: revenue,
+        kosten: infraCost + directExpenses,
+        winst: revenue - (infraCost + directExpenses),
+      });
+    } else {
+      base.setDate(base.getDate() - i);
+      const iso = base.toISOString().slice(0, 10);
+      const revenue =
+        customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0) / 30;
+      const infraCost =
+        customers.reduce(
+          (sum, customer) => sum + Number(customer.monthlyInfraCost || 0),
+          0
+        ) / 30;
+
+      const directExpenses = expenses
+        .filter((expense) => String(expense.date).slice(0, 10) === iso)
+        .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+
+      rows.push({
+        label: base.toLocaleDateString("nl-NL", {
+          day: "2-digit",
+          month: "2-digit",
+        }),
+        omzet: Math.round(revenue),
+        kosten: Math.round(infraCost + directExpenses),
+        winst: Math.round(revenue - (infraCost + directExpenses)),
       });
     }
   }
@@ -373,6 +480,7 @@ function Button(props) {
     tone = "default",
     disabled = false,
     type,
+    style = {},
   } = props;
 
   const buttonType = type === "submit" || type === "reset" ? type : "button";
@@ -419,6 +527,7 @@ function Button(props) {
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.6 : 1,
         ...selected,
+        ...style,
       }}
     >
       {children}
@@ -491,6 +600,69 @@ function Field({ label, children }) {
   );
 }
 
+function Modal({ open, title, children, onClose }) {
+  if (!open) return null;
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(15,23,42,0.45)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 1000,
+        padding: 24,
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: "100%",
+          maxWidth: 900,
+          maxHeight: "90vh",
+          overflow: "auto",
+          background: "#ffffff",
+          borderRadius: 24,
+          padding: 24,
+          boxShadow: "0 30px 80px rgba(15,23,42,0.22)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 20,
+          }}
+        >
+          <h3 style={{ fontSize: 26, fontWeight: 900, margin: 0 }}>{title}</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              border: "none",
+              background: "#f1f5f9",
+              width: 42,
+              height: 42,
+              borderRadius: 12,
+              cursor: "pointer",
+              fontSize: 18,
+              fontWeight: 900,
+            }}
+          >
+            ×
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminCRM() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [settings, setSettings] = useState(() =>
@@ -511,7 +683,9 @@ export default function AdminCRM() {
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [customerSearch, setCustomerSearch] = useState("");
   const [financeFilter, setFinanceFilter] = useState("month");
+  const [detailFilter, setDetailFilter] = useState("month");
   const [isProvisioning, setIsProvisioning] = useState(false);
+  const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
 
   useEffect(() => saveJson(STORAGE_KEYS.settings, settings), [settings]);
   useEffect(() => saveJson(STORAGE_KEYS.customers, customers), [customers]);
@@ -542,12 +716,8 @@ export default function AdminCRM() {
   }, [customers, selectedCustomerId]);
 
   const financeExpenses = useMemo(() => {
-    return expenses.filter((item) => withinFilter(item.date, financeFilter));
+    return expenses.filter((item) => isWithinFilter(item.date, financeFilter));
   }, [expenses, financeFilter]);
-
-  const financeCustomers = useMemo(() => {
-    return customers.filter((item) => withinFilter(item.createdAt, financeFilter));
-  }, [customers, financeFilter]);
 
   const totalMonthlyRevenue = useMemo(() => {
     return customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0);
@@ -577,20 +747,6 @@ export default function AdminCRM() {
     return customers.filter((item) => item.status === "warning").length;
   }, [customers]);
 
-  const statusChartData = useMemo(() => {
-    const grouped = customers.reduce((acc, customer) => {
-      const key = customer.status || "lead";
-      acc[key] = (acc[key] || 0) + 1;
-      return acc;
-    }, {});
-
-    return Object.entries(grouped).map(([key, value]) => ({
-      name: STATUS_LABELS[key] || key,
-      value,
-      color: STATUS_COLORS[key] || "#94a3b8",
-    }));
-  }, [customers]);
-
   const packageChartData = useMemo(() => {
     const grouped = customers.reduce((acc, customer) => {
       acc[customer.packageCode] = (acc[customer.packageCode] || 0) + 1;
@@ -606,9 +762,19 @@ export default function AdminCRM() {
     }));
   }, [customers]);
 
-  const trendData = useMemo(() => {
-    return buildTrendData(customers, expenses, financeFilter);
+  const dashboardTrendData = useMemo(() => {
+    return buildDashboardTrendData(customers, expenses, financeFilter);
   }, [customers, expenses, financeFilter]);
+
+  const selectedCustomerStats = useMemo(() => {
+    if (!selectedCustomer) return null;
+    return buildCustomerPeriodStats(selectedCustomer, expenses, detailFilter);
+  }, [selectedCustomer, expenses, detailFilter]);
+
+  const selectedCustomerTrendData = useMemo(() => {
+    if (!selectedCustomer) return [];
+    return buildCustomerTrendData(selectedCustomer, expenses, detailFilter);
+  }, [selectedCustomer, expenses, detailFilter]);
 
   function updateCustomerForm(key, value) {
     setCustomerForm((prev) => ({ ...prev, [key]: value }));
@@ -630,9 +796,15 @@ export default function AdminCRM() {
     });
   }
 
+  function resetCustomerForm() {
+    setCustomerForm(DEFAULT_CUSTOMER_FORM);
+  }
+
   function createCustomerDraft() {
     const companySlug = slugify(customerForm.companyName);
-    const domainSlug = slugify(customerForm.domain.split(".")[0] || customerForm.companyName);
+    const domainSlug = slugify(
+      customerForm.domain.split(".")[0] || customerForm.companyName
+    );
 
     const customerId = `cust_${companySlug || domainSlug || Date.now()}`;
 
@@ -647,6 +819,10 @@ export default function AdminCRM() {
       extras: customerForm.extras,
       notes: customerForm.notes,
       monthlyInfraCost: Number(customerForm.monthlyInfraCost || 0),
+      oneTimeSetupCost: Number(customerForm.oneTimeSetupCost || 0),
+      address: customerForm.address,
+      city: customerForm.city,
+      country: customerForm.country,
       status: "intake",
       createdAt: new Date().toISOString(),
       deploymentId: "",
@@ -786,7 +962,8 @@ export default function AdminCRM() {
       }
 
       setRequestLog((prev) => [...requestEntries, ...prev].slice(0, 100));
-      setCustomerForm(DEFAULT_CUSTOMER_FORM);
+      resetCustomerForm();
+      setIsCreateCustomerOpen(false);
       setActiveTab("customers");
     } catch (error) {
       const failedEntry = {
@@ -902,40 +1079,6 @@ export default function AdminCRM() {
     setRequestLog((prev) => [historyEntry, ...prev].slice(0, 100));
   }
 
-  async function deleteCustomerDeployment(customer) {
-    if (!customer || !customer.deploymentId) return;
-
-    const result = await apiRequest(
-      settings,
-      "POST",
-      `/api/deployments/${customer.deploymentId}/delete`,
-      {}
-    );
-
-    const historyEntry = {
-      id:
-        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-        `delete-${Date.now()}`,
-      at: new Date().toISOString(),
-      type: "DELETE_DEPLOYMENT",
-      result,
-    };
-
-    setCustomers((prev) =>
-      prev.map((item) =>
-        item.id === customer.id
-          ? {
-              ...item,
-              status: result.ok ? "cancelled" : "failed",
-              requestHistory: [historyEntry, ...(item.requestHistory || [])].slice(0, 20),
-            }
-          : item
-      )
-    );
-
-    setRequestLog((prev) => [historyEntry, ...prev].slice(0, 100));
-  }
-
   function saveCustomerEdits(nextCustomer) {
     setCustomers((prev) =>
       prev.map((item) => (item.id === nextCustomer.id ? nextCustomer : item))
@@ -960,6 +1103,7 @@ export default function AdminCRM() {
       amount: Number(expenseForm.amount),
       date: expenseForm.date,
       category: expenseForm.category,
+      customerId: expenseForm.customerId,
       createdAt: new Date().toISOString(),
     };
 
@@ -1013,7 +1157,7 @@ export default function AdminCRM() {
           "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       }}
     >
-      <div style={{ maxWidth: 1600, margin: "0 auto", padding: 24 }}>
+      <div style={{ maxWidth: 1680, margin: "0 auto", padding: 24 }}>
         <div
           style={{
             display: "flex",
@@ -1036,7 +1180,7 @@ export default function AdminCRM() {
               Vedantix Admin Dashboard
             </h1>
             <p style={{ color: "#64748b", fontSize: 15 }}>
-              Overzichtelijke CRM, deployment monitoring en financieel dashboard.
+              CRM, deployment monitoring en financieel overzicht.
             </p>
           </div>
 
@@ -1102,7 +1246,7 @@ export default function AdminCRM() {
               <StatCard
                 title="Uitgaven"
                 value={currency(totalMonthlyCosts)}
-                subtitle="Infra + handmatige kosten"
+                subtitle="Infra + extra kosten"
                 tone="#f97316"
               />
               <StatCard
@@ -1128,200 +1272,8 @@ export default function AdminCRM() {
             >
               <Card>
                 <SectionTitle
-                  title="Nieuwe klant"
-                  subtitle="Vul alleen de essentiële gegevens in. Met één knop wordt deployment en optioneel mail gestart."
-                  action={
-                    <Button
-                      tone="primary"
-                      onClick={addCustomerAndProvision}
-                      disabled={isProvisioning}
-                    >
-                      {isProvisioning ? "Bezig..." : "Klant aanmaken en regelen"}
-                    </Button>
-                  }
-                />
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                    gap: 14,
-                  }}
-                >
-                  <Field label="Bedrijfsnaam">
-                    <Input
-                      value={customerForm.companyName}
-                      onChange={(e) => updateCustomerForm("companyName", e.target.value)}
-                      placeholder="Vedantix Example"
-                    />
-                  </Field>
-
-                  <Field label="Contactpersoon">
-                    <Input
-                      value={customerForm.contactName}
-                      onChange={(e) => updateCustomerForm("contactName", e.target.value)}
-                      placeholder="Rishwi Jagesar"
-                    />
-                  </Field>
-
-                  <Field label="E-mail">
-                    <Input
-                      value={customerForm.email}
-                      onChange={(e) => updateCustomerForm("email", e.target.value)}
-                      placeholder="info@bedrijf.nl"
-                    />
-                  </Field>
-
-                  <Field label="Telefoon">
-                    <Input
-                      value={customerForm.phone}
-                      onChange={(e) => updateCustomerForm("phone", e.target.value)}
-                      placeholder="+31 6 12345678"
-                    />
-                  </Field>
-
-                  <Field label="Domeinnaam">
-                    <Input
-                      value={customerForm.domain}
-                      onChange={(e) => updateCustomerForm("domain", e.target.value)}
-                      placeholder="bedrijf.nl"
-                    />
-                  </Field>
-
-                  <Field label="Pakket">
-                    <Select
-                      value={customerForm.packageCode}
-                      onChange={(e) => updateCustomerForm("packageCode", e.target.value)}
-                    >
-                      {PACKAGE_OPTIONS.map((item) => (
-                        <option key={item.code} value={item.code}>
-                          {item.label} — {currency(item.monthlyPrice)}/m
-                        </option>
-                      ))}
-                    </Select>
-                  </Field>
-
-                  <Field label="Geschatte infra-kosten p/m">
-                    <Input
-                      type="number"
-                      min="0"
-                      value={customerForm.monthlyInfraCost}
-                      onChange={(e) =>
-                        updateCustomerForm("monthlyInfraCost", e.target.value)
-                      }
-                    />
-                  </Field>
-
-                  <Field label="Extra’s">
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                        gap: 10,
-                        border: "1px solid #cbd5e1",
-                        borderRadius: 14,
-                        padding: 12,
-                        background: "#ffffff",
-                      }}
-                    >
-                      {EXTRA_OPTIONS.map((extra) => (
-                        <label
-                          key={extra.code}
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 8,
-                            color: "#334155",
-                            fontSize: 14,
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={customerForm.extras.includes(extra.code)}
-                            onChange={() => toggleExtra(extra.code)}
-                          />
-                          <span>
-                            {extra.label} ({currency(extra.monthlyPrice)})
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  </Field>
-
-                  <div style={{ gridColumn: "1 / -1" }}>
-                    <Field label="Notities">
-                      <Textarea
-                        value={customerForm.notes}
-                        onChange={(e) => updateCustomerForm("notes", e.target.value)}
-                        placeholder="Opmerkingen, wensen, intake-info..."
-                      />
-                    </Field>
-                  </div>
-                </div>
-              </Card>
-
-              <Card>
-                <SectionTitle
-                  title="Snelle status"
-                  subtitle="Direct zicht op klanten die aandacht nodig hebben."
-                />
-
-                <div style={{ display: "grid", gap: 12 }}>
-                  {customers.slice(0, 8).map((customer) => (
-                    <div
-                      key={customer.id}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        gap: 12,
-                        border: "1px solid #e2e8f0",
-                        borderRadius: 16,
-                        padding: 14,
-                        cursor: "pointer",
-                      }}
-                      onClick={() => {
-                        setSelectedCustomerId(customer.id);
-                        setActiveTab("customers");
-                      }}
-                    >
-                      <div>
-                        <div style={{ fontWeight: 800 }}>{customer.companyName}</div>
-                        <div style={{ color: "#64748b", fontSize: 13 }}>{customer.domain}</div>
-                      </div>
-                      <div
-                        style={{
-                          padding: "6px 10px",
-                          borderRadius: 999,
-                          background: `${STATUS_COLORS[customer.status] || "#94a3b8"}20`,
-                          color: STATUS_COLORS[customer.status] || "#94a3b8",
-                          fontWeight: 800,
-                          fontSize: 12,
-                        }}
-                      >
-                        {STATUS_LABELS[customer.status] || customer.status}
-                      </div>
-                    </div>
-                  ))}
-
-                  {customers.length === 0 ? (
-                    <div style={{ color: "#64748b" }}>Nog geen klanten toegevoegd.</div>
-                  ) : null}
-                </div>
-              </Card>
-            </div>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.2fr 0.8fr",
-                gap: 18,
-              }}
-            >
-              <Card>
-                <SectionTitle
-                  title="Omzet, uitgaven en winst"
-                  subtitle="Grafiek op basis van klanten en handmatige uitgaven."
+                  title="Omzet, kosten en winst"
+                  subtitle="Totaal overzicht van al je klanten."
                   action={
                     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                       {TIME_FILTERS.map((item) => (
@@ -1336,18 +1288,17 @@ export default function AdminCRM() {
                     </div>
                   }
                 />
-
                 <div style={{ width: "100%", height: 340 }}>
                   <ResponsiveContainer>
-                    <AreaChart data={trendData}>
+                    <AreaChart data={dashboardTrendData}>
                       <defs>
-                        <linearGradient id="colorOmzet" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.35} />
-                          <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0.03} />
+                        <linearGradient id="dashRevenue" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0.04} />
                         </linearGradient>
-                        <linearGradient id="colorWinst" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.35} />
-                          <stop offset="95%" stopColor="#10b981" stopOpacity={0.03} />
+                        <linearGradient id="dashProfit" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0.04} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
@@ -1358,14 +1309,14 @@ export default function AdminCRM() {
                         type="monotone"
                         dataKey="omzet"
                         stroke="#0ea5e9"
-                        fill="url(#colorOmzet)"
+                        fill="url(#dashRevenue)"
                         strokeWidth={2}
                       />
                       <Area
                         type="monotone"
                         dataKey="winst"
                         stroke="#10b981"
-                        fill="url(#colorWinst)"
+                        fill="url(#dashProfit)"
                         strokeWidth={2}
                       />
                     </AreaChart>
@@ -1375,56 +1326,21 @@ export default function AdminCRM() {
 
               <Card>
                 <SectionTitle
-                  title="Statusverdeling"
-                  subtitle="Welke klanten live zijn, fouten hebben of aandacht nodig hebben."
+                  title="Pakketten"
+                  subtitle="Aantal klanten en omzet per pakket."
                 />
-
                 <div style={{ width: "100%", height: 340 }}>
                   <ResponsiveContainer>
-                    <PieChart>
-                      <Pie
-                        data={statusChartData}
-                        dataKey="value"
-                        nameKey="name"
-                        innerRadius={70}
-                        outerRadius={110}
-                        paddingAngle={4}
-                      >
-                        {statusChartData.map((entry) => (
-                          <Cell key={entry.name} fill={entry.color} />
-                        ))}
-                      </Pie>
+                    <BarChart data={packageChartData}>
+                      <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+                      <XAxis dataKey="name" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
                       <Tooltip />
-                    </PieChart>
+                      <Legend />
+                      <Bar dataKey="klanten" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="omzet" fill="#10b981" radius={[8, 8, 0, 0]} />
+                    </BarChart>
                   </ResponsiveContainer>
-                </div>
-
-                <div style={{ display: "grid", gap: 10 }}>
-                  {statusChartData.map((item) => (
-                    <div
-                      key={item.name}
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        fontSize: 14,
-                        color: "#334155",
-                      }}
-                    >
-                      <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <span
-                          style={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: 999,
-                            background: item.color,
-                            display: "inline-block",
-                          }}
-                        />
-                        {item.name}
-                      </span>
-                      <strong>{item.value}</strong>
-                    </div>
-                  ))}
                 </div>
               </Card>
             </div>
@@ -1432,224 +1348,367 @@ export default function AdminCRM() {
         )}
 
         {activeTab === "customers" && (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: selectedCustomer ? "0.95fr 1.05fr" : "1fr",
-              gap: 18,
-            }}
-          >
+          <div style={{ display: "grid", gap: 18 }}>
             <Card>
               <SectionTitle
                 title="Klanten"
-                subtitle="Klik op een klant voor detailinformatie, documenten en acties."
+                subtitle="Overzicht van alle klanten met snelle acties."
                 action={
-                  <Input
-                    value={customerSearch}
-                    onChange={(e) => setCustomerSearch(e.target.value)}
-                    placeholder="Zoek op bedrijf, contact, domein..."
-                    style={{ minWidth: 280 }}
-                  />
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                    <Input
+                      value={customerSearch}
+                      onChange={(e) => setCustomerSearch(e.target.value)}
+                      placeholder="Zoek op bedrijf, contact, domein..."
+                      style={{ minWidth: 280 }}
+                    />
+                    <Button
+                      tone="primary"
+                      onClick={() => setIsCreateCustomerOpen(true)}
+                    >
+                      + Klant aanmaken
+                    </Button>
+                  </div>
                 }
               />
 
-              <div style={{ display: "grid", gap: 12 }}>
-                {filteredCustomers.map((customer) => (
-                  <div
-                    key={customer.id}
-                    onClick={() => setSelectedCustomerId(customer.id)}
-                    style={{
-                      border:
-                        selectedCustomerId === customer.id
-                          ? "2px solid #0f172a"
-                          : "1px solid #e2e8f0",
-                      borderRadius: 18,
-                      padding: 16,
-                      cursor: "pointer",
-                      background: selectedCustomerId === customer.id ? "#f8fafc" : "#ffffff",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: "1.2fr auto auto",
-                        gap: 16,
-                        alignItems: "center",
-                      }}
-                    >
-                      <div>
-                        <div style={{ fontWeight: 900, fontSize: 17, marginBottom: 4 }}>
-                          {customer.companyName}
-                        </div>
-                        <div style={{ color: "#64748b", fontSize: 14 }}>
-                          {customer.contactName} · {customer.email}
-                        </div>
-                        <div style={{ color: "#334155", fontSize: 14, marginTop: 6 }}>
-                          {customer.domain}
-                        </div>
-                      </div>
-
-                      <div style={{ textAlign: "right" }}>
-                        <div
+              <div
+                style={{
+                  overflowX: "auto",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: 18,
+                }}
+              >
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    minWidth: 980,
+                    background: "#ffffff",
+                  }}
+                >
+                  <thead>
+                    <tr style={{ background: "#f8fafc" }}>
+                      {[
+                        "Bedrijf",
+                        "Contact",
+                        "Domeinnaam",
+                        "Pakket",
+                        "Status",
+                        "Omzet p/m",
+                        "Acties",
+                      ].map((header) => (
+                        <th
+                          key={header}
                           style={{
-                            padding: "6px 10px",
-                            borderRadius: 999,
-                            background: `${STATUS_COLORS[customer.status] || "#94a3b8"}20`,
-                            color: STATUS_COLORS[customer.status] || "#94a3b8",
-                            fontWeight: 900,
+                            textAlign: "left",
+                            padding: "14px 16px",
+                            color: "#475569",
                             fontSize: 12,
-                            marginBottom: 8,
+                            letterSpacing: 0.4,
+                            textTransform: "uppercase",
+                            borderBottom: "1px solid #e2e8f0",
                           }}
                         >
-                          {STATUS_LABELS[customer.status] || customer.status}
-                        </div>
-                        <div style={{ color: "#64748b", fontSize: 12 }}>
+                          {header}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCustomers.map((customer) => (
+                      <tr
+                        key={customer.id}
+                        style={{
+                          borderBottom: "1px solid #e2e8f0",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => setSelectedCustomerId(customer.id)}
+                      >
+                        <td style={{ padding: "16px" }}>
+                          <div style={{ fontWeight: 900 }}>{customer.companyName}</div>
+                          <div style={{ color: "#64748b", fontSize: 13 }}>{customer.id}</div>
+                        </td>
+                        <td style={{ padding: "16px" }}>
+                          <div>{customer.contactName}</div>
+                          <div style={{ color: "#64748b", fontSize: 13 }}>
+                            {customer.email}
+                          </div>
+                        </td>
+                        <td style={{ padding: "16px" }}>{customer.domain}</td>
+                        <td style={{ padding: "16px" }}>
                           {packageMeta(customer.packageCode).label}
-                        </div>
-                      </div>
-
-                      <div style={{ textAlign: "right" }}>
-                        <div style={{ fontWeight: 900, fontSize: 18 }}>
+                        </td>
+                        <td style={{ padding: "16px" }}>
+                          <span
+                            style={{
+                              padding: "6px 10px",
+                              borderRadius: 999,
+                              background: `${STATUS_COLORS[customer.status] || "#94a3b8"}20`,
+                              color: STATUS_COLORS[customer.status] || "#94a3b8",
+                              fontWeight: 900,
+                              fontSize: 12,
+                            }}
+                          >
+                            {STATUS_LABELS[customer.status] || customer.status}
+                          </span>
+                        </td>
+                        <td style={{ padding: "16px", fontWeight: 800 }}>
                           {currency(calcMonthlyRevenue(customer))}
-                        </div>
-                        <div style={{ color: "#64748b", fontSize: 12 }}>per maand</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                        </td>
+                        <td
+                          style={{ padding: "16px" }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                            <Button
+                              tone="soft"
+                              onClick={() => setSelectedCustomerId(customer.id)}
+                            >
+                              Beheren
+                            </Button>
+                            <Button
+                              onClick={() => refreshCustomerDeployment(customer)}
+                            >
+                              Refresh
+                            </Button>
+                            <Button
+                              tone="danger"
+                              onClick={() => removeCustomer(customer.id)}
+                            >
+                              Verwijderen
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
 
-                {filteredCustomers.length === 0 ? (
-                  <div style={{ color: "#64748b" }}>Geen klanten gevonden.</div>
-                ) : null}
+                    {filteredCustomers.length === 0 ? (
+                      <tr>
+                        <td
+                          colSpan={7}
+                          style={{
+                            padding: "28px 16px",
+                            color: "#64748b",
+                            textAlign: "center",
+                          }}
+                        >
+                          Geen klanten gevonden.
+                        </td>
+                      </tr>
+                    ) : null}
+                  </tbody>
+                </table>
               </div>
             </Card>
 
             {selectedCustomer ? (
               <Card>
                 <SectionTitle
-                  title={selectedCustomer.companyName}
-                  subtitle={`${selectedCustomer.contactName} · ${selectedCustomer.email}`}
+                  title={`Klantdetail — ${selectedCustomer.companyName}`}
+                  subtitle="Alle klantgegevens, documenten en financieel overzicht per periode."
                   action={
                     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                      <Button onClick={() => refreshCustomerDeployment(selectedCustomer)} tone="soft">
+                      <Button tone="soft" onClick={() => refreshCustomerDeployment(selectedCustomer)}>
                         Refresh status
                       </Button>
                       <Button onClick={() => redeployCustomer(selectedCustomer)}>
                         Redeploy
                       </Button>
-                      <Button
-                        onClick={() => deleteCustomerDeployment(selectedCustomer)}
-                        tone="danger"
-                      >
-                        Verwijder deployment
-                      </Button>
                     </div>
                   }
                 />
 
-                <div style={{ display: "grid", gap: 18 }}>
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-                      gap: 14,
-                    }}
-                  >
-                    <Field label="Bedrijfsnaam">
-                      <Input
-                        value={selectedCustomer.companyName}
-                        onChange={(e) =>
-                          saveCustomerEdits({
-                            ...selectedCustomer,
-                            companyName: e.target.value,
-                          })
-                        }
-                      />
-                    </Field>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                    gap: 16,
+                    marginBottom: 20,
+                  }}
+                >
+                  <StatCard
+                    title="Omzet"
+                    value={currency(selectedCustomerStats ? selectedCustomerStats.revenue : 0)}
+                    subtitle={`Per ${TIME_FILTERS.find((item) => item.key === detailFilter)?.label.toLowerCase()}`}
+                    tone="#0ea5e9"
+                  />
+                  <StatCard
+                    title="Kosten"
+                    value={currency(selectedCustomerStats ? selectedCustomerStats.cost : 0)}
+                    subtitle="Infra + extra kosten"
+                    tone="#f97316"
+                  />
+                  <StatCard
+                    title="Winst"
+                    value={currency(selectedCustomerStats ? selectedCustomerStats.profit : 0)}
+                    subtitle="Geschat resultaat"
+                    tone="#10b981"
+                  />
+                </div>
 
-                    <Field label="Contactpersoon">
-                      <Input
-                        value={selectedCustomer.contactName}
-                        onChange={(e) =>
-                          saveCustomerEdits({
-                            ...selectedCustomer,
-                            contactName: e.target.value,
-                          })
-                        }
-                      />
-                    </Field>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: 18,
+                    marginBottom: 18,
+                  }}
+                >
+                  <Card style={{ background: "#f8fafc" }}>
+                    <SectionTitle
+                      title="Algemene gegevens"
+                      subtitle="Wijzigbare klantinformatie."
+                    />
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                        gap: 14,
+                      }}
+                    >
+                      <Field label="Bedrijfsnaam">
+                        <Input
+                          value={selectedCustomer.companyName}
+                          onChange={(e) =>
+                            saveCustomerEdits({
+                              ...selectedCustomer,
+                              companyName: e.target.value,
+                            })
+                          }
+                        />
+                      </Field>
 
-                    <Field label="E-mail">
-                      <Input
-                        value={selectedCustomer.email}
-                        onChange={(e) =>
-                          saveCustomerEdits({
-                            ...selectedCustomer,
-                            email: e.target.value,
-                          })
-                        }
-                      />
-                    </Field>
+                      <Field label="Contactpersoon">
+                        <Input
+                          value={selectedCustomer.contactName}
+                          onChange={(e) =>
+                            saveCustomerEdits({
+                              ...selectedCustomer,
+                              contactName: e.target.value,
+                            })
+                          }
+                        />
+                      </Field>
 
-                    <Field label="Telefoon">
-                      <Input
-                        value={selectedCustomer.phone}
-                        onChange={(e) =>
-                          saveCustomerEdits({
-                            ...selectedCustomer,
-                            phone: e.target.value,
-                          })
-                        }
-                      />
-                    </Field>
+                      <Field label="E-mail">
+                        <Input
+                          value={selectedCustomer.email}
+                          onChange={(e) =>
+                            saveCustomerEdits({
+                              ...selectedCustomer,
+                              email: e.target.value,
+                            })
+                          }
+                        />
+                      </Field>
 
-                    <Field label="Domein">
-                      <Input
-                        value={selectedCustomer.domain}
-                        onChange={(e) =>
-                          saveCustomerEdits({
-                            ...selectedCustomer,
-                            domain: e.target.value,
-                          })
-                        }
-                      />
-                    </Field>
+                      <Field label="Telefoon">
+                        <Input
+                          value={selectedCustomer.phone}
+                          onChange={(e) =>
+                            saveCustomerEdits({
+                              ...selectedCustomer,
+                              phone: e.target.value,
+                            })
+                          }
+                        />
+                      </Field>
 
-                    <Field label="Pakket">
-                      <Select
-                        value={selectedCustomer.packageCode}
-                        onChange={(e) =>
-                          saveCustomerEdits({
-                            ...selectedCustomer,
-                            packageCode: e.target.value,
-                            finance: {
-                              ...selectedCustomer.finance,
-                              monthlyRevenue: calcMonthlyRevenue({
+                      <Field label="Domeinnaam">
+                        <Input
+                          value={selectedCustomer.domain}
+                          onChange={(e) =>
+                            saveCustomerEdits({
+                              ...selectedCustomer,
+                              domain: e.target.value,
+                            })
+                          }
+                        />
+                      </Field>
+
+                      <Field label="Pakket">
+                        <Select
+                          value={selectedCustomer.packageCode}
+                          onChange={(e) =>
+                            saveCustomerEdits({
+                              ...selectedCustomer,
+                              packageCode: e.target.value,
+                            })
+                          }
+                        >
+                          {PACKAGE_OPTIONS.map((item) => (
+                            <option key={item.code} value={item.code}>
+                              {item.label}
+                            </option>
+                          ))}
+                        </Select>
+                      </Field>
+
+                      <Field label="Adres">
+                        <Input
+                          value={selectedCustomer.address || ""}
+                          onChange={(e) =>
+                            saveCustomerEdits({
+                              ...selectedCustomer,
+                              address: e.target.value,
+                            })
+                          }
+                        />
+                      </Field>
+
+                      <Field label="Plaats">
+                        <Input
+                          value={selectedCustomer.city || ""}
+                          onChange={(e) =>
+                            saveCustomerEdits({
+                              ...selectedCustomer,
+                              city: e.target.value,
+                            })
+                          }
+                        />
+                      </Field>
+
+                      <Field label="Land">
+                        <Input
+                          value={selectedCustomer.country || ""}
+                          onChange={(e) =>
+                            saveCustomerEdits({
+                              ...selectedCustomer,
+                              country: e.target.value,
+                            })
+                          }
+                        />
+                      </Field>
+
+                      <Field label="Deployment status">
+                        <Input value={selectedCustomer.deploymentStatus || ""} readOnly />
+                      </Field>
+
+                      <Field label="Deployment ID">
+                        <Input value={selectedCustomer.deploymentId || ""} readOnly />
+                      </Field>
+
+                      <Field label="Aangemaakt op">
+                        <Input value={dateLabel(selectedCustomer.createdAt)} readOnly />
+                      </Field>
+
+                      <div style={{ gridColumn: "1 / -1" }}>
+                        <Field label="Notities">
+                          <Textarea
+                            value={selectedCustomer.notes || ""}
+                            onChange={(e) =>
+                              saveCustomerEdits({
                                 ...selectedCustomer,
-                                packageCode: e.target.value,
-                              }),
-                            },
-                          })
-                        }
-                      >
-                        {PACKAGE_OPTIONS.map((item) => (
-                          <option key={item.code} value={item.code}>
-                            {item.label}
-                          </option>
-                        ))}
-                      </Select>
-                    </Field>
+                                notes: e.target.value,
+                              })
+                            }
+                          />
+                        </Field>
+                      </div>
+                    </div>
+                  </Card>
 
-                    <Field label="Deployment ID">
-                      <Input value={selectedCustomer.deploymentId || ""} readOnly />
-                    </Field>
-
-                    <Field label="Deployment status">
-                      <Input value={selectedCustomer.deploymentStatus || ""} readOnly />
-                    </Field>
-                  </div>
-
-                  <Card style={{ background: "#f8fafc", padding: 18 }}>
+                  <Card style={{ background: "#f8fafc" }}>
                     <SectionTitle
                       title="Documenten"
                       subtitle="Upload bijvoorbeeld contracten of intakebestanden."
@@ -1722,68 +1781,152 @@ export default function AdminCRM() {
                       ) : null}
                     </div>
                   </Card>
+                </div>
 
-                  <Card style={{ background: "#f8fafc", padding: 18 }}>
-                    <SectionTitle
-                      title="Recente backend acties"
-                      subtitle="Laatste calls voor deze klant."
+                <Card style={{ marginBottom: 18 }}>
+                  <SectionTitle
+                    title="Financieel overzicht per klant"
+                    subtitle="Wat deze klant kost en oplevert per geselecteerde periode."
+                    action={
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                        {TIME_FILTERS.map((item) => (
+                          <Button
+                            key={item.key}
+                            tone={detailFilter === item.key ? "primary" : "default"}
+                            onClick={() => setDetailFilter(item.key)}
+                          >
+                            {item.label}
+                          </Button>
+                        ))}
+                      </div>
+                    }
+                  />
+
+                  <div style={{ width: "100%", height: 320, marginBottom: 18 }}>
+                    <ResponsiveContainer>
+                      <AreaChart data={selectedCustomerTrendData}>
+                        <defs>
+                          <linearGradient id="custRevenue" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0.04} />
+                          </linearGradient>
+                          <linearGradient id="custProfit" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
+                            <stop offset="95%" stopColor="#10b981" stopOpacity={0.04} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+                        <XAxis dataKey="label" stroke="#64748b" />
+                        <YAxis stroke="#64748b" />
+                        <Tooltip />
+                        <Area
+                          type="monotone"
+                          dataKey="omzet"
+                          stroke="#0ea5e9"
+                          fill="url(#custRevenue)"
+                          strokeWidth={2}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="winst"
+                          stroke="#10b981"
+                          fill="url(#custProfit)"
+                          strokeWidth={2}
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                      gap: 16,
+                    }}
+                  >
+                    <StatCard
+                      title="Opbrengst"
+                      value={currency(selectedCustomerStats ? selectedCustomerStats.revenue : 0)}
+                      subtitle="Pakket + extra's"
+                      tone="#0ea5e9"
                     />
-                    <div style={{ display: "grid", gap: 10 }}>
-                      {(selectedCustomer.requestHistory || []).map((entry) => (
+                    <StatCard
+                      title="Infra"
+                      value={currency(selectedCustomerStats ? selectedCustomerStats.infraCost : 0)}
+                      subtitle="Terugkerende kosten"
+                      tone="#8b5cf6"
+                    />
+                    <StatCard
+                      title="Extra kosten"
+                      value={currency(
+                        selectedCustomerStats ? selectedCustomerStats.directExpenses : 0
+                      )}
+                      subtitle="Handmatig gekoppelde uitgaven"
+                      tone="#f97316"
+                    />
+                    <StatCard
+                      title="Resultaat"
+                      value={currency(selectedCustomerStats ? selectedCustomerStats.profit : 0)}
+                      subtitle="Omzet minus kosten"
+                      tone="#10b981"
+                    />
+                  </div>
+                </Card>
+
+                <Card style={{ background: "#f8fafc" }}>
+                  <SectionTitle
+                    title="Backend acties"
+                    subtitle="Laatste calls voor deze klant."
+                  />
+                  <div style={{ display: "grid", gap: 10 }}>
+                    {(selectedCustomer.requestHistory || []).map((entry) => (
+                      <div
+                        key={entry.id}
+                        style={{
+                          borderRadius: 14,
+                          border: "1px solid #e2e8f0",
+                          background: "#ffffff",
+                          padding: 14,
+                        }}
+                      >
                         <div
-                          key={entry.id}
                           style={{
-                            borderRadius: 14,
-                            border: "1px solid #e2e8f0",
-                            background: "#ffffff",
-                            padding: 14,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            gap: 12,
+                            marginBottom: 8,
+                            flexWrap: "wrap",
                           }}
                         >
-                          <div
+                          <strong>{entry.type}</strong>
+                          <span
                             style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              gap: 12,
-                              marginBottom: 8,
-                              flexWrap: "wrap",
+                              color: entry.result && entry.result.ok ? "#10b981" : "#ef4444",
+                              fontWeight: 900,
                             }}
                           >
-                            <strong>{entry.type}</strong>
-                            <span
-                              style={{
-                                color: entry.result && entry.result.ok ? "#10b981" : "#ef4444",
-                                fontWeight: 900,
-                              }}
-                            >
-                              {(entry.result && entry.result.status) || "ERR"}
-                            </span>
-                          </div>
-                          <pre
-                            style={{
-                              margin: 0,
-                              whiteSpace: "pre-wrap",
-                              wordBreak: "break-word",
-                              color: "#334155",
-                              fontSize: 12,
-                            }}
-                          >
-                            {pretty(entry.result && entry.result.data)}
-                          </pre>
+                            {(entry.result && entry.result.status) || "ERR"}
+                          </span>
                         </div>
-                      ))}
+                        <pre
+                          style={{
+                            margin: 0,
+                            whiteSpace: "pre-wrap",
+                            wordBreak: "break-word",
+                            color: "#334155",
+                            fontSize: 12,
+                          }}
+                        >
+                          {pretty(entry.result && entry.result.data)}
+                        </pre>
+                      </div>
+                    ))}
 
-                      {(selectedCustomer.requestHistory || []).length === 0 ? (
-                        <div style={{ color: "#64748b" }}>Nog geen backend acties.</div>
-                      ) : null}
-                    </div>
-                  </Card>
-
-                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <Button tone="danger" onClick={() => removeCustomer(selectedCustomer.id)}>
-                      Klant verwijderen
-                    </Button>
+                    {(selectedCustomer.requestHistory || []).length === 0 ? (
+                      <div style={{ color: "#64748b" }}>Nog geen backend acties.</div>
+                    ) : null}
                   </div>
-                </div>
+                </Card>
               </Card>
             ) : null}
           </div>
@@ -1793,183 +1936,104 @@ export default function AdminCRM() {
           <div style={{ display: "grid", gap: 18 }}>
             <Card>
               <SectionTitle
-                title="Financieel overzicht"
-                subtitle="Inkomsten, uitgaven, omzet en winst met periodefilter."
+                title="Uitgave toevoegen"
+                subtitle="Voeg algemene of klantgebonden kosten toe."
                 action={
-                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                    {TIME_FILTERS.map((item) => (
-                      <Button
-                        key={item.key}
-                        tone={financeFilter === item.key ? "primary" : "default"}
-                        onClick={() => setFinanceFilter(item.key)}
-                      >
-                        {item.label}
-                      </Button>
-                    ))}
-                  </div>
+                  <Button tone="primary" onClick={addExpense}>
+                    Opslaan
+                  </Button>
                 }
               />
 
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                  gap: 16,
+                  gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+                  gap: 14,
                 }}
               >
-                <StatCard
-                  title="Omzet"
-                  value={currency(
-                    financeCustomers.reduce(
-                      (sum, customer) => sum + calcMonthlyRevenue(customer),
-                      0
-                    )
-                  )}
-                  subtitle={`Filter: ${TIME_FILTERS.find((i) => i.key === financeFilter)?.label}`}
-                  tone="#0ea5e9"
-                />
-                <StatCard
-                  title="Uitgaven"
-                  value={currency(
-                    financeExpenses.reduce(
-                      (sum, expense) => sum + Number(expense.amount || 0),
-                      0
-                    ) +
-                      customers.reduce(
-                        (sum, customer) => sum + Number(customer.monthlyInfraCost || 0),
-                        0
-                      )
-                  )}
-                  subtitle="Handmatig + infra"
-                  tone="#f97316"
-                />
-                <StatCard
-                  title="Winst"
-                  value={currency(
-                    financeCustomers.reduce(
-                      (sum, customer) => sum + calcMonthlyRevenue(customer),
-                      0
-                    ) -
-                      (financeExpenses.reduce(
-                        (sum, expense) => sum + Number(expense.amount || 0),
-                        0
-                      ) +
-                        customers.reduce(
-                          (sum, customer) =>
-                            sum + Number(customer.monthlyInfraCost || 0),
-                          0
-                        ))
-                  )}
-                  subtitle="Geschat"
-                  tone="#10b981"
-                />
-                <StatCard
-                  title="Gemiddelde per klant"
-                  value={currency(
-                    customers.length ? totalMonthlyRevenue / customers.length : 0
-                  )}
-                  subtitle="MRR per klant"
-                  tone="#8b5cf6"
-                />
+                <Field label="Titel">
+                  <Input
+                    value={expenseForm.title}
+                    onChange={(e) =>
+                      setExpenseForm((prev) => ({ ...prev, title: e.target.value }))
+                    }
+                    placeholder="Hosting, tool, advertentie..."
+                  />
+                </Field>
+
+                <Field label="Bedrag">
+                  <Input
+                    type="number"
+                    min="0"
+                    value={expenseForm.amount}
+                    onChange={(e) =>
+                      setExpenseForm((prev) => ({ ...prev, amount: e.target.value }))
+                    }
+                  />
+                </Field>
+
+                <Field label="Datum">
+                  <Input
+                    type="date"
+                    value={expenseForm.date}
+                    onChange={(e) =>
+                      setExpenseForm((prev) => ({ ...prev, date: e.target.value }))
+                    }
+                  />
+                </Field>
+
+                <Field label="Categorie">
+                  <Select
+                    value={expenseForm.category}
+                    onChange={(e) =>
+                      setExpenseForm((prev) => ({ ...prev, category: e.target.value }))
+                    }
+                  >
+                    <option>Overig</option>
+                    <option>Hosting</option>
+                    <option>Software</option>
+                    <option>Marketing</option>
+                    <option>Freelance</option>
+                    <option>Hardware</option>
+                  </Select>
+                </Field>
+
+                <Field label="Klant koppelen">
+                  <Select
+                    value={expenseForm.customerId}
+                    onChange={(e) =>
+                      setExpenseForm((prev) => ({ ...prev, customerId: e.target.value }))
+                    }
+                  >
+                    <option value="">Geen specifieke klant</option>
+                    {customers.map((customer) => (
+                      <option key={customer.id} value={customer.id}>
+                        {customer.companyName}
+                      </option>
+                    ))}
+                  </Select>
+                </Field>
               </div>
             </Card>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1.1fr 0.9fr",
-                gap: 18,
-              }}
-            >
-              <Card>
-                <SectionTitle
-                  title="Pakketten en omzet"
-                  subtitle="Aantal klanten en omzet per pakket."
-                />
-                <div style={{ width: "100%", height: 340 }}>
-                  <ResponsiveContainer>
-                    <BarChart data={packageChartData}>
-                      <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
-                      <XAxis dataKey="name" stroke="#64748b" />
-                      <YAxis stroke="#64748b" />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="klanten" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
-                      <Bar dataKey="omzet" fill="#10b981" radius={[8, 8, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </Card>
+            <Card>
+              <SectionTitle
+                title="Uitgaven"
+                subtitle="Alle geregistreerde kosten."
+              />
+              <div style={{ display: "grid", gap: 10 }}>
+                {expenses.map((expense) => {
+                  const customer = customers.find((item) => item.id === expense.customerId);
 
-              <Card>
-                <SectionTitle
-                  title="Uitgave toevoegen"
-                  subtitle="Voeg handmatige kosten toe voor een compleet overzicht."
-                  action={
-                    <Button tone="primary" onClick={addExpense}>
-                      Opslaan
-                    </Button>
-                  }
-                />
-                <div style={{ display: "grid", gap: 12, marginBottom: 18 }}>
-                  <Field label="Titel">
-                    <Input
-                      value={expenseForm.title}
-                      onChange={(e) =>
-                        setExpenseForm((prev) => ({ ...prev, title: e.target.value }))
-                      }
-                      placeholder="Hosting, software, advertentie..."
-                    />
-                  </Field>
-
-                  <Field label="Bedrag">
-                    <Input
-                      type="number"
-                      min="0"
-                      value={expenseForm.amount}
-                      onChange={(e) =>
-                        setExpenseForm((prev) => ({ ...prev, amount: e.target.value }))
-                      }
-                      placeholder="0"
-                    />
-                  </Field>
-
-                  <Field label="Datum">
-                    <Input
-                      type="date"
-                      value={expenseForm.date}
-                      onChange={(e) =>
-                        setExpenseForm((prev) => ({ ...prev, date: e.target.value }))
-                      }
-                    />
-                  </Field>
-
-                  <Field label="Categorie">
-                    <Select
-                      value={expenseForm.category}
-                      onChange={(e) =>
-                        setExpenseForm((prev) => ({ ...prev, category: e.target.value }))
-                      }
-                    >
-                      <option>Overig</option>
-                      <option>Hosting</option>
-                      <option>Software</option>
-                      <option>Marketing</option>
-                      <option>Freelance</option>
-                      <option>Hardware</option>
-                    </Select>
-                  </Field>
-                </div>
-
-                <div style={{ display: "grid", gap: 10, maxHeight: 300, overflow: "auto" }}>
-                  {expenses.map((expense) => (
+                  return (
                     <div
                       key={expense.id}
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
                         gap: 12,
-                        padding: 12,
+                        padding: 14,
                         borderRadius: 14,
                         border: "1px solid #e2e8f0",
                       }}
@@ -1978,18 +2042,19 @@ export default function AdminCRM() {
                         <div style={{ fontWeight: 800 }}>{expense.title}</div>
                         <div style={{ color: "#64748b", fontSize: 13 }}>
                           {expense.category} · {dateLabel(expense.date)}
+                          {customer ? ` · ${customer.companyName}` : ""}
                         </div>
                       </div>
                       <div style={{ fontWeight: 900 }}>{currency(expense.amount)}</div>
                     </div>
-                  ))}
+                  );
+                })}
 
-                  {expenses.length === 0 ? (
-                    <div style={{ color: "#64748b" }}>Nog geen uitgaven toegevoegd.</div>
-                  ) : null}
-                </div>
-              </Card>
-            </div>
+                {expenses.length === 0 ? (
+                  <div style={{ color: "#64748b" }}>Nog geen uitgaven toegevoegd.</div>
+                ) : null}
+              </div>
+            </Card>
           </div>
         )}
 
@@ -2045,16 +2110,6 @@ export default function AdminCRM() {
                     <option value="SYSTEM">SYSTEM</option>
                     <option value="WORKER">WORKER</option>
                   </Select>
-                </Field>
-
-                <Field label="Standaard mailbox local part">
-                  <Input
-                    value={settings.defaultMailboxLocalPart}
-                    onChange={(e) =>
-                      updateSettings("defaultMailboxLocalPart", e.target.value)
-                    }
-                    placeholder="info"
-                  />
                 </Field>
 
                 <label
@@ -2158,6 +2213,187 @@ export default function AdminCRM() {
           </div>
         )}
       </div>
+
+      <Modal
+        open={isCreateCustomerOpen}
+        title="Nieuwe klant aanmaken"
+        onClose={() => {
+          setIsCreateCustomerOpen(false);
+          resetCustomerForm();
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            gap: 14,
+          }}
+        >
+          <Field label="Bedrijfsnaam">
+            <Input
+              value={customerForm.companyName}
+              onChange={(e) => updateCustomerForm("companyName", e.target.value)}
+              placeholder="Vedantix Example"
+            />
+          </Field>
+
+          <Field label="Contactpersoon">
+            <Input
+              value={customerForm.contactName}
+              onChange={(e) => updateCustomerForm("contactName", e.target.value)}
+              placeholder="Rishwi Jagesar"
+            />
+          </Field>
+
+          <Field label="E-mail">
+            <Input
+              value={customerForm.email}
+              onChange={(e) => updateCustomerForm("email", e.target.value)}
+              placeholder="info@bedrijf.nl"
+            />
+          </Field>
+
+          <Field label="Telefoon">
+            <Input
+              value={customerForm.phone}
+              onChange={(e) => updateCustomerForm("phone", e.target.value)}
+              placeholder="+31 6 12345678"
+            />
+          </Field>
+
+          <Field label="Domeinnaam">
+            <Input
+              value={customerForm.domain}
+              onChange={(e) => updateCustomerForm("domain", e.target.value)}
+              placeholder="bedrijf.nl"
+            />
+          </Field>
+
+          <Field label="Pakket">
+            <Select
+              value={customerForm.packageCode}
+              onChange={(e) => updateCustomerForm("packageCode", e.target.value)}
+            >
+              {PACKAGE_OPTIONS.map((item) => (
+                <option key={item.code} value={item.code}>
+                  {item.label} — {currency(item.monthlyPrice)}/m
+                </option>
+              ))}
+            </Select>
+          </Field>
+
+          <Field label="Adres">
+            <Input
+              value={customerForm.address}
+              onChange={(e) => updateCustomerForm("address", e.target.value)}
+              placeholder="Straat 1"
+            />
+          </Field>
+
+          <Field label="Plaats">
+            <Input
+              value={customerForm.city}
+              onChange={(e) => updateCustomerForm("city", e.target.value)}
+              placeholder="Utrecht"
+            />
+          </Field>
+
+          <Field label="Land">
+            <Input
+              value={customerForm.country}
+              onChange={(e) => updateCustomerForm("country", e.target.value)}
+              placeholder="Nederland"
+            />
+          </Field>
+
+          <Field label="Infra kosten p/m">
+            <Input
+              type="number"
+              min="0"
+              value={customerForm.monthlyInfraCost}
+              onChange={(e) => updateCustomerForm("monthlyInfraCost", e.target.value)}
+            />
+          </Field>
+
+          <Field label="Eenmalige setup kosten">
+            <Input
+              type="number"
+              min="0"
+              value={customerForm.oneTimeSetupCost}
+              onChange={(e) => updateCustomerForm("oneTimeSetupCost", e.target.value)}
+            />
+          </Field>
+
+          <div style={{ gridColumn: "1 / -1" }}>
+            <Field label="Extra's">
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: 10,
+                  border: "1px solid #cbd5e1",
+                  borderRadius: 14,
+                  padding: 12,
+                  background: "#ffffff",
+                }}
+              >
+                {EXTRA_OPTIONS.map((extra) => (
+                  <label
+                    key={extra.code}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      color: "#334155",
+                      fontSize: 14,
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={customerForm.extras.includes(extra.code)}
+                      onChange={() => toggleExtra(extra.code)}
+                    />
+                    <span>
+                      {extra.label} ({currency(extra.monthlyPrice)})
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </Field>
+          </div>
+
+          <div style={{ gridColumn: "1 / -1" }}>
+            <Field label="Notities">
+              <Textarea
+                value={customerForm.notes}
+                onChange={(e) => updateCustomerForm("notes", e.target.value)}
+                placeholder="Intake-info, afspraken, bijzonderheden..."
+              />
+            </Field>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: 10,
+            marginTop: 22,
+          }}
+        >
+          <Button
+            onClick={() => {
+              setIsCreateCustomerOpen(false);
+              resetCustomerForm();
+            }}
+          >
+            Annuleren
+          </Button>
+          <Button tone="primary" onClick={addCustomerAndProvision} disabled={isProvisioning}>
+            {isProvisioning ? "Bezig..." : "Klant aanmaken"}
+          </Button>
+        </div>
+      </Modal>
     </div>
   );
 }

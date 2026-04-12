@@ -12,6 +12,80 @@ const MOCKUP_SERVICES = [
 ];
 
 export const HOME_HERO_STYLES = `
+  .btn-primary{
+    background:#fff;
+    color:#0f172a;
+    padding:14px 24px;
+    border-radius:12px;
+    font-weight:800;
+    font-size:.9rem;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .25s cubic-bezier(.4,0,.2,1);
+    border:none;
+    cursor:pointer;
+    letter-spacing:-.1px;
+    box-shadow:0 8px 24px rgba(0,0,0,.24);
+    min-height:50px;
+    white-space:nowrap;
+  }
+  .btn-primary:hover{
+    background:#f1f5f9;
+    transform:translateY(-2px);
+    box-shadow:0 14px 30px rgba(0,0,0,.30);
+  }
+
+  .btn-wa{
+    background:#25d366;
+    color:#fff;
+    padding:14px 24px;
+    border-radius:12px;
+    font-weight:800;
+    font-size:.9rem;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .25s cubic-bezier(.4,0,.2,1);
+    border:none;
+    cursor:pointer;
+    box-shadow:0 8px 24px rgba(37,211,102,.24);
+    min-height:50px;
+    white-space:nowrap;
+  }
+  .btn-wa:hover{
+    background:#22c55e;
+    transform:translateY(-2px);
+    box-shadow:0 14px 30px rgba(37,211,102,.34);
+  }
+
+  .btn-ghost{
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    border:1.5px solid rgba(255,255,255,.16);
+    padding:13px 22px;
+    border-radius:12px;
+    font-weight:800;
+    font-size:.9rem;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:all .25s;
+    cursor:pointer;
+    backdrop-filter:blur(4px);
+    min-height:50px;
+    white-space:nowrap;
+  }
+  .btn-ghost:hover{
+    background:rgba(255,255,255,.1);
+    border-color:rgba(255,255,255,.28);
+    color:#fff;
+    transform:translateY(-2px);
+  }
+
   .hero{
     background:linear-gradient(150deg,#060c1a 0%,#0a1428 38%,#0d1f3c 72%,#0f1e38 100%);
     min-height:calc(100svh - 72px);
@@ -46,6 +120,8 @@ export const HOME_HERO_STYLES = `
 
   .hero-content{
     min-width:0;
+    position:relative;
+    z-index:2;
   }
 
   .hero-eyebrow{
@@ -71,25 +147,51 @@ export const HOME_HERO_STYLES = `
     background:#22c55e;
     border-radius:50%;
     flex-shrink:0;
+    animation:pulse 2s infinite;
+  }
+
+  @keyframes pulse{
+    0%,100%{opacity:1}
+    50%{opacity:.35}
   }
 
   .hero h1{
-    font-size:clamp(2.2rem,4.2vw,4rem);
+    font-size:clamp(2.2rem,4.3vw,4rem);
     font-weight:900;
     line-height:1.02;
     color:#fff;
     margin-bottom:16px;
     letter-spacing:-1.8px;
-    max-width:620px;
+    max-width:690px;
+  }
+
+  .hero h1 span{
+    background:linear-gradient(125deg,#60a5fa 0%,#818cf8 50%,#a78bfa 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
   }
 
   .hero-sub{
     font-size:1rem;
     color:rgba(255,255,255,.72);
     line-height:1.72;
-    margin-bottom:20px;
-    max-width:610px;
+    margin-bottom:12px;
+    max-width:630px;
     font-weight:400;
+  }
+
+  .hero-sub strong{
+    color:#fff;
+    font-weight:700;
+  }
+
+  .hero-microcopy{
+    font-size:.78rem;
+    color:rgba(255,255,255,.46);
+    margin-bottom:18px;
+    font-weight:600;
+    max-width:620px;
   }
 
   .hero-checks{
@@ -97,7 +199,7 @@ export const HOME_HERO_STYLES = `
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:8px 14px;
-    max-width:680px;
+    max-width:690px;
   }
 
   .hero-check{
@@ -134,87 +236,47 @@ export const HOME_HERO_STYLES = `
     margin-bottom:12px;
   }
 
+  .hero-ctas a{
+    flex:0 0 auto;
+  }
+
   .hero-cta-note{
     font-size:.74rem;
     color:rgba(255,255,255,.44);
     font-weight:600;
+    margin-bottom:18px;
   }
 
-  .btn-primary{
-    background:#fff;
-    color:#0f172a;
-    padding:14px 24px;
-    border-radius:12px;
-    font-weight:800;
-    font-size:.9rem;
-    text-decoration:none;
-    display:inline-flex;
+  .hero-social-proof{
+    display:flex;
     align-items:center;
-    justify-content:center;
-    transition:all .25s cubic-bezier(.4,0,.2,1);
-    border:none;
-    cursor:pointer;
-    letter-spacing:-.1px;
-    box-shadow:0 8px 24px rgba(0,0,0,.24);
-    min-height:50px;
-    white-space:nowrap;
+    gap:14px;
+    padding-top:14px;
+    border-top:1px solid rgba(255,255,255,.07);
+    max-width:650px;
   }
 
-  .btn-primary:hover{
-    background:#f1f5f9;
-    transform:translateY(-2px);
-    box-shadow:0 14px 30px rgba(0,0,0,.30);
-  }
-
-  .btn-wa{
-    background:#25d366;
-    color:#fff;
-    padding:14px 24px;
-    border-radius:12px;
+  .hero-sp-stat{
+    font-size:.92rem;
     font-weight:800;
-    font-size:.9rem;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    transition:all .25s cubic-bezier(.4,0,.2,1);
-    border:none;
-    cursor:pointer;
-    box-shadow:0 8px 24px rgba(37,211,102,.24);
-    min-height:50px;
-    white-space:nowrap;
-  }
-
-  .btn-wa:hover{
-    background:#22c55e;
-    transform:translateY(-2px);
-    box-shadow:0 14px 30px rgba(37,211,102,.34);
-  }
-
-  .btn-ghost{
-    background:rgba(255,255,255,.06);
     color:#fff;
-    border:1.5px solid rgba(255,255,255,.16);
-    padding:13px 22px;
-    border-radius:12px;
-    font-weight:800;
-    font-size:.9rem;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    transition:all .25s;
-    cursor:pointer;
-    backdrop-filter:blur(4px);
-    min-height:50px;
-    white-space:nowrap;
+    line-height:1;
+    margin-bottom:4px;
   }
 
-  .btn-ghost:hover{
-    background:rgba(255,255,255,.1);
-    border-color:rgba(255,255,255,.28);
-    color:#fff;
-    transform:translateY(-2px);
+  .hero-sp-text{
+    font-size:.72rem;
+    color:rgba(255,255,255,.44);
+    font-weight:500;
+    line-height:1.4;
+    max-width:170px;
+  }
+
+  .hero-divider{
+    width:1px;
+    height:32px;
+    background:rgba(255,255,255,.08);
+    flex-shrink:0;
   }
 
   .hero-mockup-wrap{
@@ -245,6 +307,12 @@ export const HOME_HERO_STYLES = `
     width:100%;
     max-width:470px;
     margin-left:auto;
+    animation:float 5s ease-in-out infinite;
+  }
+
+  @keyframes float{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-8px)}
   }
 
   .mockup-bar{
@@ -286,6 +354,15 @@ export const HOME_HERO_STYLES = `
     text-align:center;
   }
 
+  .mockup-label{
+    font-size:.62rem;
+    font-weight:800;
+    color:rgba(255,255,255,.45);
+    text-transform:uppercase;
+    letter-spacing:1.4px;
+    margin-bottom:8px;
+  }
+
   .mockup-title{
     font-size:1.22rem;
     font-weight:900;
@@ -296,6 +373,22 @@ export const HOME_HERO_STYLES = `
   .mockup-sub{
     font-size:.78rem;
     color:rgba(255,255,255,.68);
+    margin-bottom:14px;
+  }
+
+  .mockup-meta{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    padding-top:10px;
+    border-top:1px solid rgba(255,255,255,.08);
+    flex-wrap:wrap;
+  }
+
+  .mockup-meta span{
+    font-size:.68rem;
+    color:rgba(255,255,255,.7);
+    font-weight:700;
   }
 
   .mockup-services{
@@ -370,6 +463,47 @@ export const HOME_HERO_STYLES = `
     display:none;
   }
 
+  @media (max-width: 1280px){
+    .hero{
+      min-height:auto;
+      align-items:flex-start;
+      padding:96px 5% 40px;
+    }
+
+    .hero-container{
+      grid-template-columns:minmax(0,1fr) 390px;
+      gap:24px;
+      align-items:start;
+    }
+
+    .hero h1{
+      font-size:clamp(2.05rem,4vw,3.1rem);
+      max-width:620px;
+    }
+
+    .hero-sub{
+      font-size:.94rem;
+      line-height:1.64;
+      max-width:560px;
+    }
+
+    .hero-social-proof{
+      max-width:560px;
+    }
+
+    .hero-mockup{
+      max-width:390px;
+    }
+
+    .btn-primary,
+    .btn-wa,
+    .btn-ghost{
+      padding:12px 18px;
+      min-height:46px;
+      font-size:.84rem;
+    }
+  }
+
   @media (max-width: 1024px){
     .hero{
       padding:90px 5% 54px;
@@ -391,9 +525,11 @@ export const HOME_HERO_STYLES = `
 
     .hero h1{
       max-width:720px;
+      font-size:2.35rem;
     }
 
-    .hero-sub{
+    .hero-sub,
+    .hero-microcopy{
       margin-left:auto;
       margin-right:auto;
     }
@@ -410,6 +546,11 @@ export const HOME_HERO_STYLES = `
       justify-content:center;
     }
 
+    .hero-social-proof{
+      justify-content:center;
+      max-width:100%;
+    }
+
     .hero-mockup{
       max-width:540px;
       margin:0 auto;
@@ -422,7 +563,7 @@ export const HOME_HERO_STYLES = `
     }
 
     .hero h1{
-      font-size:1.98rem;
+      font-size:1.95rem;
       line-height:1.08;
       letter-spacing:-1px;
     }
@@ -432,7 +573,16 @@ export const HOME_HERO_STYLES = `
       line-height:1.68;
     }
 
+    .hero-microcopy{
+      font-size:.76rem;
+      margin-bottom:16px;
+    }
+
     .hero-checks{
+      display:none;
+    }
+
+    .hero-social-proof{
       display:none;
     }
 
@@ -460,12 +610,16 @@ export const HOME_HERO_STYLES = `
     }
 
     .hero h1{
-      font-size:1.64rem;
+      font-size:1.62rem;
       letter-spacing:-.7px;
     }
 
     .hero-sub{
       font-size:.85rem;
+    }
+
+    .hero-microcopy{
+      display:none;
     }
 
     .hero-sticky-cta{
@@ -495,12 +649,22 @@ export default function HomeHero() {
               Voor lokale ondernemers die meer klanten willen
             </div>
 
-            <h1>Een website die vertrouwen wekt</h1>
+            <h1>
+              Een website die
+              <br />
+              <span>vertrouwen wekt</span>
+              <br />
+              en klanten laat kiezen
+            </h1>
 
             <p className="hero-sub">
               Meer afspraken, aanvragen en contactmomenten — zonder technisch gedoe.
-              Wij bouwen een website die direct duidelijk maakt waarom klanten voor jou kiezen.
+              Wij bouwen een website die <strong>professioneel overkomt, direct duidelijk maakt wat je doet</strong> en bezoekers sneller richting WhatsApp, bellen of een aanvraag stuurt.
             </p>
+
+            <div className="hero-microcopy">
+              Ook geschikt als je nog geen bestaande website, reviews of uitgebreide content hebt.
+            </div>
 
             <div className="hero-checks">
               {HERO_CHECKS.map((item) => (
@@ -512,7 +676,7 @@ export default function HomeHero() {
 
             <div className="hero-ctas">
               <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking."
+                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
                 target="_blank"
                 rel="noreferrer"
                 className="btn-primary"
@@ -537,6 +701,27 @@ export default function HomeHero() {
             <div className="hero-cta-note">
               Vrijblijvend · binnen 48 uur eerste versie · geen risico
             </div>
+
+            <div className="hero-social-proof">
+              <div>
+                <div className="hero-sp-stat">Sterkere eerste indruk</div>
+                <div className="hero-sp-text">Professioneler overkomen vanaf het eerste bezoek</div>
+              </div>
+
+              <div className="hero-divider" />
+
+              <div>
+                <div className="hero-sp-stat">Meer actie</div>
+                <div className="hero-sp-text">Gebouwd voor bellen, WhatsApp en aanvragen</div>
+              </div>
+
+              <div className="hero-divider" />
+
+              <div>
+                <div className="hero-sp-stat">Minder gedoe</div>
+                <div className="hero-sp-text">Hosting, onderhoud en support onder één partij</div>
+              </div>
+            </div>
           </div>
 
           <div className="hero-mockup-wrap">
@@ -551,9 +736,15 @@ export default function HomeHero() {
               </div>
 
               <div className="mockup-header">
+                <div className="mockup-label">Demo concept voor kapper / barber</div>
                 <div className="mockup-title">Barbershop Amsterdam</div>
                 <div className="mockup-sub">
                   Duidelijk. Snel. Gericht op afspraak of WhatsApp.
+                </div>
+
+                <div className="mockup-meta">
+                  <span>⭐ Professionele eerste indruk</span>
+                  <span>📱 Mobielvriendelijk</span>
                 </div>
               </div>
 
