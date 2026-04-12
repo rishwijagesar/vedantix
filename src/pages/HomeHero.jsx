@@ -1,8 +1,8 @@
 const HERO_CHECKS = [
   "Sterke eerste versie binnen 48 uur",
-  "Gebouwd voor aanvragen, afspraken en WhatsApp",
-  "Hosting, onderhoud en support geregeld",
-  "Je beslist pas verder als de richting klopt",
+  "Gebouwd voor afspraken, aanvragen en WhatsApp",
+  "Hosting, onderhoud en support inbegrepen",
+  "Niet tevreden? Je betaalt niets",
 ];
 
 const MOCKUP_SERVICES = [
@@ -12,6 +12,134 @@ const MOCKUP_SERVICES = [
 ];
 
 export const HOME_HERO_STYLES = `
+  .hero{
+    background:linear-gradient(150deg,#060c1a 0%,#0a1428 38%,#0d1f3c 72%,#0f1e38 100%);
+    min-height:calc(100svh - 72px);
+    display:flex;
+    align-items:center;
+    padding:104px 5% 44px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .hero::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:
+      radial-gradient(ellipse at 68% 36%,rgba(59,130,246,.14) 0%,transparent 58%),
+      radial-gradient(ellipse at 20% 80%,rgba(99,102,241,.08) 0%,transparent 52%);
+    pointer-events:none;
+  }
+
+  .hero-container{
+    max-width:1240px;
+    margin:0 auto;
+    width:100%;
+    display:grid;
+    grid-template-columns:minmax(0,1.04fr) minmax(320px,.84fr);
+    gap:36px;
+    align-items:center;
+    position:relative;
+    z-index:1;
+  }
+
+  .hero-content{
+    min-width:0;
+  }
+
+  .hero-eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.1);
+    color:rgba(255,255,255,.8);
+    font-size:.66rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:1.7px;
+    padding:8px 16px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+
+  .hero-eyebrow::before{
+    content:'';
+    width:6px;
+    height:6px;
+    background:#22c55e;
+    border-radius:50%;
+    flex-shrink:0;
+  }
+
+  .hero h1{
+    font-size:clamp(2.2rem,4.2vw,4rem);
+    font-weight:900;
+    line-height:1.02;
+    color:#fff;
+    margin-bottom:16px;
+    letter-spacing:-1.8px;
+    max-width:620px;
+  }
+
+  .hero-sub{
+    font-size:1rem;
+    color:rgba(255,255,255,.72);
+    line-height:1.72;
+    margin-bottom:20px;
+    max-width:610px;
+    font-weight:400;
+  }
+
+  .hero-checks{
+    margin-bottom:20px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px 14px;
+    max-width:680px;
+  }
+
+  .hero-check{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    font-size:.83rem;
+    color:rgba(255,255,255,.8);
+    font-weight:600;
+    line-height:1.45;
+  }
+
+  .hero-check::before{
+    content:'✓';
+    color:#22c55e;
+    font-weight:900;
+    font-size:.75rem;
+    flex-shrink:0;
+    background:rgba(34,197,94,.12);
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-top:1px;
+  }
+
+  .hero-ctas{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:12px;
+  }
+
+  .hero-cta-note{
+    font-size:.74rem;
+    color:rgba(255,255,255,.44);
+    font-weight:600;
+  }
+
   .btn-primary{
     background:#fff;
     color:#0f172a;
@@ -31,10 +159,11 @@ export const HOME_HERO_STYLES = `
     min-height:50px;
     white-space:nowrap;
   }
+
   .btn-primary:hover{
     background:#f1f5f9;
     transform:translateY(-2px);
-    box-shadow:0 14px 30px rgba(0,0,0,.30)
+    box-shadow:0 14px 30px rgba(0,0,0,.30);
   }
 
   .btn-wa{
@@ -55,10 +184,11 @@ export const HOME_HERO_STYLES = `
     min-height:50px;
     white-space:nowrap;
   }
+
   .btn-wa:hover{
     background:#22c55e;
     transform:translateY(-2px);
-    box-shadow:0 14px 30px rgba(37,211,102,.34)
+    box-shadow:0 14px 30px rgba(37,211,102,.34);
   }
 
   .btn-ghost{
@@ -79,185 +209,19 @@ export const HOME_HERO_STYLES = `
     min-height:50px;
     white-space:nowrap;
   }
+
   .btn-ghost:hover{
     background:rgba(255,255,255,.1);
     border-color:rgba(255,255,255,.28);
     color:#fff;
-    transform:translateY(-2px)
-  }
-
-  .hero{
-    background:linear-gradient(150deg,#060c1a 0%,#0a1428 38%,#0d1f3c 72%,#0f1e38 100%);
-    min-height:calc(100svh - 72px);
-    display:flex;
-    align-items:center;
-    padding:104px 5% 44px;
-    position:relative;
-    overflow:hidden;
-  }
-  .hero::before{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:
-      radial-gradient(ellipse at 68% 36%,rgba(59,130,246,.14) 0%,transparent 58%),
-      radial-gradient(ellipse at 20% 80%,rgba(99,102,241,.08) 0%,transparent 52%);
-    pointer-events:none
-  }
-
-  .hero-container{
-    max-width:1240px;
-    margin:0 auto;
-    width:100%;
-    display:grid;
-    grid-template-columns:minmax(0,1.04fr) minmax(320px,.84fr);
-    gap:36px;
-    align-items:center;
-  }
-
-  .hero-content{
-    min-width:0;
-    position:relative;
-    z-index:2;
-  }
-
-  .hero-eyebrow{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.1);
-    color:rgba(255,255,255,.8);
-    font-size:.66rem;
-    font-weight:800;
-    text-transform:uppercase;
-    letter-spacing:1.7px;
-    padding:8px 16px;
-    border-radius:999px;
-    margin-bottom:18px
-  }
-  .hero-eyebrow::before{
-    content:'';
-    width:6px;
-    height:6px;
-    background:#22c55e;
-    border-radius:50%;
-    animation:pulse 2s infinite;
-    flex-shrink:0
-  }
-
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-
-  .hero h1{
-    font-size:clamp(2.5rem,4.4vw,4rem);
-    font-weight:900;
-    line-height:1.02;
-    color:#fff;
-    margin-bottom:16px;
-    letter-spacing:-1.8px;
-    max-width:720px;
-  }
-  .hero h1 span{
-    background:linear-gradient(125deg,#60a5fa 0%,#818cf8 50%,#a78bfa 100%);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text
-  }
-
-  .hero-sub{
-    font-size:1rem;
-    color:rgba(255,255,255,.72);
-    line-height:1.72;
-    margin-bottom:10px;
-    max-width:610px;
-    font-weight:400
-  }
-  .hero-sub strong{color:#fff;font-weight:700}
-
-  .hero-microcopy{
-    font-size:.78rem;
-    color:rgba(255,255,255,.46);
-    margin-bottom:18px;
-    font-weight:600
-  }
-
-  .hero-checks{
-    margin-bottom:20px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px 14px;
-    max-width:680px
-  }
-  .hero-check{
-    display:flex;
-    align-items:flex-start;
-    gap:10px;
-    font-size:.83rem;
-    color:rgba(255,255,255,.8);
-    font-weight:600;
-    line-height:1.45;
-  }
-  .hero-check::before{
-    content:'✓';
-    color:#22c55e;
-    font-weight:900;
-    font-size:.75rem;
-    flex-shrink:0;
-    background:rgba(34,197,94,.12);
-    width:18px;
-    height:18px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-top:1px
-  }
-
-  .hero-ctas{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    align-items:center;
-    margin-bottom:12px
-  }
-
-  .hero-ctas a{flex:0 0 auto}
-
-  .hero-cta-note{
-    font-size:.74rem;
-    color:rgba(255,255,255,.44);
-    font-weight:600;
-    margin-bottom:18px
-  }
-
-  .hero-social-proof{
-    display:flex;
-    align-items:center;
-    gap:14px;
-    padding-top:14px;
-    border-top:1px solid rgba(255,255,255,.07)
-  }
-  .hero-sp-stat{
-    font-size:.92rem;
-    font-weight:800;
-    color:#fff;
-    line-height:1;
-    margin-bottom:4px
-  }
-  .hero-sp-text{
-    font-size:.72rem;
-    color:rgba(255,255,255,.44);
-    font-weight:500;
-    line-height:1.4;
-    max-width:170px;
+    transform:translateY(-2px);
   }
 
   .hero-mockup-wrap{
     position:relative;
-    z-index:1;
     width:100%;
   }
+
   .hero-mockup-wrap::before{
     content:'';
     position:absolute;
@@ -268,14 +232,14 @@ export const HOME_HERO_STYLES = `
     background:radial-gradient(ellipse at center,rgba(99,102,241,.18) 0%,rgba(59,130,246,.06) 45%,transparent 70%);
     pointer-events:none;
     z-index:0;
-    border-radius:34px
+    border-radius:34px;
   }
+
   .hero-mockup{
     background:#fff;
     border-radius:22px;
     overflow:hidden;
     box-shadow:0 0 0 1px rgba(255,255,255,.07),0 24px 64px rgba(0,0,0,.45),0 8px 24px rgba(0,0,0,.22);
-    animation:float 5s ease-in-out infinite;
     position:relative;
     z-index:1;
     width:100%;
@@ -289,9 +253,15 @@ export const HOME_HERO_STYLES = `
     display:flex;
     align-items:center;
     gap:6px;
-    border-bottom:1px solid rgba(255,255,255,.04)
+    border-bottom:1px solid rgba(255,255,255,.04);
   }
-  .mockup-dot{width:8px;height:8px;border-radius:50%}
+
+  .mockup-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+  }
+
   .mockup-url{
     flex:1;
     background:rgba(255,255,255,.06);
@@ -300,12 +270,96 @@ export const HOME_HERO_STYLES = `
     margin:0 12px;
     display:flex;
     align-items:center;
-    padding:0 10px
+    padding:0 10px;
   }
+
   .mockup-url span{
     font-size:.58rem;
     color:rgba(255,255,255,.35);
-    font-weight:500
+    font-weight:500;
+  }
+
+  .mockup-header{
+    background:linear-gradient(135deg,#0a1628,#0d2146);
+    padding:22px 20px;
+    color:#fff;
+    text-align:center;
+  }
+
+  .mockup-title{
+    font-size:1.22rem;
+    font-weight:900;
+    margin-bottom:6px;
+    letter-spacing:-.4px;
+  }
+
+  .mockup-sub{
+    font-size:.78rem;
+    color:rgba(255,255,255,.68);
+  }
+
+  .mockup-services{
+    padding:16px;
+    background:#f9fafb;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .mockup-item{
+    background:#fff;
+    padding:9px 12px;
+    border-radius:10px;
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:10px;
+    align-items:center;
+    box-shadow:0 1px 4px rgba(0,0,0,.04);
+    border:1px solid #f3f4f6;
+    font-size:.76rem;
+    font-weight:800;
+    color:#111827;
+  }
+
+  .mockup-item span:last-child{
+    color:#6366f1;
+    font-size:.7rem;
+  }
+
+  .mockup-actions{
+    padding:12px 16px;
+    background:#fff;
+    border-top:1px solid #f3f4f6;
+    display:flex;
+    gap:8px;
+  }
+
+  .mockup-actions button{
+    flex:1;
+    padding:9px 10px;
+    border-radius:9px;
+    border:none;
+    font-weight:800;
+    font-size:.7rem;
+    cursor:pointer;
+  }
+
+  .mockup-actions button:first-child{
+    background:#111827;
+    color:#fff;
+  }
+
+  .mockup-actions button:last-child{
+    background:#25d366;
+    color:#fff;
+  }
+
+  .mockup-note{
+    margin-top:12px;
+    font-size:.72rem;
+    color:rgba(255,255,255,.35);
+    text-align:center;
+    font-weight:600;
   }
 
   .hero-sticky-cta{
@@ -313,57 +367,7 @@ export const HOME_HERO_STYLES = `
     right:20px;
     bottom:20px;
     z-index:999;
-    display:none
-  }
-
-  @media (max-width: 1280px) {
-    .hero{
-      min-height:auto;
-      align-items:flex-start;
-      padding:96px 5% 40px;
-    }
-
-    .hero-container{
-      grid-template-columns:minmax(0,1fr) 380px;
-      gap:24px;
-      align-items:start;
-    }
-
-    .hero h1{
-      font-size:clamp(2.15rem,4vw,3rem);
-      max-width:620px;
-      margin-bottom:12px;
-    }
-
-    .hero-sub{
-      font-size:.94rem;
-      line-height:1.64;
-      max-width:540px;
-    }
-
-    .hero-microcopy,
-    .hero-checks,
-    .hero-cta-note,
-    .hero-social-proof{
-      display:none;
-    }
-
-    .hero-ctas{
-      margin-top:10px;
-      margin-bottom:0;
-    }
-
-    .btn-primary,
-    .btn-wa,
-    .btn-ghost{
-      padding:12px 18px;
-      min-height:46px;
-      font-size:.84rem;
-    }
-
-    .hero-mockup{
-      max-width:380px;
-    }
+    display:none;
   }
 
   @media (max-width: 1024px){
@@ -386,52 +390,24 @@ export const HOME_HERO_STYLES = `
     }
 
     .hero h1{
-      font-size:2.35rem;
       max-width:720px;
-      margin-bottom:14px;
     }
 
     .hero-sub{
       margin-left:auto;
       margin-right:auto;
-      max-width:640px;
-      font-size:.95rem;
-      margin-bottom:12px;
-    }
-
-    .hero-microcopy{
-      display:block;
-      margin-bottom:16px;
     }
 
     .hero-checks{
-      display:grid;
       grid-template-columns:1fr;
-      max-width:440px;
-      margin:16px auto 20px;
+      max-width:460px;
+      margin-left:auto;
+      margin-right:auto;
       text-align:left;
-    }
-
-    .hero-cta-note{
-      display:block;
-      margin-bottom:16px;
-    }
-
-    .hero-social-proof{
-      display:flex;
-      justify-content:center;
-      width:100%;
     }
 
     .hero-ctas{
       justify-content:center;
-      margin-bottom:12px;
-    }
-
-    .hero-mockup-wrap{
-      max-width:540px;
-      margin:0 auto;
-      width:100%;
     }
 
     .hero-mockup{
@@ -449,27 +425,20 @@ export const HOME_HERO_STYLES = `
       font-size:1.98rem;
       line-height:1.08;
       letter-spacing:-1px;
-      margin-bottom:12px;
     }
 
     .hero-sub{
       font-size:.9rem;
       line-height:1.68;
-      margin-bottom:10px;
     }
 
-    .hero-microcopy,
-    .hero-checks,
-    .hero-social-proof,
-    .hero-cta-note{
+    .hero-checks{
       display:none;
     }
 
     .hero-ctas{
       flex-direction:column;
       width:100%;
-      gap:10px;
-      margin-bottom:0;
     }
 
     .hero-ctas a,
@@ -478,27 +447,6 @@ export const HOME_HERO_STYLES = `
     .btn-ghost{
       width:100%;
       text-align:center;
-    }
-  }
-
-  @media(max-width:640px){
-    .hero{
-      padding:76px 5% 42px;
-    }
-
-    .hero-eyebrow{
-      font-size:.62rem;
-      letter-spacing:1.4px;
-      padding:8px 14px;
-      margin-bottom:16px;
-    }
-
-    .hero h1{
-      font-size:1.8rem;
-    }
-
-    .hero-sub{
-      font-size:.88rem;
     }
 
     .hero-mockup-wrap::before{
@@ -543,21 +491,16 @@ export default function HomeHero() {
       <section className="hero">
         <div className="hero-container">
           <div className="hero-content">
-            <div className="hero-eyebrow">Voor lokale ondernemers die meer aanvragen willen</div>
+            <div className="hero-eyebrow">
+              Voor lokale ondernemers die meer klanten willen
+            </div>
 
-            <h1>
-              Een website die <span>vertrouwen wekt</span>
-              <br />
-              en sneller klanten oplevert
-            </h1>
+            <h1>Een website die vertrouwen wekt</h1>
 
             <p className="hero-sub">
-              Vedantix bouwt websites voor lokale ondernemers die <strong>professioneler willen overkomen en meer afspraken, aanvragen of contactmomenten</strong> willen binnenhalen. Snel opgezet, duidelijk gepositioneerd en zonder technisch gedoe.
+              Meer afspraken, aanvragen en contactmomenten — zonder technisch gedoe.
+              Wij bouwen een website die direct duidelijk maakt waarom klanten voor jou kiezen.
             </p>
-
-            <div className="hero-microcopy">
-              Ook geschikt als je nog geen bestaande website, reviews of uitgebreide content hebt.
-            </div>
 
             <div className="hero-checks">
               {HERO_CHECKS.map((item) => (
@@ -569,11 +512,10 @@ export default function HomeHero() {
 
             <div className="hero-ctas">
               <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
+                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking."
                 target="_blank"
                 rel="noreferrer"
                 className="btn-primary"
-                style={{ textAlign: "center" }}
               >
                 Plan gratis kennismaking →
               </a>
@@ -583,35 +525,17 @@ export default function HomeHero() {
                 target="_blank"
                 rel="noreferrer"
                 className="btn-wa"
-                style={{ textAlign: "center" }}
               >
-                Vraag gratis website scan aan
+                Ontvang gratis website scan
               </a>
 
-              <a href="#demo" className="btn-ghost" style={{ textAlign: "center" }}>
-                Bekijk demo’s →
+              <a href="#demo" className="btn-ghost">
+                Bekijk voorbeelden →
               </a>
             </div>
 
             <div className="hero-cta-note">
-              Vrijblijvend gesprek · duidelijke pakketten · pas verder als de richting goed voelt
-            </div>
-
-            <div className="hero-social-proof">
-              <div>
-                <div className="hero-sp-stat">Sterkere eerste indruk</div>
-                <div className="hero-sp-text">Professioneler overkomen vanaf het eerste bezoek</div>
-              </div>
-              <div style={{ width: 1, height: 32, background: "rgba(255,255,255,0.08)" }} />
-              <div>
-                <div className="hero-sp-stat">Meer actie</div>
-                <div className="hero-sp-text">Gebouwd voor bellen, WhatsApp, offerte of afspraak</div>
-              </div>
-              <div style={{ width: 1, height: 32, background: "rgba(255,255,255,0.08)" }} />
-              <div>
-                <div className="hero-sp-stat">Minder gedoe</div>
-                <div className="hero-sp-text">Hosting, onderhoud en support onder één partij</div>
-              </div>
+              Vrijblijvend · binnen 48 uur eerste versie · geen risico
             </div>
           </div>
 
@@ -626,127 +550,30 @@ export default function HomeHero() {
                 </div>
               </div>
 
-              <div
-                style={{
-                  background: "linear-gradient(135deg,#0a1628,#0d2146)",
-                  padding: "22px 20px",
-                  color: "#fff",
-                  textAlign: "center",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "0.62rem",
-                    fontWeight: 800,
-                    color: "rgba(255,255,255,0.45)",
-                    textTransform: "uppercase",
-                    letterSpacing: 1.4,
-                    marginBottom: 8,
-                  }}
-                >
-                  Demo concept voor kapper / barber
-                </div>
-
-                <div style={{ fontSize: "1.22rem", fontWeight: 900, marginBottom: 6, letterSpacing: -0.4 }}>
-                  Barbershop Amsterdam
-                </div>
-
-                <div style={{ fontSize: "0.78rem", color: "rgba(255,255,255,0.68)", marginBottom: 14 }}>
+              <div className="mockup-header">
+                <div className="mockup-title">Barbershop Amsterdam</div>
+                <div className="mockup-sub">
                   Duidelijk. Snel. Gericht op afspraak of WhatsApp.
                 </div>
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: 14,
-                    paddingTop: 10,
-                    borderTop: "1px solid rgba(255,255,255,0.08)",
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>
-                    ⭐ Professionele eerste indruk
-                  </span>
-                  <span style={{ fontSize: "0.68rem", color: "rgba(255,255,255,0.7)", fontWeight: 700 }}>
-                    📱 Mobielvriendelijk
-                  </span>
-                </div>
               </div>
 
-              <div style={{ padding: "16px", background: "#f9fafb" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {MOCKUP_SERVICES.map(([icon, name, price]) => (
-                    <div
-                      key={name}
-                      style={{
-                        background: "#fff",
-                        padding: "9px 12px",
-                        borderRadius: 10,
-                        display: "flex",
-                        gap: 10,
-                        alignItems: "center",
-                        boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-                        border: "1px solid #f3f4f6",
-                      }}
-                    >
-                      <span style={{ fontSize: ".95rem" }}>{icon}</span>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: ".76rem", fontWeight: 800, color: "#111827" }}>{name}</div>
-                      </div>
-                      <span style={{ fontSize: ".7rem", fontWeight: 800, color: "#6366f1" }}>{price}</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="mockup-services">
+                {MOCKUP_SERVICES.map(([icon, name, price]) => (
+                  <div key={name} className="mockup-item">
+                    <span>{icon}</span>
+                    <span>{name}</span>
+                    <span>{price}</span>
+                  </div>
+                ))}
               </div>
 
-              <div style={{ padding: "12px 16px", background: "#fff", borderTop: "1px solid #f3f4f6" }}>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <button
-                    type="button"
-                    style={{
-                      flex: 1,
-                      background: "#111827",
-                      color: "#fff",
-                      padding: "9px 10px",
-                      borderRadius: 9,
-                      border: "none",
-                      fontWeight: 800,
-                      fontSize: ".7rem",
-                      cursor: "pointer",
-                    }}
-                  >
-                    📅 Afspraak maken
-                  </button>
-                  <button
-                    type="button"
-                    style={{
-                      flex: 1,
-                      background: "#25d366",
-                      color: "#fff",
-                      padding: "9px 10px",
-                      borderRadius: 9,
-                      border: "none",
-                      fontWeight: 800,
-                      fontSize: ".7rem",
-                      cursor: "pointer",
-                    }}
-                  >
-                    💬 WhatsApp
-                  </button>
-                </div>
+              <div className="mockup-actions">
+                <button type="button">📅 Afspraak maken</button>
+                <button type="button">💬 WhatsApp</button>
               </div>
             </div>
 
-            <p
-              style={{
-                marginTop: 12,
-                fontSize: ".72rem",
-                color: "rgba(255,255,255,0.35)",
-                textAlign: "center",
-                fontWeight: 600,
-              }}
-            >
+            <p className="mockup-note">
               Demo mockup • bedoeld om richting en stijl te laten zien
             </p>
           </div>
@@ -755,7 +582,7 @@ export default function HomeHero() {
 
       <div className="hero-sticky-cta">
         <a
-          href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20meer%20weten%20over%20een%20website."
+          href="https://wa.me/310626219989"
           target="_blank"
           rel="noreferrer"
           className="btn-wa"
