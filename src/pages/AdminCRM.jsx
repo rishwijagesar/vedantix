@@ -20,21 +20,117 @@ const STORAGE_KEYS = {
 };
 
 const PACKAGE_OPTIONS = [
-  { code: "STARTER", label: "Starter", monthlyPrice: 99 },
-  { code: "GROWTH", label: "Growth", monthlyPrice: 149 },
-  { code: "PRO", label: "Pro", monthlyPrice: 249 },
-  { code: "CUSTOM", label: "Custom", monthlyPrice: 399 },
+  {
+    code: "STARTER",
+    label: "Starter",
+    monthlyPrice: 99,
+    setupPrice: 500,
+    monthlyInfraCost: 8,
+    isActive: true,
+    sortOrder: 1,
+  },
+  {
+    code: "GROWTH",
+    label: "Growth",
+    monthlyPrice: 149,
+    setupPrice: 850,
+    monthlyInfraCost: 12,
+    isActive: true,
+    sortOrder: 2,
+  },
+  {
+    code: "PRO",
+    label: "Pro",
+    monthlyPrice: 249,
+    setupPrice: 1250,
+    monthlyInfraCost: 18,
+    isActive: true,
+    sortOrder: 3,
+  },
+  {
+    code: "CUSTOM",
+    label: "Custom",
+    monthlyPrice: 399,
+    setupPrice: 2000,
+    monthlyInfraCost: 25,
+    isActive: true,
+    sortOrder: 4,
+  },
 ];
 
 const EXTRA_OPTIONS = [
-  { code: "BLOG", label: "Blog / FAQ", monthlyPrice: 15 },
-  { code: "BOOKING", label: "Reserveringen", monthlyPrice: 25 },
-  { code: "ANALYTICS", label: "Analytics+", monthlyPrice: 10 },
-  { code: "CRM", label: "CRM module", monthlyPrice: 25 },
-  { code: "FORMS", label: "Form opslag", monthlyPrice: 12 },
-  { code: "SEO_PLUS", label: "Local SEO+", monthlyPrice: 20 },
-  { code: "EXTRA_MAILBOX", label: "Extra mailbox", monthlyPrice: 7 },
-  { code: "PRIORITY_SUPPORT", label: "Priority support", monthlyPrice: 35 },
+  {
+    code: "BLOG",
+    label: "Blog / FAQ",
+    monthlyPrice: 15,
+    setupPrice: 100,
+    monthlyInfraCost: 0,
+    isActive: true,
+    sortOrder: 1,
+  },
+  {
+    code: "BOOKING",
+    label: "Reserveringen",
+    monthlyPrice: 25,
+    setupPrice: 250,
+    monthlyInfraCost: 2,
+    isActive: true,
+    sortOrder: 2,
+  },
+  {
+    code: "ANALYTICS",
+    label: "Analytics+",
+    monthlyPrice: 10,
+    setupPrice: 50,
+    monthlyInfraCost: 0,
+    isActive: true,
+    sortOrder: 3,
+  },
+  {
+    code: "CRM",
+    label: "CRM module",
+    monthlyPrice: 25,
+    setupPrice: 300,
+    monthlyInfraCost: 3,
+    isActive: true,
+    sortOrder: 4,
+  },
+  {
+    code: "FORMS",
+    label: "Form opslag",
+    monthlyPrice: 12,
+    setupPrice: 75,
+    monthlyInfraCost: 1,
+    isActive: true,
+    sortOrder: 5,
+  },
+  {
+    code: "SEO_PLUS",
+    label: "Local SEO+",
+    monthlyPrice: 20,
+    setupPrice: 150,
+    monthlyInfraCost: 0,
+    isActive: true,
+    sortOrder: 6,
+  },
+  {
+    code: "EXTRA_MAILBOX",
+    label: "Extra mailbox",
+    monthlyPrice: 7,
+    setupPrice: 0,
+    monthlyInfraCost: 1,
+    isActive: true,
+    sortOrder: 7,
+  },
+  {
+    code: "PRIORITY_SUPPORT",
+    label: "Priority support",
+    monthlyPrice: 35,
+    setupPrice: 0,
+    monthlyInfraCost: 0,
+    isActive: true,
+    sortOrder: 8,
+  },
 ];
 
 const STATUS_LABELS = {
@@ -89,9 +185,8 @@ const DEFAULT_CUSTOMER_FORM = {
   packageCode: "STARTER",
   extras: [],
   notes: "",
-  monthlyInfraCost: 15,
-  oneTimeSetupCost: 0,
   address: "",
+  postalCode: "",
   city: "",
   country: "Nederland",
 };
@@ -149,6 +244,50 @@ function dateLabel(value) {
 function packageMeta(packageCode) {
   return (
     PACKAGE_OPTIONS.find((item) => item.code === packageCode) || PACKAGE_OPTIONS[0]
+  );
+}
+
+function activePackageOptions(options) {
+  return [...options]
+    .filter((item) => item.isActive !== false)
+    .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0));
+}
+
+function activeExtraOptions(options) {
+  return [...options]
+    .filter((item) => item.isActive !== false)
+    .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0));
+}
+
+function extraMeta(code) {
+  return EXTRA_OPTIONS.find((item) => item.code === code) || null;
+}
+
+function extrasSetupPrice(extras) {
+  return (extras || []).reduce((sum, code) => {
+    const item = extraMeta(code);
+    return sum + Number(item?.setupPrice || 0);
+  }, 0);
+}
+
+function extrasInfraCost(extras) {
+  return (extras || []).reduce((sum, code) => {
+    const item = extraMeta(code);
+    return sum + Number(item?.monthlyInfraCost || 0);
+  }, 0);
+}
+
+function calcSetupRevenue(customer) {
+  return (
+    Number(packageMeta(customer.packageCode).setupPrice || 0) +
+    extrasSetupPrice(customer.extras || [])
+  );
+}
+
+function calcMonthlyInfraCost(customer) {
+  return (
+    Number(packageMeta(customer.packageCode).monthlyInfraCost || 0) +
+    extrasInfraCost(customer.extras || [])
   );
 }
 
@@ -236,7 +375,7 @@ function isWithinFilter(dateString, filterKey) {
 function buildCustomerPeriodStats(customer, expenses, filterKey) {
   const multiplier = periodMultiplier(filterKey);
   const revenue = calcMonthlyRevenue(customer) * multiplier;
-  const infraCost = Number(customer.monthlyInfraCost || 0) * multiplier;
+  const infraCost = calcMonthlyInfraCost(customer) * multiplier;
 
   const directExpenses = expenses
     .filter((expense) => expense.customerId === customer.id)
@@ -282,7 +421,7 @@ function buildCustomerTrendData(customer, expenses, filterKey) {
       const year = base.getFullYear();
 
       const revenue = calcMonthlyRevenue(customer);
-      const infraCost = Number(customer.monthlyInfraCost || 0);
+      const infraCost = calcMonthlyInfraCost(customer);
 
       const directExpenses = expenses
         .filter((expense) => expense.customerId === customer.id)
@@ -305,7 +444,7 @@ function buildCustomerTrendData(customer, expenses, filterKey) {
       base.setDate(base.getDate() - i);
       const iso = base.toISOString().slice(0, 10);
       const revenue = calcMonthlyRevenue(customer) / 30;
-      const infraCost = Number(customer.monthlyInfraCost || 0) / 30;
+      const infraCost = calcMonthlyInfraCost(customer) / 30;
 
       const directExpenses = expenses
         .filter((expense) => expense.customerId === customer.id)
@@ -359,7 +498,7 @@ function buildDashboardTrendData(customers, expenses, filterKey) {
         0
       );
       const infraCost = customers.reduce(
-        (sum, customer) => sum + Number(customer.monthlyInfraCost || 0),
+        (sum, customer) => sum + calcMonthlyInfraCost(customer),
         0
       );
 
@@ -382,13 +521,12 @@ function buildDashboardTrendData(customers, expenses, filterKey) {
     } else {
       base.setDate(base.getDate() - i);
       const iso = base.toISOString().slice(0, 10);
+
       const revenue =
         customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0) / 30;
+
       const infraCost =
-        customers.reduce(
-          (sum, customer) => sum + Number(customer.monthlyInfraCost || 0),
-          0
-        ) / 30;
+        customers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0) / 30;
 
       const directExpenses = expenses
         .filter((expense) => String(expense.date).slice(0, 10) === iso)
@@ -750,6 +888,13 @@ function Modal({ open, title, children, onClose, maxWidth = 900 }) {
 }
 
 export default function AdminCRM() {
+  const [packageOptions, setPackageOptions] = useState(() =>
+    loadJson("vedantix_package_options_v1", PACKAGE_OPTIONS)
+  );
+  const [extraOptions, setExtraOptions] = useState(() =>
+    loadJson("vedantix_extra_options_v1", EXTRA_OPTIONS)
+  );
+  const [pricingTab, setPricingTab] = useState("packages");
   const [activeTab, setActiveTab] = useState("dashboard");
   const [settings, setSettings] = useState(() =>
     loadJson(STORAGE_KEYS.settings, DEFAULT_SETTINGS)
@@ -778,6 +923,8 @@ export default function AdminCRM() {
   useEffect(() => saveJson(STORAGE_KEYS.customers, customers), [customers]);
   useEffect(() => saveJson(STORAGE_KEYS.expenses, expenses), [expenses]);
   useEffect(() => saveJson(STORAGE_KEYS.requestLog, requestLog), [requestLog]);
+  useEffect(() => saveJson("vedantix_package_options_v1", packageOptions), [packageOptions]);
+  useEffect(() => saveJson("vedantix_extra_options_v1", extraOptions), [extraOptions]);
 
   const filteredCustomers = useMemo(() => {
     const q = customerSearch.trim().toLowerCase();
@@ -840,14 +987,14 @@ export default function AdminCRM() {
       return acc;
     }, {});
 
-    return PACKAGE_OPTIONS.map((option) => ({
+    return activePackageOptions(packageOptions).map((option) => ({
       name: option.label,
       klanten: grouped[option.code] || 0,
       omzet: customers
         .filter((customer) => customer.packageCode === option.code)
         .reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0),
     }));
-  }, [customers]);
+  }, [customers, packageOptions]);
 
   const dashboardTrendData = useMemo(() => {
     return buildDashboardTrendData(customers, expenses, financeFilter);

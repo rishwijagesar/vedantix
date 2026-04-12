@@ -1,13 +1,12 @@
-import { useMemo, useState, Suspense, lazy } from "react";
+import { useMemo, useState } from "react";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
 import BigFooter from "../components/BigFooter";
 import HomeHero, { HOME_HERO_STYLES } from "./HomeHero";
-
-const HomePricing = lazy(() => import("./HomePricing"));
-const HomeDemoSection = lazy(() => import("./HomeDemoSection"));
-const HomeFounderSection = lazy(() => import("./HomeFounderSection"));
-const ClientCasesSection = lazy(() => import("../components/home/ClientCasesSection"));
+import HomePricing from "./HomePricing";
+import HomeDemoSection from "./HomeDemoSection";
+import HomeFounderSection from "./HomeFounderSection";
+import ClientCasesSection from "../components/home/ClientCasesSection";
 
 const HOME_STYLES = `
   *{box-sizing:border-box;margin:0;padding:0}

@@ -293,8 +293,9 @@ export const HOME_HERO_STYLES = `
     position:relative;
     width:100%;
     display:flex;
-    justify-content:flex-end;
-    align-items:center;
+    flex-direction:column;
+    align-items:flex-end;
+    justify-content:center;
   }
 
   .hero-mockup-wrap::before{
@@ -320,6 +321,7 @@ export const HOME_HERO_STYLES = `
     width:100%;
     max-width:470px;
     animation:float 5s ease-in-out infinite;
+    align-self:flex-end;
   }
 
   .mockup-bar{
@@ -455,11 +457,13 @@ export const HOME_HERO_STYLES = `
   }
 
   .mockup-note{
-    margin-top:12px;
-    font-size:.71rem;
-    color:rgba(255,255,255,.35);
-    text-align:center;
+    margin-top:14px;
+    font-size:.7rem;
+    color:rgba(255,255,255,.38);
+    text-align:right;
     font-weight:600;
+    width:100%;
+    max-width:470px;
   }
 
   .hero-sticky-cta{
@@ -482,6 +486,10 @@ export const HOME_HERO_STYLES = `
     }
 
     .hero-mockup{
+      max-width:500px;
+    }
+
+    .mockup-note{
       max-width:500px;
     }
   }
@@ -551,6 +559,10 @@ export const HOME_HERO_STYLES = `
       max-width:390px;
     }
 
+    .mockup-note{
+      max-width:390px;
+    }
+
     .hero-btn-primary,
     .hero-btn-wa,
     .hero-btn-ghost{
@@ -601,6 +613,10 @@ export const HOME_HERO_STYLES = `
     }
 
     .hero-mockup{
+      max-width:360px;
+    }
+
+    .mockup-note{
       max-width:360px;
     }
   }
