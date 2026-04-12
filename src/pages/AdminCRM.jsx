@@ -1,10 +1,77 @@
 import React, { useEffect, useMemo, useState } from "react";
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  Legend,
+} from "recharts";
 
 const STORAGE_KEYS = {
-  settings: "vedantix_admin_settings_v3",
-  customers: "vedantix_admin_customers_v3",
-  history: "vedantix_admin_request_history_v3",
+  settings: "vedantix_admin_settings_v5",
+  customers: "vedantix_admin_customers_v5",
+  expenses: "vedantix_admin_expenses_v5",
+  requestLog: "vedantix_admin_request_log_v5",
 };
+
+const PACKAGE_OPTIONS = [
+  { code: "STARTER", label: "Starter", monthlyPrice: 99 },
+  { code: "GROWTH", label: "Growth", monthlyPrice: 149 },
+  { code: "PRO", label: "Pro", monthlyPrice: 249 },
+  { code: "CUSTOM", label: "Custom", monthlyPrice: 399 },
+];
+
+const EXTRA_OPTIONS = [
+  { code: "BLOG", label: "Blog / FAQ", monthlyPrice: 15 },
+  { code: "BOOKING", label: "Reserveringen", monthlyPrice: 25 },
+  { code: "ANALYTICS", label: "Analytics+", monthlyPrice: 10 },
+  { code: "CRM", label: "CRM module", monthlyPrice: 25 },
+  { code: "FORMS", label: "Form opslag", monthlyPrice: 12 },
+  { code: "SEO_PLUS", label: "Local SEO+", monthlyPrice: 20 },
+  { code: "EXTRA_MAILBOX", label: "Extra mailbox", monthlyPrice: 7 },
+  { code: "PRIORITY_SUPPORT", label: "Priority support", monthlyPrice: 35 },
+];
+
+const STATUS_LABELS = {
+  lead: "Lead",
+  intake: "Intake",
+  onboarding: "Onboarding",
+  provisioning: "Provisioning",
+  active: "Live",
+  warning: "Waarschuwing",
+  failed: "Fout",
+  paused: "Gepauzeerd",
+  cancelled: "Opgezegd",
+};
+
+const STATUS_COLORS = {
+  lead: "#64748b",
+  intake: "#8b5cf6",
+  onboarding: "#0ea5e9",
+  provisioning: "#f59e0b",
+  active: "#10b981",
+  warning: "#f97316",
+  failed: "#ef4444",
+  paused: "#475569",
+  cancelled: "#94a3b8",
+};
+
+const TIME_FILTERS = [
+  { key: "day", label: "Dag" },
+  { key: "week", label: "Week" },
+  { key: "month", label: "Maand" },
+  { key: "quarter", label: "Kwartaal" },
+  { key: "halfyear", label: "Half jaar" },
+  { key: "year", label: "Jaar" },
+];
 
 const DEFAULT_SETTINGS = {
   baseUrl: "/provisioning-api",
@@ -13,395 +80,28 @@ const DEFAULT_SETTINGS = {
   actorId: "admin-dashboard",
   source: "ADMIN_PANEL",
   autoIdempotency: true,
+  autoProvisionMail: true,
+  defaultMailboxLocalPart: "info",
 };
 
-const DEFAULT_CUSTOMER = {
-  id: "",
-  name: "",
-  projectName: "",
+const DEFAULT_CUSTOMER_FORM = {
+  companyName: "",
+  contactName: "",
+  email: "",
+  phone: "",
   domain: "",
   packageCode: "STARTER",
-  addOnsCsv: "",
-  deploymentId: "",
-  mailDomainId: "",
-  mailboxLocalPart: "",
-  mailboxDisplayName: "",
-  mailboxPassword: "",
+  extras: [],
+  notes: "",
+  monthlyInfraCost: 15,
 };
 
-const STAGES = [
-  "DOMAIN_CHECK",
-  "GITHUB_PROVISION",
-  "S3_BUCKET",
-  "ACM_REQUEST",
-  "ACM_VALIDATION_RECORDS",
-  "ACM_DNS_PROPAGATION",
-  "ACM_WAIT",
-  "CLOUDFRONT",
-  "ROUTE53_ALIAS",
-  "GITHUB_DISPATCH",
-  "DYNAMODB",
-  "SQS",
-  "DELETE_DOMAIN_ALIAS",
-  "DISABLE_CLOUDFRONT",
-  "WAIT_CLOUDFRONT_DISABLED",
-  "DELETE_CLOUDFRONT",
-  "EMPTY_S3_BUCKET",
-  "DELETE_S3_BUCKET",
-  "DELETE_ACM_VALIDATION_RECORDS",
-  "DELETE_ACM_CERTIFICATE",
-  "FINALIZE_DELETE",
-];
-
-const PACKAGE_CODES = ["STARTER", "GROWTH", "PRO", "CUSTOM"];
-const REDEPLOY_MODES = ["CONTENT_ONLY", "REPAIR_INFRA", "FULL_RECONCILE"];
-
-const ENDPOINT_PRESETS = [
-  {
-    key: "health",
-    label: "Health",
-    method: "GET",
-    path: "/health",
-    body: "",
-    category: "System",
-  },
-  {
-    key: "ready",
-    label: "Ready",
-    method: "GET",
-    path: "/ready",
-    body: "",
-    category: "System",
-  },
-  {
-    key: "create-deployment-v2",
-    label: "Create deployment (v2)",
-    method: "POST",
-    path: "/api/deployments",
-    body: JSON.stringify(
-      {
-        customerId: "cust_test_001",
-        projectName: "vedantix-test-project",
-        domain: "test.vedantix.nl",
-        packageCode: "STARTER",
-        addOns: [],
-      },
-      null,
-      2
-    ),
-    category: "Deployments v2",
-  },
-  {
-    key: "get-deployment-v2",
-    label: "Get deployment (v2)",
-    method: "GET",
-    path: "/api/deployments/:deploymentId",
-    body: "",
-    category: "Deployments v2",
-  },
-  {
-    key: "resume-deployment-v2",
-    label: "Resume deployment (v2)",
-    method: "POST",
-    path: "/api/deployments/:deploymentId/resume",
-    body: "{}",
-    category: "Deployments v2",
-  },
-  {
-    key: "redeploy-deployment-v2",
-    label: "Redeploy deployment (v2)",
-    method: "POST",
-    path: "/api/deployments/:deploymentId/redeploy",
-    body: JSON.stringify({ mode: "CONTENT_ONLY" }, null, 2),
-    category: "Deployments v2",
-  },
-  {
-    key: "retry-stage-v2",
-    label: "Retry stage (v2)",
-    method: "POST",
-    path: "/api/deployments/:deploymentId/retry/:stage",
-    body: "{}",
-    category: "Deployments v2",
-  },
-  {
-    key: "deployment-operations-v2",
-    label: "Deployment operations (v2)",
-    method: "GET",
-    path: "/api/deployments/:deploymentId/operations",
-    body: "",
-    category: "Deployments v2",
-  },
-  {
-    key: "deployment-audit-v2",
-    label: "Deployment audit (v2)",
-    method: "GET",
-    path: "/api/deployments/:deploymentId/audit",
-    body: "",
-    category: "Deployments v2",
-  },
-  {
-    key: "rollback-v2",
-    label: "Rollback deployment (v2)",
-    method: "POST",
-    path: "/api/deployments/:deploymentId/rollback",
-    body: JSON.stringify({ rollbackRef: "" }, null, 2),
-    category: "Deployments v2",
-  },
-  {
-    key: "delete-v2",
-    label: "Delete deployment (v2)",
-    method: "POST",
-    path: "/api/deployments/:deploymentId/delete",
-    body: "{}",
-    category: "Deployments v2",
-  },
-  {
-    key: "get-operation-v2",
-    label: "Get operation (v2)",
-    method: "GET",
-    path: "/api/operations/:operationId",
-    body: "",
-    category: "Deployments v2",
-  },
-  {
-    key: "cleanup-candidates",
-    label: "Cleanup candidates",
-    method: "GET",
-    path: "/api/admin/cleanup-candidates",
-    body: "",
-    category: "Admin",
-  },
-  {
-    key: "cleanup-run",
-    label: "Run cleanup",
-    method: "POST",
-    path: "/api/admin/cleanup/run",
-    body: JSON.stringify({ dryRun: true }, null, 2),
-    category: "Admin",
-  },
-  {
-    key: "orphans",
-    label: "Scan orphans",
-    method: "GET",
-    path: "/api/admin/orphans",
-    body: "",
-    category: "Admin",
-  },
-  {
-    key: "reconcile-admin",
-    label: "Reconcile deployment",
-    method: "POST",
-    path: "/api/admin/deployments/:deploymentId/reconcile",
-    body: "{}",
-    category: "Admin",
-  },
-  {
-    key: "consistency-admin",
-    label: "Deployment consistency",
-    method: "GET",
-    path: "/api/admin/deployments/:deploymentId/consistency",
-    body: "",
-    category: "Admin",
-  },
-  {
-    key: "mail-domain-create",
-    label: "Create mail domain",
-    method: "POST",
-    path: "/api/mail/domains",
-    body: JSON.stringify(
-      {
-        customerId: "cust_test_001",
-        domain: "mail.vedantix.nl",
-      },
-      null,
-      2
-    ),
-    category: "Mail",
-  },
-  {
-    key: "mail-domain-dns",
-    label: "Mail domain DNS records",
-    method: "GET",
-    path: "/api/mail/domains/:mailDomainId/dns-records",
-    body: "",
-    category: "Mail",
-  },
-  {
-    key: "mail-domain-reconcile",
-    label: "Reconcile mail domain",
-    method: "POST",
-    path: "/api/mail/domains/:mailDomainId/reconcile",
-    body: "{}",
-    category: "Mail",
-  },
-  {
-    key: "mailbox-create",
-    label: "Create mailbox",
-    method: "POST",
-    path: "/api/mail/mailboxes",
-    body: JSON.stringify(
-      {
-        customerId: "cust_test_001",
-        mailDomainId: "mail-domain-id",
-        localPart: "info",
-        displayName: "Info",
-        includedStorageGb: 5,
-        extraStorageGb: 0,
-        password: "SterkTijdelijkWachtwoord123!",
-      },
-      null,
-      2
-    ),
-    category: "Mail",
-  },
-  {
-    key: "mailbox-disable",
-    label: "Disable mailbox",
-    method: "POST",
-    path: "/api/mail/mailboxes/:mailboxId/disable",
-    body: JSON.stringify({ reason: "temporary" }, null, 2),
-    category: "Mail",
-  },
-  {
-    key: "mailbox-enable",
-    label: "Enable mailbox",
-    method: "POST",
-    path: "/api/mail/mailboxes/:mailboxId/enable",
-    body: "{}",
-    category: "Mail",
-  },
-  {
-    key: "mailbox-delete",
-    label: "Delete mailbox",
-    method: "DELETE",
-    path: "/api/mail/mailboxes/:mailboxId",
-    body: "",
-    category: "Mail",
-  },
-  {
-    key: "customer-provision-mail",
-    label: "Provision customer mail",
-    method: "POST",
-    path: "/api/customers/:customerId/provision-mail",
-    body: JSON.stringify(
-      {
-        domain: "vedantix.nl",
-        packageCode: "STARTER",
-      },
-      null,
-      2
-    ),
-    category: "Mail",
-  },
-  {
-    key: "legacy-deploy",
-    label: "Legacy deploy",
-    method: "POST",
-    path: "/api/deploy",
-    body: JSON.stringify(
-      {
-        customerId: "cust_test_001",
-        projectName: "vedantix-test-project",
-        domain: "test.vedantix.nl",
-        packageCode: "STARTER",
-        addOns: [],
-      },
-      null,
-      2
-    ),
-    category: "Legacy",
-  },
-  {
-    key: "legacy-check-domain",
-    label: "Legacy domain check",
-    method: "POST",
-    path: "/api/domains/check",
-    body: JSON.stringify({ domain: "test.vedantix.nl" }, null, 2),
-    category: "Legacy",
-  },
-  {
-    key: "legacy-add-domain",
-    label: "Legacy add domain",
-    method: "POST",
-    path: "/api/domains",
-    body: JSON.stringify(
-      {
-        customerId: "cust_test_001",
-        deploymentId: "deployment-id",
-        domain: "extra.vedantix.nl",
-      },
-      null,
-      2
-    ),
-    category: "Legacy",
-  },
-  {
-    key: "legacy-upgrade-package",
-    label: "Legacy package upgrade",
-    method: "POST",
-    path: "/api/package-upgrades",
-    body: JSON.stringify(
-      {
-        customerId: "cust_test_001",
-        deploymentId: "deployment-id",
-        targetPackageCode: "PRO",
-        addOns: [],
-      },
-      null,
-      2
-    ),
-    category: "Legacy",
-  },
-  {
-    key: "legacy-add-mailbox",
-    label: "Legacy add mailbox",
-    method: "POST",
-    path: "/api/mailboxes",
-    body: JSON.stringify(
-      {
-        customerId: "cust_test_001",
-        deploymentId: "deployment-id",
-        domain: "vedantix.nl",
-        mailboxLocalPart: "sales",
-        quantity: 1,
-      },
-      null,
-      2
-    ),
-    category: "Legacy",
-  },
-  {
-    key: "legacy-delete-everything",
-    label: "Legacy delete everything",
-    method: "POST",
-    path: "/api/delete-everything",
-    body: JSON.stringify(
-      {
-        customerId: "cust_test_001",
-        deploymentId: "deployment-id",
-        confirm: true,
-      },
-      null,
-      2
-    ),
-    category: "Legacy",
-  },
-  {
-    key: "legacy-redeploy",
-    label: "Legacy redeploy",
-    method: "POST",
-    path: "/api/redeploy",
-    body: JSON.stringify(
-      {
-        customerId: "cust_test_001",
-        deploymentId: "deployment-id",
-      },
-      null,
-      2
-    ),
-    category: "Legacy",
-  },
-];
+const DEFAULT_EXPENSE_FORM = {
+  title: "",
+  amount: "",
+  date: new Date().toISOString().slice(0, 10),
+  category: "Overig",
+};
 
 function loadJson(key, fallback) {
   try {
@@ -416,52 +116,84 @@ function saveJson(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-function pretty(value) {
-  if (typeof value === "string") {
-    try {
-      return JSON.stringify(JSON.parse(value), null, 2);
-    } catch {
-      return value;
-    }
-  }
-  return JSON.stringify(value, null, 2);
+function slugify(value) {
+  return String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
-function buildHeaders(settings, method, extra = {}) {
+function pretty(value) {
+  try {
+    return JSON.stringify(value, null, 2);
+  } catch {
+    return String(value);
+  }
+}
+
+function currency(value) {
+  return new Intl.NumberFormat("nl-NL", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  }).format(Number(value || 0));
+}
+
+function dateLabel(value) {
+  if (!value) return "—";
+  return new Date(value).toLocaleDateString("nl-NL");
+}
+
+function packageMeta(packageCode) {
+  return (
+    PACKAGE_OPTIONS.find((item) => item.code === packageCode) || PACKAGE_OPTIONS[0]
+  );
+}
+
+function extrasPrice(extras) {
+  return (extras || []).reduce((sum, code) => {
+    const item = EXTRA_OPTIONS.find((extra) => extra.code === code);
+    return sum + (item?.monthlyPrice || 0);
+  }, 0);
+}
+
+function calcMonthlyRevenue(customer) {
+  return (
+    (packageMeta(customer.packageCode).monthlyPrice || 0) +
+    extrasPrice(customer.extras || [])
+  );
+}
+
+function buildHeaders(settings, method) {
   const headers = {
     "Content-Type": "application/json",
     "X-Api-Key": settings.apiKey || "",
     "X-Tenant-Id": settings.tenantId || "default",
     "X-Actor-Id": settings.actorId || "admin-dashboard",
     "X-Source": settings.source || "ADMIN_PANEL",
-    ...extra,
   };
 
   if (settings.autoIdempotency && method !== "GET") {
     headers["Idempotency-Key"] =
-      extra["Idempotency-Key"] ||
-      (window.crypto?.randomUUID?.() ?? `req-${Date.now()}`);
+      (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+      `req-${Date.now()}`;
   }
 
   return headers;
 }
 
-async function callProvisioningApi(settings, method, path, bodyText = "") {
+async function apiRequest(settings, method, path, body) {
   const url = `${settings.baseUrl.replace(/\/$/, "")}${path}`;
-  const headers = buildHeaders(settings, method);
-  const options = {
+  const response = await fetch(url, {
     method,
-    headers,
-  };
+    headers: buildHeaders(settings, method),
+    body: method === "GET" ? undefined : JSON.stringify(body || {}),
+  });
 
-  if (method !== "GET" && bodyText && bodyText.trim()) {
-    options.body = bodyText;
-  }
-
-  const response = await fetch(url, options);
   const text = await response.text();
+  let data = null;
 
-  let data = text;
   try {
     data = text ? JSON.parse(text) : null;
   } catch {
@@ -471,16 +203,145 @@ async function callProvisioningApi(settings, method, path, bodyText = "") {
   return {
     ok: response.ok,
     status: response.status,
-    statusText: response.statusText,
-    url,
-    headers,
     data,
+    url,
+    method,
   };
 }
 
-function SectionTitle(props) {
-  const { title, subtitle, action = null } = props;
+function withinFilter(dateString, filterKey) {
+  const d = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const dayMs = 24 * 60 * 60 * 1000;
 
+  if (filterKey === "day") return diffMs <= dayMs;
+  if (filterKey === "week") return diffMs <= 7 * dayMs;
+  if (filterKey === "month") return diffMs <= 31 * dayMs;
+  if (filterKey === "quarter") return diffMs <= 92 * dayMs;
+  if (filterKey === "halfyear") return diffMs <= 183 * dayMs;
+  return diffMs <= 366 * dayMs;
+}
+
+function buildTrendData(customers, expenses, filterKey) {
+  const days =
+    filterKey === "day"
+      ? 1
+      : filterKey === "week"
+        ? 7
+        : filterKey === "month"
+          ? 30
+          : filterKey === "quarter"
+            ? 12
+            : filterKey === "halfyear"
+              ? 6
+              : 12;
+
+  const useMonths =
+    filterKey === "quarter" || filterKey === "halfyear" || filterKey === "year";
+
+  const rows = [];
+
+  for (let i = days - 1; i >= 0; i -= 1) {
+    const base = new Date();
+
+    if (useMonths) {
+      base.setMonth(base.getMonth() - i);
+      const month = base.getMonth();
+      const year = base.getFullYear();
+
+      const income = customers
+        .filter((customer) => {
+          const start = new Date(customer.createdAt);
+          return start.getMonth() <= month || start.getFullYear() < year;
+        })
+        .reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0);
+
+      const outgoing = expenses
+        .filter((expense) => {
+          const d = new Date(expense.date);
+          return d.getMonth() === month && d.getFullYear() === year;
+        })
+        .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+
+      rows.push({
+        label: base.toLocaleDateString("nl-NL", {
+          month: "short",
+          year: filterKey === "year" ? "2-digit" : undefined,
+        }),
+        omzet: income,
+        uitgaven: outgoing,
+        winst: income - outgoing,
+      });
+    } else {
+      base.setDate(base.getDate() - i);
+      const iso = base.toISOString().slice(0, 10);
+
+      const income = customers
+        .filter((customer) => {
+          return new Date(customer.createdAt) <= new Date(`${iso}T23:59:59`);
+        })
+        .reduce((sum, customer) => sum + calcMonthlyRevenue(customer) / 30, 0);
+
+      const outgoing = expenses
+        .filter((expense) => String(expense.date).slice(0, 10) === iso)
+        .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+
+      rows.push({
+        label: base.toLocaleDateString("nl-NL", {
+          day: "2-digit",
+          month: "2-digit",
+        }),
+        omzet: Math.round(income),
+        uitgaven: outgoing,
+        winst: Math.round(income - outgoing),
+      });
+    }
+  }
+
+  return rows;
+}
+
+function StatCard({ title, value, subtitle, tone = "#0ea5e9" }) {
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
+        borderRadius: 18,
+        padding: 18,
+        boxShadow: "0 10px 30px rgba(15,23,42,0.05)",
+      }}
+    >
+      <div style={{ color: "#64748b", fontSize: 13, fontWeight: 700, marginBottom: 10 }}>
+        {title}
+      </div>
+      <div style={{ color: "#0f172a", fontSize: 28, fontWeight: 900, marginBottom: 8 }}>
+        {value}
+      </div>
+      <div style={{ color: tone, fontSize: 13, fontWeight: 700 }}>{subtitle}</div>
+    </div>
+  );
+}
+
+function Card({ children, style = {} }) {
+  return (
+    <div
+      style={{
+        background: "#ffffff",
+        border: "1px solid #e2e8f0",
+        borderRadius: 22,
+        padding: 20,
+        boxShadow: "0 10px 30px rgba(15,23,42,0.05)",
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function SectionTitle({ title, subtitle, action = null }) {
   return (
     <div
       style={{
@@ -493,18 +354,11 @@ function SectionTitle(props) {
       }}
     >
       <div>
-        <h2
-          style={{
-            fontSize: 22,
-            fontWeight: 800,
-            color: "#e2e8f0",
-            marginBottom: 6,
-          }}
-        >
+        <h2 style={{ fontSize: 24, fontWeight: 900, color: "#0f172a", marginBottom: 6 }}>
           {title}
         </h2>
         {subtitle ? (
-          <p style={{ color: "#94a3b8", fontSize: 14 }}>{subtitle}</p>
+          <p style={{ color: "#64748b", fontSize: 14, lineHeight: 1.5 }}>{subtitle}</p>
         ) : null}
       </div>
       {action}
@@ -512,92 +366,63 @@ function SectionTitle(props) {
   );
 }
 
-function TabButton(props) {
-  const { active, children, onClick } = props;
+function Button(props) {
+  const {
+    children,
+    onClick,
+    tone = "default",
+    disabled = false,
+    type,
+  } = props;
 
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        border: "1px solid",
-        borderColor: active ? "#38bdf8" : "#334155",
-        background: active ? "rgba(56,189,248,0.12)" : "#0f172a",
-        color: active ? "#e0f2fe" : "#94a3b8",
-        borderRadius: 12,
-        padding: "10px 14px",
-        fontWeight: 700,
-        cursor: "pointer",
-      }}
-    >
-      {children}
-    </button>
-  );
-}
+  const buttonType = type === "submit" || type === "reset" ? type : "button";
 
-function SmallButton(props) {
-  const { children, onClick, tone = "default", disabled = false, type = "button" } = props;
-
-  const tones = {
+  const styles = {
     default: {
-      background: "#0f172a",
-      border: "#334155",
-      color: "#e2e8f0",
+      background: "#ffffff",
+      color: "#0f172a",
+      border: "1px solid #cbd5e1",
     },
     primary: {
-      background: "#0ea5e9",
-      border: "#0ea5e9",
-      color: "#082f49",
+      background: "#0f172a",
+      color: "#ffffff",
+      border: "1px solid #0f172a",
     },
     success: {
       background: "#10b981",
-      border: "#10b981",
       color: "#052e16",
+      border: "1px solid #10b981",
     },
     danger: {
       background: "#ef4444",
-      border: "#ef4444",
-      color: "#450a0a",
+      color: "#ffffff",
+      border: "1px solid #ef4444",
     },
-    muted: {
-      background: "#1e293b",
-      border: "#334155",
-      color: "#cbd5e1",
+    soft: {
+      background: "#eff6ff",
+      color: "#1d4ed8",
+      border: "1px solid #bfdbfe",
     },
   };
 
-  const palette = tones[tone] || tones.default;
+  const selected = styles[tone] || styles.default;
 
   return (
     <button
-      type={type}
+      type={buttonType}
       disabled={disabled}
       onClick={onClick}
       style={{
-        background: palette.background,
-        color: palette.color,
-        border: `1px solid ${palette.border}`,
-        borderRadius: 10,
-        padding: "9px 12px",
-        fontWeight: 700,
+        padding: "10px 14px",
+        borderRadius: 12,
+        fontWeight: 800,
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.6 : 1,
+        ...selected,
       }}
     >
       {children}
     </button>
-  );
-}
-
-function Field(props) {
-  const { label, children } = props;
-
-  return (
-    <label style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-      <span style={{ fontSize: 13, color: "#cbd5e1", fontWeight: 700 }}>
-        {label}
-      </span>
-      {children}
-    </label>
   );
 }
 
@@ -607,29 +432,11 @@ function Input(props) {
       {...props}
       style={{
         width: "100%",
-        background: "#020617",
-        color: "#e2e8f0",
-        border: "1px solid #334155",
-        borderRadius: 12,
-        padding: "11px 12px",
-        outline: "none",
-        ...(props.style || {}),
-      }}
-    />
-  );
-}
-
-function Select(props) {
-  return (
-    <select
-      {...props}
-      style={{
-        width: "100%",
-        background: "#020617",
-        color: "#e2e8f0",
-        border: "1px solid #334155",
-        borderRadius: 12,
-        padding: "11px 12px",
+        borderRadius: 14,
+        border: "1px solid #cbd5e1",
+        background: "#ffffff",
+        padding: "12px 14px",
+        color: "#0f172a",
         outline: "none",
         ...(props.style || {}),
       }}
@@ -643,115 +450,165 @@ function Textarea(props) {
       {...props}
       style={{
         width: "100%",
-        minHeight: 140,
-        resize: "vertical",
-        background: "#020617",
-        color: "#e2e8f0",
-        border: "1px solid #334155",
-        borderRadius: 12,
-        padding: "11px 12px",
+        minHeight: 100,
+        borderRadius: 14,
+        border: "1px solid #cbd5e1",
+        background: "#ffffff",
+        padding: "12px 14px",
+        color: "#0f172a",
         outline: "none",
-        fontFamily:
-          "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+        resize: "vertical",
         ...(props.style || {}),
       }}
     />
   );
 }
 
-function Card(props) {
-  const { children, style = {} } = props;
-
+function Select(props) {
   return (
-    <div
+    <select
+      {...props}
       style={{
-        background: "#111827",
-        border: "1px solid #1f2937",
-        borderRadius: 18,
-        padding: 18,
-        ...style,
+        width: "100%",
+        borderRadius: 14,
+        border: "1px solid #cbd5e1",
+        background: "#ffffff",
+        padding: "12px 14px",
+        color: "#0f172a",
+        outline: "none",
+        ...(props.style || {}),
       }}
-    >
+    />
+  );
+}
+
+function Field({ label, children }) {
+  return (
+    <label style={{ display: "grid", gap: 8 }}>
+      <span style={{ color: "#334155", fontSize: 13, fontWeight: 800 }}>{label}</span>
       {children}
-    </div>
+    </label>
   );
 }
 
 export default function AdminCRM() {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("dashboard");
   const [settings, setSettings] = useState(() =>
     loadJson(STORAGE_KEYS.settings, DEFAULT_SETTINGS)
   );
   const [customers, setCustomers] = useState(() =>
     loadJson(STORAGE_KEYS.customers, [])
   );
-  const [history, setHistory] = useState(() =>
-    loadJson(STORAGE_KEYS.history, [])
+  const [expenses, setExpenses] = useState(() =>
+    loadJson(STORAGE_KEYS.expenses, [])
+  );
+  const [requestLog, setRequestLog] = useState(() =>
+    loadJson(STORAGE_KEYS.requestLog, [])
   );
 
-  const [customerForm, setCustomerForm] = useState(DEFAULT_CUSTOMER);
+  const [customerForm, setCustomerForm] = useState(DEFAULT_CUSTOMER_FORM);
+  const [expenseForm, setExpenseForm] = useState(DEFAULT_EXPENSE_FORM);
+  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+  const [customerSearch, setCustomerSearch] = useState("");
+  const [financeFilter, setFinanceFilter] = useState("month");
+  const [isProvisioning, setIsProvisioning] = useState(false);
 
-  const [selectedPresetKey, setSelectedPresetKey] = useState(
-    ENDPOINT_PRESETS[0].key
-  );
-  const [requestPath, setRequestPath] = useState(ENDPOINT_PRESETS[0].path);
-  const [requestMethod, setRequestMethod] = useState(ENDPOINT_PRESETS[0].method);
-  const [requestBody, setRequestBody] = useState(ENDPOINT_PRESETS[0].body);
-
-  const [responseState, setResponseState] = useState(null);
-  const [isSending, setIsSending] = useState(false);
-
-  const [deploymentLookupId, setDeploymentLookupId] = useState("");
-  const [operationLookupId, setOperationLookupId] = useState("");
-  const [mailDomainLookupId, setMailDomainLookupId] = useState("");
-  const [mailboxLookupId, setMailboxLookupId] = useState("");
-  const [retryStage, setRetryStage] = useState(STAGES[0]);
-  const [redeployMode, setRedeployMode] = useState(REDEPLOY_MODES[0]);
-  const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    saveJson(STORAGE_KEYS.settings, settings);
-  }, [settings]);
-
-  useEffect(() => {
-    saveJson(STORAGE_KEYS.customers, customers);
-  }, [customers]);
-
-  useEffect(() => {
-    saveJson(STORAGE_KEYS.history, history);
-  }, [history]);
-
-  const selectedPreset = useMemo(() => {
-    return ENDPOINT_PRESETS.find((item) => item.key === selectedPresetKey);
-  }, [selectedPresetKey]);
+  useEffect(() => saveJson(STORAGE_KEYS.settings, settings), [settings]);
+  useEffect(() => saveJson(STORAGE_KEYS.customers, customers), [customers]);
+  useEffect(() => saveJson(STORAGE_KEYS.expenses, expenses), [expenses]);
+  useEffect(() => saveJson(STORAGE_KEYS.requestLog, requestLog), [requestLog]);
 
   const filteredCustomers = useMemo(() => {
-    const q = search.trim().toLowerCase();
+    const q = customerSearch.trim().toLowerCase();
     if (!q) return customers;
 
-    return customers.filter((customer) => {
-      return [
-        customer.name,
-        customer.id,
+    return customers.filter((customer) =>
+      [
+        customer.companyName,
+        customer.contactName,
+        customer.email,
+        customer.phone,
         customer.domain,
-        customer.projectName,
-        customer.deploymentId,
+        customer.status,
       ]
         .join(" ")
         .toLowerCase()
-        .includes(q);
-    });
-  }, [customers, search]);
+        .includes(q)
+    );
+  }, [customers, customerSearch]);
 
-  const groupedPresets = useMemo(() => {
-    return ENDPOINT_PRESETS.reduce((acc, preset) => {
-      if (!acc[preset.category]) {
-        acc[preset.category] = [];
-      }
-      acc[preset.category].push(preset);
+  const selectedCustomer = useMemo(() => {
+    return customers.find((item) => item.id === selectedCustomerId) || null;
+  }, [customers, selectedCustomerId]);
+
+  const financeExpenses = useMemo(() => {
+    return expenses.filter((item) => withinFilter(item.date, financeFilter));
+  }, [expenses, financeFilter]);
+
+  const financeCustomers = useMemo(() => {
+    return customers.filter((item) => withinFilter(item.createdAt, financeFilter));
+  }, [customers, financeFilter]);
+
+  const totalMonthlyRevenue = useMemo(() => {
+    return customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0);
+  }, [customers]);
+
+  const totalMonthlyCosts = useMemo(() => {
+    const infra = customers.reduce(
+      (sum, customer) => sum + Number(customer.monthlyInfraCost || 0),
+      0
+    );
+    const manual = financeExpenses.reduce(
+      (sum, expense) => sum + Number(expense.amount || 0),
+      0
+    );
+    return infra + manual;
+  }, [customers, financeExpenses]);
+
+  const activeCustomers = useMemo(() => {
+    return customers.filter((item) => item.status === "active").length;
+  }, [customers]);
+
+  const failedCustomers = useMemo(() => {
+    return customers.filter((item) => item.status === "failed").length;
+  }, [customers]);
+
+  const warningCustomers = useMemo(() => {
+    return customers.filter((item) => item.status === "warning").length;
+  }, [customers]);
+
+  const statusChartData = useMemo(() => {
+    const grouped = customers.reduce((acc, customer) => {
+      const key = customer.status || "lead";
+      acc[key] = (acc[key] || 0) + 1;
       return acc;
     }, {});
-  }, []);
+
+    return Object.entries(grouped).map(([key, value]) => ({
+      name: STATUS_LABELS[key] || key,
+      value,
+      color: STATUS_COLORS[key] || "#94a3b8",
+    }));
+  }, [customers]);
+
+  const packageChartData = useMemo(() => {
+    const grouped = customers.reduce((acc, customer) => {
+      acc[customer.packageCode] = (acc[customer.packageCode] || 0) + 1;
+      return acc;
+    }, {});
+
+    return PACKAGE_OPTIONS.map((option) => ({
+      name: option.label,
+      klanten: grouped[option.code] || 0,
+      omzet: customers
+        .filter((customer) => customer.packageCode === option.code)
+        .reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0),
+    }));
+  }, [customers]);
+
+  const trendData = useMemo(() => {
+    return buildTrendData(customers, expenses, financeFilter);
+  }, [customers, expenses, financeFilter]);
 
   function updateCustomerForm(key, value) {
     setCustomerForm((prev) => ({ ...prev, [key]: value }));
@@ -761,339 +618,388 @@ export default function AdminCRM() {
     setSettings((prev) => ({ ...prev, [key]: value }));
   }
 
-  function resetRequestFromPreset(preset) {
-    setSelectedPresetKey(preset.key);
-    setRequestMethod(preset.method);
-    setRequestPath(preset.path);
-    setRequestBody(preset.body);
+  function toggleExtra(code) {
+    setCustomerForm((prev) => {
+      const exists = prev.extras.includes(code);
+      return {
+        ...prev,
+        extras: exists
+          ? prev.extras.filter((item) => item !== code)
+          : [...prev.extras, code],
+      };
+    });
   }
 
-  function applyCustomerToRequest(customer, presetKey) {
-    const addOns = String(customer.addOnsCsv || "")
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean);
+  function createCustomerDraft() {
+    const companySlug = slugify(customerForm.companyName);
+    const domainSlug = slugify(customerForm.domain.split(".")[0] || customerForm.companyName);
 
-    const map = {
-      "create-deployment-v2": {
-        path: "/api/deployments",
-        method: "POST",
-        body: pretty({
-          customerId: customer.id,
-          projectName: customer.projectName || customer.name || customer.id,
-          domain: customer.domain,
-          packageCode: customer.packageCode || "STARTER",
-          addOns,
-        }),
-      },
-      "get-deployment-v2": {
-        path: `/api/deployments/${customer.deploymentId || ":deploymentId"}`,
-        method: "GET",
-        body: "",
-      },
-      "redeploy-deployment-v2": {
-        path: `/api/deployments/${customer.deploymentId || ":deploymentId"}/redeploy`,
-        method: "POST",
-        body: pretty({ mode: redeployMode }),
-      },
-      "deployment-operations-v2": {
-        path: `/api/deployments/${customer.deploymentId || ":deploymentId"}/operations`,
-        method: "GET",
-        body: "",
-      },
-      "deployment-audit-v2": {
-        path: `/api/deployments/${customer.deploymentId || ":deploymentId"}/audit`,
-        method: "GET",
-        body: "",
-      },
-      "legacy-check-domain": {
-        path: "/api/domains/check",
-        method: "POST",
-        body: pretty({ domain: customer.domain }),
-      },
-      "legacy-deploy": {
-        path: "/api/deploy",
-        method: "POST",
-        body: pretty({
-          customerId: customer.id,
-          projectName: customer.projectName || customer.name || customer.id,
-          domain: customer.domain,
-          packageCode: customer.packageCode || "STARTER",
-          addOns: [],
-        }),
-      },
-      "legacy-redeploy": {
-        path: "/api/redeploy",
-        method: "POST",
-        body: pretty({
-          customerId: customer.id,
-          deploymentId: customer.deploymentId,
-        }),
-      },
-      "legacy-delete-everything": {
-        path: "/api/delete-everything",
-        method: "POST",
-        body: pretty({
-          customerId: customer.id,
-          deploymentId: customer.deploymentId,
-          confirm: true,
-        }),
-      },
-      "mail-domain-create": {
-        path: "/api/mail/domains",
-        method: "POST",
-        body: pretty({
-          customerId: customer.id,
-          domain: customer.domain,
-        }),
-      },
-      "customer-provision-mail": {
-        path: `/api/customers/${customer.id}/provision-mail`,
-        method: "POST",
-        body: pretty({
-          domain: customer.domain,
-          packageCode: customer.packageCode || "STARTER",
-        }),
-      },
-      "mailbox-create": {
-        path: "/api/mail/mailboxes",
-        method: "POST",
-        body: pretty({
-          customerId: customer.id,
-          mailDomainId: customer.mailDomainId || "mail-domain-id",
-          localPart: customer.mailboxLocalPart || "info",
-          displayName: customer.mailboxDisplayName || customer.name || "Mailbox",
-          includedStorageGb: 5,
-          extraStorageGb: 0,
-          password: customer.mailboxPassword || "SterkTijdelijkWachtwoord123!",
-        }),
+    const customerId = `cust_${companySlug || domainSlug || Date.now()}`;
+
+    return {
+      id: customerId,
+      companyName: customerForm.companyName,
+      contactName: customerForm.contactName,
+      email: customerForm.email,
+      phone: customerForm.phone,
+      domain: customerForm.domain.trim().toLowerCase(),
+      packageCode: customerForm.packageCode,
+      extras: customerForm.extras,
+      notes: customerForm.notes,
+      monthlyInfraCost: Number(customerForm.monthlyInfraCost || 0),
+      status: "intake",
+      createdAt: new Date().toISOString(),
+      deploymentId: "",
+      deploymentStatus: "NOT_STARTED",
+      deploymentStage: null,
+      mailProvisioned: false,
+      mailDomainId: "",
+      documents: [],
+      requestHistory: [],
+      finance: {
+        monthlyRevenue: calcMonthlyRevenue(customerForm),
       },
     };
-
-    const next = map[presetKey];
-    if (!next) return;
-
-    setRequestMethod(next.method);
-    setRequestPath(next.path);
-    setRequestBody(next.body);
-    setActiveTab("playground");
   }
 
-  function saveCustomer() {
-    if (!customerForm.id || !customerForm.name || !customerForm.domain) return;
+  async function addCustomerAndProvision() {
+    if (
+      !customerForm.companyName ||
+      !customerForm.contactName ||
+      !customerForm.email ||
+      !customerForm.domain
+    ) {
+      return;
+    }
 
-    setCustomers((prev) => {
-      const exists = prev.some((item) => item.id === customerForm.id);
+    setIsProvisioning(true);
 
-      if (exists) {
-        return prev.map((item) =>
-          item.id === customerForm.id ? { ...customerForm } : item
+    const customer = createCustomerDraft();
+    setCustomers((prev) => [customer, ...prev]);
+    setSelectedCustomerId(customer.id);
+
+    const requestEntries = [];
+
+    try {
+      const deployResult = await apiRequest(settings, "POST", "/api/deployments", {
+        customerId: customer.id,
+        projectName: slugify(customer.companyName || customer.domain),
+        domain: customer.domain,
+        packageCode: customer.packageCode,
+        addOns: customer.extras,
+      });
+
+      requestEntries.push({
+        id:
+          (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+          `req-${Date.now()}-1`,
+        at: new Date().toISOString(),
+        type: "CREATE_DEPLOYMENT",
+        result: deployResult,
+      });
+
+      const deploymentId =
+        (deployResult &&
+          deployResult.data &&
+          deployResult.data.data &&
+          deployResult.data.data.deploymentId) ||
+        (deployResult && deployResult.data && deployResult.data.deploymentId) ||
+        "";
+
+      const deploymentStatus =
+        (deployResult &&
+          deployResult.data &&
+          deployResult.data.data &&
+          deployResult.data.data.status) ||
+        (deployResult && deployResult.data && deployResult.data.status) ||
+        (deployResult.ok ? "PENDING" : "FAILED");
+
+      setCustomers((prev) =>
+        prev.map((item) =>
+          item.id === customer.id
+            ? {
+                ...item,
+                deploymentId,
+                deploymentStatus,
+                deploymentStage:
+                  (deployResult &&
+                    deployResult.data &&
+                    deployResult.data.data &&
+                    deployResult.data.data.currentStage) ||
+                  (deployResult && deployResult.data && deployResult.data.currentStage) ||
+                  null,
+                status: deployResult.ok ? "provisioning" : "failed",
+                requestHistory: requestEntries,
+              }
+            : item
+        )
+      );
+
+      if (settings.autoProvisionMail) {
+        const mailResult = await apiRequest(
+          settings,
+          "POST",
+          `/api/customers/${customer.id}/provision-mail`,
+          {
+            domain: customer.domain,
+            packageCode: customer.packageCode,
+          }
+        );
+
+        requestEntries.push({
+          id:
+            (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+            `req-${Date.now()}-2`,
+          at: new Date().toISOString(),
+          type: "PROVISION_MAIL",
+          result: mailResult,
+        });
+
+        setCustomers((prev) =>
+          prev.map((item) =>
+            item.id === customer.id
+              ? {
+                  ...item,
+                  mailProvisioned: mailResult.ok,
+                  status: deployResult.ok
+                    ? mailResult.ok
+                      ? "active"
+                      : "warning"
+                    : "failed",
+                  requestHistory: requestEntries,
+                }
+              : item
+          )
+        );
+      } else {
+        setCustomers((prev) =>
+          prev.map((item) =>
+            item.id === customer.id
+              ? {
+                  ...item,
+                  status: deployResult.ok ? "active" : "failed",
+                  requestHistory: requestEntries,
+                }
+              : item
+          )
         );
       }
 
-      return [{ ...customerForm }, ...prev];
-    });
+      setRequestLog((prev) => [...requestEntries, ...prev].slice(0, 100));
+      setCustomerForm(DEFAULT_CUSTOMER_FORM);
+      setActiveTab("customers");
+    } catch (error) {
+      const failedEntry = {
+        id:
+          (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+          `req-${Date.now()}-x`,
+        at: new Date().toISOString(),
+        type: "UNKNOWN_ERROR",
+        result: {
+          ok: false,
+          status: 0,
+          data: {
+            message: error instanceof Error ? error.message : "Unknown error",
+          },
+        },
+      };
 
-    setCustomerForm(DEFAULT_CUSTOMER);
+      requestEntries.push(failedEntry);
+      setRequestLog((prev) => [failedEntry, ...prev].slice(0, 100));
+
+      setCustomers((prev) =>
+        prev.map((item) =>
+          item.id === customer.id
+            ? {
+                ...item,
+                status: "failed",
+                requestHistory: requestEntries,
+              }
+            : item
+        )
+      );
+    } finally {
+      setIsProvisioning(false);
+    }
   }
 
-  function editCustomer(customer) {
-    setCustomerForm(customer);
-    setActiveTab("customers");
+  async function refreshCustomerDeployment(customer) {
+    if (!customer || !customer.deploymentId) return;
+
+    const result = await apiRequest(
+      settings,
+      "GET",
+      `/api/deployments/${customer.deploymentId}`
+    );
+
+    const deployment = (result && result.data && result.data.data) || result.data || {};
+    const normalizedStatus = String(deployment.status || "").toUpperCase();
+
+    let nextStatus = customer.status;
+    if (normalizedStatus === "SUCCEEDED") nextStatus = "active";
+    if (normalizedStatus === "FAILED") nextStatus = "failed";
+    if (normalizedStatus === "IN_PROGRESS" || normalizedStatus === "PENDING") {
+      nextStatus = "provisioning";
+    }
+
+    const historyEntry = {
+      id:
+        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+        `refresh-${Date.now()}`,
+      at: new Date().toISOString(),
+      type: "GET_DEPLOYMENT",
+      result,
+    };
+
+    setCustomers((prev) =>
+      prev.map((item) =>
+        item.id === customer.id
+          ? {
+              ...item,
+              deploymentStatus: deployment.status || item.deploymentStatus,
+              deploymentStage: deployment.currentStage || item.deploymentStage,
+              status: nextStatus,
+              requestHistory: [historyEntry, ...(item.requestHistory || [])].slice(0, 20),
+            }
+          : item
+      )
+    );
+
+    setRequestLog((prev) => [historyEntry, ...prev].slice(0, 100));
+  }
+
+  async function redeployCustomer(customer) {
+    if (!customer || !customer.deploymentId) return;
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/deployments/${customer.deploymentId}/redeploy`,
+      { mode: "CONTENT_ONLY" }
+    );
+
+    const historyEntry = {
+      id:
+        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+        `redeploy-${Date.now()}`,
+      at: new Date().toISOString(),
+      type: "REDEPLOY",
+      result,
+    };
+
+    setCustomers((prev) =>
+      prev.map((item) =>
+        item.id === customer.id
+          ? {
+              ...item,
+              status: result.ok ? "provisioning" : "failed",
+              requestHistory: [historyEntry, ...(item.requestHistory || [])].slice(0, 20),
+            }
+          : item
+      )
+    );
+
+    setRequestLog((prev) => [historyEntry, ...prev].slice(0, 100));
+  }
+
+  async function deleteCustomerDeployment(customer) {
+    if (!customer || !customer.deploymentId) return;
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/deployments/${customer.deploymentId}/delete`,
+      {}
+    );
+
+    const historyEntry = {
+      id:
+        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+        `delete-${Date.now()}`,
+      at: new Date().toISOString(),
+      type: "DELETE_DEPLOYMENT",
+      result,
+    };
+
+    setCustomers((prev) =>
+      prev.map((item) =>
+        item.id === customer.id
+          ? {
+              ...item,
+              status: result.ok ? "cancelled" : "failed",
+              requestHistory: [historyEntry, ...(item.requestHistory || [])].slice(0, 20),
+            }
+          : item
+      )
+    );
+
+    setRequestLog((prev) => [historyEntry, ...prev].slice(0, 100));
+  }
+
+  function saveCustomerEdits(nextCustomer) {
+    setCustomers((prev) =>
+      prev.map((item) => (item.id === nextCustomer.id ? nextCustomer : item))
+    );
   }
 
   function removeCustomer(customerId) {
     setCustomers((prev) => prev.filter((item) => item.id !== customerId));
-  }
-
-  function clearHistory() {
-    setHistory([]);
-  }
-
-  async function sendRequest(custom = null) {
-    const method = custom?.method || requestMethod;
-    const path = custom?.path || requestPath;
-    const body = custom?.body ?? requestBody;
-
-    setIsSending(true);
-    setResponseState(null);
-
-    try {
-      const result = await callProvisioningApi(settings, method, path, body);
-
-      const historyEntry = {
-        id: window.crypto?.randomUUID?.() ?? `h-${Date.now()}`,
-        at: new Date().toISOString(),
-        method,
-        path,
-        status: result.status,
-        ok: result.ok,
-        data: result.data,
-      };
-
-      setResponseState(historyEntry);
-      setHistory((prev) => [historyEntry, ...prev].slice(0, 30));
-    } catch (error) {
-      const failed = {
-        id: window.crypto?.randomUUID?.() ?? `h-${Date.now()}`,
-        at: new Date().toISOString(),
-        method,
-        path,
-        status: 0,
-        ok: false,
-        data: {
-          message: error instanceof Error ? error.message : "Unknown error",
-        },
-      };
-
-      setResponseState(failed);
-      setHistory((prev) => [failed, ...prev].slice(0, 30));
-    } finally {
-      setIsSending(false);
+    if (selectedCustomerId === customerId) {
+      setSelectedCustomerId(null);
     }
   }
 
-  async function quickGetDeployment() {
-    if (!deploymentLookupId) return;
-    await sendRequest({
-      method: "GET",
-      path: `/api/deployments/${deploymentLookupId}`,
-      body: "",
-    });
+  function addExpense() {
+    if (!expenseForm.title || !expenseForm.amount) return;
+
+    const nextExpense = {
+      id:
+        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+        `exp-${Date.now()}`,
+      title: expenseForm.title,
+      amount: Number(expenseForm.amount),
+      date: expenseForm.date,
+      category: expenseForm.category,
+      createdAt: new Date().toISOString(),
+    };
+
+    setExpenses((prev) => [nextExpense, ...prev]);
+    setExpenseForm(DEFAULT_EXPENSE_FORM);
   }
 
-  async function quickListOperations() {
-    if (!deploymentLookupId) return;
-    await sendRequest({
-      method: "GET",
-      path: `/api/deployments/${deploymentLookupId}/operations`,
-      body: "",
-    });
-  }
+  function uploadDocuments(customerId, files) {
+    const fileArray = Array.from(files || []);
 
-  async function quickAudit() {
-    if (!deploymentLookupId) return;
-    await sendRequest({
-      method: "GET",
-      path: `/api/deployments/${deploymentLookupId}/audit`,
-      body: "",
-    });
-  }
-
-  async function quickResume() {
-    if (!deploymentLookupId) return;
-    await sendRequest({
-      method: "POST",
-      path: `/api/deployments/${deploymentLookupId}/resume`,
-      body: "{}",
-    });
-  }
-
-  async function quickRedeploy() {
-    if (!deploymentLookupId) return;
-    await sendRequest({
-      method: "POST",
-      path: `/api/deployments/${deploymentLookupId}/redeploy`,
-      body: pretty({ mode: redeployMode }),
-    });
-  }
-
-  async function quickRetryStage() {
-    if (!deploymentLookupId || !retryStage) return;
-    await sendRequest({
-      method: "POST",
-      path: `/api/deployments/${deploymentLookupId}/retry/${retryStage}`,
-      body: "{}",
-    });
-  }
-
-  async function quickRollback() {
-    if (!deploymentLookupId) return;
-    await sendRequest({
-      method: "POST",
-      path: `/api/deployments/${deploymentLookupId}/rollback`,
-      body: pretty({ rollbackRef: "" }),
-    });
-  }
-
-  async function quickDelete() {
-    if (!deploymentLookupId) return;
-    await sendRequest({
-      method: "POST",
-      path: `/api/deployments/${deploymentLookupId}/delete`,
-      body: "{}",
-    });
-  }
-
-  async function quickConsistency() {
-    if (!deploymentLookupId) return;
-    await sendRequest({
-      method: "GET",
-      path: `/api/admin/deployments/${deploymentLookupId}/consistency`,
-      body: "",
-    });
-  }
-
-  async function quickReconcile() {
-    if (!deploymentLookupId) return;
-    await sendRequest({
-      method: "POST",
-      path: `/api/admin/deployments/${deploymentLookupId}/reconcile`,
-      body: "{}",
-    });
-  }
-
-  async function quickGetOperation() {
-    if (!operationLookupId) return;
-    await sendRequest({
-      method: "GET",
-      path: `/api/operations/${operationLookupId}`,
-      body: "",
-    });
-  }
-
-  async function quickMailDns() {
-    if (!mailDomainLookupId) return;
-    await sendRequest({
-      method: "GET",
-      path: `/api/mail/domains/${mailDomainLookupId}/dns-records`,
-      body: "",
-    });
-  }
-
-  async function quickMailReconcile() {
-    if (!mailDomainLookupId) return;
-    await sendRequest({
-      method: "POST",
-      path: `/api/mail/domains/${mailDomainLookupId}/reconcile`,
-      body: "{}",
-    });
-  }
-
-  async function quickMailboxDisable() {
-    if (!mailboxLookupId) return;
-    await sendRequest({
-      method: "POST",
-      path: `/api/mail/mailboxes/${mailboxLookupId}/disable`,
-      body: pretty({ reason: "temporary" }),
-    });
-  }
-
-  async function quickMailboxEnable() {
-    if (!mailboxLookupId) return;
-    await sendRequest({
-      method: "POST",
-      path: `/api/mail/mailboxes/${mailboxLookupId}/enable`,
-      body: "{}",
-    });
-  }
-
-  async function quickMailboxDelete() {
-    if (!mailboxLookupId) return;
-    await sendRequest({
-      method: "DELETE",
-      path: `/api/mail/mailboxes/${mailboxLookupId}`,
-      body: "",
+    Promise.all(
+      fileArray.map(
+        (file) =>
+          new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () =>
+              resolve({
+                id:
+                  (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+                  `doc-${Date.now()}-${file.name}`,
+                name: file.name,
+                type: file.type,
+                size: file.size,
+                uploadedAt: new Date().toISOString(),
+                dataUrl: typeof reader.result === "string" ? reader.result : "",
+              });
+            reader.readAsDataURL(file);
+          })
+      )
+    ).then((docs) => {
+      setCustomers((prev) =>
+        prev.map((customer) =>
+          customer.id === customerId
+            ? {
+                ...customer,
+                documents: [...(customer.documents || []), ...docs],
+              }
+            : customer
+        )
+      );
     });
   }
 
@@ -1101,9 +1007,8 @@ export default function AdminCRM() {
     <div
       style={{
         minHeight: "100vh",
-        background:
-          "radial-gradient(circle at top left, rgba(14,165,233,0.12), transparent 30%), #020617",
-        color: "#e2e8f0",
+        background: "#f8fafc",
+        color: "#0f172a",
         fontFamily:
           "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       }}
@@ -1113,7 +1018,7 @@ export default function AdminCRM() {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            gap: 16,
+            gap: 20,
             alignItems: "center",
             flexWrap: "wrap",
             marginBottom: 22,
@@ -1124,918 +1029,967 @@ export default function AdminCRM() {
               style={{
                 fontSize: 34,
                 fontWeight: 900,
-                color: "#f8fafc",
+                color: "#0f172a",
                 marginBottom: 8,
               }}
             >
-              Vedantix Admin Control Center
+              Vedantix Admin Dashboard
             </h1>
-            <p style={{ color: "#94a3b8", fontSize: 15 }}>
-              Klantenbeheer en provisioning backend tester in één dashboard.
+            <p style={{ color: "#64748b", fontSize: 15 }}>
+              Overzichtelijke CRM, deployment monitoring en financieel dashboard.
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <TabButton
-              active={activeTab === "overview"}
-              onClick={() => setActiveTab("overview")}
-            >
-              Overzicht
-            </TabButton>
-            <TabButton
-              active={activeTab === "customers"}
-              onClick={() => setActiveTab("customers")}
-            >
-              Klanten
-            </TabButton>
-            <TabButton
-              active={activeTab === "deployments"}
-              onClick={() => setActiveTab("deployments")}
-            >
-              Deployments
-            </TabButton>
-            <TabButton
-              active={activeTab === "mail"}
-              onClick={() => setActiveTab("mail")}
-            >
-              Mail
-            </TabButton>
-            <TabButton
-              active={activeTab === "playground"}
-              onClick={() => setActiveTab("playground")}
-            >
-              Endpoint tester
-            </TabButton>
-            <TabButton
-              active={activeTab === "settings"}
-              onClick={() => setActiveTab("settings")}
-            >
-              Instellingen
-            </TabButton>
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              flexWrap: "wrap",
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              borderRadius: 18,
+              padding: 8,
+              boxShadow: "0 10px 30px rgba(15,23,42,0.05)",
+            }}
+          >
+            {[
+              ["dashboard", "Dashboard"],
+              ["customers", "Klanten"],
+              ["finance", "Financiën"],
+              ["settings", "Instellingen"],
+            ].map(([key, label]) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setActiveTab(key)}
+                style={{
+                  border: "none",
+                  borderRadius: 12,
+                  padding: "12px 14px",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  background: activeTab === key ? "#0f172a" : "transparent",
+                  color: activeTab === key ? "#ffffff" : "#475569",
+                }}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
 
-        {activeTab === "overview" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 18 }}>
-            <Card>
-              <SectionTitle
-                title="Snelstart"
-                subtitle="Gebruik opgeslagen klanten om direct een request klaar te zetten."
+        {activeTab === "dashboard" && (
+          <div style={{ display: "grid", gap: 18 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+                gap: 16,
+              }}
+            >
+              <StatCard
+                title="Totaal klanten"
+                value={customers.length}
+                subtitle={`${activeCustomers} live`}
+                tone="#10b981"
               />
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                  gap: 14,
-                }}
-              >
-                {filteredCustomers.length === 0 ? (
-                  <Card style={{ background: "#0f172a" }}>
-                    <div style={{ color: "#94a3b8" }}>
-                      Geen klanten opgeslagen.
-                    </div>
-                  </Card>
-                ) : (
-                  filteredCustomers.slice(0, 6).map((customer) => (
-                    <Card
-                      key={customer.id}
-                      style={{ background: "#0b1220", padding: 16 }}
+              <StatCard
+                title="MRR"
+                value={currency(totalMonthlyRevenue)}
+                subtitle="Maandelijkse omzet"
+                tone="#0ea5e9"
+              />
+              <StatCard
+                title="Uitgaven"
+                value={currency(totalMonthlyCosts)}
+                subtitle="Infra + handmatige kosten"
+                tone="#f97316"
+              />
+              <StatCard
+                title="Fouten"
+                value={failedCustomers}
+                subtitle="Sites met deployment issues"
+                tone="#ef4444"
+              />
+              <StatCard
+                title="Waarschuwingen"
+                value={warningCustomers}
+                subtitle="Aandacht vereist"
+                tone="#f59e0b"
+              />
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.2fr 0.8fr",
+                gap: 18,
+              }}
+            >
+              <Card>
+                <SectionTitle
+                  title="Nieuwe klant"
+                  subtitle="Vul alleen de essentiële gegevens in. Met één knop wordt deployment en optioneel mail gestart."
+                  action={
+                    <Button
+                      tone="primary"
+                      onClick={addCustomerAndProvision}
+                      disabled={isProvisioning}
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          gap: 12,
-                          marginBottom: 12,
-                        }}
-                      >
-                        <div>
-                          <div
-                            style={{
-                              fontWeight: 800,
-                              fontSize: 16,
-                              color: "#f8fafc",
-                            }}
-                          >
-                            {customer.name}
-                          </div>
-                          <div style={{ color: "#94a3b8", fontSize: 13 }}>
-                            {customer.id}
-                          </div>
-                        </div>
-                        <div
-                          style={{
-                            fontSize: 12,
-                            fontWeight: 800,
-                            color: "#7dd3fc",
-                          }}
-                        >
-                          {customer.packageCode || "STARTER"}
-                        </div>
-                      </div>
+                      {isProvisioning ? "Bezig..." : "Klant aanmaken en regelen"}
+                    </Button>
+                  }
+                />
 
-                      <div style={{ color: "#cbd5e1", fontSize: 14, marginBottom: 12 }}>
-                        {customer.domain || "—"}
-                      </div>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                    gap: 14,
+                  }}
+                >
+                  <Field label="Bedrijfsnaam">
+                    <Input
+                      value={customerForm.companyName}
+                      onChange={(e) => updateCustomerForm("companyName", e.target.value)}
+                      placeholder="Vedantix Example"
+                    />
+                  </Field>
 
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                        <SmallButton
-                          tone="primary"
-                          onClick={() =>
-                            applyCustomerToRequest(customer, "create-deployment-v2")
-                          }
-                        >
-                          New deploy
-                        </SmallButton>
-                        <SmallButton
-                          onClick={() =>
-                            applyCustomerToRequest(customer, "get-deployment-v2")
-                          }
-                        >
-                          Get deployment
-                        </SmallButton>
-                        <SmallButton
-                          onClick={() =>
-                            applyCustomerToRequest(customer, "deployment-audit-v2")
-                          }
-                        >
-                          Audit
-                        </SmallButton>
-                        <SmallButton
-                          onClick={() =>
-                            applyCustomerToRequest(customer, "mail-domain-create")
-                          }
-                        >
-                          Mail domain
-                        </SmallButton>
-                        <SmallButton
-                          tone="danger"
-                          onClick={() =>
-                            applyCustomerToRequest(
-                              customer,
-                              "legacy-delete-everything"
-                            )
-                          }
-                        >
-                          Delete legacy
-                        </SmallButton>
-                      </div>
-                    </Card>
-                  ))
-                )}
-              </div>
-            </Card>
+                  <Field label="Contactpersoon">
+                    <Input
+                      value={customerForm.contactName}
+                      onChange={(e) => updateCustomerForm("contactName", e.target.value)}
+                      placeholder="Rishwi Jagesar"
+                    />
+                  </Field>
 
-            <Card>
-              <SectionTitle
-                title="Laatste responses"
-                subtitle="Meest recente verzoeken en statussen."
-                action={
-                  <SmallButton tone="muted" onClick={clearHistory}>
-                    Wis historie
-                  </SmallButton>
-                }
-              />
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                {history.length === 0 ? (
-                  <div style={{ color: "#94a3b8" }}>Nog geen requests uitgevoerd.</div>
-                ) : (
-                  history.slice(0, 10).map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setResponseState(item)}
+                  <Field label="E-mail">
+                    <Input
+                      value={customerForm.email}
+                      onChange={(e) => updateCustomerForm("email", e.target.value)}
+                      placeholder="info@bedrijf.nl"
+                    />
+                  </Field>
+
+                  <Field label="Telefoon">
+                    <Input
+                      value={customerForm.phone}
+                      onChange={(e) => updateCustomerForm("phone", e.target.value)}
+                      placeholder="+31 6 12345678"
+                    />
+                  </Field>
+
+                  <Field label="Domeinnaam">
+                    <Input
+                      value={customerForm.domain}
+                      onChange={(e) => updateCustomerForm("domain", e.target.value)}
+                      placeholder="bedrijf.nl"
+                    />
+                  </Field>
+
+                  <Field label="Pakket">
+                    <Select
+                      value={customerForm.packageCode}
+                      onChange={(e) => updateCustomerForm("packageCode", e.target.value)}
+                    >
+                      {PACKAGE_OPTIONS.map((item) => (
+                        <option key={item.code} value={item.code}>
+                          {item.label} — {currency(item.monthlyPrice)}/m
+                        </option>
+                      ))}
+                    </Select>
+                  </Field>
+
+                  <Field label="Geschatte infra-kosten p/m">
+                    <Input
+                      type="number"
+                      min="0"
+                      value={customerForm.monthlyInfraCost}
+                      onChange={(e) =>
+                        updateCustomerForm("monthlyInfraCost", e.target.value)
+                      }
+                    />
+                  </Field>
+
+                  <Field label="Extra’s">
+                    <div
                       style={{
-                        textAlign: "left",
-                        background: "#0b1220",
-                        border: "1px solid #1e293b",
+                        display: "grid",
+                        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                        gap: 10,
+                        border: "1px solid #cbd5e1",
                         borderRadius: 14,
-                        padding: 14,
-                        color: "#e2e8f0",
-                        cursor: "pointer",
+                        padding: 12,
+                        background: "#ffffff",
                       }}
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          gap: 12,
-                          flexWrap: "wrap",
-                          marginBottom: 8,
-                        }}
-                      >
-                        <div style={{ fontWeight: 800 }}>
-                          {item.method} {item.path}
-                        </div>
-                        <div
+                      {EXTRA_OPTIONS.map((extra) => (
+                        <label
+                          key={extra.code}
                           style={{
-                            color: item.ok ? "#34d399" : "#f87171",
-                            fontWeight: 800,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                            color: "#334155",
+                            fontSize: 14,
                           }}
                         >
-                          {item.status || "ERR"}
-                        </div>
-                      </div>
-                      <div style={{ color: "#94a3b8", fontSize: 12 }}>
-                        {new Date(item.at).toLocaleString("nl-NL")}
-                      </div>
-                    </button>
-                  ))
-                )}
-              </div>
-            </Card>
+                          <input
+                            type="checkbox"
+                            checked={customerForm.extras.includes(extra.code)}
+                            onChange={() => toggleExtra(extra.code)}
+                          />
+                          <span>
+                            {extra.label} ({currency(extra.monthlyPrice)})
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </Field>
 
-            <Card style={{ gridColumn: "1 / -1" }}>
-              <SectionTitle
-                title="Response viewer"
-                subtitle="Altijd de laatste response of geselecteerde history-entry."
-              />
-              <pre
-                style={{
-                  margin: 0,
-                  whiteSpace: "pre-wrap",
-                  wordBreak: "break-word",
-                  fontSize: 13,
-                  lineHeight: 1.6,
-                  color: "#cbd5e1",
-                  background: "#020617",
-                  border: "1px solid #1e293b",
-                  borderRadius: 14,
-                  padding: 16,
-                  minHeight: 240,
-                  overflow: "auto",
-                }}
-              >
-                {responseState ? pretty(responseState) : "Nog geen response."}
-              </pre>
-            </Card>
+                  <div style={{ gridColumn: "1 / -1" }}>
+                    <Field label="Notities">
+                      <Textarea
+                        value={customerForm.notes}
+                        onChange={(e) => updateCustomerForm("notes", e.target.value)}
+                        placeholder="Opmerkingen, wensen, intake-info..."
+                      />
+                    </Field>
+                  </div>
+                </div>
+              </Card>
+
+              <Card>
+                <SectionTitle
+                  title="Snelle status"
+                  subtitle="Direct zicht op klanten die aandacht nodig hebben."
+                />
+
+                <div style={{ display: "grid", gap: 12 }}>
+                  {customers.slice(0, 8).map((customer) => (
+                    <div
+                      key={customer.id}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: 12,
+                        border: "1px solid #e2e8f0",
+                        borderRadius: 16,
+                        padding: 14,
+                        cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        setSelectedCustomerId(customer.id);
+                        setActiveTab("customers");
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: 800 }}>{customer.companyName}</div>
+                        <div style={{ color: "#64748b", fontSize: 13 }}>{customer.domain}</div>
+                      </div>
+                      <div
+                        style={{
+                          padding: "6px 10px",
+                          borderRadius: 999,
+                          background: `${STATUS_COLORS[customer.status] || "#94a3b8"}20`,
+                          color: STATUS_COLORS[customer.status] || "#94a3b8",
+                          fontWeight: 800,
+                          fontSize: 12,
+                        }}
+                      >
+                        {STATUS_LABELS[customer.status] || customer.status}
+                      </div>
+                    </div>
+                  ))}
+
+                  {customers.length === 0 ? (
+                    <div style={{ color: "#64748b" }}>Nog geen klanten toegevoegd.</div>
+                  ) : null}
+                </div>
+              </Card>
+            </div>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.2fr 0.8fr",
+                gap: 18,
+              }}
+            >
+              <Card>
+                <SectionTitle
+                  title="Omzet, uitgaven en winst"
+                  subtitle="Grafiek op basis van klanten en handmatige uitgaven."
+                  action={
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      {TIME_FILTERS.map((item) => (
+                        <Button
+                          key={item.key}
+                          tone={financeFilter === item.key ? "primary" : "default"}
+                          onClick={() => setFinanceFilter(item.key)}
+                        >
+                          {item.label}
+                        </Button>
+                      ))}
+                    </div>
+                  }
+                />
+
+                <div style={{ width: "100%", height: 340 }}>
+                  <ResponsiveContainer>
+                    <AreaChart data={trendData}>
+                      <defs>
+                        <linearGradient id="colorOmzet" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.35} />
+                          <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0.03} />
+                        </linearGradient>
+                        <linearGradient id="colorWinst" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.35} />
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0.03} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+                      <XAxis dataKey="label" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip />
+                      <Area
+                        type="monotone"
+                        dataKey="omzet"
+                        stroke="#0ea5e9"
+                        fill="url(#colorOmzet)"
+                        strokeWidth={2}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="winst"
+                        stroke="#10b981"
+                        fill="url(#colorWinst)"
+                        strokeWidth={2}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </Card>
+
+              <Card>
+                <SectionTitle
+                  title="Statusverdeling"
+                  subtitle="Welke klanten live zijn, fouten hebben of aandacht nodig hebben."
+                />
+
+                <div style={{ width: "100%", height: 340 }}>
+                  <ResponsiveContainer>
+                    <PieChart>
+                      <Pie
+                        data={statusChartData}
+                        dataKey="value"
+                        nameKey="name"
+                        innerRadius={70}
+                        outerRadius={110}
+                        paddingAngle={4}
+                      >
+                        {statusChartData.map((entry) => (
+                          <Cell key={entry.name} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div style={{ display: "grid", gap: 10 }}>
+                  {statusChartData.map((item) => (
+                    <div
+                      key={item.name}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        fontSize: 14,
+                        color: "#334155",
+                      }}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span
+                          style={{
+                            width: 10,
+                            height: 10,
+                            borderRadius: 999,
+                            background: item.color,
+                            display: "inline-block",
+                          }}
+                        />
+                        {item.name}
+                      </span>
+                      <strong>{item.value}</strong>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </div>
           </div>
         )}
 
         {activeTab === "customers" && (
-          <div style={{ display: "grid", gridTemplateColumns: "440px 1fr", gap: 18 }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: selectedCustomer ? "0.95fr 1.05fr" : "1fr",
+              gap: 18,
+            }}
+          >
             <Card>
               <SectionTitle
-                title="Klant opslaan"
-                subtitle="Frontend-klantenkaart voor snelle backend-acties."
-              />
-
-              <div style={{ display: "grid", gap: 12 }}>
-                <Field label="Customer ID">
-                  <Input
-                    value={customerForm.id}
-                    onChange={(e) => updateCustomerForm("id", e.target.value)}
-                    placeholder="cust_test_001"
-                  />
-                </Field>
-
-                <Field label="Naam">
-                  <Input
-                    value={customerForm.name}
-                    onChange={(e) => updateCustomerForm("name", e.target.value)}
-                    placeholder="Bedrijfsnaam"
-                  />
-                </Field>
-
-                <Field label="Project name">
-                  <Input
-                    value={customerForm.projectName}
-                    onChange={(e) =>
-                      updateCustomerForm("projectName", e.target.value)
-                    }
-                    placeholder="vedantix-test-project"
-                  />
-                </Field>
-
-                <Field label="Domein">
-                  <Input
-                    value={customerForm.domain}
-                    onChange={(e) => updateCustomerForm("domain", e.target.value)}
-                    placeholder="test.vedantix.nl"
-                  />
-                </Field>
-
-                <Field label="Package">
-                  <Select
-                    value={customerForm.packageCode}
-                    onChange={(e) =>
-                      updateCustomerForm("packageCode", e.target.value)
-                    }
-                  >
-                    {PACKAGE_CODES.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </Select>
-                </Field>
-
-                <Field label="Add-ons CSV">
-                  <Input
-                    value={customerForm.addOnsCsv}
-                    onChange={(e) =>
-                      updateCustomerForm("addOnsCsv", e.target.value)
-                    }
-                    placeholder="BLOG,BOOKING,ANALYTICS"
-                  />
-                </Field>
-
-                <Field label="Deployment ID">
-                  <Input
-                    value={customerForm.deploymentId}
-                    onChange={(e) =>
-                      updateCustomerForm("deploymentId", e.target.value)
-                    }
-                    placeholder="deployment-id"
-                  />
-                </Field>
-
-                <Field label="Mail domain ID">
-                  <Input
-                    value={customerForm.mailDomainId}
-                    onChange={(e) =>
-                      updateCustomerForm("mailDomainId", e.target.value)
-                    }
-                    placeholder="mail-domain-id"
-                  />
-                </Field>
-
-                <Field label="Mailbox local part">
-                  <Input
-                    value={customerForm.mailboxLocalPart}
-                    onChange={(e) =>
-                      updateCustomerForm("mailboxLocalPart", e.target.value)
-                    }
-                    placeholder="info"
-                  />
-                </Field>
-
-                <Field label="Mailbox display name">
-                  <Input
-                    value={customerForm.mailboxDisplayName}
-                    onChange={(e) =>
-                      updateCustomerForm("mailboxDisplayName", e.target.value)
-                    }
-                    placeholder="Info"
-                  />
-                </Field>
-
-                <Field label="Mailbox password">
-                  <Input
-                    type="password"
-                    value={customerForm.mailboxPassword}
-                    onChange={(e) =>
-                      updateCustomerForm("mailboxPassword", e.target.value)
-                    }
-                    placeholder="SterkTijdelijkWachtwoord123!"
-                  />
-                </Field>
-
-                <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                  <SmallButton tone="primary" onClick={saveCustomer}>
-                    Opslaan
-                  </SmallButton>
-                  <SmallButton
-                    tone="muted"
-                    onClick={() => setCustomerForm(DEFAULT_CUSTOMER)}
-                  >
-                    Leegmaken
-                  </SmallButton>
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <SectionTitle
-                title="Klantenoverzicht"
-                subtitle="Zoek, bewerk en open direct een endpoint-flow."
+                title="Klanten"
+                subtitle="Klik op een klant voor detailinformatie, documenten en acties."
                 action={
                   <Input
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Zoek klant..."
-                    style={{ minWidth: 240 }}
+                    value={customerSearch}
+                    onChange={(e) => setCustomerSearch(e.target.value)}
+                    placeholder="Zoek op bedrijf, contact, domein..."
+                    style={{ minWidth: 280 }}
                   />
                 }
               />
 
               <div style={{ display: "grid", gap: 12 }}>
-                {filteredCustomers.length === 0 ? (
-                  <div style={{ color: "#94a3b8" }}>Geen klanten gevonden.</div>
-                ) : (
-                  filteredCustomers.map((customer) => (
-                    <Card
-                      key={customer.id}
-                      style={{ background: "#0b1220", padding: 16 }}
-                    >
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "1.4fr 1fr auto",
-                          gap: 16,
-                          alignItems: "center",
-                        }}
-                      >
-                        <div>
-                          <div
-                            style={{
-                              fontWeight: 800,
-                              color: "#f8fafc",
-                              fontSize: 16,
-                              marginBottom: 4,
-                            }}
-                          >
-                            {customer.name}
-                          </div>
-                          <div style={{ color: "#94a3b8", fontSize: 13 }}>
-                            {customer.id}
-                          </div>
-                          <div style={{ color: "#cbd5e1", marginTop: 6 }}>
-                            {customer.domain}
-                          </div>
-                          {customer.deploymentId ? (
-                            <div
-                              style={{
-                                color: "#7dd3fc",
-                                fontSize: 13,
-                                marginTop: 4,
-                              }}
-                            >
-                              deployment: {customer.deploymentId}
-                            </div>
-                          ) : null}
-                        </div>
-
-                        <div>
-                          <div style={{ color: "#cbd5e1", fontSize: 13 }}>
-                            package: {customer.packageCode || "STARTER"}
-                          </div>
-                          <div
-                            style={{
-                              color: "#cbd5e1",
-                              fontSize: 13,
-                              marginTop: 4,
-                            }}
-                          >
-                            project: {customer.projectName || "—"}
-                          </div>
-                          <div
-                            style={{
-                              color: "#cbd5e1",
-                              fontSize: 13,
-                              marginTop: 4,
-                            }}
-                          >
-                            mailDomainId: {customer.mailDomainId || "—"}
-                          </div>
-                        </div>
-
-                        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                          <SmallButton onClick={() => editCustomer(customer)}>
-                            Bewerk
-                          </SmallButton>
-                          <SmallButton
-                            tone="primary"
-                            onClick={() =>
-                              applyCustomerToRequest(customer, "create-deployment-v2")
-                            }
-                          >
-                            Deploy
-                          </SmallButton>
-                          <SmallButton
-                            onClick={() =>
-                              applyCustomerToRequest(customer, "deployment-operations-v2")
-                            }
-                          >
-                            Ops
-                          </SmallButton>
-                          <SmallButton
-                            onClick={() =>
-                              applyCustomerToRequest(customer, "customer-provision-mail")
-                            }
-                          >
-                            Mail
-                          </SmallButton>
-                          <SmallButton
-                            tone="danger"
-                            onClick={() => removeCustomer(customer.id)}
-                          >
-                            Verwijder
-                          </SmallButton>
-                        </div>
-                      </div>
-                    </Card>
-                  ))
-                )}
-              </div>
-            </Card>
-          </div>
-        )}
-
-        {activeTab === "deployments" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
-            <Card>
-              <SectionTitle
-                title="Deployment acties"
-                subtitle="Voor de nieuwe deployment-flow."
-              />
-              <div style={{ display: "grid", gap: 12 }}>
-                <Field label="Deployment ID">
-                  <Input
-                    value={deploymentLookupId}
-                    onChange={(e) => setDeploymentLookupId(e.target.value)}
-                    placeholder="deployment-id"
-                  />
-                </Field>
-
-                <Field label="Redeploy mode">
-                  <Select
-                    value={redeployMode}
-                    onChange={(e) => setRedeployMode(e.target.value)}
+                {filteredCustomers.map((customer) => (
+                  <div
+                    key={customer.id}
+                    onClick={() => setSelectedCustomerId(customer.id)}
+                    style={{
+                      border:
+                        selectedCustomerId === customer.id
+                          ? "2px solid #0f172a"
+                          : "1px solid #e2e8f0",
+                      borderRadius: 18,
+                      padding: 16,
+                      cursor: "pointer",
+                      background: selectedCustomerId === customer.id ? "#f8fafc" : "#ffffff",
+                    }}
                   >
-                    {REDEPLOY_MODES.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </Select>
-                </Field>
-
-                <Field label="Retry stage">
-                  <Select
-                    value={retryStage}
-                    onChange={(e) => setRetryStage(e.target.value)}
-                  >
-                    {STAGES.map((stage) => (
-                      <option key={stage} value={stage}>
-                        {stage}
-                      </option>
-                    ))}
-                  </Select>
-                </Field>
-
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                  <SmallButton tone="primary" onClick={quickGetDeployment}>
-                    Get deployment
-                  </SmallButton>
-                  <SmallButton onClick={quickListOperations}>Operations</SmallButton>
-                  <SmallButton onClick={quickAudit}>Audit</SmallButton>
-                  <SmallButton tone="success" onClick={quickResume}>
-                    Resume
-                  </SmallButton>
-                  <SmallButton tone="success" onClick={quickRedeploy}>
-                    Redeploy
-                  </SmallButton>
-                  <SmallButton onClick={quickRetryStage}>Retry stage</SmallButton>
-                  <SmallButton onClick={quickRollback}>Rollback</SmallButton>
-                  <SmallButton tone="danger" onClick={quickDelete}>
-                    Delete
-                  </SmallButton>
-                  <SmallButton onClick={quickConsistency}>Consistency</SmallButton>
-                  <SmallButton onClick={quickReconcile}>Reconcile</SmallButton>
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <SectionTitle
-                title="Operation lookup"
-                subtitle="Bekijk losse operation records."
-              />
-              <div style={{ display: "grid", gap: 12 }}>
-                <Field label="Operation ID">
-                  <Input
-                    value={operationLookupId}
-                    onChange={(e) => setOperationLookupId(e.target.value)}
-                    placeholder="operation-id"
-                  />
-                </Field>
-
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  <SmallButton tone="primary" onClick={quickGetOperation}>
-                    Get operation
-                  </SmallButton>
-                  <SmallButton onClick={() => setActiveTab("playground")}>
-                    Open endpoint tester
-                  </SmallButton>
-                </div>
-              </div>
-            </Card>
-
-            <Card style={{ gridColumn: "1 / -1" }}>
-              <SectionTitle
-                title="Response"
-                subtitle="Laatste deployment-gerelateerde response."
-              />
-              <pre
-                style={{
-                  margin: 0,
-                  whiteSpace: "pre-wrap",
-                  wordBreak: "break-word",
-                  fontSize: 13,
-                  lineHeight: 1.6,
-                  color: "#cbd5e1",
-                  background: "#020617",
-                  border: "1px solid #1e293b",
-                  borderRadius: 14,
-                  padding: 16,
-                  minHeight: 260,
-                  overflow: "auto",
-                }}
-              >
-                {responseState ? pretty(responseState) : "Nog geen response."}
-              </pre>
-            </Card>
-          </div>
-        )}
-
-        {activeTab === "mail" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
-            <Card>
-              <SectionTitle
-                title="Mail domain acties"
-                subtitle="DNS records en reconciliatie."
-              />
-              <div style={{ display: "grid", gap: 12 }}>
-                <Field label="Mail domain ID">
-                  <Input
-                    value={mailDomainLookupId}
-                    onChange={(e) => setMailDomainLookupId(e.target.value)}
-                    placeholder="mail-domain-id"
-                  />
-                </Field>
-
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  <SmallButton tone="primary" onClick={quickMailDns}>
-                    DNS records
-                  </SmallButton>
-                  <SmallButton tone="success" onClick={quickMailReconcile}>
-                    Reconcile domain
-                  </SmallButton>
-                </div>
-              </div>
-            </Card>
-
-            <Card>
-              <SectionTitle
-                title="Mailbox acties"
-                subtitle="Disable, enable en delete mailbox."
-              />
-              <div style={{ display: "grid", gap: 12 }}>
-                <Field label="Mailbox ID">
-                  <Input
-                    value={mailboxLookupId}
-                    onChange={(e) => setMailboxLookupId(e.target.value)}
-                    placeholder="mailbox-id"
-                  />
-                </Field>
-
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  <SmallButton onClick={quickMailboxDisable}>Disable</SmallButton>
-                  <SmallButton tone="success" onClick={quickMailboxEnable}>
-                    Enable
-                  </SmallButton>
-                  <SmallButton tone="danger" onClick={quickMailboxDelete}>
-                    Delete
-                  </SmallButton>
-                </div>
-              </div>
-            </Card>
-
-            <Card style={{ gridColumn: "1 / -1" }}>
-              <SectionTitle
-                title="Mail presets"
-                subtitle="Klik een preset en stuur hem daarna vanuit de endpoint tester."
-              />
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-                  gap: 12,
-                }}
-              >
-                {ENDPOINT_PRESETS.filter((item) => item.category === "Mail").map(
-                  (preset) => (
-                    <button
-                      key={preset.key}
-                      type="button"
-                      onClick={() => {
-                        resetRequestFromPreset(preset);
-                        setActiveTab("playground");
-                      }}
-                      style={{
-                        background: "#0b1220",
-                        border: "1px solid #1e293b",
-                        borderRadius: 14,
-                        color: "#e2e8f0",
-                        padding: 16,
-                        textAlign: "left",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <div style={{ fontWeight: 800, marginBottom: 6 }}>
-                        {preset.label}
-                      </div>
-                      <div style={{ color: "#94a3b8", fontSize: 13 }}>
-                        {preset.method} {preset.path}
-                      </div>
-                    </button>
-                  )
-                )}
-              </div>
-            </Card>
-          </div>
-        )}
-
-        {activeTab === "playground" && (
-          <div style={{ display: "grid", gridTemplateColumns: "360px 1fr", gap: 18 }}>
-            <Card>
-              <SectionTitle
-                title="Endpoint presets"
-                subtitle="Alle provisioning endpoints, inclusief legacy."
-              />
-              <div style={{ display: "grid", gap: 14 }}>
-                {Object.entries(groupedPresets).map(([category, presets]) => (
-                  <div key={category}>
                     <div
                       style={{
-                        color: "#7dd3fc",
-                        fontWeight: 800,
-                        marginBottom: 8,
-                        fontSize: 13,
-                        textTransform: "uppercase",
-                        letterSpacing: 0.6,
+                        display: "grid",
+                        gridTemplateColumns: "1.2fr auto auto",
+                        gap: 16,
+                        alignItems: "center",
                       }}
                     >
-                      {category}
-                    </div>
-                    <div style={{ display: "grid", gap: 8 }}>
-                      {presets.map((preset) => (
-                        <button
-                          key={preset.key}
-                          type="button"
-                          onClick={() => resetRequestFromPreset(preset)}
+                      <div>
+                        <div style={{ fontWeight: 900, fontSize: 17, marginBottom: 4 }}>
+                          {customer.companyName}
+                        </div>
+                        <div style={{ color: "#64748b", fontSize: 14 }}>
+                          {customer.contactName} · {customer.email}
+                        </div>
+                        <div style={{ color: "#334155", fontSize: 14, marginTop: 6 }}>
+                          {customer.domain}
+                        </div>
+                      </div>
+
+                      <div style={{ textAlign: "right" }}>
+                        <div
                           style={{
-                            textAlign: "left",
-                            background:
-                              selectedPresetKey === preset.key
-                                ? "rgba(14,165,233,0.12)"
-                                : "#0b1220",
-                            border:
-                              selectedPresetKey === preset.key
-                                ? "1px solid #38bdf8"
-                                : "1px solid #1e293b",
-                            borderRadius: 12,
-                            padding: 12,
-                            color: "#e2e8f0",
-                            cursor: "pointer",
+                            padding: "6px 10px",
+                            borderRadius: 999,
+                            background: `${STATUS_COLORS[customer.status] || "#94a3b8"}20`,
+                            color: STATUS_COLORS[customer.status] || "#94a3b8",
+                            fontWeight: 900,
+                            fontSize: 12,
+                            marginBottom: 8,
                           }}
                         >
-                          <div style={{ fontWeight: 800, marginBottom: 4 }}>
-                            {preset.label}
-                          </div>
-                          <div style={{ color: "#94a3b8", fontSize: 12 }}>
-                            {preset.method} {preset.path}
-                          </div>
-                        </button>
-                      ))}
+                          {STATUS_LABELS[customer.status] || customer.status}
+                        </div>
+                        <div style={{ color: "#64748b", fontSize: 12 }}>
+                          {packageMeta(customer.packageCode).label}
+                        </div>
+                      </div>
+
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontWeight: 900, fontSize: 18 }}>
+                          {currency(calcMonthlyRevenue(customer))}
+                        </div>
+                        <div style={{ color: "#64748b", fontSize: 12 }}>per maand</div>
+                      </div>
                     </div>
                   </div>
                 ))}
+
+                {filteredCustomers.length === 0 ? (
+                  <div style={{ color: "#64748b" }}>Geen klanten gevonden.</div>
+                ) : null}
               </div>
             </Card>
 
+            {selectedCustomer ? (
+              <Card>
+                <SectionTitle
+                  title={selectedCustomer.companyName}
+                  subtitle={`${selectedCustomer.contactName} · ${selectedCustomer.email}`}
+                  action={
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                      <Button onClick={() => refreshCustomerDeployment(selectedCustomer)} tone="soft">
+                        Refresh status
+                      </Button>
+                      <Button onClick={() => redeployCustomer(selectedCustomer)}>
+                        Redeploy
+                      </Button>
+                      <Button
+                        onClick={() => deleteCustomerDeployment(selectedCustomer)}
+                        tone="danger"
+                      >
+                        Verwijder deployment
+                      </Button>
+                    </div>
+                  }
+                />
+
+                <div style={{ display: "grid", gap: 18 }}>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                      gap: 14,
+                    }}
+                  >
+                    <Field label="Bedrijfsnaam">
+                      <Input
+                        value={selectedCustomer.companyName}
+                        onChange={(e) =>
+                          saveCustomerEdits({
+                            ...selectedCustomer,
+                            companyName: e.target.value,
+                          })
+                        }
+                      />
+                    </Field>
+
+                    <Field label="Contactpersoon">
+                      <Input
+                        value={selectedCustomer.contactName}
+                        onChange={(e) =>
+                          saveCustomerEdits({
+                            ...selectedCustomer,
+                            contactName: e.target.value,
+                          })
+                        }
+                      />
+                    </Field>
+
+                    <Field label="E-mail">
+                      <Input
+                        value={selectedCustomer.email}
+                        onChange={(e) =>
+                          saveCustomerEdits({
+                            ...selectedCustomer,
+                            email: e.target.value,
+                          })
+                        }
+                      />
+                    </Field>
+
+                    <Field label="Telefoon">
+                      <Input
+                        value={selectedCustomer.phone}
+                        onChange={(e) =>
+                          saveCustomerEdits({
+                            ...selectedCustomer,
+                            phone: e.target.value,
+                          })
+                        }
+                      />
+                    </Field>
+
+                    <Field label="Domein">
+                      <Input
+                        value={selectedCustomer.domain}
+                        onChange={(e) =>
+                          saveCustomerEdits({
+                            ...selectedCustomer,
+                            domain: e.target.value,
+                          })
+                        }
+                      />
+                    </Field>
+
+                    <Field label="Pakket">
+                      <Select
+                        value={selectedCustomer.packageCode}
+                        onChange={(e) =>
+                          saveCustomerEdits({
+                            ...selectedCustomer,
+                            packageCode: e.target.value,
+                            finance: {
+                              ...selectedCustomer.finance,
+                              monthlyRevenue: calcMonthlyRevenue({
+                                ...selectedCustomer,
+                                packageCode: e.target.value,
+                              }),
+                            },
+                          })
+                        }
+                      >
+                        {PACKAGE_OPTIONS.map((item) => (
+                          <option key={item.code} value={item.code}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </Select>
+                    </Field>
+
+                    <Field label="Deployment ID">
+                      <Input value={selectedCustomer.deploymentId || ""} readOnly />
+                    </Field>
+
+                    <Field label="Deployment status">
+                      <Input value={selectedCustomer.deploymentStatus || ""} readOnly />
+                    </Field>
+                  </div>
+
+                  <Card style={{ background: "#f8fafc", padding: 18 }}>
+                    <SectionTitle
+                      title="Documenten"
+                      subtitle="Upload bijvoorbeeld contracten of intakebestanden."
+                      action={
+                        <label
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 8,
+                            padding: "10px 14px",
+                            borderRadius: 12,
+                            border: "1px solid #cbd5e1",
+                            background: "#ffffff",
+                            cursor: "pointer",
+                            fontWeight: 800,
+                          }}
+                        >
+                          Upload document
+                          <input
+                            type="file"
+                            multiple
+                            style={{ display: "none" }}
+                            onChange={(e) =>
+                              uploadDocuments(selectedCustomer.id, e.target.files)
+                            }
+                          />
+                        </label>
+                      }
+                    />
+
+                    <div style={{ display: "grid", gap: 10 }}>
+                      {(selectedCustomer.documents || []).map((doc) => (
+                        <div
+                          key={doc.id}
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            gap: 16,
+                            alignItems: "center",
+                            padding: 14,
+                            borderRadius: 14,
+                            background: "#ffffff",
+                            border: "1px solid #e2e8f0",
+                          }}
+                        >
+                          <div>
+                            <div style={{ fontWeight: 800 }}>{doc.name}</div>
+                            <div style={{ color: "#64748b", fontSize: 13 }}>
+                              {Math.round(doc.size / 1024)} KB · {dateLabel(doc.uploadedAt)}
+                            </div>
+                          </div>
+                          {doc.dataUrl ? (
+                            <a
+                              href={doc.dataUrl}
+                              download={doc.name}
+                              style={{
+                                color: "#1d4ed8",
+                                fontWeight: 800,
+                                textDecoration: "none",
+                              }}
+                            >
+                              Download
+                            </a>
+                          ) : null}
+                        </div>
+                      ))}
+
+                      {(selectedCustomer.documents || []).length === 0 ? (
+                        <div style={{ color: "#64748b" }}>Nog geen documenten.</div>
+                      ) : null}
+                    </div>
+                  </Card>
+
+                  <Card style={{ background: "#f8fafc", padding: 18 }}>
+                    <SectionTitle
+                      title="Recente backend acties"
+                      subtitle="Laatste calls voor deze klant."
+                    />
+                    <div style={{ display: "grid", gap: 10 }}>
+                      {(selectedCustomer.requestHistory || []).map((entry) => (
+                        <div
+                          key={entry.id}
+                          style={{
+                            borderRadius: 14,
+                            border: "1px solid #e2e8f0",
+                            background: "#ffffff",
+                            padding: 14,
+                          }}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              gap: 12,
+                              marginBottom: 8,
+                              flexWrap: "wrap",
+                            }}
+                          >
+                            <strong>{entry.type}</strong>
+                            <span
+                              style={{
+                                color: entry.result && entry.result.ok ? "#10b981" : "#ef4444",
+                                fontWeight: 900,
+                              }}
+                            >
+                              {(entry.result && entry.result.status) || "ERR"}
+                            </span>
+                          </div>
+                          <pre
+                            style={{
+                              margin: 0,
+                              whiteSpace: "pre-wrap",
+                              wordBreak: "break-word",
+                              color: "#334155",
+                              fontSize: 12,
+                            }}
+                          >
+                            {pretty(entry.result && entry.result.data)}
+                          </pre>
+                        </div>
+                      ))}
+
+                      {(selectedCustomer.requestHistory || []).length === 0 ? (
+                        <div style={{ color: "#64748b" }}>Nog geen backend acties.</div>
+                      ) : null}
+                    </div>
+                  </Card>
+
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <Button tone="danger" onClick={() => removeCustomer(selectedCustomer.id)}>
+                      Klant verwijderen
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            ) : null}
+          </div>
+        )}
+
+        {activeTab === "finance" && (
+          <div style={{ display: "grid", gap: 18 }}>
             <Card>
               <SectionTitle
-                title="Request editor"
-                subtitle="Pas path en body aan en verstuur direct."
+                title="Financieel overzicht"
+                subtitle="Inkomsten, uitgaven, omzet en winst met periodefilter."
                 action={
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <SmallButton
-                      tone="muted"
-                      onClick={() =>
-                        selectedPreset && resetRequestFromPreset(selectedPreset)
-                      }
-                    >
-                      Reset preset
-                    </SmallButton>
-                    <SmallButton
-                      tone="primary"
-                      onClick={() => sendRequest()}
-                      disabled={isSending}
-                    >
-                      {isSending ? "Versturen..." : "Verstuur request"}
-                    </SmallButton>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {TIME_FILTERS.map((item) => (
+                      <Button
+                        key={item.key}
+                        tone={financeFilter === item.key ? "primary" : "default"}
+                        onClick={() => setFinanceFilter(item.key)}
+                      >
+                        {item.label}
+                      </Button>
+                    ))}
                   </div>
                 }
               />
 
-              <div style={{ display: "grid", gap: 12 }}>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "180px 1fr",
-                    gap: 12,
-                  }}
-                >
-                  <Field label="Method">
-                    <Select
-                      value={requestMethod}
-                      onChange={(e) => setRequestMethod(e.target.value)}
-                    >
-                      <option value="GET">GET</option>
-                      <option value="POST">POST</option>
-                      <option value="DELETE">DELETE</option>
-                    </Select>
-                  </Field>
-
-                  <Field label="Path">
-                    <Input
-                      value={requestPath}
-                      onChange={(e) => setRequestPath(e.target.value)}
-                      placeholder="/api/deployments/..."
-                    />
-                  </Field>
-                </div>
-
-                <Field label="JSON body">
-                  <Textarea
-                    value={requestBody}
-                    onChange={(e) => setRequestBody(e.target.value)}
-                    placeholder="{}"
-                  />
-                </Field>
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: 18,
-                    marginTop: 8,
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        fontWeight: 800,
-                        color: "#cbd5e1",
-                        marginBottom: 8,
-                      }}
-                    >
-                      Headers
-                    </div>
-                    <pre
-                      style={{
-                        margin: 0,
-                        whiteSpace: "pre-wrap",
-                        wordBreak: "break-word",
-                        fontSize: 12,
-                        lineHeight: 1.6,
-                        color: "#cbd5e1",
-                        background: "#020617",
-                        border: "1px solid #1e293b",
-                        borderRadius: 14,
-                        padding: 14,
-                        minHeight: 180,
-                        overflow: "auto",
-                      }}
-                    >
-                      {pretty(buildHeaders(settings, requestMethod))}
-                    </pre>
-                  </div>
-
-                  <div>
-                    <div
-                      style={{
-                        fontWeight: 800,
-                        color: "#cbd5e1",
-                        marginBottom: 8,
-                      }}
-                    >
-                      Response
-                    </div>
-                    <pre
-                      style={{
-                        margin: 0,
-                        whiteSpace: "pre-wrap",
-                        wordBreak: "break-word",
-                        fontSize: 12,
-                        lineHeight: 1.6,
-                        color: "#cbd5e1",
-                        background: "#020617",
-                        border: "1px solid #1e293b",
-                        borderRadius: 14,
-                        padding: 14,
-                        minHeight: 180,
-                        overflow: "auto",
-                      }}
-                    >
-                      {responseState ? pretty(responseState) : "Nog geen response."}
-                    </pre>
-                  </div>
-                </div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                  gap: 16,
+                }}
+              >
+                <StatCard
+                  title="Omzet"
+                  value={currency(
+                    financeCustomers.reduce(
+                      (sum, customer) => sum + calcMonthlyRevenue(customer),
+                      0
+                    )
+                  )}
+                  subtitle={`Filter: ${TIME_FILTERS.find((i) => i.key === financeFilter)?.label}`}
+                  tone="#0ea5e9"
+                />
+                <StatCard
+                  title="Uitgaven"
+                  value={currency(
+                    financeExpenses.reduce(
+                      (sum, expense) => sum + Number(expense.amount || 0),
+                      0
+                    ) +
+                      customers.reduce(
+                        (sum, customer) => sum + Number(customer.monthlyInfraCost || 0),
+                        0
+                      )
+                  )}
+                  subtitle="Handmatig + infra"
+                  tone="#f97316"
+                />
+                <StatCard
+                  title="Winst"
+                  value={currency(
+                    financeCustomers.reduce(
+                      (sum, customer) => sum + calcMonthlyRevenue(customer),
+                      0
+                    ) -
+                      (financeExpenses.reduce(
+                        (sum, expense) => sum + Number(expense.amount || 0),
+                        0
+                      ) +
+                        customers.reduce(
+                          (sum, customer) =>
+                            sum + Number(customer.monthlyInfraCost || 0),
+                          0
+                        ))
+                  )}
+                  subtitle="Geschat"
+                  tone="#10b981"
+                />
+                <StatCard
+                  title="Gemiddelde per klant"
+                  value={currency(
+                    customers.length ? totalMonthlyRevenue / customers.length : 0
+                  )}
+                  subtitle="MRR per klant"
+                  tone="#8b5cf6"
+                />
               </div>
             </Card>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.1fr 0.9fr",
+                gap: 18,
+              }}
+            >
+              <Card>
+                <SectionTitle
+                  title="Pakketten en omzet"
+                  subtitle="Aantal klanten en omzet per pakket."
+                />
+                <div style={{ width: "100%", height: 340 }}>
+                  <ResponsiveContainer>
+                    <BarChart data={packageChartData}>
+                      <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+                      <XAxis dataKey="name" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip />
+                      <Legend />
+                      <Bar dataKey="klanten" fill="#0ea5e9" radius={[8, 8, 0, 0]} />
+                      <Bar dataKey="omzet" fill="#10b981" radius={[8, 8, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </Card>
+
+              <Card>
+                <SectionTitle
+                  title="Uitgave toevoegen"
+                  subtitle="Voeg handmatige kosten toe voor een compleet overzicht."
+                  action={
+                    <Button tone="primary" onClick={addExpense}>
+                      Opslaan
+                    </Button>
+                  }
+                />
+                <div style={{ display: "grid", gap: 12, marginBottom: 18 }}>
+                  <Field label="Titel">
+                    <Input
+                      value={expenseForm.title}
+                      onChange={(e) =>
+                        setExpenseForm((prev) => ({ ...prev, title: e.target.value }))
+                      }
+                      placeholder="Hosting, software, advertentie..."
+                    />
+                  </Field>
+
+                  <Field label="Bedrag">
+                    <Input
+                      type="number"
+                      min="0"
+                      value={expenseForm.amount}
+                      onChange={(e) =>
+                        setExpenseForm((prev) => ({ ...prev, amount: e.target.value }))
+                      }
+                      placeholder="0"
+                    />
+                  </Field>
+
+                  <Field label="Datum">
+                    <Input
+                      type="date"
+                      value={expenseForm.date}
+                      onChange={(e) =>
+                        setExpenseForm((prev) => ({ ...prev, date: e.target.value }))
+                      }
+                    />
+                  </Field>
+
+                  <Field label="Categorie">
+                    <Select
+                      value={expenseForm.category}
+                      onChange={(e) =>
+                        setExpenseForm((prev) => ({ ...prev, category: e.target.value }))
+                      }
+                    >
+                      <option>Overig</option>
+                      <option>Hosting</option>
+                      <option>Software</option>
+                      <option>Marketing</option>
+                      <option>Freelance</option>
+                      <option>Hardware</option>
+                    </Select>
+                  </Field>
+                </div>
+
+                <div style={{ display: "grid", gap: 10, maxHeight: 300, overflow: "auto" }}>
+                  {expenses.map((expense) => (
+                    <div
+                      key={expense.id}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 12,
+                        padding: 12,
+                        borderRadius: 14,
+                        border: "1px solid #e2e8f0",
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: 800 }}>{expense.title}</div>
+                        <div style={{ color: "#64748b", fontSize: 13 }}>
+                          {expense.category} · {dateLabel(expense.date)}
+                        </div>
+                      </div>
+                      <div style={{ fontWeight: 900 }}>{currency(expense.amount)}</div>
+                    </div>
+                  ))}
+
+                  {expenses.length === 0 ? (
+                    <div style={{ color: "#64748b" }}>Nog geen uitgaven toegevoegd.</div>
+                  ) : null}
+                </div>
+              </Card>
+            </div>
           </div>
         )}
 
@@ -2043,9 +1997,10 @@ export default function AdminCRM() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
             <Card>
               <SectionTitle
-                title="Backend verbinding"
-                subtitle="Deze waarden worden lokaal in localStorage opgeslagen."
+                title="Backend instellingen"
+                subtitle="Koppeling met de provisioning backend."
               />
+
               <div style={{ display: "grid", gap: 12 }}>
                 <Field label="Base URL">
                   <Input
@@ -2055,7 +2010,7 @@ export default function AdminCRM() {
                   />
                 </Field>
 
-                <Field label="X-Api-Key">
+                <Field label="API key">
                   <Input
                     type="password"
                     value={settings.apiKey}
@@ -2064,7 +2019,7 @@ export default function AdminCRM() {
                   />
                 </Field>
 
-                <Field label="X-Tenant-Id">
+                <Field label="Tenant ID">
                   <Input
                     value={settings.tenantId}
                     onChange={(e) => updateSettings("tenantId", e.target.value)}
@@ -2072,7 +2027,7 @@ export default function AdminCRM() {
                   />
                 </Field>
 
-                <Field label="X-Actor-Id">
+                <Field label="Actor ID">
                   <Input
                     value={settings.actorId}
                     onChange={(e) => updateSettings("actorId", e.target.value)}
@@ -2080,7 +2035,7 @@ export default function AdminCRM() {
                   />
                 </Field>
 
-                <Field label="X-Source">
+                <Field label="Source">
                   <Select
                     value={settings.source}
                     onChange={(e) => updateSettings("source", e.target.value)}
@@ -2092,13 +2047,23 @@ export default function AdminCRM() {
                   </Select>
                 </Field>
 
+                <Field label="Standaard mailbox local part">
+                  <Input
+                    value={settings.defaultMailboxLocalPart}
+                    onChange={(e) =>
+                      updateSettings("defaultMailboxLocalPart", e.target.value)
+                    }
+                    placeholder="info"
+                  />
+                </Field>
+
                 <label
                   style={{
                     display: "flex",
                     alignItems: "center",
                     gap: 10,
-                    color: "#cbd5e1",
-                    fontWeight: 700,
+                    color: "#334155",
+                    fontWeight: 800,
                   }}
                 >
                   <input
@@ -2108,72 +2073,87 @@ export default function AdminCRM() {
                       updateSettings("autoIdempotency", e.target.checked)
                     }
                   />
-                  Automatisch Idempotency-Key toevoegen op non-GET requests
+                  Automatisch idempotency key toevoegen
                 </label>
 
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  <SmallButton
-                    tone="primary"
-                    onClick={() => setActiveTab("playground")}
-                  >
-                    Open endpoint tester
-                  </SmallButton>
-                  <SmallButton
-                    onClick={() =>
-                      setSettings({
-                        ...DEFAULT_SETTINGS,
-                        apiKey: settings.apiKey,
-                      })
+                <label
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 10,
+                    color: "#334155",
+                    fontWeight: 800,
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={Boolean(settings.autoProvisionMail)}
+                    onChange={(e) =>
+                      updateSettings("autoProvisionMail", e.target.checked)
                     }
-                  >
-                    Reset defaults
-                  </SmallButton>
-                </div>
+                  />
+                  Automatisch mail provisioning starten na deploy
+                </label>
               </div>
             </Card>
 
             <Card>
               <SectionTitle
-                title="Connection checks"
-                subtitle="Snelle checks voor /health en /ready."
+                title="Laatste backend calls"
+                subtitle="Globale log over alle uitgevoerde acties."
               />
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
-                <SmallButton
-                  tone="primary"
-                  onClick={() =>
-                    sendRequest({ method: "GET", path: "/health", body: "" })
-                  }
-                >
-                  Check health
-                </SmallButton>
-                <SmallButton
-                  tone="primary"
-                  onClick={() =>
-                    sendRequest({ method: "GET", path: "/ready", body: "" })
-                  }
-                >
-                  Check ready
-                </SmallButton>
-              </div>
 
-              <pre
-                style={{
-                  margin: 0,
-                  whiteSpace: "pre-wrap",
-                  wordBreak: "break-word",
-                  fontSize: 13,
-                  lineHeight: 1.6,
-                  color: "#cbd5e1",
-                  background: "#020617",
-                  border: "1px solid #1e293b",
-                  borderRadius: 14,
-                  padding: 16,
-                  minHeight: 260,
-                  overflow: "auto",
-                }}
-              >
-                {responseState ? pretty(responseState) : "Nog geen response."}
-              </pre>
+              <div style={{ display: "grid", gap: 10, maxHeight: 560, overflow: "auto" }}>
+                {requestLog.map((entry) => (
+                  <div
+                    key={entry.id}
+                    style={{
+                      border: "1px solid #e2e8f0",
+                      borderRadius: 16,
+                      padding: 14,
+                      background: "#ffffff",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 12,
+                        flexWrap: "wrap",
+                        marginBottom: 8,
+                      }}
+                    >
+                      <strong>{entry.type}</strong>
+                      <span
+                        style={{
+                          color: entry.result && entry.result.ok ? "#10b981" : "#ef4444",
+                          fontWeight: 900,
+                        }}
+                      >
+                        {(entry.result && entry.result.status) || "ERR"}
+                      </span>
+                    </div>
+                    <div style={{ color: "#64748b", fontSize: 12, marginBottom: 8 }}>
+                      {dateLabel(entry.at)}
+                    </div>
+                    <pre
+                      style={{
+                        margin: 0,
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-word",
+                        color: "#334155",
+                        fontSize: 12,
+                      }}
+                    >
+                      {pretty(entry.result && entry.result.data)}
+                    </pre>
+                  </div>
+                ))}
+
+                {requestLog.length === 0 ? (
+                  <div style={{ color: "#64748b" }}>Nog geen backend calls.</div>
+                ) : null}
+              </div>
             </Card>
           </div>
         )}
