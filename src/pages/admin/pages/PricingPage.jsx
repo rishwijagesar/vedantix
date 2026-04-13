@@ -28,7 +28,16 @@ export default function PricingPage({ store: storeProp }) {
               >
                 Extra's
               </Button>
-              <Button onClick={store.resetPricingDrafts} disabled={store.isPricingSaving || store.isPricingLoading}>
+              <Button
+                onClick={store.restoreDefaultPricing}
+                disabled={store.isPricingSaving || store.isPricingLoading}
+              >
+                Herstel standaard
+              </Button>
+              <Button
+                onClick={store.resetPricingDrafts}
+                disabled={store.isPricingSaving || store.isPricingLoading}
+              >
                 Cancel
               </Button>
               <Button
@@ -139,7 +148,11 @@ export default function PricingPage({ store: storeProp }) {
                         min="0"
                         value={item.monthlyInfraCostExclVat}
                         onChange={(e) =>
-                          store.updatePackageDraft(item.code, "monthlyInfraCostExclVat", e.target.value)
+                          store.updatePackageDraft(
+                            item.code,
+                            "monthlyInfraCostExclVat",
+                            e.target.value
+                          )
                         }
                       />
                     </Field>

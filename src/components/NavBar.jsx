@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import VedantixLogo from "../components/VedantixLogo";
 import "../styles/navbar.css";
@@ -5,6 +6,14 @@ import "../styles/navbar.css";
 export default function NavBar() {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+
+  useEffect(() => {
+    document.body.setAttribute("data-has-fixed-navbar", "true");
+
+    return () => {
+      document.body.removeAttribute("data-has-fixed-navbar");
+    };
+  }, []);
 
   return (
     <header className="site-header">
@@ -21,29 +30,15 @@ export default function NavBar() {
             <a href={isHomePage ? "#how" : "/#how"} className="site-nav-link">
               Hoe het werkt
             </a>
-            <a
-              href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag."
-              target="_blank"
-              rel="noreferrer"
-              className="site-nav-link"
-            >
-              Contact
-            </a>
-            <Link to="/blog" className="site-nav-link">
-              Blog
-            </Link>
-            <Link to="/faq" className="site-nav-link">
-              FAQ
-            </Link>
           </div>
 
           <a
-            href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20meer%20weten%20over%20een%20website."
+            href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag."
             target="_blank"
             rel="noreferrer"
             className="site-nav-cta"
           >
-            Start je website →
+            Stel je vraag
           </a>
         </nav>
       </div>

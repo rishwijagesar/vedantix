@@ -9,6 +9,8 @@ import {
   DEFAULT_SETTINGS,
   DEFAULT_CUSTOMER_FORM,
   DEFAULT_EXPENSE_FORM,
+  DEFAULT_PRICING_PACKAGES,
+  DEFAULT_PRICING_ADDONS,
   loadJson,
   saveJson,
   slugify,
@@ -40,7 +42,8 @@ function buildHeaders(settings, method) {
 }
 
 async function apiRequest(settings, method, path, body) {
-  const url = `${settings.baseUrl.replace(/\/$/, "")}${path}`;
+  const url = `${String(settings.baseUrl || "").replace(/\/$/, "")}${path}`;
+
   const response = await fetch(url, {
     method,
     headers: buildHeaders(settings, method),
@@ -63,6 +66,13 @@ async function apiRequest(settings, method, path, body) {
     url,
     method,
   };
+}
+
+function createId(prefix) {
+  return (
+    (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+    `${prefix}-${Date.now()}`
+  );
 }
 
 function withDerivedPricingValues(item) {
@@ -92,13 +102,53 @@ function withDerivedPricingValues(item) {
   };
 }
 
-function clonePricingData(items) {
+function clonePricingData(items = []) {
   return items.map((item) => withDerivedPricingValues({ ...item }));
+}
+
+function getFallbackPricingState() {
+  return {
+    packages: clonePricingData(DEFAULT_PRICING_PACKAGES),
+    addons: clonePricingData(DEFAULT_PRICING_ADDONS),
+  };
+}
+
+function normalizePricingSummary(summary) {
+  const incomingPackages = Array.isArray(summary?.packages) ? summary.packages : [];
+  const incomingAddons = Array.isArray(summary?.addons) ? summary.addons : [];
+
+  if (incomingPackages.length === 0 && incomingAddons.length === 0) {
+    return {
+      ...getFallbackPricingState(),
+      usedFallback: true,
+    };
+  }
+
+  return {
+    packages: clonePricingData(incomingPackages),
+    addons: clonePricingData(incomingAddons),
+    usedFallback: false,
+  };
+}
+
+function toEditableValue(key, value) {
+  if (
+    key === "monthlyPriceInclVat" ||
+    key === "setupPriceInclVat" ||
+    key === "monthlyInfraCostExclVat" ||
+    key === "sortOrder" ||
+    key === "vatRate"
+  ) {
+    return toNumber(value);
+  }
+
+  return value;
 }
 
 export function useAdminStore() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [pricingTab, setPricingTab] = useState("packages");
+
   const [settings, setSettings] = useState(() =>
     loadJson(STORAGE_KEYS.settings, DEFAULT_SETTINGS)
   );
@@ -114,11 +164,13 @@ export function useAdminStore() {
 
   const [customerForm, setCustomerForm] = useState(DEFAULT_CUSTOMER_FORM);
   const [expenseForm, setExpenseForm] = useState(DEFAULT_EXPENSE_FORM);
+
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
   const [customerSearch, setCustomerSearch] = useState("");
   const [financeFilter, setFinanceFilter] = useState("month");
   const [detailFilter, setDetailFilter] = useState("month");
   const [vatFilter, setVatFilter] = useState("month");
+
   const [isProvisioning, setIsProvisioning] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
   const [deleteCandidate, setDeleteCandidate] = useState(null);
@@ -127,15 +179,27 @@ export function useAdminStore() {
   const [extraOptions, setExtraOptions] = useState([]);
   const [packageDrafts, setPackageDrafts] = useState([]);
   const [addonDrafts, setAddonDrafts] = useState([]);
+
   const [isPricingLoading, setIsPricingLoading] = useState(false);
   const [isPricingSaving, setIsPricingSaving] = useState(false);
   const [pricingSaveMessage, setPricingSaveMessage] = useState("");
   const [pricingError, setPricingError] = useState("");
 
-  useEffect(() => saveJson(STORAGE_KEYS.settings, settings), [settings]);
-  useEffect(() => saveJson(STORAGE_KEYS.customers, customers), [customers]);
-  useEffect(() => saveJson(STORAGE_KEYS.expenses, expenses), [expenses]);
-  useEffect(() => saveJson(STORAGE_KEYS.requestLog, requestLog), [requestLog]);
+  useEffect(() => {
+    saveJson(STORAGE_KEYS.settings, settings);
+  }, [settings]);
+
+  useEffect(() => {
+    saveJson(STORAGE_KEYS.customers, customers);
+  }, [customers]);
+
+  useEffect(() => {
+    saveJson(STORAGE_KEYS.expenses, expenses);
+  }, [expenses]);
+
+  useEffect(() => {
+    saveJson(STORAGE_KEYS.requestLog, requestLog);
+  }, [requestLog]);
 
   async function loadPricingFromBackend() {
     setIsPricingLoading(true);
@@ -144,16 +208,28 @@ export function useAdminStore() {
 
     try {
       const summary = await fetchPricingSummary();
-      const packages = clonePricingData(summary?.packages || []);
-      const addons = clonePricingData(summary?.addons || []);
+      const normalized = normalizePricingSummary(summary);
 
-      setPackageOptions(packages);
-      setExtraOptions(addons);
-      setPackageDrafts(clonePricingData(packages));
-      setAddonDrafts(clonePricingData(addons));
-    } catch (error) {
-      setPricingError(
-        error instanceof Error ? error.message : "Pricing kon niet geladen worden."
+      setPackageOptions(normalized.packages);
+      setExtraOptions(normalized.addons);
+      setPackageDrafts(clonePricingData(normalized.packages));
+      setAddonDrafts(clonePricingData(normalized.addons));
+
+      if (normalized.usedFallback) {
+        setPricingSaveMessage(
+          "Standaard pakketten geladen. Sla op om ze weer naar je backend te schrijven."
+        );
+      }
+    } catch {
+      const fallback = getFallbackPricingState();
+
+      setPackageOptions(fallback.packages);
+      setExtraOptions(fallback.addons);
+      setPackageDrafts(clonePricingData(fallback.packages));
+      setAddonDrafts(clonePricingData(fallback.addons));
+      setPricingError("");
+      setPricingSaveMessage(
+        "Backend pricing kon niet geladen worden. Standaard pakketten zijn hersteld in admin."
       );
     } finally {
       setIsPricingLoading(false);
@@ -165,8 +241,11 @@ export function useAdminStore() {
   }, []);
 
   const filteredCustomers = useMemo(() => {
-    const q = customerSearch.trim().toLowerCase();
-    if (!q) return customers;
+    const query = customerSearch.trim().toLowerCase();
+
+    if (!query) {
+      return customers;
+    }
 
     return customers.filter((customer) =>
       [
@@ -179,7 +258,7 @@ export function useAdminStore() {
       ]
         .join(" ")
         .toLowerCase()
-        .includes(q)
+        .includes(query)
     );
   }, [customers, customerSearch]);
 
@@ -240,25 +319,29 @@ export function useAdminStore() {
   }, [customers, packageOptions, extraOptions]);
 
   const totalMonthlyCosts = useMemo(() => {
-    const infra = customers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0);
-    const manual = financeExpenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+    const infra = customers.reduce(
+      (sum, customer) => sum + calcMonthlyInfraCost(customer),
+      0
+    );
+    const manual = financeExpenses.reduce(
+      (sum, expense) => sum + Number(expense.amount || 0),
+      0
+    );
+
     return infra + manual;
   }, [customers, financeExpenses, packageOptions, extraOptions]);
 
-  const activeCustomers = useMemo(
-    () => customers.filter((item) => item.status === "active").length,
-    [customers]
-  );
+  const activeCustomers = useMemo(() => {
+    return customers.filter((item) => item.status === "active").length;
+  }, [customers]);
 
-  const failedCustomers = useMemo(
-    () => customers.filter((item) => item.status === "failed").length,
-    [customers]
-  );
+  const failedCustomers = useMemo(() => {
+    return customers.filter((item) => item.status === "failed").length;
+  }, [customers]);
 
-  const warningCustomers = useMemo(
-    () => customers.filter((item) => item.status === "warning").length,
-    [customers]
-  );
+  const warningCustomers = useMemo(() => {
+    return customers.filter((item) => item.status === "warning").length;
+  }, [customers]);
 
   const packageChartData = useMemo(() => {
     const grouped = customers.reduce((acc, customer) => {
@@ -300,7 +383,10 @@ export function useAdminStore() {
   }
 
   const selectedCustomerStats = useMemo(() => {
-    if (!selectedCustomer) return null;
+    if (!selectedCustomer) {
+      return null;
+    }
+
     return buildCustomerPeriodStats(selectedCustomer, detailFilter);
   }, [selectedCustomer, expenses, detailFilter, packageOptions, extraOptions]);
 
@@ -331,13 +417,19 @@ export function useAdminStore() {
         const month = base.getMonth();
         const year = base.getFullYear();
 
-        const revenue = customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0);
-        const infraCost = customers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0);
+        const revenue = customers.reduce(
+          (sum, customer) => sum + calcMonthlyRevenue(customer),
+          0
+        );
+        const infraCost = customers.reduce(
+          (sum, customer) => sum + calcMonthlyInfraCost(customer),
+          0
+        );
 
         const directExpenses = expenses
           .filter((expense) => {
-            const d = new Date(expense.date);
-            return d.getMonth() === month && d.getFullYear() === year;
+            const date = new Date(expense.date);
+            return date.getMonth() === month && date.getFullYear() === year;
           })
           .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
 
@@ -354,8 +446,10 @@ export function useAdminStore() {
         base.setDate(base.getDate() - i);
         const iso = base.toISOString().slice(0, 10);
 
-        const revenue = customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0) / 30;
-        const infraCost = customers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0) / 30;
+        const revenue =
+          customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0) / 30;
+        const infraCost =
+          customers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0) / 30;
 
         const directExpenses = expenses
           .filter((expense) => String(expense.date).slice(0, 10) === iso)
@@ -409,8 +503,8 @@ export function useAdminStore() {
         const directExpenses = expenses
           .filter((expense) => expense.customerId === customer.id)
           .filter((expense) => {
-            const d = new Date(expense.date);
-            return d.getMonth() === month && d.getFullYear() === year;
+            const date = new Date(expense.date);
+            return date.getMonth() === month && date.getFullYear() === year;
           })
           .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
 
@@ -426,6 +520,7 @@ export function useAdminStore() {
       } else {
         base.setDate(base.getDate() - i);
         const iso = base.toISOString().slice(0, 10);
+
         const revenue = calcMonthlyRevenue(customer) / 30;
         const infraCost = calcMonthlyInfraCost(customer) / 30;
 
@@ -449,33 +544,48 @@ export function useAdminStore() {
     return rows;
   }
 
-  const dashboardTrendData = useMemo(
-    () => buildDashboardTrendData(financeFilter),
-    [customers, expenses, financeFilter, packageOptions, extraOptions]
-  );
+  const dashboardTrendData = useMemo(() => {
+    return buildDashboardTrendData(financeFilter);
+  }, [customers, expenses, financeFilter, packageOptions, extraOptions]);
 
   const selectedCustomerTrendData = useMemo(() => {
-    if (!selectedCustomer) return [];
+    if (!selectedCustomer) {
+      return [];
+    }
+
     return buildCustomerTrendData(selectedCustomer, detailFilter);
   }, [selectedCustomer, expenses, detailFilter, packageOptions, extraOptions]);
 
   function pushRequestLogEntries(entries) {
-    const nextEntries = Array.isArray(entries) ? entries.filter(Boolean) : [entries].filter(Boolean);
-    if (nextEntries.length === 0) return;
+    const nextEntries = Array.isArray(entries)
+      ? entries.filter(Boolean)
+      : [entries].filter(Boolean);
+
+    if (nextEntries.length === 0) {
+      return;
+    }
+
     setRequestLog((prev) => [...nextEntries, ...prev].slice(0, 100));
   }
 
   function updateCustomerForm(key, value) {
-    setCustomerForm((prev) => ({ ...prev, [key]: value }));
+    setCustomerForm((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   }
 
   function updateSettings(key, value) {
-    setSettings((prev) => ({ ...prev, [key]: value }));
+    setSettings((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   }
 
   function toggleExtra(code) {
     setCustomerForm((prev) => {
       const exists = prev.extras.includes(code);
+
       return {
         ...prev,
         extras: exists
@@ -495,14 +605,7 @@ export function useAdminStore() {
         item.code === code
           ? withDerivedPricingValues({
               ...item,
-              [key]:
-                key === "monthlyPriceInclVat" ||
-                key === "setupPriceInclVat" ||
-                key === "monthlyInfraCostExclVat" ||
-                key === "sortOrder" ||
-                key === "vatRate"
-                  ? toNumber(value)
-                  : value,
+              [key]: toEditableValue(key, value),
             })
           : item
       )
@@ -515,14 +618,7 @@ export function useAdminStore() {
         item.code === code
           ? withDerivedPricingValues({
               ...item,
-              [key]:
-                key === "monthlyPriceInclVat" ||
-                key === "setupPriceInclVat" ||
-                key === "monthlyInfraCostExclVat" ||
-                key === "sortOrder" ||
-                key === "vatRate"
-                  ? toNumber(value)
-                  : value,
+              [key]: toEditableValue(key, value),
             })
           : item
       )
@@ -534,6 +630,19 @@ export function useAdminStore() {
     setAddonDrafts(clonePricingData(extraOptions));
     setPricingSaveMessage("");
     setPricingError("");
+  }
+
+  function restoreDefaultPricing() {
+    const fallback = getFallbackPricingState();
+
+    setPackageOptions(fallback.packages);
+    setExtraOptions(fallback.addons);
+    setPackageDrafts(clonePricingData(fallback.packages));
+    setAddonDrafts(clonePricingData(fallback.addons));
+    setPricingError("");
+    setPricingSaveMessage(
+      "Standaard pakketten en extra's zijn hersteld. Klik op Save om dit definitief op te slaan."
+    );
   }
 
   async function savePricingChanges() {
@@ -614,25 +723,27 @@ export function useAdminStore() {
 
   function createCustomerDraft() {
     const companySlug = slugify(customerForm.companyName);
-    const domainSlug = slugify(customerForm.domain.split(".")[0] || customerForm.companyName);
+    const domainSlug = slugify(
+      customerForm.domain.split(".")[0] || customerForm.companyName
+    );
     const customerId = `cust_${companySlug || domainSlug || Date.now()}`;
 
     const monthlyRevenue =
-      (getPackageByCode(customerForm.packageCode)?.monthlyPriceInclVat || 0) +
+      Number(getPackageByCode(customerForm.packageCode)?.monthlyPriceInclVat || 0) +
       (customerForm.extras || []).reduce((sum, code) => {
         const addon = getAddonByCode(code);
         return sum + Number(addon?.monthlyPriceInclVat || 0);
       }, 0);
 
     const monthlyInfraCost =
-      (getPackageByCode(customerForm.packageCode)?.monthlyInfraCostInclVat || 0) +
+      Number(getPackageByCode(customerForm.packageCode)?.monthlyInfraCostInclVat || 0) +
       (customerForm.extras || []).reduce((sum, code) => {
         const addon = getAddonByCode(code);
         return sum + Number(addon?.monthlyInfraCostInclVat || 0);
       }, 0);
 
     const oneTimeSetupCost =
-      (getPackageByCode(customerForm.packageCode)?.setupPriceInclVat || 0) +
+      Number(getPackageByCode(customerForm.packageCode)?.setupPriceInclVat || 0) +
       (customerForm.extras || []).reduce((sum, code) => {
         const addon = getAddonByCode(code);
         return sum + Number(addon?.setupPriceInclVat || 0);
@@ -697,9 +808,7 @@ export function useAdminStore() {
       });
 
       requestEntries.push({
-        id:
-          (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-          `req-${Date.now()}-1`,
+        id: createId("req-1"),
         at: new Date().toISOString(),
         type: "CREATE_DEPLOYMENT",
         result: deployResult,
@@ -730,9 +839,7 @@ export function useAdminStore() {
         );
 
         requestEntries.push({
-          id:
-            (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-            `req-${Date.now()}-2`,
+          id: createId("req-2"),
           at: new Date().toISOString(),
           type: "PROVISION_MAIL",
           result: mailResult,
@@ -773,9 +880,7 @@ export function useAdminStore() {
       setActiveTab("customers");
     } catch (error) {
       const failedEntry = {
-        id:
-          (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-          `req-${Date.now()}-x`,
+        id: createId("req-x"),
         at: new Date().toISOString(),
         type: "UNKNOWN_ERROR",
         result: {
@@ -808,7 +913,9 @@ export function useAdminStore() {
   }
 
   async function refreshCustomerDeployment(customer) {
-    if (!customer || !customer.deploymentId) return;
+    if (!customer || !customer.deploymentId) {
+      return;
+    }
 
     const result = await apiRequest(
       settings,
@@ -816,20 +923,25 @@ export function useAdminStore() {
       `/api/deployments/${customer.deploymentId}`
     );
 
-    const deployment = result?.data?.data || result.data || {};
+    const deployment = result?.data?.data || result?.data || {};
     const normalizedStatus = String(deployment.status || "").toUpperCase();
 
     let nextStatus = customer.status;
-    if (normalizedStatus === "SUCCEEDED") nextStatus = "active";
-    if (normalizedStatus === "FAILED") nextStatus = "failed";
+
+    if (normalizedStatus === "SUCCEEDED") {
+      nextStatus = "active";
+    }
+
+    if (normalizedStatus === "FAILED") {
+      nextStatus = "failed";
+    }
+
     if (normalizedStatus === "IN_PROGRESS" || normalizedStatus === "PENDING") {
       nextStatus = "provisioning";
     }
 
     const historyEntry = {
-      id:
-        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-        `refresh-${Date.now()}`,
+      id: createId("refresh"),
       at: new Date().toISOString(),
       type: "GET_DEPLOYMENT",
       result,
@@ -853,7 +965,9 @@ export function useAdminStore() {
   }
 
   async function redeployCustomer(customer) {
-    if (!customer || !customer.deploymentId) return;
+    if (!customer || !customer.deploymentId) {
+      return;
+    }
 
     const result = await apiRequest(
       settings,
@@ -863,9 +977,7 @@ export function useAdminStore() {
     );
 
     const historyEntry = {
-      id:
-        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-        `redeploy-${Date.now()}`,
+      id: createId("redeploy"),
       at: new Date().toISOString(),
       type: "REDEPLOY",
       result,
@@ -897,9 +1009,12 @@ export function useAdminStore() {
   }
 
   function confirmDeleteCustomer() {
-    if (!deleteCandidate) return;
+    if (!deleteCandidate) {
+      return;
+    }
 
     const customerId = deleteCandidate.id;
+
     setCustomers((prev) => prev.filter((item) => item.id !== customerId));
 
     if (selectedCustomerId === customerId) {
@@ -910,12 +1025,12 @@ export function useAdminStore() {
   }
 
   function addExpense() {
-    if (!expenseForm.title || !expenseForm.amount) return;
+    if (!expenseForm.title || !expenseForm.amount) {
+      return;
+    }
 
     const nextExpense = {
-      id:
-        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-        `exp-${Date.now()}`,
+      id: createId("exp"),
       title: expenseForm.title,
       amount: Number(expenseForm.amount),
       date: expenseForm.date,
@@ -936,17 +1051,18 @@ export function useAdminStore() {
         (file) =>
           new Promise((resolve) => {
             const reader = new FileReader();
-            reader.onload = () =>
+
+            reader.onload = () => {
               resolve({
-                id:
-                  (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-                  `doc-${Date.now()}-${file.name}`,
+                id: createId(`doc-${file.name}`),
                 name: file.name,
                 type: file.type,
                 size: file.size,
                 uploadedAt: new Date().toISOString(),
                 dataUrl: typeof reader.result === "string" ? reader.result : "",
               });
+            };
+
             reader.readAsDataURL(file);
           })
       )
@@ -1055,6 +1171,7 @@ export function useAdminStore() {
     updatePackageDraft,
     updateAddonDraft,
     resetPricingDrafts,
+    restoreDefaultPricing,
     savePricingChanges,
     pricingSaveMessage,
     pricingError,
@@ -1073,5 +1190,6 @@ export function useAdminStore() {
     calcMonthlyRevenue,
     calcSetupRevenue,
     calcMonthlyInfraCost,
+    loadPricingFromBackend,
   };
 }
