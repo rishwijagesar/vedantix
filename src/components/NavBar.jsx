@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import VedantixLogo from "../components/VedantixLogo";
+import VedantixLogo from "./VedantixLogo";
 import "../styles/navbar.css";
 
 export default function NavBar() {
@@ -30,15 +30,22 @@ export default function NavBar() {
             <a href={isHomePage ? "#how" : "/#how"} className="site-nav-link">
               Hoe het werkt
             </a>
+            <a href={isHomePage ? "#contact" : "/#contact"} className="site-nav-link">
+              Contact
+            </a>
+            <Link to="/blog" className="site-nav-link">
+              Blog
+            </Link>
+            <Link to="/faq" className="site-nav-link">
+              FAQ
+            </Link>
           </div>
 
           <a
-            href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag."
-            target="_blank"
-            rel="noreferrer"
+            href={isHomePage ? "#cta" : "/#cta"}
             className="site-nav-cta"
           >
-            Stel je vraag
+            Start je website <span aria-hidden="true">→</span>
           </a>
         </nav>
       </div>
