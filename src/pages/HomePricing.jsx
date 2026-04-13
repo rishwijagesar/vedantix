@@ -1,58 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../styles/home-pricing.css";
 
-const PRICING_STORAGE_KEYS = {
-  packageOptions: "vedantix_package_options_v2",
-  extraOptions: "vedantix_extra_options_v2",
+const DEFAULT_PRICING = {
+  packages: [],
+  addons: [],
 };
-
-const DEFAULT_PACKAGE_OPTIONS = [
-  {
-    code: "STARTER",
-    label: "Starter",
-    monthlyPrice: 99,
-    setupPrice: 500,
-    monthlyInfraCost: 8,
-    isActive: true,
-    sortOrder: 1,
-  },
-  {
-    code: "GROWTH",
-    label: "Growth",
-    monthlyPrice: 149,
-    setupPrice: 850,
-    monthlyInfraCost: 12,
-    isActive: true,
-    sortOrder: 2,
-  },
-  {
-    code: "PRO",
-    label: "Pro",
-    monthlyPrice: 249,
-    setupPrice: 1250,
-    monthlyInfraCost: 18,
-    isActive: true,
-    sortOrder: 3,
-  },
-  {
-    code: "CUSTOM",
-    label: "Custom",
-    monthlyPrice: 399,
-    setupPrice: 2000,
-    monthlyInfraCost: 25,
-    isActive: true,
-    sortOrder: 4,
-  },
-];
-
-function loadJson(key, fallback) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
-  } catch {
-    return fallback;
-  }
-}
 
 function currency(value) {
   return new Intl.NumberFormat("nl-NL", {
@@ -60,6 +12,17 @@ function currency(value) {
     currency: "EUR",
     maximumFractionDigits: 0,
   }).format(Number(value || 0));
+}
+
+async function fetchPricing() {
+  const response = await fetch("/provisioning-api/api/pricing");
+
+  if (!response.ok) {
+    throw new Error("Failed to load pricing");
+  }
+
+  const json = await response.json();
+  return json?.data || DEFAULT_PRICING;
 }
 
 function activePackageOptions(options) {
@@ -128,26 +91,38 @@ const PACKAGE_COPY = {
 };
 
 export default function HomePricing() {
-  const [packageOptions, setPackageOptions] = useState(() =>
-    loadJson(PRICING_STORAGE_KEYS.packageOptions, DEFAULT_PACKAGE_OPTIONS)
-  );
+  const [pricing, setPricing] = useState(DEFAULT_PRICING);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const syncPricing = () => {
-      setPackageOptions(loadJson(PRICING_STORAGE_KEYS.packageOptions, DEFAULT_PACKAGE_OPTIONS));
-    };
+    let active = true;
 
-    window.addEventListener("storage", syncPricing);
-    window.addEventListener("focus", syncPricing);
+    async function load() {
+      try {
+        const data = await fetchPricing();
+        if (active) {
+          setPricing(data);
+        }
+      } catch {
+        if (active) {
+          setPricing(DEFAULT_PRICING);
+        }
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    }
+
+    load();
 
     return () => {
-      window.removeEventListener("storage", syncPricing);
-      window.removeEventListener("focus", syncPricing);
+      active = false;
     };
   }, []);
 
   const packages = useMemo(() => {
-    return activePackageOptions(packageOptions).map((pkg) => {
+    return activePackageOptions(pricing.packages || []).map((pkg) => {
       const copy = PACKAGE_COPY[pkg.code] || {
         tier: pkg.label,
         name: pkg.label,
@@ -162,11 +137,16 @@ export default function HomePricing() {
         ...copy,
         code: pkg.code,
         tier: pkg.label,
-        price: pkg.monthlyPrice,
-        setup: `${currency(pkg.setupPrice)} setup`,
+        featured: Boolean(pkg.featured ?? copy.featured),
+        priceInclVat: Number(pkg.monthlyPriceInclVat || 0),
+        priceExclVat: Number(pkg.monthlyPriceExclVat || 0),
+        priceVat: Number(pkg.monthlyVatAmount || 0),
+        setupInclVat: Number(pkg.setupPriceInclVat || 0),
+        setupExclVat: Number(pkg.setupPriceExclVat || 0),
+        setupVat: Number(pkg.setupVatAmount || 0),
       };
     });
-  }, [packageOptions]);
+  }, [pricing]);
 
   return (
     <section id="pricing" className="pricing-section anchor-section">
@@ -201,12 +181,18 @@ export default function HomePricing() {
               <div className="p-price-row">
                 <div className="p-price">
                   <sup>€</sup>
-                  {pkg.price}
-                  <span>/m</span>
+                  {Math.round(pkg.priceInclVat)}
+                  <span>/m incl. btw</span>
                 </div>
               </div>
 
-              <div className="p-setup">+ {pkg.setup}</div>
+              <div className="p-setup">+ {currency(pkg.setupInclVat)} setup incl. btw</div>
+
+              <div className="p-tax-meta">
+                <div>Excl. btw: {currency(pkg.priceExclVat)}/m</div>
+                <div>Btw: {currency(pkg.priceVat)}/m</div>
+              </div>
+
               <div className="p-terms">{pkg.cancelNote}</div>
               <div className="p-divider" />
 
@@ -228,6 +214,12 @@ export default function HomePricing() {
               </a>
             </div>
           ))}
+
+          {!loading && packages.length === 0 && (
+            <div className="pricing-empty">
+              Momenteel zijn er geen actieve pakketten zichtbaar.
+            </div>
+          )}
         </div>
 
         <div className="pricing-decision">
