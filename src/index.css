@@ -95,10 +95,6 @@
     @apply bg-background text-foreground;
   }
 
-  body[data-has-fixed-navbar="true"] {
-    padding-top: 84px;
-  }
-
   a {
     color: inherit;
     text-decoration: none;
@@ -114,7 +110,4 @@
     outline-offset: 3px;
   }
 
-  body[data-has-fixed-navbar="true"] {
-    padding-top: 96px;
-  }
 }
