@@ -184,7 +184,7 @@
   
   .hero-microcopy{
     font-size:.76rem;
-    color:rgba(255,255,255,.46);
+    color:rgba(255,255,255,.68);
     margin-bottom:14px;
     font-weight:600;
     max-width:560px;
@@ -234,7 +234,7 @@
   
   .hero-cta-note{
     font-size:.72rem;
-    color:rgba(255,255,255,.44);
+    color:rgba(255,255,255,.72);
     font-weight:600;
     margin-bottom:14px;
   }
@@ -263,7 +263,7 @@
   
   .hero-sp-text{
     font-size:.69rem;
-    color:rgba(255,255,255,.44);
+    color:rgba(255,255,255,.72);
     font-weight:500;
     line-height:1.38;
   }
@@ -445,7 +445,7 @@
   .mockup-note{
     margin-top:14px;
     font-size:.7rem;
-    color:rgba(255,255,255,.38);
+    color:rgba(255,255,255,.72);
     text-align:right;
     font-weight:600;
     width:100%;
