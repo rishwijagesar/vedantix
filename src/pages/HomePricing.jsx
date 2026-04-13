@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "../styles/home-pricing.css";
+import { fetchPricingSummary } from "../api/pricing.api";
 
 const DEFAULT_PRICING = {
   packages: [],
@@ -12,17 +13,6 @@ function currency(value) {
     currency: "EUR",
     maximumFractionDigits: 0,
   }).format(Number(value || 0));
-}
-
-async function fetchPricing() {
-  const response = await fetch("/provisioning-api/api/pricing");
-
-  if (!response.ok) {
-    throw new Error("Failed to load pricing");
-  }
-
-  const json = await response.json();
-  return json?.data || DEFAULT_PRICING;
 }
 
 function activePackageOptions(options) {
@@ -99,18 +89,20 @@ export default function HomePricing() {
 
     async function load() {
       try {
-        const data = await fetchPricing();
-        if (active) {
-          setPricing(data);
-        }
+        const data = await fetchPricingSummary();
+
+        if (!active) return;
+
+        setPricing({
+          packages: Array.isArray(data?.packages) ? data.packages : [],
+          addons: Array.isArray(data?.addons) ? data.addons : [],
+        });
       } catch {
-        if (active) {
-          setPricing(DEFAULT_PRICING);
-        }
+        if (!active) return;
+        setPricing(DEFAULT_PRICING);
       } finally {
-        if (active) {
-          setLoading(false);
-        }
+        if (!active) return;
+        setLoading(false);
       }
     }
 

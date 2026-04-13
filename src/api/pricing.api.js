@@ -1,10 +1,11 @@
 /// <reference types="vite/client" />
 
-const API_BASE =
-  import.meta.env.VITE_API_BASE_URL || window.location.origin;
+const API_BASE = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+const DEFAULT_TENANT_ID = import.meta.env.VITE_TENANT_ID || "default";
 
 async function parseJson(res) {
   const text = await res.text();
+
   try {
     return text ? JSON.parse(text) : null;
   } catch {
@@ -12,8 +13,19 @@ async function parseJson(res) {
   }
 }
 
+function buildPublicHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "X-Tenant-Id": DEFAULT_TENANT_ID,
+  };
+}
+
 export async function fetchPricingSummary() {
-  const res = await fetch(`${API_BASE}/api/pricing`);
+  const res = await fetch(`${API_BASE}/api/pricing`, {
+    method: "GET",
+    headers: buildPublicHeaders(),
+  });
+
   if (!res.ok) {
     throw new Error("Failed to fetch pricing summary");
   }
@@ -31,7 +43,7 @@ export async function updatePricingPackage({
   code,
   payload,
   apiKey,
-  tenantId = "default",
+  tenantId = DEFAULT_TENANT_ID,
   actorId = "admin-dashboard",
   source = "ADMIN_PANEL",
 }) {
@@ -51,6 +63,7 @@ export async function updatePricingPackage({
   });
 
   const json = await parseJson(res);
+
   if (!res.ok) {
     throw new Error(
       json?.message || json?.error || `Failed to update package ${code}`
@@ -64,7 +77,7 @@ export async function updatePricingAddon({
   code,
   payload,
   apiKey,
-  tenantId = "default",
+  tenantId = DEFAULT_TENANT_ID,
   actorId = "admin-dashboard",
   source = "ADMIN_PANEL",
 }) {
@@ -84,6 +97,7 @@ export async function updatePricingAddon({
   });
 
   const json = await parseJson(res);
+
   if (!res.ok) {
     throw new Error(
       json?.message || json?.error || `Failed to update addon ${code}`
