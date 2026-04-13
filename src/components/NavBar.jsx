@@ -16,7 +16,7 @@ export default function NavBar() {
     }
 
     const onScroll = () => {
-      setScrolled(window.scrollY > 16);
+      setScrolled(window.scrollY > 40);
     };
 
     onScroll();
@@ -30,20 +30,21 @@ export default function NavBar() {
 
   const headerClassName = [
     "site-header",
-    !isHomePage ? "is-solid" : "",
-    isHomePage && scrolled ? "is-scrolled" : "",
+    scrolled || !isHomePage ? "is-solid" : "",
   ]
     .filter(Boolean)
     .join(" ");
+
+  const logoTheme = scrolled || !isHomePage ? "dark" : "light";
 
   return (
     <header className={headerClassName}>
       <div className="site-header-inner">
         <Link to="/" className="site-brand" aria-label="Home">
-          <VedantixLogo variant="full" size="md" theme="light" />
+          <VedantixLogo variant="full" size="md" theme={logoTheme} />
         </Link>
 
-        <nav className="site-nav" aria-label="Hoofdmenu">
+        <nav className="site-nav">
           <div className="site-nav-links">
             <a href={isHomePage ? "#pricing" : "/#pricing"} className="site-nav-link">
               Prijzen
@@ -54,16 +55,12 @@ export default function NavBar() {
             <a href={isHomePage ? "#contact" : "/#contact"} className="site-nav-link">
               Contact
             </a>
-            <Link to="/blog" className="site-nav-link">
-              Blog
-            </Link>
-            <Link to="/faq" className="site-nav-link">
-              FAQ
-            </Link>
+            <Link to="/blog" className="site-nav-link">Blog</Link>
+            <Link to="/faq" className="site-nav-link">FAQ</Link>
           </div>
 
           <a href={isHomePage ? "#cta" : "/#cta"} className="site-nav-cta">
-            Start je website <span aria-hidden="true">→</span>
+            Start je website →
           </a>
         </nav>
       </div>

@@ -95,9 +95,9 @@
     @apply bg-background text-foreground;
   }
 
-  body[data-has-fixed-navbar="true"] {
+  /* body[data-has-fixed-navbar="true"] {
     padding-top: 96px;
-  }
+  } */
 
   a {
     color: inherit;
