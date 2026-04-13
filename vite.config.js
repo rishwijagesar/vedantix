@@ -7,10 +7,10 @@ export default defineConfig({
   plugins: [
     base44({
       legacySDKImports: process.env.BASE44_LEGACY_SDK_IMPORTS === "true",
-      hmrNotifier: true,
+      hmrNotifier: false,
       navigationNotifier: true,
       analyticsTracker: true,
-      visualEditAgent: true,
+      visualEditAgent: false,
     }),
     react(),
   ],

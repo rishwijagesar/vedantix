@@ -44,7 +44,7 @@
 }
 
 .hero-btn-wa:hover{
-  background:#22c55e;
+  background:#1faa52;
   transform:translateY(-2px);
   box-shadow:0 14px 30px rgba(37,211,102,.34);
 }
@@ -731,5 +731,8 @@
     display:flex;
     padding:14px 18px;
     box-shadow:0 12px 30px rgba(37,211,102,.28);
+    background:#1faa52;
+    color:#052e16;
+    font-weight:900;
   }
 }

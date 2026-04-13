@@ -15,13 +15,28 @@ export default function NicheCarousel() {
   );
 
   useEffect(() => {
-    const handleResize = () => {
-      setVisibleCount(getVisibleCount(window.innerWidth));
+    const mobile = window.matchMedia("(max-width: 768px)");
+    const tablet = window.matchMedia("(max-width: 1024px)");
+  
+    const updateVisibleCount = () => {
+      if (mobile.matches) {
+        setVisibleCount(1);
+      } else if (tablet.matches) {
+        setVisibleCount(2);
+      } else {
+        setVisibleCount(3);
+      }
     };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+  
+    updateVisibleCount();
+  
+    mobile.addEventListener("change", updateVisibleCount);
+    tablet.addEventListener("change", updateVisibleCount);
+  
+    return () => {
+      mobile.removeEventListener("change", updateVisibleCount);
+      tablet.removeEventListener("change", updateVisibleCount);
+    };
   }, []);
 
   const maxIndex = Math.max(0, NICHE_DEMOS.length - visibleCount);
