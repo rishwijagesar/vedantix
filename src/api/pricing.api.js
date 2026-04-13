@@ -2,7 +2,7 @@
 
 const API_BASE =
   import.meta.env.VITE_API_BASE_URL ||
-  "http://localhost:3000";
+  "/provisioning-api";
 
 const DEFAULT_TENANT_ID = import.meta.env.VITE_TENANT_ID || "default";
 
@@ -12,9 +12,7 @@ async function parseJson(res) {
   try {
     return text ? JSON.parse(text) : null;
   } catch {
-    throw new Error(
-      `Expected JSON but received: ${text.slice(0, 120)}`
-    );
+    throw new Error(`Expected JSON but received: ${text.slice(0, 120)}`);
   }
 }
 
