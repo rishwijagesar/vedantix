@@ -1,7 +1,18 @@
 import React from "react";
 import { useOutletContext } from "react-router-dom";
-import { Card, SectionTitle, Button, Field, Input, StatCard } from "../components/AdminUI";
+import { Card, SectionTitle, Button, Field, Input, StatCard, Textarea } from "../components/AdminUI";
 import { currency } from "../utils/adminStorage";
+
+function linesToValue(value) {
+  return Array.isArray(value) ? value.join("\n") : "";
+}
+
+function valueToLines(value) {
+  return String(value || "")
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
 
 function PricingMetricGrid({ item }) {
   return (
@@ -98,26 +109,51 @@ function PackageCard({ item, onChange, type = "package" }) {
           </div>
         </div>
 
-        <label
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 8,
-            color: "#334155",
-            fontWeight: 800,
-            background: "#f8fafc",
-            border: "1px solid #dbe4ef",
-            borderRadius: 999,
-            padding: "10px 14px",
-          }}
-        >
-          <input
-            type="checkbox"
-            checked={item.isActive !== false}
-            onChange={(e) => update("isActive", e.target.checked)}
-          />
-          Actief
-        </label>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          {type === "package" ? (
+            <label
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                color: "#334155",
+                fontWeight: 800,
+                background: "#f8fafc",
+                border: "1px solid #dbe4ef",
+                borderRadius: 999,
+                padding: "10px 14px",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={Boolean(item.featured)}
+                onChange={(e) => update("featured", e.target.checked)}
+              />
+              Meest gekozen
+            </label>
+          ) : null}
+
+          <label
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              color: "#334155",
+              fontWeight: 800,
+              background: "#f8fafc",
+              border: "1px solid #dbe4ef",
+              borderRadius: 999,
+              padding: "10px 14px",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={item.isActive !== false}
+              onChange={(e) => update("isActive", e.target.checked)}
+            />
+            Actief
+          </label>
+        </div>
       </div>
 
       <div
@@ -180,6 +216,99 @@ function PackageCard({ item, onChange, type = "package" }) {
           />
         </Field>
       </div>
+
+      {type === "package" ? (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            gap: 14,
+          }}
+        >
+          <Field label="Titel op kaart">
+            <Input
+              value={item.description || ""}
+              onChange={(e) => update("description", e.target.value)}
+            />
+          </Field>
+
+          <Field label="Subtekst / doelgroep">
+            <Input
+              value={item.fit || ""}
+              onChange={(e) => update("fit", e.target.value)}
+            />
+          </Field>
+
+          <Field label="Opzeg / voorwaarden">
+            <Input
+              value={item.cancelNote || ""}
+              onChange={(e) => update("cancelNote", e.target.value)}
+            />
+          </Field>
+
+          <Field label="CTA knoptekst">
+            <Input
+              value={item.cta || ""}
+              onChange={(e) => update("cta", e.target.value)}
+            />
+          </Field>
+
+          <div style={{ gridColumn: "1 / -1" }}>
+            <Field label="Bullets op homepage (1 per regel)">
+              <Textarea
+                value={linesToValue(item.bullets)}
+                onChange={(e) => update("bullets", valueToLines(e.target.value))}
+                rows={6}
+              />
+            </Field>
+          </div>
+
+          <div style={{ gridColumn: "1 / -1" }}>
+            <Field label="Inbegrepen op pakketvergelijking (1 per regel)">
+              <Textarea
+                value={linesToValue(item.included)}
+                onChange={(e) => update("included", valueToLines(e.target.value))}
+                rows={6}
+              />
+            </Field>
+          </div>
+
+          <div>
+            <Field label="Niet inbegrepen (1 per regel)">
+              <Textarea
+                value={linesToValue(item.notIncluded)}
+                onChange={(e) => update("notIncluded", valueToLines(e.target.value))}
+                rows={5}
+              />
+            </Field>
+          </div>
+
+          <div>
+            <Field label="Uitbreidingen / addons tekst (1 per regel)">
+              <Textarea
+                value={linesToValue(item.addons)}
+                onChange={(e) => update("addons", valueToLines(e.target.value))}
+                rows={5}
+              />
+            </Field>
+          </div>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gap: 14,
+          }}
+        >
+          <Field label="Beschrijving">
+            <Input
+              value={item.description || ""}
+              onChange={(e) => update("description", e.target.value)}
+            />
+          </Field>
+        </div>
+      )}
 
       <PricingMetricGrid item={item} />
     </div>

@@ -134,10 +134,17 @@ export default function HomePricing() {
       };
 
       return {
-        ...copy,
         code: pkg.code,
-        tier: pkg.label,
+        tier: pkg.label || copy.tier,
+        name: pkg.description || copy.name,
+        fit: pkg.fit || copy.fit,
         featured: Boolean(pkg.featured ?? copy.featured),
+        cancelNote: pkg.cancelNote || copy.cancelNote,
+        bullets:
+          Array.isArray(pkg.bullets) && pkg.bullets.length > 0
+            ? pkg.bullets
+            : copy.bullets,
+        cta: pkg.cta || copy.cta,
         priceInclVat: Number(pkg.monthlyPriceInclVat || 0),
         priceExclVat: Number(pkg.monthlyPriceExclVat || 0),
         priceVat: Number(pkg.monthlyVatAmount || 0),

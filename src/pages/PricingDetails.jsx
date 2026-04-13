@@ -92,6 +92,25 @@ const PACKAGE_DETAILS_FALLBACK = {
   },
 };
 
+const PACKAGE_META_FALLBACK = {
+  STARTER: {
+    title: "Voor professioneel online zichtbaar zijn",
+    note: "Geschikt als instap wanneer je vooral professioneel zichtbaar wilt zijn zonder extra complexiteit.",
+  },
+  GROWTH: {
+    title: "Voor meer aanvragen en groeiruimte",
+    note: "Beste balans tussen prijs, inhoud en groeiruimte voor de meeste lokale ondernemers.",
+  },
+  PRO: {
+    title: "Voor functionaliteit en doorontwikkeling",
+    note: "Voor bedrijven die hun website echt als onderdeel van hun proces of dienstverlening willen inzetten.",
+  },
+  CUSTOM: {
+    title: "Voor maatwerk en afwijkende trajecten",
+    note: "Voor bedrijven met afwijkende wensen, extra logica of een traject dat niet netjes binnen een standaard pakket past.",
+  },
+};
+
 const MAILBOX_BUNDLES = [
   "Starter: 1 zakelijk mailadres inbegrepen",
   "Growth: 5 zakelijke mailadressen inbegrepen",
@@ -156,17 +175,8 @@ function headClass(slug) {
   return "custom";
 }
 
-function ctaNote(label) {
-  if (label === "Starter") {
-    return "Geschikt als instap wanneer je vooral professioneel zichtbaar wilt zijn zonder extra complexiteit.";
-  }
-  if (label === "Growth") {
-    return "Beste balans tussen prijs, inhoud en groeiruimte voor de meeste lokale ondernemers.";
-  }
-  if (label === "Pro") {
-    return "Voor bedrijven die hun website echt als onderdeel van hun proces of dienstverlening willen inzetten.";
-  }
-  return "Voor bedrijven met afwijkende wensen, extra logica of een traject dat niet netjes binnen een standaard pakket past.";
+function listOrFallback(value, fallback) {
+  return Array.isArray(value) && value.length > 0 ? value : fallback;
 }
 
 export default function PricingDetails() {
@@ -229,8 +239,8 @@ export default function PricingDetails() {
             <div className="page-wrap">
               <h2 className="section-title">Vergelijk de pakketten naast elkaar</h2>
               <p className="section-sub">
-                Dit overzicht haalt de prijzen op uit dezelfde bron als je admin dashboard.
-                Als jij prijzen aanpast in admin, zie je dat hier ook terug.
+                Dit overzicht haalt de prijzen en inhoud op uit dezelfde bron als je admin dashboard.
+                Als jij teksten of prijzen aanpast in admin, zie je dat hier ook terug.
               </p>
 
               {isLoading ? (
@@ -243,37 +253,31 @@ export default function PricingDetails() {
                 >
                   {visiblePackages.map((pkg) => {
                     const slug = slugFromCode(pkg.code);
-                    const fallback = PACKAGE_DETAILS_FALLBACK[slug] || {
+                    const fallbackDetails = PACKAGE_DETAILS_FALLBACK[slug] || {
                       included: [],
                       notIncluded: [],
                       addons: [],
                     };
+                    const fallbackMeta = PACKAGE_META_FALLBACK[pkg.code] || {
+                      title: pkg.label,
+                      note: "Neem contact op voor de precieze invulling van dit pakket.",
+                    };
 
-                    const monthlyIncl =
-                      Number(pkg.monthlyPriceInclVat ?? pkg.monthlyPrice ?? 0);
+                    const monthlyIncl = Number(pkg.monthlyPriceInclVat ?? pkg.monthlyPrice ?? 0);
                     const monthlyExcl =
-                      Number(
-                        pkg.monthlyPriceExclVat ??
-                          (monthlyIncl ? monthlyIncl / 1.21 : 0)
-                      ) || 0;
+                      Number(pkg.monthlyPriceExclVat ?? (monthlyIncl ? monthlyIncl / 1.21 : 0)) || 0;
                     const monthlyVat =
-                      Number(
-                        pkg.monthlyVatAmount ??
-                          (monthlyIncl ? monthlyIncl - monthlyExcl : 0)
-                      ) || 0;
+                      Number(pkg.monthlyVatAmount ?? (monthlyIncl ? monthlyIncl - monthlyExcl : 0)) || 0;
 
-                    const setupIncl =
-                      Number(pkg.setupPriceInclVat ?? pkg.setupPrice ?? 0);
+                    const setupIncl = Number(pkg.setupPriceInclVat ?? pkg.setupPrice ?? 0);
                     const setupExcl =
-                      Number(
-                        pkg.setupPriceExclVat ??
-                          (setupIncl ? setupIncl / 1.21 : 0)
-                      ) || 0;
+                      Number(pkg.setupPriceExclVat ?? (setupIncl ? setupIncl / 1.21 : 0)) || 0;
                     const setupVat =
-                      Number(
-                        pkg.setupVatAmount ??
-                          (setupIncl ? setupIncl - setupExcl : 0)
-                      ) || 0;
+                      Number(pkg.setupVatAmount ?? (setupIncl ? setupIncl - setupExcl : 0)) || 0;
+
+                    const included = listOrFallback(pkg.included, fallbackDetails.included);
+                    const notIncluded = listOrFallback(pkg.notIncluded, fallbackDetails.notIncluded);
+                    const addons = listOrFallback(pkg.addons, fallbackDetails.addons);
 
                     return (
                       <div
@@ -289,9 +293,11 @@ export default function PricingDetails() {
                               </span>
                             ) : null}
                           </div>
+
                           <div className="pricing-title">
-                            {pkg.description || pkg.label}
+                            {pkg.description || fallbackMeta.title}
                           </div>
+
                           <div className="pricing-sub">
                             {pkg.fit || "Pakketinformatie"}
                           </div>
@@ -344,7 +350,7 @@ export default function PricingDetails() {
                         <div className="pricing-section-block">
                           <div className="pricing-block-title">Inbegrepen</div>
                           <ul className="pricing-list">
-                            {(pkg.included || fallback.included).map((item) => (
+                            {included.map((item) => (
                               <li key={item}>{item}</li>
                             ))}
                           </ul>
@@ -353,7 +359,7 @@ export default function PricingDetails() {
                         <div className="pricing-section-block">
                           <div className="pricing-block-title">Niet inbegrepen</div>
                           <ul className="pricing-list minus">
-                            {(pkg.notIncluded || fallback.notIncluded).map((item) => (
+                            {notIncluded.map((item) => (
                               <li key={item}>{item}</li>
                             ))}
                           </ul>
@@ -362,14 +368,14 @@ export default function PricingDetails() {
                         <div className="pricing-section-block">
                           <div className="pricing-block-title">Uitbreidingen</div>
                           <ul className="pricing-list">
-                            {(pkg.addons || fallback.addons).map((item) => (
+                            {addons.map((item) => (
                               <li key={item}>{item}</li>
                             ))}
                           </ul>
                         </div>
 
                         <div className="pricing-cta-note">
-                          {ctaNote(pkg.label)}
+                          {fallbackMeta.note}
                         </div>
                       </div>
                     );
