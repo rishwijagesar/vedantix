@@ -205,31 +205,38 @@ export function useAdminStore() {
     setIsPricingLoading(true);
     setPricingError("");
     setPricingSaveMessage("");
-
+  
     try {
       const summary = await fetchPricingSummary();
-      const normalized = normalizePricingSummary(summary);
-
-      setPackageOptions(normalized.packages);
-      setExtraOptions(normalized.addons);
-      setPackageDrafts(clonePricingData(normalized.packages));
-      setAddonDrafts(clonePricingData(normalized.addons));
-
-      if (normalized.usedFallback) {
-        setPricingSaveMessage(
-          "Standaard pakketten geladen. Sla op om ze weer naar je backend te schrijven."
-        );
+  
+      const incomingPackages = Array.isArray(summary?.packages) ? summary.packages : [];
+      const incomingAddons = Array.isArray(summary?.addons) ? summary.addons : [];
+  
+      if (incomingPackages.length === 0 && incomingAddons.length === 0) {
+        throw new Error("Lege pricing response van backend.");
       }
-    } catch {
+  
+      const packages = clonePricingData(incomingPackages);
+      const addons = clonePricingData(incomingAddons);
+  
+      setPackageOptions(packages);
+      setExtraOptions(addons);
+      setPackageDrafts(clonePricingData(packages));
+      setAddonDrafts(clonePricingData(addons));
+    } catch (error) {
       const fallback = getFallbackPricingState();
-
+  
       setPackageOptions(fallback.packages);
       setExtraOptions(fallback.addons);
       setPackageDrafts(clonePricingData(fallback.packages));
       setAddonDrafts(clonePricingData(fallback.addons));
-      setPricingError("");
+      setPricingError(
+        error instanceof Error
+          ? error.message
+          : "Backend pricing kon niet geladen worden."
+      );
       setPricingSaveMessage(
-        "Backend pricing kon niet geladen worden. Standaard pakketten zijn hersteld in admin."
+        "Standaard pakketten zijn geladen omdat de backend geen bruikbare pricing teruggaf."
       );
     } finally {
       setIsPricingLoading(false);
@@ -649,9 +656,9 @@ export function useAdminStore() {
     setIsPricingSaving(true);
     setPricingError("");
     setPricingSaveMessage("");
-
+  
     try {
-      const savedPackages = await Promise.all(
+      await Promise.all(
         packageDrafts.map((item) =>
           updatePricingPackage({
             code: item.code,
@@ -673,16 +680,16 @@ export function useAdminStore() {
               fit: item.fit || "",
               cancelNote: item.cancelNote || "",
               cta: item.cta || "",
-              bullets: item.bullets || [],
-              included: item.included || [],
-              notIncluded: item.notIncluded || [],
-              addons: item.addons || [],
+              bullets: Array.isArray(item.bullets) ? item.bullets : [],
+              included: Array.isArray(item.included) ? item.included : [],
+              notIncluded: Array.isArray(item.notIncluded) ? item.notIncluded : [],
+              addons: Array.isArray(item.addons) ? item.addons : [],
             },
           })
         )
       );
-
-      const savedAddons = await Promise.all(
+  
+      await Promise.all(
         addonDrafts.map((item) =>
           updatePricingAddon({
             code: item.code,
@@ -703,14 +710,8 @@ export function useAdminStore() {
           })
         )
       );
-
-      const normalizedPackages = clonePricingData(savedPackages);
-      const normalizedAddons = clonePricingData(savedAddons);
-
-      setPackageOptions(normalizedPackages);
-      setExtraOptions(normalizedAddons);
-      setPackageDrafts(clonePricingData(normalizedPackages));
-      setAddonDrafts(clonePricingData(normalizedAddons));
+  
+      await loadPricingFromBackend();
       setPricingSaveMessage("Prijzen succesvol opgeslagen.");
     } catch (error) {
       setPricingError(
