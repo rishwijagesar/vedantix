@@ -28,8 +28,16 @@ export default function NavBar() {
     };
   }, [isHomePage]);
 
+  const headerClassName = [
+    "site-header",
+    !isHomePage ? "is-solid" : "",
+    isHomePage && scrolled ? "is-scrolled" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return (
-    <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
+    <header className={headerClassName}>
       <div className="site-header-inner">
         <Link to="/" className="site-brand" aria-label="Home">
           <VedantixLogo variant="full" size="md" theme="light" />
