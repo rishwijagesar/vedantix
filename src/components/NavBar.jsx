@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import VedantixLogo from "./VedantixLogo";
 import "../styles/navbar.css";
@@ -6,17 +6,26 @@ import "../styles/navbar.css";
 export default function NavBar() {
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     document.body.setAttribute("data-has-fixed-navbar", "true");
 
+    const onScroll = () => {
+      setScrolled(window.scrollY > 16);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
     return () => {
       document.body.removeAttribute("data-has-fixed-navbar");
+      window.removeEventListener("scroll", onScroll);
     };
   }, []);
 
   return (
-    <header className="site-header">
+    <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
       <div className="site-header-inner">
         <Link to="/" className="site-brand" aria-label="Home">
           <VedantixLogo variant="full" size="md" theme="light" />
@@ -41,10 +50,7 @@ export default function NavBar() {
             </Link>
           </div>
 
-          <a
-            href={isHomePage ? "#cta" : "/#cta"}
-            className="site-nav-cta"
-          >
+          <a href={isHomePage ? "#cta" : "/#cta"} className="site-nav-cta">
             Start je website <span aria-hidden="true">→</span>
           </a>
         </nav>
