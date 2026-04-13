@@ -1,6 +1,13 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AdminLayout from "./pages/admin/AdminLayout";
+import CustomerDetailPage from "./pages/admin/pages/CustomerDetailPage";
+import CustomersPage from "./pages/admin/pages/CustomersPage";
+import DashboardPage from "./pages/admin/pages/DashboardPage";
+import FinancePage from "./pages/admin/pages/FinancePage";
+import PricingPage from "./pages/admin/pages/PricingPage";
+import SettingsPage from "./pages/admin/pages/SettingsPage";
 
 const Home = lazy(() => import("./pages/Home"));
 const Planning = lazy(() => import("./pages/Planning"));
@@ -27,7 +34,7 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/blog/BlogPost"));
 const SeoCityPage = lazy(() => import("./pages/SeoCityPage"));
 
-const AdminCRM = lazy(() => import("./pages/AdminCRM.jsx"));
+const AdminCRM = lazy(() => import("./pages/admin/AdminCRM.jsx"));
 const KlantenPortaal = lazy(() => import("./pages/KlantenPortaal.jsx"));
 
 const queryClient = new QueryClient();
@@ -65,14 +72,14 @@ function AppRoutes() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
 
-        <Route
-          path="/admin"
-          element={
-            <AdminApp>
-              <AdminCRM />
-            </AdminApp>
-          }
-        />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<DashboardPage store={undefined} />} />
+          <Route path="customers" element={<CustomersPage store={undefined} />} />
+          <Route path="customers/:id" element={<CustomerDetailPage store={undefined} />} />
+          <Route path="finance" element={<FinancePage store={undefined} />} />
+          <Route path="pricing" element={<PricingPage store={undefined} />} />
+          <Route path="settings" element={<SettingsPage store={undefined} />} />
+        </Route>
 
         <Route
           path="/klantenportaal"
