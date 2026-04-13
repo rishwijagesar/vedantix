@@ -113,4 +113,8 @@
     outline: 3px solid #facc15;
     outline-offset: 3px;
   }
+
+  body[data-has-fixed-navbar="true"] {
+    padding-top: 96px;
+  }
 }
