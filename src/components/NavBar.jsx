@@ -9,7 +9,11 @@ export default function NavBar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    document.body.setAttribute("data-has-fixed-navbar", "true");
+    if (!isHomePage) {
+      document.body.setAttribute("data-has-fixed-navbar", "true");
+    } else {
+      document.body.removeAttribute("data-has-fixed-navbar");
+    }
 
     const onScroll = () => {
       setScrolled(window.scrollY > 16);
@@ -22,7 +26,7 @@ export default function NavBar() {
       document.body.removeAttribute("data-has-fixed-navbar");
       window.removeEventListener("scroll", onScroll);
     };
-  }, []);
+  }, [isHomePage]);
 
   return (
     <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
