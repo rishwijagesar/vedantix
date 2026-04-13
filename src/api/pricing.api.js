@@ -1,6 +1,9 @@
 /// <reference types="vite/client" />
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || window.location.origin;
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL ||
+  "http://localhost:3000";
+
 const DEFAULT_TENANT_ID = import.meta.env.VITE_TENANT_ID || "default";
 
 async function parseJson(res) {
@@ -9,7 +12,9 @@ async function parseJson(res) {
   try {
     return text ? JSON.parse(text) : null;
   } catch {
-    return text;
+    throw new Error(
+      `Expected JSON but received: ${text.slice(0, 120)}`
+    );
   }
 }
 
@@ -27,7 +32,7 @@ export async function fetchPricingSummary() {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch pricing summary");
+    throw new Error(`Failed to fetch pricing summary (${res.status})`);
   }
 
   const json = await parseJson(res);
