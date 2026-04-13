@@ -117,26 +117,26 @@ export default function HomePricing() {
     return activePackageOptions(pricing.packages || []).map((pkg) => {
       const copy = PACKAGE_COPY[pkg.code] || {
         tier: pkg.label,
-        name: pkg.label,
-        fit: "Pakketinformatie",
+        name: "",
+        fit: "",
         featured: false,
-        cancelNote: "Neem contact op voor details",
+        cancelNote: "",
         bullets: [],
-        cta: `Bespreek ${pkg.label} →`,
+        cta: "",
       };
 
       return {
         code: pkg.code,
         tier: pkg.label || copy.tier,
-        name: pkg.description || copy.name,
-        fit: pkg.fit || copy.fit,
+        name: pkg.description || copy.name || pkg.label,
+        fit: pkg.fit || copy.fit || "Pakketinformatie",
         featured: Boolean(pkg.featured ?? copy.featured),
-        cancelNote: pkg.cancelNote || copy.cancelNote,
+        cancelNote: pkg.cancelNote || copy.cancelNote || "Neem contact op voor details",
         bullets:
           Array.isArray(pkg.bullets) && pkg.bullets.length > 0
             ? pkg.bullets
             : copy.bullets,
-        cta: pkg.cta || copy.cta,
+        cta: pkg.cta || copy.cta || `Bespreek ${pkg.label} →`,
         priceInclVat: Number(pkg.monthlyPriceInclVat || 0),
         priceExclVat: Number(pkg.monthlyPriceExclVat || 0),
         priceVat: Number(pkg.monthlyVatAmount || 0),
