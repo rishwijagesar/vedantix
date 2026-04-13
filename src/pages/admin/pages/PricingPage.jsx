@@ -1,13 +1,195 @@
 import React from "react";
+import { useOutletContext } from "react-router-dom";
 import { Card, SectionTitle, Button, Field, Input, StatCard } from "../components/AdminUI";
 import { currency } from "../utils/adminStorage";
-import { useOutletContext } from "react-router-dom";
+
+function PricingMetricGrid({ item }) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+        gap: 12,
+      }}
+    >
+      <StatCard
+        title="Maand excl. btw"
+        value={currency(item.monthlyPriceExclVat)}
+        subtitle="Afgeleid"
+        tone="#0ea5e9"
+      />
+      <StatCard
+        title="Btw p/m"
+        value={currency(item.monthlyVatAmount)}
+        subtitle="Afgeleid"
+        tone="#8b5cf6"
+      />
+      <StatCard
+        title="Setup excl. btw"
+        value={currency(item.setupPriceExclVat)}
+        subtitle="Afgeleid"
+        tone="#0ea5e9"
+      />
+      <StatCard
+        title="Btw setup"
+        value={currency(item.setupVatAmount)}
+        subtitle="Afgeleid"
+        tone="#8b5cf6"
+      />
+      <StatCard
+        title="Infra btw"
+        value={currency(item.monthlyInfraCostVatAmount)}
+        subtitle="Afgeleid"
+        tone="#f97316"
+      />
+      <StatCard
+        title="Infra incl. btw"
+        value={currency(item.monthlyInfraCostInclVat)}
+        subtitle="Afgeleid"
+        tone="#10b981"
+      />
+    </div>
+  );
+}
+
+function PackageCard({ item, onChange, type = "package" }) {
+  const update = (key, value) => onChange(item.code, key, value);
+
+  return (
+    <div
+      style={{
+        border: "1px solid #dbe4ef",
+        borderRadius: 24,
+        padding: 22,
+        background: "#ffffff",
+        display: "grid",
+        gap: 18,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 16,
+          flexWrap: "wrap",
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontSize: 22,
+              fontWeight: 900,
+              color: "#0f172a",
+              lineHeight: 1.1,
+            }}
+          >
+            {item.label || item.code}
+          </div>
+          <div
+            style={{
+              marginTop: 6,
+              color: "#64748b",
+              fontSize: 14,
+              fontWeight: 600,
+            }}
+          >
+            {type === "package" ? item.code : `Addon · ${item.code}`}
+          </div>
+        </div>
+
+        <label
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            color: "#334155",
+            fontWeight: 800,
+            background: "#f8fafc",
+            border: "1px solid #dbe4ef",
+            borderRadius: 999,
+            padding: "10px 14px",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={item.isActive !== false}
+            onChange={(e) => update("isActive", e.target.checked)}
+          />
+          Actief
+        </label>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+          gap: 14,
+        }}
+      >
+        <Field label="Naam">
+          <Input
+            value={item.label || ""}
+            onChange={(e) => update("label", e.target.value)}
+          />
+        </Field>
+
+        <Field label="Volgorde">
+          <Input
+            type="number"
+            min="0"
+            value={item.sortOrder}
+            onChange={(e) => update("sortOrder", e.target.value)}
+          />
+        </Field>
+
+        <Field label="Prijs p/m incl. btw">
+          <Input
+            type="number"
+            min="0"
+            value={item.monthlyPriceInclVat}
+            onChange={(e) => update("monthlyPriceInclVat", e.target.value)}
+          />
+        </Field>
+
+        <Field label="Setup incl. btw">
+          <Input
+            type="number"
+            min="0"
+            value={item.setupPriceInclVat}
+            onChange={(e) => update("setupPriceInclVat", e.target.value)}
+          />
+        </Field>
+
+        <Field label="Infra excl. btw">
+          <Input
+            type="number"
+            min="0"
+            value={item.monthlyInfraCostExclVat}
+            onChange={(e) => update("monthlyInfraCostExclVat", e.target.value)}
+          />
+        </Field>
+
+        <Field label="Btw tarief">
+          <Input
+            type="number"
+            min="0"
+            step="0.01"
+            value={item.vatRate}
+            onChange={(e) => update("vatRate", e.target.value)}
+          />
+        </Field>
+      </div>
+
+      <PricingMetricGrid item={item} />
+    </div>
+  );
+}
 
 export default function PricingPage({ store: storeProp }) {
-  /** @type {{ store: any }} */
   const outletContext = useOutletContext();
+  const store = storeProp || /** @type {{ store: any }} */ (outletContext).store;
 
-  const store = storeProp || outletContext.store;
   return (
     <div style={{ display: "grid", gap: 18 }}>
       <Card>
@@ -88,239 +270,33 @@ export default function PricingPage({ store: storeProp }) {
         ) : null}
 
         {!store.isPricingLoading && store.pricingTab === "packages" && (
-          <div style={{ display: "grid", gap: 12 }}>
+          <div style={{ display: "grid", gap: 16 }}>
             {store.packageDrafts
               .slice()
               .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0))
               .map((item) => (
-                <div
+                <PackageCard
                   key={item.code}
-                  style={{
-                    border: "1px solid #dbe4ef",
-                    borderRadius: 20,
-                    padding: 18,
-                    background: "#ffffff",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1.15fr 0.8fr 0.8fr 0.8fr 0.7fr auto",
-                      gap: 12,
-                      alignItems: "end",
-                      marginBottom: 14,
-                    }}
-                  >
-                    <Field label="Naam">
-                      <Input
-                        value={item.label || ""}
-                        onChange={(e) =>
-                          store.updatePackageDraft(item.code, "label", e.target.value)
-                        }
-                      />
-                    </Field>
-
-                    <Field label="Prijs p/m incl. btw">
-                      <Input
-                        type="number"
-                        min="0"
-                        value={item.monthlyPriceInclVat}
-                        onChange={(e) =>
-                          store.updatePackageDraft(item.code, "monthlyPriceInclVat", e.target.value)
-                        }
-                      />
-                    </Field>
-
-                    <Field label="Setup incl. btw">
-                      <Input
-                        type="number"
-                        min="0"
-                        value={item.setupPriceInclVat}
-                        onChange={(e) =>
-                          store.updatePackageDraft(item.code, "setupPriceInclVat", e.target.value)
-                        }
-                      />
-                    </Field>
-
-                    <Field label="Infra excl. btw">
-                      <Input
-                        type="number"
-                        min="0"
-                        value={item.monthlyInfraCostExclVat}
-                        onChange={(e) =>
-                          store.updatePackageDraft(
-                            item.code,
-                            "monthlyInfraCostExclVat",
-                            e.target.value
-                          )
-                        }
-                      />
-                    </Field>
-
-                    <Field label="Volgorde">
-                      <Input
-                        type="number"
-                        min="0"
-                        value={item.sortOrder}
-                        onChange={(e) =>
-                          store.updatePackageDraft(item.code, "sortOrder", e.target.value)
-                        }
-                      />
-                    </Field>
-
-                    <label
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        color: "#334155",
-                        fontWeight: 800,
-                        minHeight: 54,
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={item.isActive !== false}
-                        onChange={(e) =>
-                          store.updatePackageDraft(item.code, "isActive", e.target.checked)
-                        }
-                      />
-                      Actief
-                    </label>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-                      gap: 12,
-                    }}
-                  >
-                    <StatCard title="Maand excl. btw" value={currency(item.monthlyPriceExclVat)} subtitle="Afgeleid" tone="#0ea5e9" />
-                    <StatCard title="Btw p/m" value={currency(item.monthlyVatAmount)} subtitle="Afgeleid" tone="#8b5cf6" />
-                    <StatCard title="Setup excl. btw" value={currency(item.setupPriceExclVat)} subtitle="Afgeleid" tone="#0ea5e9" />
-                    <StatCard title="Btw setup" value={currency(item.setupVatAmount)} subtitle="Afgeleid" tone="#8b5cf6" />
-                    <StatCard title="Infra btw" value={currency(item.monthlyInfraCostVatAmount)} subtitle="Afgeleid" tone="#f97316" />
-                    <StatCard title="Infra incl. btw" value={currency(item.monthlyInfraCostInclVat)} subtitle="Afgeleid" tone="#10b981" />
-                  </div>
-                </div>
+                  item={item}
+                  onChange={store.updatePackageDraft}
+                  type="package"
+                />
               ))}
           </div>
         )}
 
         {!store.isPricingLoading && store.pricingTab === "extras" && (
-          <div style={{ display: "grid", gap: 12 }}>
+          <div style={{ display: "grid", gap: 16 }}>
             {store.addonDrafts
               .slice()
               .sort((a, b) => Number(a.sortOrder || 0) - Number(b.sortOrder || 0))
               .map((item) => (
-                <div
+                <PackageCard
                   key={item.code}
-                  style={{
-                    border: "1px solid #dbe4ef",
-                    borderRadius: 20,
-                    padding: 18,
-                    background: "#ffffff",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1.15fr 0.8fr 0.8fr 0.8fr 0.7fr auto",
-                      gap: 12,
-                      alignItems: "end",
-                      marginBottom: 14,
-                    }}
-                  >
-                    <Field label="Naam">
-                      <Input
-                        value={item.label || ""}
-                        onChange={(e) =>
-                          store.updateAddonDraft(item.code, "label", e.target.value)
-                        }
-                      />
-                    </Field>
-
-                    <Field label="Prijs p/m incl. btw">
-                      <Input
-                        type="number"
-                        min="0"
-                        value={item.monthlyPriceInclVat}
-                        onChange={(e) =>
-                          store.updateAddonDraft(item.code, "monthlyPriceInclVat", e.target.value)
-                        }
-                      />
-                    </Field>
-
-                    <Field label="Setup incl. btw">
-                      <Input
-                        type="number"
-                        min="0"
-                        value={item.setupPriceInclVat}
-                        onChange={(e) =>
-                          store.updateAddonDraft(item.code, "setupPriceInclVat", e.target.value)
-                        }
-                      />
-                    </Field>
-
-                    <Field label="Infra excl. btw">
-                      <Input
-                        type="number"
-                        min="0"
-                        value={item.monthlyInfraCostExclVat}
-                        onChange={(e) =>
-                          store.updateAddonDraft(item.code, "monthlyInfraCostExclVat", e.target.value)
-                        }
-                      />
-                    </Field>
-
-                    <Field label="Volgorde">
-                      <Input
-                        type="number"
-                        min="0"
-                        value={item.sortOrder}
-                        onChange={(e) =>
-                          store.updateAddonDraft(item.code, "sortOrder", e.target.value)
-                        }
-                      />
-                    </Field>
-
-                    <label
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 8,
-                        color: "#334155",
-                        fontWeight: 800,
-                        minHeight: 54,
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={item.isActive !== false}
-                        onChange={(e) =>
-                          store.updateAddonDraft(item.code, "isActive", e.target.checked)
-                        }
-                      />
-                      Actief
-                    </label>
-                  </div>
-
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "repeat(6, minmax(0, 1fr))",
-                      gap: 12,
-                    }}
-                  >
-                    <StatCard title="Maand excl. btw" value={currency(item.monthlyPriceExclVat)} subtitle="Afgeleid" tone="#0ea5e9" />
-                    <StatCard title="Btw p/m" value={currency(item.monthlyVatAmount)} subtitle="Afgeleid" tone="#8b5cf6" />
-                    <StatCard title="Setup excl. btw" value={currency(item.setupPriceExclVat)} subtitle="Afgeleid" tone="#0ea5e9" />
-                    <StatCard title="Btw setup" value={currency(item.setupVatAmount)} subtitle="Afgeleid" tone="#8b5cf6" />
-                    <StatCard title="Infra btw" value={currency(item.monthlyInfraCostVatAmount)} subtitle="Afgeleid" tone="#f97316" />
-                    <StatCard title="Infra incl. btw" value={currency(item.monthlyInfraCostInclVat)} subtitle="Afgeleid" tone="#10b981" />
-                  </div>
-                </div>
+                  item={item}
+                  onChange={store.updateAddonDraft}
+                  type="addon"
+                />
               ))}
           </div>
         )}
