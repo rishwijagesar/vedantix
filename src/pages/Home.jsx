@@ -20,22 +20,62 @@ const FITS = [
 ];
 
 const PROMISES = [
-  ["48u", "Snel eerste concept", "Geen lang traject of maanden wachten. Je hebt snel iets sterks om op te reageren en mee verder te bouwen."],
-  ["€", "Duidelijke maandprijs", "Geen vaag gedoe met losse technische kosten. Je weet vooraf waar je aan toe bent."],
-  ["✓", "Doorlopende ondersteuning", "Na livegang stopt het niet. Onderhoud, kleine updates en hulp blijven gewoon geregeld."],
+  [
+    "48u",
+    "Snel eerste concept",
+    "Geen lang traject of maanden wachten. Je hebt snel iets sterks om op te reageren en mee verder te bouwen.",
+  ],
+  [
+    "€",
+    "Duidelijke maandprijs",
+    "Geen vaag gedoe met losse technische kosten. Je weet vooraf waar je aan toe bent.",
+  ],
+  [
+    "✓",
+    "Doorlopende ondersteuning",
+    "Na livegang stopt het niet. Onderhoud, kleine updates en hulp blijven gewoon geregeld.",
+  ],
 ];
 
 const PROBLEMS = [
-  ["🔍", "Je website overtuigt niet snel genoeg", "Bezoekers beslissen in seconden. Is je site onduidelijk of verouderd, dan haken ze af voordat ze bellen of appen."],
-  ["📱", "Mobiel laat vaak kansen liggen", "Veel lokale klanten bekijken je website op hun telefoon. Als dat niet strak en duidelijk werkt, verlies je directe actie."],
-  ["📞", "Te weinig sturing naar contact", "Zonder sterke call-to-actions verdwijnen bezoekers zonder reservering, aanvraag of WhatsApp-bericht."],
-  ["🧩", "Na oplevering begint vaak het gedoe", "Veel ondernemers willen geen losse partijen, technische vragen of een website die daarna stilstaat."],
+  [
+    "🔍",
+    "Je website overtuigt niet snel genoeg",
+    "Bezoekers beslissen in seconden. Is je site onduidelijk of verouderd, dan haken ze af voordat ze bellen of appen.",
+  ],
+  [
+    "📱",
+    "Mobiel laat vaak kansen liggen",
+    "Veel lokale klanten bekijken je website op hun telefoon. Als dat niet strak en duidelijk werkt, verlies je directe actie.",
+  ],
+  [
+    "📞",
+    "Te weinig sturing naar contact",
+    "Zonder sterke call-to-actions verdwijnen bezoekers zonder reservering, aanvraag of WhatsApp-bericht.",
+  ],
+  [
+    "🧩",
+    "Na oplevering begint vaak het gedoe",
+    "Veel ondernemers willen geen losse partijen, technische vragen of een website die daarna stilstaat.",
+  ],
 ];
 
 const PROOF_POINTS = [
-  ["01", "Gebouwd voor lokale bedrijven", "De focus ligt op vertrouwen, contact en aanvragen. Niet op overbodige complexiteit."],
-  ["02", "Van bezoeker naar actie", "Elke sectie stuurt op duidelijkheid: bellen, WhatsApp, offerte, reservering of intake."],
-  ["03", "Geen losse oplevering", "Je krijgt niet alleen een website, maar ook onderhoud, ondersteuning en ruimte om door te groeien."],
+  [
+    "01",
+    "Gebouwd voor lokale bedrijven",
+    "De focus ligt op vertrouwen, contact en aanvragen. Niet op overbodige complexiteit.",
+  ],
+  [
+    "02",
+    "Van bezoeker naar actie",
+    "Elke sectie stuurt op duidelijkheid: bellen, WhatsApp, offerte, reservering of intake.",
+  ],
+  [
+    "03",
+    "Geen losse oplevering",
+    "Je krijgt niet alleen een website, maar ook onderhoud, ondersteuning en ruimte om door te groeien.",
+  ],
 ];
 
 const NICHE_OPTIONS = [
@@ -148,16 +188,40 @@ const COMPARE_NEW = [
 ];
 
 const OUTCOMES = [
-  ["✔", "Meer vertrouwen", "Een website die professioneler overkomt en sneller serieus genomen wordt."],
+  [
+    "✔",
+    "Meer vertrouwen",
+    "Een website die professioneler overkomt en sneller serieus genomen wordt.",
+  ],
   ["⚡", "Meer actie", "Meer kans op bellen, appen, reserveren of een aanvraag."],
-  ["🛡️", "Meer rust", "Onderhoud, kleine wijzigingen en doorlopende ondersteuning blijven geregeld."],
+  [
+    "🛡️",
+    "Meer rust",
+    "Onderhoud, kleine wijzigingen en doorlopende ondersteuning blijven geregeld.",
+  ],
 ];
 
 const STEPS = [
-  ["1", "Korte kennismaking", "We bespreken je bedrijf, doelgroep en wat je website praktisch moet opleveren."],
-  ["2", "Concept en opbouw", "Je krijgt een sterke eerste richting die past bij jouw branche en uitstraling."],
-  ["3", "Aanscherpen en live zetten", "We verwerken feedback, maken het scherp en zetten alles netjes live."],
-  ["4", "Doorlopend verbeteren", "Na livegang blijven we beschikbaar voor onderhoud, updates en vervolgstappen."],
+  [
+    "1",
+    "Korte kennismaking",
+    "We bespreken je bedrijf, doelgroep en wat je website praktisch moet opleveren.",
+  ],
+  [
+    "2",
+    "Concept en opbouw",
+    "Je krijgt een sterke eerste richting die past bij jouw branche en uitstraling.",
+  ],
+  [
+    "3",
+    "Aanscherpen en live zetten",
+    "We verwerken feedback, maken het scherp en zetten alles netjes live.",
+  ],
+  [
+    "4",
+    "Doorlopend verbeteren",
+    "Na livegang blijven we beschikbaar voor onderhoud, updates en vervolgstappen.",
+  ],
 ];
 
 const TRUST_ITEMS = [
@@ -229,6 +293,17 @@ export default function Home() {
 
           <section className="section-shell">
             <div className="section-wrap">
+              <div className="section-header center">
+                <div className="section-label">Waarom dit werkt</div>
+                <h2 className="section-h2">
+                  Een website die niet alleen mooi oogt, maar ook iets oplevert
+                </h2>
+                <p className="section-p">
+                  Snelle oplevering, duidelijke prijzen en ondersteuning na livegang. Zodat je
+                  website niet stilvalt na de eerste versie.
+                </p>
+              </div>
+
               <div className="promise-grid">
                 {PROMISES.map(([icon, title, text]) => (
                   <div key={title} className="promise-card">
@@ -247,9 +322,12 @@ export default function Home() {
             <div className="section-wrap">
               <div className="section-header">
                 <div className="section-label">Het probleem</div>
-                <h2 className="section-h2">Veel websites van lokale ondernemers laten onnodig klanten liggen</h2>
+                <h2 className="section-h2">
+                  Veel websites van lokale ondernemers laten onnodig klanten liggen
+                </h2>
                 <p className="section-p">
-                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen geeft, te weinig richting biedt en daarna vaak stil blijft staan.
+                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen
+                  geeft, te weinig richting biedt en daarna vaak stil blijft staan.
                 </p>
               </div>
 
@@ -269,9 +347,13 @@ export default function Home() {
             <div className="section-wrap">
               <div className="section-header center">
                 <div className="section-label">Waarom Vedantix</div>
-                <h2 className="section-h2">Geen technische rompslomp, maar een website die beter verkoopt</h2>
+                <h2 className="section-h2">
+                  Geen technische rompslomp, maar een website die beter verkoopt
+                </h2>
                 <p className="section-p">
-                  Vedantix is voor ondernemers die geen zin hebben in losse tools, lange trajecten of vage communicatie. Je krijgt snelheid, duidelijkheid en doorlopende ondersteuning.
+                  Vedantix is voor ondernemers die geen zin hebben in losse tools, lange trajecten
+                  of vage communicatie. Je krijgt snelheid, duidelijkheid en doorlopende
+                  ondersteuning.
                 </p>
               </div>
 
@@ -293,7 +375,8 @@ export default function Home() {
                 <div className="section-label">Voor wie dit past</div>
                 <h2 className="section-h2">Kies jouw branche en zie waar de meeste winst zit</h2>
                 <p className="section-p">
-                  Niet elke ondernemer heeft dezelfde website nodig. Kies je branche en zie direct welke richting meestal het beste aansluit.
+                  Niet elke ondernemer heeft dezelfde website nodig. Kies je branche en zie direct
+                  welke richting meestal het beste aansluit.
                 </p>
               </div>
 
@@ -341,7 +424,8 @@ export default function Home() {
                     Bekijk branchepagina →
                   </a>
                   <div className="industry-note">
-                    De branchepagina’s helpen bezoekers zichzelf sneller herkennen en ondersteunen ook je SEO-structuur.
+                    De branchepagina’s helpen bezoekers zichzelf sneller herkennen en ondersteunen
+                    ook je SEO-structuur.
                   </div>
                 </div>
               </div>
@@ -356,7 +440,8 @@ export default function Home() {
                 <div className="section-label">Vindbaarheid</div>
                 <h2 className="section-h2">Niet alleen mooi, maar ook beter vindbaar</h2>
                 <p className="section-p">
-                  Een goede website moet niet alleen professioneel ogen, maar ook helpen om beter gevonden te worden in Google en lokaal meer zichtbaar te zijn.
+                  Een goede website moet niet alleen professioneel ogen, maar ook helpen om beter
+                  gevonden te worden in Google en lokaal meer zichtbaar te zijn.
                 </p>
               </div>
 
@@ -364,19 +449,28 @@ export default function Home() {
                 <div className="proof-card">
                   <div className="proof-icon">🔎</div>
                   <h3>Slimme SEO-basis</h3>
-                  <p>We bouwen een duidelijke pagina-opbouw en inhoudsstructuur die helpt om beter gevonden te worden.</p>
+                  <p>
+                    We bouwen een duidelijke pagina-opbouw en inhoudsstructuur die helpt om beter
+                    gevonden te worden.
+                  </p>
                 </div>
 
                 <div className="proof-card">
                   <div className="proof-icon">📍</div>
                   <h3>Lokale vindbaarheid</h3>
-                  <p>Voor lokale ondernemers is plaats + dienst belangrijk. Daar richten we de website-opbouw slim op in.</p>
+                  <p>
+                    Voor lokale ondernemers is plaats + dienst belangrijk. Daar richten we de
+                    website-opbouw slim op in.
+                  </p>
                 </div>
 
                 <div className="proof-card">
                   <div className="proof-icon">📈</div>
                   <h3>Klaar voor groei</h3>
-                  <p>De website blijft later makkelijk uitbreidbaar met extra pagina’s, FAQ’s, dienstenpagina’s of lokale landingspagina’s.</p>
+                  <p>
+                    De website blijft later makkelijk uitbreidbaar met extra pagina’s, FAQ’s,
+                    dienstenpagina’s of lokale landingspagina’s.
+                  </p>
                 </div>
               </div>
             </div>
@@ -388,9 +482,13 @@ export default function Home() {
             <div className="section-wrap">
               <div className="section-header center">
                 <div className="section-label">De echte keuze</div>
-                <h2 className="section-h2">Zelf puzzelen of alles in één keer goed geregeld hebben</h2>
+                <h2 className="section-h2">
+                  Zelf puzzelen of alles in één keer goed geregeld hebben
+                </h2>
                 <p className="section-p">
-                  De vergelijking is meestal niet met een goedkope builder. De echte vergelijking is of je alles zelf wilt uitzoeken of liever snel iets goeds neerzet met ondersteuning.
+                  De vergelijking is meestal niet met een goedkope builder. De echte vergelijking
+                  is of je alles zelf wilt uitzoeken of liever snel iets goeds neerzet met
+                  ondersteuning.
                 </p>
               </div>
 
@@ -422,7 +520,8 @@ export default function Home() {
                 <div className="section-label">Na livegang</div>
                 <h2 className="section-h2">Geen oplevering en klaar. Wij blijven betrokken.</h2>
                 <p className="section-p">
-                  Na livegang stopt het niet. We blijven actief met je meekijken, stellen verbeteringen voor en zorgen dat je website actueel en sterk blijft.
+                  Na livegang stopt het niet. We blijven actief met je meekijken, stellen
+                  verbeteringen voor en zorgen dat je website actueel en sterk blijft.
                 </p>
               </div>
 
@@ -430,19 +529,28 @@ export default function Home() {
                 <div className="proof-card">
                   <div className="proof-icon">01</div>
                   <h3>Periodiek contact</h3>
-                  <p>We blijven regelmatig in gesprek om te kijken wat beter kan, wat je doelgroep nodig heeft en welke nieuwe wensen er zijn.</p>
+                  <p>
+                    We blijven regelmatig in gesprek om te kijken wat beter kan, wat je doelgroep
+                    nodig heeft en welke nieuwe wensen er zijn.
+                  </p>
                 </div>
 
                 <div className="proof-card">
                   <div className="proof-icon">02</div>
                   <h3>Continue optimalisatie</h3>
-                  <p>Een website hoeft niet stil te staan na oplevering. We blijven kijken naar duidelijkheid, conversie en verbeterkansen.</p>
+                  <p>
+                    Een website hoeft niet stil te staan na oplevering. We blijven kijken naar
+                    duidelijkheid, conversie en verbeterkansen.
+                  </p>
                 </div>
 
                 <div className="proof-card">
                   <div className="proof-icon">03</div>
                   <h3>Warme samenwerking</h3>
-                  <p>We willen geen losse transactie, maar een relatie waarin we betrokken blijven en waarin klanten je later ook makkelijker aanbevelen.</p>
+                  <p>
+                    We willen geen losse transactie, maar een relatie waarin we betrokken blijven
+                    en waarin klanten je later ook makkelijker aanbevelen.
+                  </p>
                 </div>
               </div>
             </div>
@@ -452,9 +560,12 @@ export default function Home() {
             <div className="section-wrap">
               <div className="section-header center">
                 <div className="section-label">Werkwijze</div>
-                <h2 className="section-h2">Van eerste bericht naar live website in 4 heldere stappen</h2>
+                <h2 className="section-h2">
+                  Van eerste bericht naar live website in 4 heldere stappen
+                </h2>
                 <p className="section-p">
-                  Geen vaag proces. Je weet vooraf hoe we werken, wat je kunt verwachten en hoe snel we kunnen schakelen.
+                  Geen vaag proces. Je weet vooraf hoe we werken, wat je kunt verwachten en hoe
+                  snel we kunnen schakelen.
                 </p>
               </div>
 
@@ -476,7 +587,8 @@ export default function Home() {
                 <div className="section-label">Wat dit oplevert</div>
                 <h2 className="section-h2">Meer vertrouwen, meer actie en minder gedoe</h2>
                 <p className="section-p">
-                  Een goede website moet niet alleen netjes ogen. Hij moet iemand overtuigen om contact op te nemen, te reserveren of een aanvraag te sturen.
+                  Een goede website moet niet alleen netjes ogen. Hij moet iemand overtuigen om
+                  contact op te nemen, te reserveren of een aanvraag te sturen.
                 </p>
               </div>
 
@@ -512,13 +624,18 @@ export default function Home() {
                   <div className="lead-badge">Gratis · vrijblijvend</div>
                   <div className="lead-title">Ontvang een eerlijke scan van je huidige website</div>
                   <p className="lead-text">
-                    We laten concreet zien waar winst zit in duidelijkheid, uitstraling, mobiele gebruikservaring en call-to-actions. Geen vaag advies, maar punten waar je echt iets aan hebt.
+                    We laten concreet zien waar winst zit in duidelijkheid, uitstraling, mobiele
+                    gebruikservaring en call-to-actions. Geen vaag advies, maar punten waar je
+                    echt iets aan hebt.
                   </p>
                 </div>
 
                 <div className="lead-side">
                   <h3>Wat je terugkrijgt</h3>
-                  <p>Een korte, duidelijke beoordeling met verbeterpunten waar je direct mee verder kunt.</p>
+                  <p>
+                    Een korte, duidelijke beoordeling met verbeterpunten waar je direct mee verder
+                    kunt.
+                  </p>
                   <ul>
                     <li>Heldere feedback op je eerste indruk</li>
                     <li>Verbeterpunten voor mobiel en CTA’s</li>
@@ -550,14 +667,18 @@ export default function Home() {
                     ))}
                   </div>
                   <p>
-                    Zo blijft er ruimte voor snelle communicatie, kwaliteit in de uitwerking en aandacht na livegang. Dat werkt beter dan zoveel mogelijk projecten tegelijk aannemen.
+                    Zo blijft er ruimte voor snelle communicatie, kwaliteit in de uitwerking en
+                    aandacht na livegang. Dat werkt beter dan zoveel mogelijk projecten tegelijk
+                    aannemen.
                   </p>
                 </div>
 
                 <div className="guarantee-card">
                   <h3>Geen druk, wel duidelijkheid</h3>
                   <p>
-                    Eerst bespreken we wat bij jouw bedrijf past. Daarna beslis jij rustig of je verder wilt. Het doel is een website die echt bijdraagt aan je bedrijf, niet een snelle verkoop om het verkopen.
+                    Eerst bespreken we wat bij jouw bedrijf past. Daarna beslis jij rustig of je
+                    verder wilt. Het doel is een website die echt bijdraagt aan je bedrijf, niet
+                    een snelle verkoop om het verkopen.
                   </p>
                 </div>
               </div>
@@ -570,7 +691,8 @@ export default function Home() {
                 <div className="section-label">Veelgestelde vragen</div>
                 <h2 className="section-h2">Praktische vragen, direct beantwoord</h2>
                 <p className="section-p">
-                  Juist bij een eerste websiteproject wil je vooraf weten hoe snel het gaat, wat je zelf moet doen en hoe flexibel het later nog is.
+                  Juist bij een eerste websiteproject wil je vooraf weten hoe snel het gaat, wat
+                  je zelf moet doen en hoe flexibel het later nog is.
                 </p>
               </div>
 
@@ -589,7 +711,8 @@ export default function Home() {
             <div className="cta-inner">
               <h2>Klaar voor een website die wél vertrouwen wekt en actie uitlokt?</h2>
               <p>
-                Plan een vrijblijvende kennismaking en ontdek welke richting, stijl en opbouw het beste past bij jouw bedrijf.
+                Plan een vrijblijvende kennismaking en ontdek welke richting, stijl en opbouw het
+                beste past bij jouw bedrijf.
               </p>
 
               <div className="cta-actions">

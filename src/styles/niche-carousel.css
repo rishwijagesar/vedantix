@@ -85,7 +85,7 @@
     font-weight:800;
     letter-spacing:1.4px;
     text-transform:uppercase;
-    color:rgba(255,255,255,.72);
+    color:rgba(255,255,255,.82);
     margin-bottom:10px;
   }
   
@@ -99,7 +99,7 @@
   
   .niche-card-sub{
     font-size:.82rem;
-    color:rgba(255,255,255,.78);
+    color:rgba(255,255,255,.86);
     line-height:1.6;
     min-height:4.5em;
   }
@@ -176,18 +176,32 @@
   }
   
   .niche-carousel-dot{
+    width:32px;
+    height:32px;
+    border-radius:999px;
+    background:transparent;
+    border:none;
+    cursor:pointer;
+    transition:all .2s;
+    position:relative;
+  }
+  
+  .niche-carousel-dot::before{
+    content:"";
+    position:absolute;
+    top:50%;
+    left:50%;
     width:9px;
     height:9px;
     border-radius:999px;
     background:#d1d5db;
-    border:none;
-    cursor:pointer;
+    transform:translate(-50%, -50%);
     transition:all .2s;
   }
   
-  .niche-carousel-dot.active{
+  .niche-carousel-dot.active::before{
     background:#6366f1;
-    transform:scale(1.08);
+    transform:translate(-50%, -50%) scale(1.08);
   }
   
   @media(max-width:1024px){

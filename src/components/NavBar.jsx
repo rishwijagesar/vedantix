@@ -10,11 +10,7 @@ export default function NavBar() {
     <header className="site-header">
       <div className="site-header-inner">
         <Link to="/" className="site-brand" aria-label="Home">
-          <VedantixLogo
-            variant="full"
-            size="md"
-            theme="light"
-          />
+          <VedantixLogo variant="full" size="md" theme="light" />
         </Link>
 
         <nav className="site-nav" aria-label="Hoofdmenu">
@@ -25,9 +21,14 @@ export default function NavBar() {
             <a href={isHomePage ? "#how" : "/#how"} className="site-nav-link">
               Hoe het werkt
             </a>
-            <Link to="/contact" className="site-nav-link">
+            <a
+              href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag."
+              target="_blank"
+              rel="noreferrer"
+              className="site-nav-link"
+            >
               Contact
-            </Link>
+            </a>
             <Link to="/blog" className="site-nav-link">
               Blog
             </Link>

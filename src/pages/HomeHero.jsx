@@ -19,9 +19,7 @@ export default function HomeHero() {
       <section className="hero">
         <div className="hero-container">
           <div className="hero-content">
-            <div className="hero-eyebrow">
-              Voor lokale ondernemers die meer klanten willen
-            </div>
+            <div className="hero-eyebrow">Voor lokale ondernemers die meer klanten willen</div>
 
             <h1>
               Een website die
@@ -32,10 +30,10 @@ export default function HomeHero() {
             </h1>
 
             <p className="hero-sub">
-              Meer afspraken, aanvragen en contactmomenten — zonder technisch gedoe.
-              Wij bouwen een website die{" "}
-              <strong>professioneel overkomt, direct duidelijk maakt wat je doet</strong>{" "}
-              en bezoekers sneller richting WhatsApp, bellen of een aanvraag stuurt.
+              Meer afspraken, aanvragen en contactmomenten — zonder technisch gedoe. Wij bouwen een
+              website die{" "}
+              <strong>professioneel overkomt, direct duidelijk maakt wat je doet</strong> en
+              bezoekers sneller richting WhatsApp, bellen of een aanvraag stuurt.
             </p>
 
             <div className="hero-microcopy">
@@ -135,8 +133,8 @@ export default function HomeHero() {
               </div>
 
               <div className="mockup-actions">
-                <button type="button">📅 Afspraak maken</button>
-                <button type="button">💬 WhatsApp</button>
+                <div className="mockup-action mockup-action-primary">📅 Afspraak maken</div>
+                <div className="mockup-action mockup-action-wa">💬 WhatsApp</div>
               </div>
             </div>
 
