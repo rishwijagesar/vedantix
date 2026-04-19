@@ -170,7 +170,7 @@ const TIME_FILTERS = [
 
 const DEFAULT_SETTINGS = {
   baseUrl: "/provisioning-api",
-  apiKey: "",
+  apiKey: "d1e07740dce2a9102635aee441926de52e341fde95cfa10778e465d64d0f6251",
   tenantId: "default",
   actorId: "admin-dashboard",
   source: "ADMIN_PANEL",
