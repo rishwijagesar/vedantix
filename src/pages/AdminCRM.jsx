@@ -1159,35 +1159,38 @@ export default function AdminCRM() {
       Number(selectedPackage?.setupPrice || 0) +
       selectedExtras.reduce((sum, item) => sum + Number(item.setupPrice || 0), 0);
 
-    return {
-      id: customerId,
-      companyName: customerForm.companyName,
-      contactName: customerForm.contactName,
-      email: customerForm.email,
-      phone: customerForm.phone,
-      domain: customerForm.domain.trim().toLowerCase(),
-      packageCode: customerForm.packageCode,
-      extras: customerForm.extras,
-      notes: customerForm.notes,
-      monthlyInfraCost,
-      oneTimeSetupCost,
-      address: customerForm.address,
-      postalCode: customerForm.postalCode,
-      city: customerForm.city,
-      country: customerForm.country,
-      status: "intake",
-      createdAt: new Date().toISOString(),
-      deploymentId: "",
-      deploymentStatus: "NOT_STARTED",
-      deploymentStage: null,
-      mailProvisioned: false,
-      mailDomainId: "",
-      documents: [],
-      requestHistory: [],
-      finance: {
-        monthlyRevenue,
-      },
-    };
+      return {
+        id: customerId,
+        companyName: customerForm.companyName,
+        contactName: customerForm.contactName,
+        email: customerForm.email,
+        phone: customerForm.phone,
+        domain: customerForm.domain.trim().toLowerCase(),
+        packageCode: customerForm.packageCode,
+        extras: customerForm.extras,
+        notes: customerForm.notes,
+        monthlyInfraCost,
+        oneTimeSetupCost,
+        address: customerForm.address,
+        postalCode: customerForm.postalCode,
+        city: customerForm.city,
+        country: customerForm.country,
+        status: "intake",
+        createdAt: new Date().toISOString(),
+        deploymentId: "",
+        deploymentStatus: "NOT_STARTED",
+        deploymentStage: null,
+        mailProvisioned: false,
+        mailDomainId: "",
+        documents: [],
+        requestHistory: [],
+        financeSynced: false,
+        finance: {
+          monthlyRevenue,
+          monthlyInfraCost,
+          oneTimeSetupCost,
+        },
+      };
   }
 
   async function addCustomerAndProvision() {
@@ -1199,15 +1202,15 @@ export default function AdminCRM() {
     ) {
       return;
     }
-
+  
     setIsProvisioning(true);
-
+  
     const customer = createCustomerDraft();
     setCustomers((prev) => [customer, ...prev]);
     setSelectedCustomerId(customer.id);
-
+  
     const requestEntries = [];
-
+  
     try {
       const deployResult = await apiRequest(settings, "POST", "/api/deployments", {
         customerId: customer.id,
@@ -1216,37 +1219,29 @@ export default function AdminCRM() {
         packageCode: customer.packageCode,
         addOns: customer.extras,
       });
-
-      const deployEntry = {
+  
+      requestEntries.push({
         id:
           (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
           `req-${Date.now()}-1`,
         at: new Date().toISOString(),
         type: "CREATE_DEPLOYMENT",
         result: deployResult,
-      };
-
-      requestEntries.push(deployEntry);
-
+      });
+  
       const deploymentId =
-        (deployResult &&
-          deployResult.data &&
-          deployResult.data.data &&
-          deployResult.data.data.deploymentId) ||
-        (deployResult && deployResult.data && deployResult.data.deploymentId) ||
+        deployResult?.data?.data?.deploymentId ||
+        deployResult?.data?.deploymentId ||
         "";
-
+  
       const deploymentStatus =
-        (deployResult &&
-          deployResult.data &&
-          deployResult.data.data &&
-          deployResult.data.data.status) ||
-        (deployResult && deployResult.data && deployResult.data.status) ||
+        deployResult?.data?.data?.status ||
+        deployResult?.data?.status ||
         (deployResult.ok ? "PENDING" : "FAILED");
-
+  
       let nextStatus = deployResult.ok ? "provisioning" : "failed";
       let mailProvisioned = false;
-
+  
       if (settings.autoProvisionMail) {
         const mailResult = await apiRequest(
           settings,
@@ -1257,18 +1252,16 @@ export default function AdminCRM() {
             packageCode: customer.packageCode,
           }
         );
-
-        const mailEntry = {
+  
+        requestEntries.push({
           id:
             (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
             `req-${Date.now()}-2`,
           at: new Date().toISOString(),
           type: "PROVISION_MAIL",
           result: mailResult,
-        };
-
-        requestEntries.push(mailEntry);
-
+        });
+  
         mailProvisioned = mailResult.ok;
         nextStatus = deployResult.ok
           ? mailResult.ok
@@ -1278,7 +1271,37 @@ export default function AdminCRM() {
       } else {
         nextStatus = deployResult.ok ? "active" : "failed";
       }
-
+      const pkg = packageOptions.find(p => p.code === customer.packageCode);
+  
+      const financeBootstrapPayload = {
+        tenantId: settings.tenantId || "default",
+        customerId: customer.id,
+        customerName: customer.companyName,
+        packageCode: customer.packageCode,
+        extras: customer.extras || [],
+        monthlyRevenueInclVat: Number(customer.finance?.monthlyRevenue || 0),
+        monthlyInfraCostInclVat: Number(customer.monthlyInfraCost || 0),
+        oneTimeSetupInclVat: Number(customer.oneTimeSetupCost || 0),
+        currency: "EUR",
+        vatRate: Number(pkg?.vatRate) || 0.21,
+      };
+  
+      const financeResult = await apiRequest(
+        settings,
+        "POST",
+        "/api/finance/customers/bootstrap",
+        financeBootstrapPayload
+      );
+  
+      requestEntries.push({
+        id:
+          (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+          `req-${Date.now()}-3`,
+        at: new Date().toISOString(),
+        type: "BOOTSTRAP_FINANCE",
+        result: financeResult,
+      });
+  
       setCustomers((prev) =>
         prev.map((item) =>
           item.id === customer.id
@@ -1287,22 +1310,19 @@ export default function AdminCRM() {
                 deploymentId,
                 deploymentStatus,
                 deploymentStage:
-                  (deployResult &&
-                    deployResult.data &&
-                    deployResult.data.data &&
-                    deployResult.data.data.currentStage) ||
-                  (deployResult && deployResult.data && deployResult.data.currentStage) ||
+                  deployResult?.data?.data?.currentStage ||
+                  deployResult?.data?.currentStage ||
                   null,
                 mailProvisioned,
                 status: nextStatus,
+                financeSynced: financeResult.ok,
                 requestHistory: requestEntries,
               }
             : item
         )
       );
-
+  
       pushRequestLogEntries(requestEntries);
-
       resetCustomerForm();
       setIsCreateCustomerOpen(false);
       setActiveTab("customers");
@@ -1321,9 +1341,9 @@ export default function AdminCRM() {
           },
         },
       };
-
+  
       requestEntries.push(failedEntry);
-
+  
       setCustomers((prev) =>
         prev.map((item) =>
           item.id === customer.id
@@ -1335,7 +1355,7 @@ export default function AdminCRM() {
             : item
         )
       );
-
+  
       pushRequestLogEntries(requestEntries);
     } finally {
       setIsProvisioning(false);

@@ -145,13 +145,23 @@ function toEditableValue(key, value) {
   return value;
 }
 
+function buildInitialSettings() {
+  const loaded = loadJson(STORAGE_KEYS.settings, {});
+  return {
+    ...DEFAULT_SETTINGS,
+    ...loaded,
+    apiKey: loaded?.apiKey || DEFAULT_SETTINGS.apiKey || "",
+    tenantId: loaded?.tenantId || DEFAULT_SETTINGS.tenantId || "default",
+    actorId: loaded?.actorId || DEFAULT_SETTINGS.actorId || "admin-dashboard",
+    source: loaded?.source || DEFAULT_SETTINGS.source || "ADMIN_PANEL",
+  };
+}
+
 export function useAdminStore() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [pricingTab, setPricingTab] = useState("packages");
 
-  const [settings, setSettings] = useState(() =>
-    loadJson(STORAGE_KEYS.settings, DEFAULT_SETTINGS)
-  );
+  const [settings, setSettings] = useState(buildInitialSettings);
   const [customers, setCustomers] = useState(() =>
     loadJson(STORAGE_KEYS.customers, [])
   );
@@ -205,27 +215,24 @@ export function useAdminStore() {
     setIsPricingLoading(true);
     setPricingError("");
     setPricingSaveMessage("");
-  
+
     try {
       const summary = await fetchPricingSummary();
-  
-      const incomingPackages = Array.isArray(summary?.packages) ? summary.packages : [];
-      const incomingAddons = Array.isArray(summary?.addons) ? summary.addons : [];
-  
-      if (incomingPackages.length === 0 && incomingAddons.length === 0) {
-        throw new Error("Lege pricing response van backend.");
+      const normalized = normalizePricingSummary(summary);
+
+      setPackageOptions(normalized.packages);
+      setExtraOptions(normalized.addons);
+      setPackageDrafts(clonePricingData(normalized.packages));
+      setAddonDrafts(clonePricingData(normalized.addons));
+
+      if (normalized.usedFallback) {
+        setPricingSaveMessage(
+          "Standaard pakketten zijn geladen omdat de backend geen bruikbare pricing teruggaf."
+        );
       }
-  
-      const packages = clonePricingData(incomingPackages);
-      const addons = clonePricingData(incomingAddons);
-  
-      setPackageOptions(packages);
-      setExtraOptions(addons);
-      setPackageDrafts(clonePricingData(packages));
-      setAddonDrafts(clonePricingData(addons));
     } catch (error) {
       const fallback = getFallbackPricingState();
-  
+
       setPackageOptions(fallback.packages);
       setExtraOptions(fallback.addons);
       setPackageDrafts(clonePricingData(fallback.packages));
@@ -240,6 +247,32 @@ export function useAdminStore() {
       );
     } finally {
       setIsPricingLoading(false);
+    }
+  }
+
+  async function getFreshPricingSnapshot() {
+    try {
+      const summary = await fetchPricingSummary();
+      const normalized = normalizePricingSummary(summary);
+
+      setPackageOptions(normalized.packages);
+      setExtraOptions(normalized.addons);
+      setPackageDrafts(clonePricingData(normalized.packages));
+      setAddonDrafts(clonePricingData(normalized.addons));
+
+      return normalized;
+    } catch {
+      const fallback = getFallbackPricingState();
+
+      setPackageOptions(fallback.packages);
+      setExtraOptions(fallback.addons);
+      setPackageDrafts(clonePricingData(fallback.packages));
+      setAddonDrafts(clonePricingData(fallback.addons));
+
+      return {
+        ...fallback,
+        usedFallback: true,
+      };
     }
   }
 
@@ -322,7 +355,10 @@ export function useAdminStore() {
   }
 
   const totalMonthlyRevenue = useMemo(() => {
-    return customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0);
+    return customers.reduce(
+      (sum, customer) => sum + calcMonthlyRevenue(customer),
+      0
+    );
   }, [customers, packageOptions, extraOptions]);
 
   const totalMonthlyCosts = useMemo(() => {
@@ -656,7 +692,7 @@ export function useAdminStore() {
     setIsPricingSaving(true);
     setPricingError("");
     setPricingSaveMessage("");
-  
+
     try {
       await Promise.all(
         packageDrafts.map((item) =>
@@ -688,7 +724,7 @@ export function useAdminStore() {
           })
         )
       );
-  
+
       await Promise.all(
         addonDrafts.map((item) =>
           updatePricingAddon({
@@ -710,7 +746,7 @@ export function useAdminStore() {
           })
         )
       );
-  
+
       await loadPricingFromBackend();
       setPricingSaveMessage("Prijzen succesvol opgeslagen.");
     } catch (error) {
@@ -722,31 +758,38 @@ export function useAdminStore() {
     }
   }
 
-  function createCustomerDraft() {
+  function createCustomerDraft(pricingSnapshot) {
     const companySlug = slugify(customerForm.companyName);
     const domainSlug = slugify(
       customerForm.domain.split(".")[0] || customerForm.companyName
     );
     const customerId = `cust_${companySlug || domainSlug || Date.now()}`;
 
+    const packageRecord =
+      pricingSnapshot?.packages?.find(
+        (item) => item.code === customerForm.packageCode
+      ) || getPackageByCode(customerForm.packageCode);
+
+    const addonsSource = pricingSnapshot?.addons || extraOptions;
+
     const monthlyRevenue =
-      Number(getPackageByCode(customerForm.packageCode)?.monthlyPriceInclVat || 0) +
+      Number(packageRecord?.monthlyPriceInclVat || 0) +
       (customerForm.extras || []).reduce((sum, code) => {
-        const addon = getAddonByCode(code);
+        const addon = addonsSource.find((item) => item.code === code) || null;
         return sum + Number(addon?.monthlyPriceInclVat || 0);
       }, 0);
 
     const monthlyInfraCost =
-      Number(getPackageByCode(customerForm.packageCode)?.monthlyInfraCostInclVat || 0) +
+      Number(packageRecord?.monthlyInfraCostInclVat || 0) +
       (customerForm.extras || []).reduce((sum, code) => {
-        const addon = getAddonByCode(code);
+        const addon = addonsSource.find((item) => item.code === code) || null;
         return sum + Number(addon?.monthlyInfraCostInclVat || 0);
       }, 0);
 
     const oneTimeSetupCost =
-      Number(getPackageByCode(customerForm.packageCode)?.setupPriceInclVat || 0) +
+      Number(packageRecord?.setupPriceInclVat || 0) +
       (customerForm.extras || []).reduce((sum, code) => {
-        const addon = getAddonByCode(code);
+        const addon = addonsSource.find((item) => item.code === code) || null;
         return sum + Number(addon?.setupPriceInclVat || 0);
       }, 0);
 
@@ -775,8 +818,11 @@ export function useAdminStore() {
       mailDomainId: "",
       documents: [],
       requestHistory: [],
+      financeSynced: false,
       finance: {
         monthlyRevenue,
+        monthlyInfraCost,
+        oneTimeSetupCost,
       },
     };
   }
@@ -792,8 +838,28 @@ export function useAdminStore() {
     }
 
     setIsProvisioning(true);
+    setPricingError("");
 
-    const customer = createCustomerDraft();
+    const pricingSnapshot =
+      packageOptions.length > 0
+        ? {
+            packages: packageOptions,
+            addons: extraOptions,
+          }
+        : await getFreshPricingSnapshot();
+
+    const selectedPackage =
+      pricingSnapshot.packages.find(
+        (item) => item.code === customerForm.packageCode
+      ) || null;
+
+    if (!selectedPackage) {
+      setPricingError("Geselecteerd pakket kon niet geladen worden.");
+      setIsProvisioning(false);
+      return;
+    }
+
+    const customer = createCustomerDraft(pricingSnapshot);
     setCustomers((prev) => [customer, ...prev]);
     setSelectedCustomerId(customer.id);
 
@@ -856,6 +922,33 @@ export function useAdminStore() {
         nextStatus = deployResult.ok ? "active" : "failed";
       }
 
+      const financeBootstrapPayload = {
+        tenantId: settings.tenantId || "default",
+        customerId: customer.id,
+        customerName: customer.companyName,
+        packageCode: customer.packageCode,
+        extras: customer.extras || [],
+        monthlyRevenueInclVat: Number(customer.finance?.monthlyRevenue || 0),
+        monthlyInfraCostInclVat: Number(customer.monthlyInfraCost || 0),
+        oneTimeSetupInclVat: Number(customer.oneTimeSetupCost || 0),
+        currency: "EUR",
+        vatRate: Number(selectedPackage?.vatRate || 0.21),
+      };
+
+      const financeResult = await apiRequest(
+        settings,
+        "POST",
+        "/api/finance/customers/bootstrap",
+        financeBootstrapPayload
+      );
+
+      requestEntries.push({
+        id: createId("req-3"),
+        at: new Date().toISOString(),
+        type: "BOOTSTRAP_FINANCE",
+        result: financeResult,
+      });
+
       setCustomers((prev) =>
         prev.map((item) =>
           item.id === customer.id
@@ -869,6 +962,7 @@ export function useAdminStore() {
                   null,
                 mailProvisioned,
                 status: nextStatus,
+                financeSynced: financeResult.ok,
                 requestHistory: requestEntries,
               }
             : item
