@@ -1,9 +1,10 @@
 /// <reference types="vite/client" />
 
-const API_BASE =
+const RAW_API_BASE =
   import.meta.env.VITE_API_BASE_URL ||
-  "/provisioning-api";
+  "https://api.vedantix.nl";
 
+const API_BASE = String(RAW_API_BASE).replace(/\/$/, "");
 const DEFAULT_TENANT_ID = import.meta.env.VITE_TENANT_ID || "default";
 
 async function parseJson(res) {
@@ -12,7 +13,7 @@ async function parseJson(res) {
   try {
     return text ? JSON.parse(text) : null;
   } catch {
-    throw new Error(`Expected JSON but received: ${text.slice(0, 120)}`);
+    throw new Error(`Expected JSON but received: ${text.slice(0, 200)}`);
   }
 }
 
@@ -27,6 +28,7 @@ export async function fetchPricingSummary() {
   const res = await fetch(`${API_BASE}/api/pricing`, {
     method: "GET",
     headers: buildPublicHeaders(),
+    cache: "no-store",
   });
 
   if (!res.ok) {
