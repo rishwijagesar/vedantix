@@ -23,6 +23,11 @@ import {
   isWithinFilter,
 } from "../utils/adminStorage";
 import { updateCustomer, deleteCustomer } from "../../../api/customers.api";
+import {
+  notifyError,
+  notifyInfo,
+  notifySuccess,
+} from "../utils/adminNotifications";
 
 function buildHeaders(settings, method) {
   const headers = {
@@ -942,10 +947,12 @@ export function useAdminStore() {
 
       await loadPricingFromBackend();
       setPricingSaveMessage("Prijzen succesvol opgeslagen.");
+      notifySuccess("Prijzen succesvol opgeslagen.");
     } catch (error) {
-      setPricingError(
-        error instanceof Error ? error.message : "Opslaan van pricing is mislukt."
-      );
+      const message =
+        error instanceof Error ? error.message : "Opslaan van pricing is mislukt.";
+      setPricingError(message);
+      notifyError(message);
     } finally {
       setIsPricingSaving(false);
     }
@@ -958,6 +965,7 @@ export function useAdminStore() {
       !customerForm.email ||
       !customerForm.domain
     ) {
+      notifyInfo("Vul eerst bedrijfsnaam, contactpersoon, e-mail en domeinnaam in.");
       return null;
     }
 
@@ -979,6 +987,7 @@ export function useAdminStore() {
 
     if (!selectedPackage) {
       setPricingError("Geselecteerd pakket kon niet geladen worden.");
+      notifyError("Geselecteerd pakket kon niet geladen worden.");
       setIsProvisioning(false);
       return null;
     }
@@ -1082,6 +1091,7 @@ export function useAdminStore() {
       resetCustomerForm();
       setIsCreateCustomerOpen(false);
       setActiveTab("customers");
+      notifySuccess("Klant succesvol aangemaakt.");
       return nextCustomer;
     } catch (error) {
       const failedEntry = {
@@ -1099,9 +1109,10 @@ export function useAdminStore() {
 
       requestEntries.push(failedEntry);
       pushRequestLogEntries(requestEntries);
-      setPricingError(
-        error instanceof Error ? error.message : "Klant aanmaken is mislukt."
-      );
+      const message =
+        error instanceof Error ? error.message : "Klant aanmaken is mislukt.";
+      setPricingError(message);
+      notifyError(message);
       return null;
     } finally {
       setIsProvisioning(false);
@@ -1145,6 +1156,9 @@ export function useAdminStore() {
       setCustomers((prev) =>
         prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
       );
+      notifySuccess("Base44 app succesvol gekoppeld.");
+    } else {
+      notifyError("Base44 app koppelen is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1198,6 +1212,9 @@ export function useAdminStore() {
         prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
       );
       setSelectedCustomerId(updatedCustomer.id);
+      notifySuccess("Buildflow gestart.");
+    } else {
+      notifyError("Buildflow starten is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1234,6 +1251,7 @@ export function useAdminStore() {
 
   async function syncCustomerContent(customer) {
     if (!customer?.id || !contentSyncForm.indexHtml.trim()) {
+      notifyInfo("Vul eerst index.html export in voordat je synchroniseert.");
       return;
     }
 
@@ -1269,6 +1287,9 @@ export function useAdminStore() {
       setCustomers((prev) =>
         prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
       );
+      notifySuccess("Content succesvol naar GitHub gesynchroniseerd.");
+    } else {
+      notifyError("Content synchroniseren is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1277,6 +1298,7 @@ export function useAdminStore() {
 
   async function linkBase44App(customer) {
     if (!customer?.id || !base44LinkForm.appId) {
+      notifyInfo("Vul eerst een Base44 app ID in.");
       return;
     }
 
@@ -1316,6 +1338,9 @@ export function useAdminStore() {
       setCustomers((prev) =>
         prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
       );
+      notifySuccess("Base44 app succesvol handmatig gekoppeld.");
+    } else {
+      notifyError("Base44 app handmatig koppelen is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1351,6 +1376,9 @@ export function useAdminStore() {
       setCustomers((prev) =>
         prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
       );
+      notifySuccess("Preview is klaar gezet.");
+    } else {
+      notifyError("Preview klaarzetten is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1386,6 +1414,9 @@ export function useAdminStore() {
       setCustomers((prev) =>
         prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
       );
+      notifySuccess("Klant is goedgekeurd voor productie.");
+    } else {
+      notifyError("Goedkeuren voor productie is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1437,6 +1468,9 @@ export function useAdminStore() {
             : item
         )
       );
+      notifySuccess("Deployment gestart.");
+    } else {
+      notifyError("Deployment starten is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1576,6 +1610,14 @@ export function useAdminStore() {
       return;
     }
 
+    const confirmed = window.confirm(
+      `Weet je zeker dat je ${customer.companyName} opnieuw wilt deployen?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
     setIsUpdatingWorkflow(true);
 
     const result = await apiRequest(
@@ -1612,12 +1654,34 @@ export function useAdminStore() {
       )
     );
 
+    if (result.ok) {
+      notifySuccess("Redeploy gestart.");
+    } else {
+      notifyError("Redeploy starten is mislukt.");
+    }
+
     pushRequestLogEntries(historyEntry);
     setIsUpdatingWorkflow(false);
   }
 
   async function rollbackCustomer(customer, targetRef = "") {
     if (!customer || !customer.deployment?.deploymentId) {
+      return;
+    }
+
+    const resolvedTargetRef =
+      targetRef ||
+      window.prompt(
+        "Voer optioneel een target ref in voor rollback (bijvoorbeeld commit SHA of tag). Laat leeg voor standaard rollback.",
+        customer?.deployment?.targetRef || ""
+      ) ||
+      "";
+
+    const confirmed = window.confirm(
+      `Weet je zeker dat je een rollback wilt starten voor ${customer.companyName}?`
+    );
+
+    if (!confirmed) {
       return;
     }
 
@@ -1628,7 +1692,7 @@ export function useAdminStore() {
       "POST",
       `/api/deployments/${customer.deployment.deploymentId}/rollback`,
       {
-        targetRef: targetRef || undefined,
+        targetRef: resolvedTargetRef || undefined,
       }
     );
 
@@ -1649,12 +1713,18 @@ export function useAdminStore() {
                 ...(item.deployment || {}),
                 status: result.ok ? "ROLLBACK_STARTED" : item.deployment?.status || "",
                 currentStage: result.ok ? "ROLLBACK_REQUESTED" : item.deployment?.currentStage || null,
-                targetRef: targetRef || item.deployment?.targetRef || "",
+                targetRef: resolvedTargetRef || item.deployment?.targetRef || "",
               },
             }
           : item
       )
     );
+
+    if (result.ok) {
+      notifySuccess("Rollback gestart.");
+    } else {
+      notifyError("Rollback starten is mislukt.");
+    }
 
     pushRequestLogEntries(historyEntry);
     setIsUpdatingWorkflow(false);
@@ -1673,9 +1743,10 @@ export function useAdminStore() {
       setCustomers((prev) =>
         prev.map((c) => (c.id === saved.id ? saved : c))
       );
+      notifySuccess("Klantgegevens opgeslagen.");
     } catch (e) {
       console.error(e);
-      alert("Opslaan mislukt");
+      notifyError("Opslaan mislukt");
     }
   }
 
@@ -1699,14 +1770,16 @@ export function useAdminStore() {
       );
 
       setDeleteCandidate(null);
+      notifySuccess("Klant verwijderd.");
     } catch (e) {
       console.error(e);
-      alert("Verwijderen mislukt");
+      notifyError("Verwijderen mislukt");
     }
   }
 
   function addExpense() {
     if (!expenseForm.title || !expenseForm.amount) {
+      notifyInfo("Vul eerst titel en bedrag in.");
       return;
     }
 
@@ -1722,6 +1795,7 @@ export function useAdminStore() {
 
     setExpenses((prev) => [nextExpense, ...prev]);
     setExpenseForm(DEFAULT_EXPENSE_FORM);
+    notifySuccess("Uitgave toegevoegd.");
   }
 
   function uploadDocuments(customerId, files) {
@@ -1758,6 +1832,7 @@ export function useAdminStore() {
             : customer
         )
       );
+      notifySuccess("Documenten toegevoegd.");
     });
   }
 
