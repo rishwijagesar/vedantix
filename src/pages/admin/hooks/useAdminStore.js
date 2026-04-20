@@ -24,6 +24,7 @@ import {
 } from "../utils/adminStorage";
 
 import { updateCustomer, deleteCustomer } from "../../../api/customers.api";
+import { fetchCustomers } from "../../../api/customers.api";
 
 function buildHeaders(settings, method) {
   const headers = {
@@ -390,6 +391,20 @@ export function useAdminStore() {
   const selectedCustomer = useMemo(() => {
     return customers.find((item) => item.id === selectedCustomerId) || null;
   }, [customers, selectedCustomerId]);
+
+  async function fetchCustomersFromApi() {
+    try {
+      const apiKey = settings.apiKey;
+  
+      const data = await fetchCustomers({ apiKey });
+  
+      if (Array.isArray(data)) {
+        setCustomers(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   useEffect(() => {
     if (!selectedCustomer) {
@@ -841,67 +856,35 @@ export function useAdminStore() {
     setIsPricingSaving(true);
     setPricingError("");
     setPricingSaveMessage("");
-
+  
     try {
+      const apiKey = settings.apiKey;
+  
       await Promise.all(
         packageDrafts.map((item) =>
           updatePricingPackage({
             code: item.code,
-            apiKey: settings.apiKey,
-            tenantId: settings.tenantId,
-            actorId: settings.actorId,
-            source: settings.source,
+            apiKey,
             payload: {
               label: item.label,
               description: item.description || item.label,
               slug: item.slug || String(item.code || "").toLowerCase(),
-              monthlyPriceInclVat: toNumber(item.monthlyPriceInclVat),
-              setupPriceInclVat: toNumber(item.setupPriceInclVat),
-              monthlyInfraCostExclVat: toNumber(item.monthlyInfraCostExclVat),
-              vatRate: toNumber(item.vatRate || 0.21),
+              monthlyPriceInclVat: Number(item.monthlyPriceInclVat),
+              setupPriceInclVat: Number(item.setupPriceInclVat),
+              monthlyInfraCostExclVat: Number(item.monthlyInfraCostExclVat),
+              vatRate: Number(item.vatRate || 0.21),
               featured: Boolean(item.featured),
               isActive: item.isActive !== false,
-              sortOrder: toNumber(item.sortOrder || 0),
-              fit: item.fit || "",
-              cancelNote: item.cancelNote || "",
-              cta: item.cta || "",
-              bullets: Array.isArray(item.bullets) ? item.bullets : [],
-              included: Array.isArray(item.included) ? item.included : [],
-              notIncluded: Array.isArray(item.notIncluded) ? item.notIncluded : [],
-              addons: Array.isArray(item.addons) ? item.addons : [],
+              sortOrder: Number(item.sortOrder || 0),
             },
           })
         )
       );
-
-      await Promise.all(
-        addonDrafts.map((item) =>
-          updatePricingAddon({
-            code: item.code,
-            apiKey: settings.apiKey,
-            tenantId: settings.tenantId,
-            actorId: settings.actorId,
-            source: settings.source,
-            payload: {
-              label: item.label,
-              description: item.description || item.label,
-              monthlyPriceInclVat: toNumber(item.monthlyPriceInclVat),
-              setupPriceInclVat: toNumber(item.setupPriceInclVat),
-              monthlyInfraCostExclVat: toNumber(item.monthlyInfraCostExclVat),
-              vatRate: toNumber(item.vatRate || 0.21),
-              isActive: item.isActive !== false,
-              sortOrder: toNumber(item.sortOrder || 0),
-            },
-          })
-        )
-      );
-
-      await loadPricingFromBackend();
-      setPricingSaveMessage("Prijzen succesvol opgeslagen.");
-    } catch (error) {
-      setPricingError(
-        error instanceof Error ? error.message : "Opslaan van pricing is mislukt."
-      );
+  
+      setPricingSaveMessage("Pricing succesvol opgeslagen");
+    } catch (e) {
+      console.error(e);
+      setPricingError("Opslaan mislukt");
     } finally {
       setIsPricingSaving(false);
     }
