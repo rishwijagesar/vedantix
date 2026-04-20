@@ -1,3 +1,5 @@
+import { readAdminSessionToken } from "../pages/admin/auth/adminAuth";
+
 const RAW_API_BASE =
   import.meta.env.VITE_API_BASE_URL || "https://api.vedantix.nl";
 
@@ -22,6 +24,8 @@ function buildHeaders(params = {}) {
     idempotencyKey,
   } = params;
 
+  const token = readAdminSessionToken();
+
   const headers = {
     "Content-Type": "application/json",
     "X-Tenant-Id": DEFAULT_TENANT_ID,
@@ -30,6 +34,7 @@ function buildHeaders(params = {}) {
   };
 
   if (apiKey) headers["X-Api-Key"] = apiKey;
+  if (token) headers.Authorization = `Bearer ${token}`;
   if (idempotencyKey) headers["Idempotency-Key"] = idempotencyKey;
 
   return headers;

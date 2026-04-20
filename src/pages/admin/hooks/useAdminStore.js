@@ -38,6 +38,18 @@ function buildHeaders(settings, method) {
     "X-Source": settings.source || "ADMIN_PANEL",
   };
 
+  try {
+    const raw = localStorage.getItem("vedantix_admin_auth_v1");
+    const session = raw ? JSON.parse(raw) : null;
+    const token = session?.token || "";
+
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+  } catch {
+    // ignore auth storage read errors
+  }
+
   if (settings.autoIdempotency && method !== "GET") {
     headers["Idempotency-Key"] =
       (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||

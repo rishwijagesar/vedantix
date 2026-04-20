@@ -24,7 +24,7 @@ export default function AdminLoginPage() {
     setIsSubmitting(true);
 
     try {
-      login({ password });
+      await login({ password });
       navigate(redirectTo, { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Inloggen mislukt");
