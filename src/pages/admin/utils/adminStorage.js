@@ -1,13 +1,201 @@
 export const STORAGE_KEYS = {
-  settings: "vedantix_admin_settings_v9",
-  customers: "vedantix_admin_customers_v9",
-  expenses: "vedantix_admin_expenses_v9",
-  requestLog: "vedantix_admin_request_log_v9",
+  settings: "vedantix_admin_settings_v8",
+  customers: "vedantix_admin_customers_v8",
+  expenses: "vedantix_admin_expenses_v8",
+  requestLog: "vedantix_admin_request_log_v8",
+  packageOptions: "vedantix_package_options_v2",
+  extraOptions: "vedantix_extra_options_v2",
 };
+
+export const DEFAULT_PRICING_PACKAGES = [
+  {
+    code: "STARTER",
+    label: "Starter",
+    description: "Voor starters en kleine lokale bedrijven.",
+    slug: "starter",
+    monthlyPriceInclVat: 99,
+    setupPriceInclVat: 500,
+    monthlyInfraCostExclVat: 8,
+    vatRate: 0.21,
+    featured: false,
+    isActive: true,
+    sortOrder: 1,
+    fit: "Snel live met een sterke basis",
+    cancelNote: "Maandelijks opzegbaar na oplevering",
+    cta: "Start met Starter",
+    bullets: [
+      "Professionele one-page of compacte website",
+      "Mobielvriendelijk design",
+      "Contactformulier en WhatsApp CTA",
+    ],
+    included: [
+      "Hosting",
+      "SSL",
+      "Basis onderhoud",
+    ],
+    notIncluded: [
+      "Maatwerk integraties",
+    ],
+    addons: [],
+  },
+  {
+    code: "GROWTH",
+    label: "Growth",
+    description: "Voor bedrijven die meer pagina's en meer conversie willen.",
+    slug: "growth",
+    monthlyPriceInclVat: 149,
+    setupPriceInclVat: 850,
+    monthlyInfraCostExclVat: 12,
+    vatRate: 0.21,
+    featured: true,
+    isActive: true,
+    sortOrder: 2,
+    fit: "Meer inhoud, meer vertrouwen, meer aanvragen",
+    cancelNote: "Maandelijks opzegbaar na oplevering",
+    cta: "Kies Growth",
+    bullets: [
+      "Meer pagina's en sterkere structuur",
+      "FAQ, reviews en extra CTA's",
+      "Beter geschikt voor lokale SEO",
+    ],
+    included: [
+      "Hosting",
+      "SSL",
+      "Onderhoud",
+      "Meer contentruimte",
+    ],
+    notIncluded: [
+      "Complex maatwerk",
+    ],
+    addons: [],
+  },
+  {
+    code: "PRO",
+    label: "Pro",
+    description: "Voor bedrijven die een sterkere maatwerkpresentatie willen.",
+    slug: "pro",
+    monthlyPriceInclVat: 249,
+    setupPriceInclVat: 1250,
+    monthlyInfraCostExclVat: 18,
+    vatRate: 0.21,
+    featured: false,
+    isActive: true,
+    sortOrder: 3,
+    fit: "Meer autoriteit en zwaardere commerciële uitstraling",
+    cancelNote: "Maandelijks opzegbaar na oplevering",
+    cta: "Ga voor Pro",
+    bullets: [
+      "Uitgebreidere opbouw",
+      "Sterkere positionering",
+      "Meer ruimte voor maatwerk content",
+    ],
+    included: [
+      "Hosting",
+      "SSL",
+      "Onderhoud",
+      "Ruime contentopzet",
+    ],
+    notIncluded: [
+      "Zware externe software-integraties",
+    ],
+    addons: [],
+  },
+];
+
+export const DEFAULT_PRICING_ADDONS = [
+  {
+    code: "BLOG",
+    label: "Blog / FAQ",
+    description: "Extra contentsecties of kennisbank.",
+    monthlyPriceInclVat: 15,
+    setupPriceInclVat: 100,
+    monthlyInfraCostExclVat: 0,
+    vatRate: 0.21,
+    isActive: true,
+    sortOrder: 1,
+  },
+  {
+    code: "BOOKING",
+    label: "Reserveringen",
+    description: "Afspraak- of reserveringsflow.",
+    monthlyPriceInclVat: 25,
+    setupPriceInclVat: 250,
+    monthlyInfraCostExclVat: 2,
+    vatRate: 0.21,
+    isActive: true,
+    sortOrder: 2,
+  },
+  {
+    code: "ANALYTICS",
+    label: "Analytics+",
+    description: "Uitgebreidere metingen en rapportage.",
+    monthlyPriceInclVat: 10,
+    setupPriceInclVat: 50,
+    monthlyInfraCostExclVat: 0,
+    vatRate: 0.21,
+    isActive: true,
+    sortOrder: 3,
+  },
+  {
+    code: "CRM",
+    label: "CRM module",
+    description: "Leadopslag en opvolgstructuur.",
+    monthlyPriceInclVat: 25,
+    setupPriceInclVat: 300,
+    monthlyInfraCostExclVat: 3,
+    vatRate: 0.21,
+    isActive: true,
+    sortOrder: 4,
+  },
+  {
+    code: "FORMS",
+    label: "Form opslag",
+    description: "Opslag van ingestuurde formulierdata.",
+    monthlyPriceInclVat: 12,
+    setupPriceInclVat: 75,
+    monthlyInfraCostExclVat: 1,
+    vatRate: 0.21,
+    isActive: true,
+    sortOrder: 5,
+  },
+  {
+    code: "SEO_PLUS",
+    label: "Local SEO+",
+    description: "Sterkere lokale SEO-uitwerking.",
+    monthlyPriceInclVat: 20,
+    setupPriceInclVat: 150,
+    monthlyInfraCostExclVat: 0,
+    vatRate: 0.21,
+    isActive: true,
+    sortOrder: 6,
+  },
+  {
+    code: "EXTRA_MAILBOX",
+    label: "Extra mailbox",
+    description: "Extra mailbox boven pakketniveau.",
+    monthlyPriceInclVat: 7,
+    setupPriceInclVat: 0,
+    monthlyInfraCostExclVat: 1,
+    vatRate: 0.21,
+    isActive: true,
+    sortOrder: 7,
+  },
+  {
+    code: "PRIORITY_SUPPORT",
+    label: "Priority support",
+    description: "Snellere support en opvolging.",
+    monthlyPriceInclVat: 35,
+    setupPriceInclVat: 0,
+    monthlyInfraCostExclVat: 0,
+    vatRate: 0.21,
+    isActive: true,
+    sortOrder: 8,
+  },
+];
 
 export const DEFAULT_SETTINGS = {
   baseUrl: "/provisioning-api",
-  apiKey: "d1e07740dce2a9102635aee441926de52e341fde95cfa10778e465d64d0f6251",
+  apiKey: "",
   tenantId: "default",
   actorId: "admin-dashboard",
   source: "ADMIN_PANEL",
@@ -38,179 +226,43 @@ export const DEFAULT_EXPENSE_FORM = {
   customerId: "",
 };
 
-export const DEFAULT_PRICING_PACKAGES = [
-  {
-    code: "STARTER",
-    label: "Starter",
-    description: "Sterke basis voor kleine bedrijven die professioneel online zichtbaar willen zijn.",
-    slug: "starter",
-    monthlyPriceInclVat: 99,
-    setupPriceInclVat: 349,
-    monthlyInfraCostExclVat: 12,
-    vatRate: 0.21,
-    featured: false,
-    isActive: true,
-    sortOrder: 1,
-    fit: "Voor een duidelijke bedrijfswebsite zonder extra complexiteit.",
-    cancelNote: "Maandelijks opzegbaar na de afgesproken startperiode.",
-    cta: "Plan gratis intake",
-    bullets: [
-      "Professionele website",
-      "Tot 5 pagina’s",
-      "1 zakelijk mailadres",
-      "Onderhoud en kleine updates",
-    ],
-    included: [
-      "Professionele website",
-      "Tot 5 pagina’s",
-      "1 zakelijk mailadres",
-      "Mobielvriendelijk ontwerp",
-      "Contactformulier en WhatsApp-knop",
-      "Onderhoud en kleine updates",
-      "Je website blijft online en veilig",
-    ],
-    notIncluded: [
-      "Geen klantomgeving of login",
-      "Geen uitgebreide reserveringsmodule",
-      "Geen maatwerk functionaliteit",
-      "Niet bedoeld voor complexe processen",
-    ],
-    addons: [
-      "Extra mailadressen",
-      "Extra pagina’s",
-      "Lokale SEO uitbreiding",
-      "Blog of FAQ uitbreiding",
-      "Extra formulieren of secties",
-    ],
-  },
-  {
-    code: "GROWTH",
-    label: "Growth",
-    description: "Meer inhoud, meer groeiruimte en een sterkere commerciële basis.",
-    slug: "growth",
-    monthlyPriceInclVat: 149,
-    setupPriceInclVat: 499,
-    monthlyInfraCostExclVat: 18,
-    vatRate: 0.21,
-    featured: true,
-    isActive: true,
-    sortOrder: 2,
-    fit: "Beste balans tussen prijs, inhoud en groeiruimte.",
-    cancelNote: "Maandelijks opzegbaar na de afgesproken startperiode.",
-    cta: "Plan gratis intake",
-    bullets: [
-      "Alles uit Starter",
-      "Meer pagina’s en inhoud",
-      "5 zakelijke mailadressen",
-      "Meer SEO-ruimte",
-    ],
-    included: [
-      "Alles uit Starter",
-      "Meer pagina’s en meer inhoud",
-      "5 zakelijke mailadressen",
-      "Blog of FAQ mogelijk",
-      "Sterkere SEO-opbouw",
-      "Meer ruimte voor dienstenpagina’s en landingspagina’s",
-    ],
-    notIncluded: [
-      "Geen uitgebreide klantomgeving standaard",
-      "Geen zwaar maatwerk standaard",
-      "Niet bedoeld voor complexe interne workflows",
-    ],
-    addons: [
-      "Extra pagina’s",
-      "Extra mailadressen",
-      "Reserveringsmodule",
-      "Uitgebreidere leadformulieren",
-      "Extra SEO-landingspagina’s",
-    ],
-  },
-  {
-    code: "PRO",
-    label: "Pro",
-    description: "Voor bedrijven die hun website ook als proces- of salesmachine willen inzetten.",
-    slug: "pro",
-    monthlyPriceInclVat: 249,
-    setupPriceInclVat: 749,
-    monthlyInfraCostExclVat: 28,
-    vatRate: 0.21,
-    featured: false,
-    isActive: true,
-    sortOrder: 3,
-    fit: "Voor bedrijven die processen, aanvragen of reserveringen online willen ondersteunen.",
-    cancelNote: "Maandelijks opzegbaar na de afgesproken startperiode.",
-    cta: "Plan gratis intake",
-    bullets: [
-      "Alles uit Growth",
-      "10 zakelijke mailadressen",
-      "Dashboard of klantomgeving mogelijk",
-      "Meer maatwerk",
-    ],
-    included: [
-      "Alles uit Growth",
-      "10 zakelijke mailadressen",
-      "Klantomgeving of dashboard mogelijk",
-      "Reserveringen, intake of workflows mogelijk",
-      "Meer maatwerk en doorontwikkeling",
-      "Geschikt voor bedrijven die online processen willen ondersteunen",
-    ],
-    notIncluded: [
-      "Zeer specialistisch maatwerk alleen op offertebasis",
-    ],
-    addons: [
-      "Extra mailadressen",
-      "Extra opslag of uitgebreide formulieren",
-      "Extra beveiliging",
-      "Extra maatwerk modules",
-    ],
-  },
-];
+export const STATUS_LABELS = {
+  lead: "Lead",
+  intake: "Intake",
+  onboarding: "Onboarding",
+  building: "In opbouw",
+  awaiting_approval: "Wacht op akkoord",
+  approved: "Goedgekeurd",
+  provisioning: "Provisioning",
+  active: "Live",
+  warning: "Waarschuwing",
+  failed: "Fout",
+  paused: "Gepauzeerd",
+  cancelled: "Opgezegd",
+};
 
-export const DEFAULT_PRICING_ADDONS = [
-  {
-    code: "EXTRA_MAILBOX",
-    label: "Extra mailadres",
-    description: "Extra zakelijk mailadres",
-    monthlyPriceInclVat: 7,
-    setupPriceInclVat: 0,
-    monthlyInfraCostExclVat: 1,
-    vatRate: 0.21,
-    isActive: true,
-    sortOrder: 1,
-  },
-  {
-    code: "EXTRA_PAGE",
-    label: "Extra pagina",
-    description: "Losse extra pagina",
-    monthlyPriceInclVat: 10,
-    setupPriceInclVat: 49,
-    monthlyInfraCostExclVat: 0,
-    vatRate: 0.21,
-    isActive: true,
-    sortOrder: 2,
-  },
-  {
-    code: "LOCAL_SEO",
-    label: "Lokale SEO uitbreiding",
-    description: "Extra lokale SEO-pagina’s en optimalisatie",
-    monthlyPriceInclVat: 29,
-    setupPriceInclVat: 99,
-    monthlyInfraCostExclVat: 2,
-    vatRate: 0.21,
-    isActive: true,
-    sortOrder: 3,
-  },
-  {
-    code: "BOOKING_MODULE",
-    label: "Reserveringsmodule",
-    description: "Booking of intake flow",
-    monthlyPriceInclVat: 39,
-    setupPriceInclVat: 149,
-    monthlyInfraCostExclVat: 4,
-    vatRate: 0.21,
-    isActive: true,
-    sortOrder: 4,
-  },
+export const STATUS_COLORS = {
+  lead: "#64748b",
+  intake: "#8b5cf6",
+  onboarding: "#0ea5e9",
+  building: "#2563eb",
+  awaiting_approval: "#f59e0b",
+  approved: "#22c55e",
+  provisioning: "#f59e0b",
+  active: "#10b981",
+  warning: "#f97316",
+  failed: "#ef4444",
+  paused: "#475569",
+  cancelled: "#94a3b8",
+};
+
+export const TIME_FILTERS = [
+  { key: "day", label: "Dag" },
+  { key: "week", label: "Week" },
+  { key: "month", label: "Maand" },
+  { key: "quarter", label: "Kwartaal" },
+  { key: "halfyear", label: "Half jaar" },
+  { key: "year", label: "Jaar" },
 ];
 
 export function loadJson(key, fallback) {
@@ -250,15 +302,6 @@ export function currency(value) {
   }).format(Number(value || 0));
 }
 
-export function currency2(value) {
-  return new Intl.NumberFormat("nl-NL", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(Number(value || 0));
-}
-
 export function dateLabel(value) {
   if (!value) return "—";
   return new Date(value).toLocaleDateString("nl-NL");
@@ -270,19 +313,24 @@ export function toNumber(value) {
 }
 
 export function round2(value) {
-  return Number(toNumber(value).toFixed(2));
+  return Math.round((Number(value || 0) + Number.EPSILON) * 100) / 100;
 }
 
-export function calcExVatFromInc(inc, vatRate = 0.21) {
-  return round2(toNumber(inc) / (1 + toNumber(vatRate || 0.21)));
+export function calcExVatFromInc(amountInclVat, vatRate = 0.21) {
+  const amount = Number(amountInclVat || 0);
+  const rate = Number(vatRate || 0);
+  if (!rate) return round2(amount);
+  return round2(amount / (1 + rate));
 }
 
-export function calcVatFromInc(inc, vatRate = 0.21) {
-  return round2(toNumber(inc) - calcExVatFromInc(inc, vatRate));
+export function calcVatFromInc(amountInclVat, vatRate = 0.21) {
+  return round2(calcIncVatFromEx(calcExVatFromInc(amountInclVat, vatRate), vatRate) - calcExVatFromInc(amountInclVat, vatRate));
 }
 
-export function calcIncVatFromEx(ex, vatRate = 0.21) {
-  return round2(toNumber(ex) * (1 + toNumber(vatRate || 0.21)));
+export function calcIncVatFromEx(amountExclVat, vatRate = 0.21) {
+  const amount = Number(amountExclVat || 0);
+  const rate = Number(vatRate || 0);
+  return round2(amount * (1 + rate));
 }
 
 export function periodMultiplier(filterKey) {
@@ -307,36 +355,3 @@ export function isWithinFilter(dateString, filterKey) {
   if (filterKey === "halfyear") return diffMs <= 183 * dayMs;
   return diffMs <= 366 * dayMs;
 }
-
-export const STATUS_LABELS = {
-  lead: "Lead",
-  intake: "Intake",
-  onboarding: "Onboarding",
-  provisioning: "Provisioning",
-  active: "Live",
-  warning: "Waarschuwing",
-  failed: "Fout",
-  paused: "Gepauzeerd",
-  cancelled: "Opgezegd",
-};
-
-export const STATUS_COLORS = {
-  lead: "#64748b",
-  intake: "#8b5cf6",
-  onboarding: "#0ea5e9",
-  provisioning: "#f59e0b",
-  active: "#10b981",
-  warning: "#f97316",
-  failed: "#ef4444",
-  paused: "#475569",
-  cancelled: "#94a3b8",
-};
-
-export const TIME_FILTERS = [
-  { key: "day", label: "Dag" },
-  { key: "week", label: "Week" },
-  { key: "month", label: "Maand" },
-  { key: "quarter", label: "Kwartaal" },
-  { key: "halfyear", label: "Half jaar" },
-  { key: "year", label: "Jaar" },
-];

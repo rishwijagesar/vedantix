@@ -26,14 +26,34 @@ import {
   dateLabel,
   pretty,
 } from "../utils/adminStorage";
-
 import { useOutletContext } from "react-router-dom";
+
+function canMarkPreviewReady(customer) {
+  return Boolean(customer?.base44?.appId);
+}
+
+function canApproveCustomer(customer) {
+  return (
+    Boolean(customer?.base44?.appId) &&
+    Boolean(customer?.base44?.previewUrl) &&
+    customer?.websiteBuildStatus === "PREVIEW_READY"
+  );
+}
+
+function canDeployCustomer(customer) {
+  return (
+    Boolean(customer?.base44?.appId) &&
+    Boolean(customer?.base44?.previewUrl) &&
+    customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION"
+  );
+}
 
 export default function CustomersPage({ store: storeProp }) {
   /** @type {{ store: any }} */
   const outletContext = useOutletContext();
 
   const store = storeProp || outletContext.store;
+
   return (
     <div style={{ display: "grid", gap: 18 }}>
       <Card>
@@ -103,7 +123,7 @@ export default function CustomersPage({ store: storeProp }) {
             style={{
               width: "100%",
               borderCollapse: "collapse",
-              minWidth: 980,
+              minWidth: 1180,
               background: "#ffffff",
             }}
           >
@@ -119,7 +139,9 @@ export default function CustomersPage({ store: storeProp }) {
                   "Contact",
                   "Domeinnaam",
                   "Pakket",
-                  "Status",
+                  "Bouwfase",
+                  "Base44",
+                  "Preview",
                   "Omzet p/m",
                   "Acties",
                 ].map((header) => (
@@ -182,6 +204,33 @@ export default function CustomersPage({ store: storeProp }) {
                       {STATUS_LABELS[customer.status] || customer.status}
                     </span>
                   </td>
+                  <td style={{ padding: "18px" }}>
+                    <div style={{ fontWeight: 800 }}>
+                      {customer.base44?.appName || "Nog niet gekoppeld"}
+                    </div>
+                    <div style={{ color: "#64748b", fontSize: 13 }}>
+                      {customer.base44?.appId || customer.websiteBuildStatus || "APP_REQUESTED"}
+                    </div>
+                  </td>
+                  <td style={{ padding: "18px" }}>
+                    {customer.preview?.fullUrl ? (
+                      <a
+                        href={customer.preview.fullUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                          color: "#1d4ed8",
+                          fontWeight: 800,
+                          textDecoration: "none",
+                        }}
+                      >
+                        {customer.preview.path || "Open preview"}
+                      </a>
+                    ) : (
+                      <span style={{ color: "#94a3b8" }}>Nog niet klaar</span>
+                    )}
+                  </td>
                   <td style={{ padding: "18px", fontWeight: 900 }}>
                     {currency(store.calcMonthlyRevenue(customer))}
                   </td>
@@ -196,9 +245,11 @@ export default function CustomersPage({ store: storeProp }) {
                       >
                         Beheren
                       </Button>
-                      <Button onClick={() => store.refreshCustomerDeployment(customer)}>
-                        Refresh
-                      </Button>
+                      {customer.base44?.editorUrl ? (
+                        <Button onClick={() => store.openBase44Editor(customer)}>
+                          Open Base44
+                        </Button>
+                      ) : null}
                       <Button
                         tone="danger"
                         onClick={() => store.requestDeleteCustomer(customer)}
@@ -213,7 +264,7 @@ export default function CustomersPage({ store: storeProp }) {
               {store.filteredCustomers.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={7}
+                    colSpan={9}
                     style={{
                       padding: "34px 16px",
                       color: "#64748b",
@@ -234,15 +285,19 @@ export default function CustomersPage({ store: storeProp }) {
         <Card>
           <SectionTitle
             title={`Klantdetail — ${store.selectedCustomer.companyName}`}
-            subtitle="Alle klantgegevens, documenten en financieel overzicht per periode."
+            subtitle="Alle klantgegevens, Base44-koppeling, preview en financieel overzicht per periode."
             action={
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <Button tone="soft" onClick={() => store.refreshCustomerDeployment(store.selectedCustomer)}>
-                  Refresh status
-                </Button>
-                <Button onClick={() => store.redeployCustomer(store.selectedCustomer)}>
-                  Redeploy
-                </Button>
+                {store.selectedCustomer.base44?.editorUrl ? (
+                  <Button tone="soft" onClick={() => store.openBase44Editor(store.selectedCustomer)}>
+                    Open in Base44
+                  </Button>
+                ) : null}
+                {store.selectedCustomer.preview?.fullUrl ? (
+                  <Button onClick={() => window.open(store.selectedCustomer.preview.fullUrl, "_blank", "noopener,noreferrer")}>
+                    Open preview
+                  </Button>
+                ) : null}
               </div>
             }
           />
@@ -432,12 +487,28 @@ export default function CustomersPage({ store: storeProp }) {
                   />
                 </Field>
 
+                <Field label="Website build status">
+                  <Input value={store.selectedCustomer.websiteBuildStatus || ""} readOnly />
+                </Field>
+
+                <Field label="Base44 status">
+                  <Input value={store.selectedCustomer.base44?.status || ""} readOnly />
+                </Field>
+
+                <Field label="Preview pad">
+                  <Input value={store.selectedCustomer.preview?.path || ""} readOnly />
+                </Field>
+
+                <Field label="Preview status">
+                  <Input value={store.selectedCustomer.preview?.status || ""} readOnly />
+                </Field>
+
                 <Field label="Deployment status">
-                  <Input value={store.selectedCustomer.deploymentStatus || ""} readOnly />
+                  <Input value={store.selectedCustomer.deployment?.status || ""} readOnly />
                 </Field>
 
                 <Field label="Deployment ID">
-                  <Input value={store.selectedCustomer.deploymentId || ""} readOnly />
+                  <Input value={store.selectedCustomer.deployment?.deploymentId || ""} readOnly />
                 </Field>
 
                 <Field label="Aangemaakt op">
@@ -471,76 +542,147 @@ export default function CustomersPage({ store: storeProp }) {
               }}
             >
               <SectionTitle
-                title="Documenten"
-                subtitle="Upload bijvoorbeeld contracten of intakebestanden."
+                title="Base44 koppeling + workflow"
+                subtitle="Maak automatisch een app aan, zet preview klaar en zet daarna live."
                 action={
-                  <label
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 8,
-                      padding: "11px 14px",
-                      borderRadius: 14,
-                      border: "1px solid #dbe4ef",
-                      background: "#ffffff",
-                      cursor: "pointer",
-                      fontWeight: 800,
-                      boxShadow: "0 10px 24px rgba(15,23,42,0.05)",
-                    }}
-                  >
-                    Upload document
-                    <input
-                      type="file"
-                      multiple
-                      style={{ display: "none" }}
-                      onChange={(e) =>
-                        store.uploadDocuments(store.selectedCustomer.id, e.target.files)
-                      }
-                    />
-                  </label>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {store.selectedCustomer.base44?.editorUrl ? (
+                      <Button tone="soft" onClick={() => store.openBase44Editor(store.selectedCustomer)}>
+                        Open editor
+                      </Button>
+                    ) : null}
+                    {store.selectedCustomer.preview?.fullUrl ? (
+                      <Button onClick={() => window.open(store.selectedCustomer.preview.fullUrl, "_blank", "noopener,noreferrer")}>
+                        Open preview
+                      </Button>
+                    ) : null}
+                  </div>
                 }
               />
 
-              <div style={{ display: "grid", gap: 10 }}>
-                {(store.selectedCustomer.documents || []).map((doc) => (
-                  <div
-                    key={doc.id}
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: 16,
-                      alignItems: "center",
-                      padding: 14,
-                      borderRadius: 16,
-                      background: "#ffffff",
-                      border: "1px solid #e2e8f0",
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontWeight: 800 }}>{doc.name}</div>
-                      <div style={{ color: "#64748b", fontSize: 13 }}>
-                        {Math.round(doc.size / 1024)} KB · {dateLabel(doc.uploadedAt)}
-                      </div>
-                    </div>
-                    {doc.dataUrl ? (
-                      <a
-                        href={doc.dataUrl}
-                        download={doc.name}
-                        style={{
-                          color: "#1d4ed8",
-                          fontWeight: 800,
-                          textDecoration: "none",
-                        }}
-                      >
-                        Download
-                      </a>
-                    ) : null}
-                  </div>
-                ))}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: 14,
+                }}
+              >
+                <Field label="Base44 app ID">
+                  <Input
+                    value={store.base44LinkForm.appId}
+                    onChange={(e) => store.updateBase44LinkForm("appId", e.target.value)}
+                    placeholder="69b9b443c57eefc3d3bfafbf"
+                  />
+                </Field>
 
-                {(store.selectedCustomer.documents || []).length === 0 ? (
-                  <div style={{ color: "#64748b" }}>Nog geen documenten.</div>
-                ) : null}
+                <Field label="App naam">
+                  <Input
+                    value={store.base44LinkForm.appName}
+                    onChange={(e) => store.updateBase44LinkForm("appName", e.target.value)}
+                    placeholder="De Gouden Kapper"
+                  />
+                </Field>
+
+                <Field label="Editor URL">
+                  <Input
+                    value={store.base44LinkForm.editorUrl}
+                    onChange={(e) => store.updateBase44LinkForm("editorUrl", e.target.value)}
+                    placeholder="https://app.base44.com/apps/..."
+                  />
+                </Field>
+
+                <Field label="Preview URL">
+                  <Input
+                    value={store.base44LinkForm.previewUrl}
+                    onChange={(e) => store.updateBase44LinkForm("previewUrl", e.target.value)}
+                    placeholder="https://preview.vedantix.nl/degoudenkapper"
+                  />
+                </Field>
+
+                <Field label="Niche">
+                  <Input
+                    value={store.base44LinkForm.niche}
+                    onChange={(e) => store.updateBase44LinkForm("niche", e.target.value)}
+                    placeholder="Kapper"
+                  />
+                </Field>
+
+                <Field label="Template key">
+                  <Input
+                    value={store.base44LinkForm.templateKey}
+                    onChange={(e) => store.updateBase44LinkForm("templateKey", e.target.value)}
+                    placeholder="barbershop-v1"
+                  />
+                </Field>
+
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <Field label="Base44 prompt">
+                    <Textarea
+                      value={store.base44LinkForm.requestedPrompt}
+                      onChange={(e) => store.updateBase44LinkForm("requestedPrompt", e.target.value)}
+                      placeholder="Prompt voor deze klantwebsite..."
+                    />
+                  </Field>
+                </div>
+
+                <div
+                  style={{
+                    gridColumn: "1 / -1",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 10,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                    <Button
+                      tone="primary"
+                      onClick={() => store.autoCreateBase44App(store.selectedCustomer)}
+                      disabled={store.isAutoCreatingBase44}
+                    >
+                      {store.isAutoCreatingBase44 ? "Bezig..." : "Auto-create Base44 app"}
+                    </Button>
+
+                    <Button
+                      tone="soft"
+                      onClick={() => store.linkBase44App(store.selectedCustomer)}
+                      disabled={store.isLinkingBase44}
+                    >
+                      {store.isLinkingBase44 ? "Bezig..." : "Handmatig koppelen"}
+                    </Button>
+
+                    <Button
+                      onClick={() => store.markPreviewReady(store.selectedCustomer)}
+                      disabled={
+                        store.isUpdatingWorkflow ||
+                        !canMarkPreviewReady(store.selectedCustomer)
+                      }
+                    >
+                      {store.isUpdatingWorkflow ? "Bezig..." : "Preview klaarzetten"}
+                    </Button>
+
+                    <Button
+                      onClick={() => store.approveCustomerForProduction(store.selectedCustomer)}
+                      disabled={
+                        store.isUpdatingWorkflow ||
+                        !canApproveCustomer(store.selectedCustomer)
+                      }
+                    >
+                      {store.isUpdatingWorkflow ? "Bezig..." : "Klant akkoord"}
+                    </Button>
+                  </div>
+
+                  <Button
+                    tone="success"
+                    onClick={() => store.deployCustomer(store.selectedCustomer)}
+                    disabled={
+                      store.isUpdatingWorkflow ||
+                      !canDeployCustomer(store.selectedCustomer)
+                    }
+                  >
+                    {store.isUpdatingWorkflow ? "Bezig..." : "Site live zetten"}
+                  </Button>
+                </div>
               </div>
             </Card>
           </div>
@@ -644,50 +786,68 @@ export default function CustomersPage({ store: storeProp }) {
               subtitle="Laatste calls voor deze klant."
             />
             <div style={{ display: "grid", gap: 10 }}>
-              {(store.selectedCustomer.requestHistory || []).map((entry) => (
-                <div
-                  key={entry.id}
-                  style={{
-                    borderRadius: 16,
-                    border: "1px solid #e2e8f0",
-                    background: "#ffffff",
-                    padding: 14,
-                  }}
-                >
+              {store.requestLog
+                .filter((entry) => {
+                  const payload = entry?.result?.data;
+                  const serialized = JSON.stringify(payload || {});
+                  return (
+                    serialized.includes(store.selectedCustomer.id) ||
+                    serialized.includes(store.selectedCustomer.domain) ||
+                    serialized.includes(store.selectedCustomer.base44?.appId || "___no_app___")
+                  );
+                })
+                .map((entry) => (
                   <div
+                    key={entry.id}
                     style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: 12,
-                      marginBottom: 8,
-                      flexWrap: "wrap",
+                      borderRadius: 16,
+                      border: "1px solid #e2e8f0",
+                      background: "#ffffff",
+                      padding: 14,
                     }}
                   >
-                    <strong>{entry.type}</strong>
-                    <span
+                    <div
                       style={{
-                        color: entry.result && entry.result.ok ? "#10b981" : "#ef4444",
-                        fontWeight: 900,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 12,
+                        marginBottom: 8,
+                        flexWrap: "wrap",
                       }}
                     >
-                      {(entry.result && entry.result.status) || "ERR"}
-                    </span>
+                      <strong>{entry.type}</strong>
+                      <span
+                        style={{
+                          color: entry.result && entry.result.ok ? "#10b981" : "#ef4444",
+                          fontWeight: 900,
+                        }}
+                      >
+                        {(entry.result && entry.result.status) || "ERR"}
+                      </span>
+                    </div>
+                    <pre
+                      style={{
+                        margin: 0,
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-word",
+                        color: "#334155",
+                        fontSize: 12,
+                      }}
+                    >
+                      {pretty(entry.result && entry.result.data)}
+                    </pre>
                   </div>
-                  <pre
-                    style={{
-                      margin: 0,
-                      whiteSpace: "pre-wrap",
-                      wordBreak: "break-word",
-                      color: "#334155",
-                      fontSize: 12,
-                    }}
-                  >
-                    {pretty(entry.result && entry.result.data)}
-                  </pre>
-                </div>
-              ))}
+                ))}
 
-              {(store.selectedCustomer.requestHistory || []).length === 0 ? (
+              {store.requestLog.filter((entry) => {
+                const payload = entry?.result?.data;
+                const serialized = JSON.stringify(payload || {});
+                return (
+                  serialized.includes(store.selectedCustomer.id) ||
+                  serialized.includes(store.selectedCustomer.domain) ||
+                  serialized.includes(store.selectedCustomer.base44?.appId || "___no_app___")
+                );
+              }).length === 0 ? (
                 <div style={{ color: "#64748b" }}>Nog geen backend acties.</div>
               ) : null}
             </div>

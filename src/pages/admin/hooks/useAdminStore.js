@@ -157,6 +157,26 @@ function buildInitialSettings() {
   };
 }
 
+function buildBase44Prompt(form) {
+  const niche = String(form.niche || "").trim();
+  const companyName = String(form.companyName || "").trim();
+  const city = String(form.city || "").trim();
+  const packageCode = String(form.packageCode || "").trim().toUpperCase();
+  const extras = Array.isArray(form.extras) ? form.extras.join(", ") : "";
+
+  return [
+    `Maak een conversiegerichte website voor ${companyName || "deze klant"} in Nederland.`,
+    niche ? `Niche: ${niche}.` : "",
+    city ? `Vestigingsplaats: ${city}.` : "",
+    packageCode ? `Pakket: ${packageCode}.` : "",
+    extras ? `Extra's: ${extras}.` : "",
+    "Gebruik een professionele homepage met hero, diensten, reviews, FAQ, contact en duidelijke CTA's.",
+    "De site is bedoeld als klantpreview en moet later op een eigen domein live kunnen.",
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
+
 export function useAdminStore() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [pricingTab, setPricingTab] = useState("packages");
@@ -172,7 +192,11 @@ export function useAdminStore() {
     loadJson(STORAGE_KEYS.requestLog, [])
   );
 
-  const [customerForm, setCustomerForm] = useState(DEFAULT_CUSTOMER_FORM);
+  const [customerForm, setCustomerForm] = useState({
+    ...DEFAULT_CUSTOMER_FORM,
+    niche: "",
+    templateKey: "",
+  });
   const [expenseForm, setExpenseForm] = useState(DEFAULT_EXPENSE_FORM);
 
   const [selectedCustomerId, setSelectedCustomerId] = useState(null);
@@ -182,6 +206,9 @@ export function useAdminStore() {
   const [vatFilter, setVatFilter] = useState("month");
 
   const [isProvisioning, setIsProvisioning] = useState(false);
+  const [isLinkingBase44, setIsLinkingBase44] = useState(false);
+  const [isAutoCreatingBase44, setIsAutoCreatingBase44] = useState(false);
+  const [isUpdatingWorkflow, setIsUpdatingWorkflow] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
   const [deleteCandidate, setDeleteCandidate] = useState(null);
 
@@ -194,6 +221,16 @@ export function useAdminStore() {
   const [isPricingSaving, setIsPricingSaving] = useState(false);
   const [pricingSaveMessage, setPricingSaveMessage] = useState("");
   const [pricingError, setPricingError] = useState("");
+
+  const [base44LinkForm, setBase44LinkForm] = useState({
+    appId: "",
+    appName: "",
+    editorUrl: "",
+    previewUrl: "",
+    niche: "",
+    templateKey: "",
+    requestedPrompt: "",
+  });
 
   useEffect(() => {
     saveJson(STORAGE_KEYS.settings, settings);
@@ -250,6 +287,19 @@ export function useAdminStore() {
     }
   }
 
+  async function loadCustomersFromBackend() {
+    try {
+      const result = await apiRequest(settings, "GET", "/api/customers");
+      const nextCustomers = result?.data?.data || [];
+
+      if (result.ok && Array.isArray(nextCustomers)) {
+        setCustomers(nextCustomers);
+      }
+    } catch {
+      // keep local fallback
+    }
+  }
+
   async function getFreshPricingSnapshot() {
     try {
       const summary = await fetchPricingSummary();
@@ -280,6 +330,10 @@ export function useAdminStore() {
     loadPricingFromBackend();
   }, []);
 
+  useEffect(() => {
+    loadCustomersFromBackend();
+  }, [settings.baseUrl, settings.apiKey, settings.tenantId, settings.actorId, settings.source]);
+
   const filteredCustomers = useMemo(() => {
     const query = customerSearch.trim().toLowerCase();
 
@@ -295,6 +349,8 @@ export function useAdminStore() {
         customer.phone,
         customer.domain,
         customer.status,
+        customer.base44?.appName,
+        customer.base44?.appId,
       ]
         .join(" ")
         .toLowerCase()
@@ -305,6 +361,38 @@ export function useAdminStore() {
   const selectedCustomer = useMemo(() => {
     return customers.find((item) => item.id === selectedCustomerId) || null;
   }, [customers, selectedCustomerId]);
+
+  useEffect(() => {
+    if (!selectedCustomer) {
+      setBase44LinkForm({
+        appId: "",
+        appName: "",
+        editorUrl: "",
+        previewUrl: "",
+        niche: "",
+        templateKey: "",
+        requestedPrompt: "",
+      });
+      return;
+    }
+
+    setBase44LinkForm({
+      appId: selectedCustomer.base44?.appId || "",
+      appName: selectedCustomer.base44?.appName || selectedCustomer.companyName || "",
+      editorUrl: selectedCustomer.base44?.editorUrl || "",
+      previewUrl: selectedCustomer.base44?.previewUrl || "",
+      niche: selectedCustomer.base44?.niche || selectedCustomer.niche || "",
+      templateKey: selectedCustomer.base44?.templateKey || selectedCustomer.templateKey || "",
+      requestedPrompt:
+        selectedCustomer.base44?.requestedPrompt ||
+        buildBase44Prompt({
+          ...selectedCustomer,
+          niche: selectedCustomer.base44?.niche || selectedCustomer.niche || "",
+          templateKey:
+            selectedCustomer.base44?.templateKey || selectedCustomer.templateKey || "",
+        }),
+    });
+  }, [selectedCustomer]);
 
   const financeExpenses = useMemo(() => {
     return expenses.filter((item) => isWithinFilter(item.date, financeFilter));
@@ -618,6 +706,13 @@ export function useAdminStore() {
     }));
   }
 
+  function updateBase44LinkForm(key, value) {
+    setBase44LinkForm((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  }
+
   function updateSettings(key, value) {
     setSettings((prev) => ({
       ...prev,
@@ -639,7 +734,11 @@ export function useAdminStore() {
   }
 
   function resetCustomerForm() {
-    setCustomerForm(DEFAULT_CUSTOMER_FORM);
+    setCustomerForm({
+      ...DEFAULT_CUSTOMER_FORM,
+      niche: "",
+      templateKey: "",
+    });
   }
 
   function updatePackageDraft(code, key, value) {
@@ -758,75 +857,6 @@ export function useAdminStore() {
     }
   }
 
-  function createCustomerDraft(pricingSnapshot) {
-    const companySlug = slugify(customerForm.companyName);
-    const domainSlug = slugify(
-      customerForm.domain.split(".")[0] || customerForm.companyName
-    );
-    const customerId = `cust_${companySlug || domainSlug || Date.now()}`;
-
-    const packageRecord =
-      pricingSnapshot?.packages?.find(
-        (item) => item.code === customerForm.packageCode
-      ) || getPackageByCode(customerForm.packageCode);
-
-    const addonsSource = pricingSnapshot?.addons || extraOptions;
-
-    const monthlyRevenue =
-      Number(packageRecord?.monthlyPriceInclVat || 0) +
-      (customerForm.extras || []).reduce((sum, code) => {
-        const addon = addonsSource.find((item) => item.code === code) || null;
-        return sum + Number(addon?.monthlyPriceInclVat || 0);
-      }, 0);
-
-    const monthlyInfraCost =
-      Number(packageRecord?.monthlyInfraCostInclVat || 0) +
-      (customerForm.extras || []).reduce((sum, code) => {
-        const addon = addonsSource.find((item) => item.code === code) || null;
-        return sum + Number(addon?.monthlyInfraCostInclVat || 0);
-      }, 0);
-
-    const oneTimeSetupCost =
-      Number(packageRecord?.setupPriceInclVat || 0) +
-      (customerForm.extras || []).reduce((sum, code) => {
-        const addon = addonsSource.find((item) => item.code === code) || null;
-        return sum + Number(addon?.setupPriceInclVat || 0);
-      }, 0);
-
-    return {
-      id: customerId,
-      companyName: customerForm.companyName,
-      contactName: customerForm.contactName,
-      email: customerForm.email,
-      phone: customerForm.phone,
-      domain: customerForm.domain.trim().toLowerCase(),
-      packageCode: customerForm.packageCode,
-      extras: customerForm.extras,
-      notes: customerForm.notes,
-      monthlyInfraCost,
-      oneTimeSetupCost,
-      address: customerForm.address,
-      postalCode: customerForm.postalCode,
-      city: customerForm.city,
-      country: customerForm.country,
-      status: "intake",
-      createdAt: new Date().toISOString(),
-      deploymentId: "",
-      deploymentStatus: "NOT_STARTED",
-      deploymentStage: null,
-      mailProvisioned: false,
-      mailDomainId: "",
-      documents: [],
-      requestHistory: [],
-      financeSynced: false,
-      finance: {
-        monthlyRevenue,
-        monthlyInfraCost,
-        oneTimeSetupCost,
-      },
-    };
-  }
-
   async function addCustomerAndProvision() {
     if (
       !customerForm.companyName ||
@@ -859,115 +889,94 @@ export function useAdminStore() {
       return;
     }
 
-    const customer = createCustomerDraft(pricingSnapshot);
-    setCustomers((prev) => [customer, ...prev]);
-    setSelectedCustomerId(customer.id);
+    const monthlyRevenueInclVat =
+      Number(selectedPackage?.monthlyPriceInclVat || 0) +
+      (customerForm.extras || []).reduce((sum, code) => {
+        const addon =
+          pricingSnapshot.addons.find((item) => item.code === code) || null;
+        return sum + Number(addon?.monthlyPriceInclVat || 0);
+      }, 0);
+
+    const monthlyInfraCostInclVat =
+      Number(selectedPackage?.monthlyInfraCostInclVat || 0) +
+      (customerForm.extras || []).reduce((sum, code) => {
+        const addon =
+          pricingSnapshot.addons.find((item) => item.code === code) || null;
+        return sum + Number(addon?.monthlyInfraCostInclVat || 0);
+      }, 0);
+
+    const oneTimeSetupInclVat =
+      Number(selectedPackage?.setupPriceInclVat || 0) +
+      (customerForm.extras || []).reduce((sum, code) => {
+        const addon =
+          pricingSnapshot.addons.find((item) => item.code === code) || null;
+        return sum + Number(addon?.setupPriceInclVat || 0);
+      }, 0);
+
+    const createPayload = {
+      companyName: customerForm.companyName,
+      contactName: customerForm.contactName,
+      email: customerForm.email,
+      phone: customerForm.phone,
+      domain: customerForm.domain,
+      packageCode: customerForm.packageCode,
+      extras: customerForm.extras || [],
+      notes: customerForm.notes,
+      address: customerForm.address,
+      postalCode: customerForm.postalCode,
+      city: customerForm.city,
+      country: customerForm.country,
+      monthlyRevenueInclVat,
+      monthlyInfraCostInclVat,
+      oneTimeSetupInclVat,
+      vatRate: Number(selectedPackage?.vatRate || 0.21),
+    };
 
     const requestEntries = [];
 
     try {
-      const deployResult = await apiRequest(settings, "POST", "/api/deployments", {
-        customerId: customer.id,
-        projectName: slugify(customer.companyName || customer.domain),
-        domain: customer.domain,
-        packageCode: customer.packageCode,
-        addOns: customer.extras,
-      });
-
-      requestEntries.push({
-        id: createId("req-1"),
-        at: new Date().toISOString(),
-        type: "CREATE_DEPLOYMENT",
-        result: deployResult,
-      });
-
-      const deploymentId =
-        deployResult?.data?.data?.deploymentId ||
-        deployResult?.data?.deploymentId ||
-        "";
-
-      const deploymentStatus =
-        deployResult?.data?.data?.status ||
-        deployResult?.data?.status ||
-        (deployResult.ok ? "PENDING" : "FAILED");
-
-      let nextStatus = deployResult.ok ? "provisioning" : "failed";
-      let mailProvisioned = false;
-
-      if (settings.autoProvisionMail) {
-        const mailResult = await apiRequest(
-          settings,
-          "POST",
-          `/api/customers/${customer.id}/provision-mail`,
-          {
-            domain: customer.domain,
-            packageCode: customer.packageCode,
-          }
-        );
-
-        requestEntries.push({
-          id: createId("req-2"),
-          at: new Date().toISOString(),
-          type: "PROVISION_MAIL",
-          result: mailResult,
-        });
-
-        mailProvisioned = mailResult.ok;
-        nextStatus = deployResult.ok
-          ? mailResult.ok
-            ? "active"
-            : "warning"
-          : "failed";
-      } else {
-        nextStatus = deployResult.ok ? "active" : "failed";
-      }
-
-      const financeBootstrapPayload = {
-        tenantId: settings.tenantId || "default",
-        customerId: customer.id,
-        customerName: customer.companyName,
-        packageCode: customer.packageCode,
-        extras: customer.extras || [],
-        monthlyRevenueInclVat: Number(customer.finance?.monthlyRevenue || 0),
-        monthlyInfraCostInclVat: Number(customer.monthlyInfraCost || 0),
-        oneTimeSetupInclVat: Number(customer.oneTimeSetupCost || 0),
-        currency: "EUR",
-        vatRate: Number(selectedPackage?.vatRate || 0.21),
-      };
-
-      const financeResult = await apiRequest(
+      const createCustomerResult = await apiRequest(
         settings,
         "POST",
-        "/api/finance/customers/bootstrap",
-        financeBootstrapPayload
+        "/api/customers",
+        createPayload
       );
 
       requestEntries.push({
-        id: createId("req-3"),
+        id: createId("req-customer"),
         at: new Date().toISOString(),
-        type: "BOOTSTRAP_FINANCE",
-        result: financeResult,
+        type: "CREATE_CUSTOMER",
+        result: createCustomerResult,
       });
 
-      setCustomers((prev) =>
-        prev.map((item) =>
-          item.id === customer.id
-            ? {
-                ...item,
-                deploymentId,
-                deploymentStatus,
-                deploymentStage:
-                  deployResult?.data?.data?.currentStage ||
-                  deployResult?.data?.currentStage ||
-                  null,
-                mailProvisioned,
-                status: nextStatus,
-                financeSynced: financeResult.ok,
-                requestHistory: requestEntries,
-              }
-            : item
-        )
-      );
+      const createdCustomer = createCustomerResult?.data?.data || null;
+
+      if (!createCustomerResult.ok || !createdCustomer?.id) {
+        throw new Error(
+          createCustomerResult?.data?.error ||
+            createCustomerResult?.data?.message ||
+            "Klant aanmaken is mislukt."
+        );
+      }
+
+      const nextCustomer = {
+        ...createdCustomer,
+        niche: customerForm.niche || "",
+        templateKey: customerForm.templateKey || "",
+      };
+
+      setCustomers((prev) => [nextCustomer, ...prev.filter((item) => item.id !== nextCustomer.id)]);
+      setSelectedCustomerId(nextCustomer.id);
+
+      setBase44LinkForm({
+        appId: "",
+        appName: nextCustomer.companyName || "",
+        editorUrl: "",
+        previewUrl: "",
+        niche: customerForm.niche || "",
+        templateKey: customerForm.templateKey || "",
+        requestedPrompt: buildBase44Prompt(customerForm),
+      });
 
       pushRequestLogEntries(requestEntries);
       resetCustomerForm();
@@ -988,34 +997,232 @@ export function useAdminStore() {
       };
 
       requestEntries.push(failedEntry);
-
-      setCustomers((prev) =>
-        prev.map((item) =>
-          item.id === customer.id
-            ? {
-                ...item,
-                status: "failed",
-                requestHistory: requestEntries,
-              }
-            : item
-        )
-      );
-
       pushRequestLogEntries(requestEntries);
+      setPricingError(
+        error instanceof Error ? error.message : "Klant aanmaken is mislukt."
+      );
     } finally {
       setIsProvisioning(false);
     }
   }
 
+  async function autoCreateBase44App(customer) {
+    if (!customer?.id) {
+      return;
+    }
+
+    setIsAutoCreatingBase44(true);
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/customers/${customer.id}/base44-app/auto`,
+      {
+        niche: base44LinkForm.niche,
+        templateKey: base44LinkForm.templateKey,
+        requestedPrompt:
+          base44LinkForm.requestedPrompt ||
+          buildBase44Prompt({
+            ...customer,
+            niche: base44LinkForm.niche,
+            templateKey: base44LinkForm.templateKey,
+          }),
+      }
+    );
+
+    const historyEntry = {
+      id: createId("base44-auto"),
+      at: new Date().toISOString(),
+      type: "AUTO_CREATE_BASE44_APP",
+      result,
+    };
+
+    if (result.ok && result?.data?.data) {
+      const updatedCustomer = result.data.data;
+
+      setCustomers((prev) =>
+        prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
+      );
+    }
+
+    pushRequestLogEntries(historyEntry);
+    setIsAutoCreatingBase44(false);
+  }
+
+  async function linkBase44App(customer) {
+    if (!customer?.id || !base44LinkForm.appId) {
+      return;
+    }
+
+    setIsLinkingBase44(true);
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/customers/${customer.id}/base44-app`,
+      {
+        appId: base44LinkForm.appId,
+        appName: base44LinkForm.appName || customer.companyName,
+        editorUrl: base44LinkForm.editorUrl,
+        previewUrl: base44LinkForm.previewUrl,
+        templateKey: base44LinkForm.templateKey,
+        niche: base44LinkForm.niche,
+        requestedPrompt:
+          base44LinkForm.requestedPrompt ||
+          buildBase44Prompt({
+            ...customer,
+            niche: base44LinkForm.niche,
+            templateKey: base44LinkForm.templateKey,
+          }),
+      }
+    );
+
+    const historyEntry = {
+      id: createId("base44-link"),
+      at: new Date().toISOString(),
+      type: "LINK_BASE44_APP",
+      result,
+    };
+
+    if (result.ok && result?.data?.data) {
+      const updatedCustomer = result.data.data;
+
+      setCustomers((prev) =>
+        prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
+      );
+    }
+
+    pushRequestLogEntries(historyEntry);
+    setIsLinkingBase44(false);
+  }
+
+  async function markPreviewReady(customer) {
+    if (!customer?.id) {
+      return;
+    }
+
+    setIsUpdatingWorkflow(true);
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/customers/${customer.id}/preview-ready`,
+      {
+        previewUrl:
+          base44LinkForm.previewUrl || customer?.base44?.previewUrl || "",
+      }
+    );
+
+    const historyEntry = {
+      id: createId("preview-ready"),
+      at: new Date().toISOString(),
+      type: "MARK_PREVIEW_READY",
+      result,
+    };
+
+    if (result.ok && result?.data?.data) {
+      const updatedCustomer = result.data.data;
+      setCustomers((prev) =>
+        prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
+      );
+    }
+
+    pushRequestLogEntries(historyEntry);
+    setIsUpdatingWorkflow(false);
+  }
+
+  async function approveCustomerForProduction(customer) {
+    if (!customer?.id) {
+      return;
+    }
+
+    setIsUpdatingWorkflow(true);
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/customers/${customer.id}/approve`,
+      {
+        previewUrl:
+          base44LinkForm.previewUrl || customer?.base44?.previewUrl || "",
+      }
+    );
+
+    const historyEntry = {
+      id: createId("approve-customer"),
+      at: new Date().toISOString(),
+      type: "APPROVE_CUSTOMER_FOR_PRODUCTION",
+      result,
+    };
+
+    if (result.ok && result?.data?.data) {
+      const updatedCustomer = result.data.data;
+      setCustomers((prev) =>
+        prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
+      );
+    }
+
+    pushRequestLogEntries(historyEntry);
+    setIsUpdatingWorkflow(false);
+  }
+
+  async function deployCustomer(customer) {
+    if (!customer?.id) {
+      return;
+    }
+
+    setIsUpdatingWorkflow(true);
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/customers/${customer.id}/deploy`,
+      {
+        projectName: slugify(customer.companyName || customer.domain),
+      }
+    );
+
+    const historyEntry = {
+      id: createId("deploy-customer"),
+      at: new Date().toISOString(),
+      type: "DEPLOY_CUSTOMER",
+      result,
+    };
+
+    if (result.ok && result?.data?.data?.customer) {
+      const updatedCustomer = result.data.data.customer;
+      setCustomers((prev) =>
+        prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
+      );
+    }
+
+    pushRequestLogEntries(historyEntry);
+    setIsUpdatingWorkflow(false);
+  }
+
+  function openBase44Editor(customer) {
+    const url = customer?.base44?.editorUrl;
+    if (url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  function openBase44Preview(customer) {
+    const url = customer?.base44?.previewUrl;
+    if (url) {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  }
+
   async function refreshCustomerDeployment(customer) {
-    if (!customer || !customer.deploymentId) {
+    if (!customer || !customer.deployment?.deploymentId) {
       return;
     }
 
     const result = await apiRequest(
       settings,
       "GET",
-      `/api/deployments/${customer.deploymentId}`
+      `/api/deployments/${customer.deployment.deploymentId}`
     );
 
     const deployment = result?.data?.data || result?.data || {};
@@ -1047,10 +1254,14 @@ export function useAdminStore() {
         item.id === customer.id
           ? {
               ...item,
-              deploymentStatus: deployment.status || item.deploymentStatus,
-              deploymentStage: deployment.currentStage || item.deploymentStage,
               status: nextStatus,
-              requestHistory: [historyEntry, ...(item.requestHistory || [])].slice(0, 20),
+              deployment: {
+                ...(item.deployment || {}),
+                status: deployment.status || item.deployment?.status,
+                currentStage: deployment.currentStage || item.deployment?.currentStage,
+                deploymentId:
+                  item.deployment?.deploymentId || deployment.deploymentId || "",
+              },
             }
           : item
       )
@@ -1060,14 +1271,14 @@ export function useAdminStore() {
   }
 
   async function redeployCustomer(customer) {
-    if (!customer || !customer.deploymentId) {
+    if (!customer || !customer.deployment?.deploymentId) {
       return;
     }
 
     const result = await apiRequest(
       settings,
       "POST",
-      `/api/deployments/${customer.deploymentId}/redeploy`,
+      `/api/deployments/${customer.deployment.deploymentId}/redeploy`,
       { mode: "CONTENT_ONLY" }
     );
 
@@ -1084,7 +1295,6 @@ export function useAdminStore() {
           ? {
               ...item,
               status: result.ok ? "provisioning" : "failed",
-              requestHistory: [historyEntry, ...(item.requestHistory || [])].slice(0, 20),
             }
           : item
       )
@@ -1243,6 +1453,9 @@ export function useAdminStore() {
     vatFilter,
     setVatFilter,
     isProvisioning,
+    isLinkingBase44,
+    isAutoCreatingBase44,
+    isUpdatingWorkflow,
     isCreateCustomerOpen,
     setIsCreateCustomerOpen,
     deleteCandidate,
@@ -1286,5 +1499,15 @@ export function useAdminStore() {
     calcSetupRevenue,
     calcMonthlyInfraCost,
     loadPricingFromBackend,
+    loadCustomersFromBackend,
+    base44LinkForm,
+    updateBase44LinkForm,
+    autoCreateBase44App,
+    linkBase44App,
+    markPreviewReady,
+    approveCustomerForProduction,
+    deployCustomer,
+    openBase44Editor,
+    openBase44Preview,
   };
 }

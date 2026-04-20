@@ -139,6 +139,22 @@ export default function AdminLayout() {
             </Select>
           </Field>
 
+          <Field label="Niche">
+            <Input
+              value={store.customerForm.niche || ""}
+              onChange={(e) => store.updateCustomerForm("niche", e.target.value)}
+              placeholder="Kapper, restaurant, fotograaf..."
+            />
+          </Field>
+
+          <Field label="Template key">
+            <Input
+              value={store.customerForm.templateKey || ""}
+              onChange={(e) => store.updateCustomerForm("templateKey", e.target.value)}
+              placeholder="barbershop-v1"
+            />
+          </Field>
+
           <Field label="Adres">
             <Input
               value={store.customerForm.address}
