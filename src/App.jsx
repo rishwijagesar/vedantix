@@ -8,6 +8,9 @@ import DashboardPage from "./pages/admin/pages/DashboardPage";
 import FinancePage from "./pages/admin/pages/FinancePage";
 import PricingPage from "./pages/admin/pages/PricingPage";
 import SettingsPage from "./pages/admin/pages/SettingsPage";
+import { AdminAuthProvider } from "./pages/admin/auth/adminAuth";
+import AdminProtectedRoute from "./pages/admin/auth/AdminProtectedRoute";
+import AdminLoginPage from "./pages/admin/pages/AdminLoginPage";
 
 const Home = lazy(() => import("./pages/Home"));
 const Planning = lazy(() => import("./pages/Planning"));
@@ -34,7 +37,6 @@ const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/blog/BlogPost"));
 const SeoCityPage = lazy(() => import("./pages/SeoCityPage"));
 
-const AdminCRM = lazy(() => import("./pages/admin/AdminCRM.jsx"));
 const KlantenPortaal = lazy(() => import("./pages/KlantenPortaal.jsx"));
 
 const queryClient = new QueryClient();
@@ -72,13 +74,17 @@ function AppRoutes() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
 
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<DashboardPage store={undefined} />} />
-          <Route path="customers" element={<CustomersPage store={undefined} />} />
-          <Route path="customers/:id" element={<CustomerDetailPage store={undefined} />} />
-          <Route path="finance" element={<FinancePage store={undefined} />} />
-          <Route path="pricing" element={<PricingPage store={undefined} />} />
-          <Route path="settings" element={<SettingsPage store={undefined} />} />
+        <Route path="/admin/login" element={<AdminLoginPage />} />
+
+        <Route element={<AdminProtectedRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<DashboardPage store={undefined} />} />
+            <Route path="customers" element={<CustomersPage store={undefined} />} />
+            <Route path="customers/:id" element={<CustomerDetailPage store={undefined} />} />
+            <Route path="finance" element={<FinancePage store={undefined} />} />
+            <Route path="pricing" element={<PricingPage store={undefined} />} />
+            <Route path="settings" element={<SettingsPage store={undefined} />} />
+          </Route>
         </Route>
 
         <Route
@@ -116,7 +122,9 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <AdminAuthProvider>
+        <AppRoutes />
+      </AdminAuthProvider>
     </BrowserRouter>
   );
 }

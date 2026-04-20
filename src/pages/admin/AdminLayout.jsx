@@ -1,6 +1,7 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import VedantixLogo from "../../components/VedantixLogo";
 import { useAdminStore } from "./hooks/useAdminStore";
+import { useAdminAuth } from "./auth/adminAuth";
 import {
   Button,
   Modal,
@@ -14,7 +15,9 @@ import { currency } from "./utils/adminStorage";
 
 export default function AdminLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const store = useAdminStore();
+  const { logout } = useAdminAuth();
 
   const navItems = [
     { label: "Dashboard", path: "/admin" },
@@ -23,6 +26,11 @@ export default function AdminLayout() {
     { label: "Prijzen", path: "/admin/pricing" },
     { label: "Instellingen", path: "/admin/settings" },
   ];
+
+  function handleLogout() {
+    logout();
+    navigate("/admin/login", { replace: true });
+  }
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#f8fafc" }}>
@@ -40,7 +48,7 @@ export default function AdminLayout() {
           <VedantixLogo variant="full" size="md" theme="light" />
         </div>
 
-        <nav style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <nav style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
           {navItems.map((item) => {
             const active = location.pathname === item.path;
 
@@ -62,6 +70,18 @@ export default function AdminLayout() {
             );
           })}
         </nav>
+
+        <Button
+          tone="soft"
+          onClick={handleLogout}
+          style={{
+            width: "100%",
+            marginTop: 20,
+            borderRadius: 14,
+          }}
+        >
+          Uitloggen
+        </Button>
       </aside>
 
       <main style={{ flex: 1, padding: 30 }}>
@@ -348,15 +368,12 @@ export default function AdminLayout() {
               Let op
             </div>
             <div style={{ color: "#475569", lineHeight: 1.7 }}>
-              Je staat op het punt om{" "}
-              <strong>{store.deleteCandidate ? store.deleteCandidate.companyName : ""}</strong>{" "}
-              te verwijderen uit het dashboard. Dit kan niet automatisch ongedaan worden gemaakt.
+              Je staat op het punt om <strong>{store.deleteCandidate ? store.deleteCandidate.companyName : ""}</strong> te verwijderen uit het dashboard. Dit kan niet automatisch ongedaan worden gemaakt.
             </div>
           </div>
 
           <div style={{ color: "#475569", lineHeight: 1.7 }}>
-            Controleer eerst of je echt deze klant wilt verwijderen. Gebruik{" "}
-            <strong>Beheren</strong> als je alleen gegevens wilt aanpassen.
+            Controleer eerst of je echt deze klant wilt verwijderen. Gebruik <strong>Beheren</strong> als je alleen gegevens wilt aanpassen.
           </div>
 
           <div
