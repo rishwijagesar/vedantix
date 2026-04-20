@@ -11,6 +11,7 @@ import {
   Textarea,
   Card,
 } from "./components/AdminUI";
+import NotificationCenter from "./components/NotificationCenter";
 import { currency } from "./utils/adminStorage";
 
 export default function AdminLayout() {
@@ -34,6 +35,8 @@ export default function AdminLayout() {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#f8fafc" }}>
+      <NotificationCenter />
+
       <aside
         style={{
           width: 240,
@@ -50,7 +53,10 @@ export default function AdminLayout() {
 
         <nav style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
           {navItems.map((item) => {
-            const active = location.pathname === item.path;
+            const active =
+              item.path === "/admin"
+                ? location.pathname === "/admin"
+                : location.pathname.startsWith(item.path);
 
             return (
               <Link
