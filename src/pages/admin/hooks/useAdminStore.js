@@ -23,6 +23,8 @@ import {
   isWithinFilter,
 } from "../utils/adminStorage";
 
+import { updateCustomer, deleteCustomer } from "../../../api/customers.api";
+
 function buildHeaders(settings, method) {
   const headers = {
     "Content-Type": "application/json",
@@ -1556,30 +1558,49 @@ export function useAdminStore() {
     pushRequestLogEntries(historyEntry);
   }
 
-  function saveCustomerEdits(nextCustomer) {
-    setCustomers((prev) =>
-      prev.map((item) => (item.id === nextCustomer.id ? nextCustomer : item))
-    );
+  async function saveCustomerEdits(updatedCustomer) {
+    try {
+      const apiKey = settings.apiKey;
+  
+      const saved = await updateCustomer({
+        id: updatedCustomer.id,
+        payload: updatedCustomer,
+        apiKey,
+      });
+  
+      setCustomers((prev) =>
+        prev.map((c) => (c.id === saved.id ? saved : c))
+      );
+    } catch (e) {
+      console.error(e);
+      alert("Opslaan mislukt");
+    }
   }
 
   function requestDeleteCustomer(customer) {
     setDeleteCandidate(customer);
   }
 
-  function confirmDeleteCustomer() {
-    if (!deleteCandidate) {
-      return;
+  async function confirmDeleteCustomer() {
+    if (!deleteCandidate) return;
+  
+    try {
+      const apiKey = settings.apiKey;
+  
+      await deleteCustomer({
+        id: deleteCandidate.id,
+        apiKey,
+      });
+  
+      setCustomers((prev) =>
+        prev.filter((c) => c.id !== deleteCandidate.id)
+      );
+  
+      setDeleteCandidate(null);
+    } catch (e) {
+      console.error(e);
+      alert("Verwijderen mislukt");
     }
-
-    const customerId = deleteCandidate.id;
-
-    setCustomers((prev) => prev.filter((item) => item.id !== customerId));
-
-    if (selectedCustomerId === customerId) {
-      setSelectedCustomerId(null);
-    }
-
-    setDeleteCandidate(null);
   }
 
   function addExpense() {
