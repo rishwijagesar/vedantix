@@ -49,6 +49,10 @@ function canDeployCustomer(customer) {
   );
 }
 
+function canManageDeployment(customer) {
+  return Boolean(customer?.deployment?.deploymentId);
+}
+
 function workflowTone(state) {
   if (state === "LIVE") return "#10b981";
   if (state === "DEPLOYING") return "#f59e0b";
@@ -56,7 +60,32 @@ function workflowTone(state) {
   if (state === "PREVIEW_READY") return "#2563eb";
   if (state === "CONTENT_SYNCED") return "#8b5cf6";
   if (state === "BUILDING") return "#0ea5e9";
+  if (state === "FAILED") return "#ef4444";
   return "#94a3b8";
+}
+
+function deploymentTone(status) {
+  const normalized = String(status || "").toUpperCase();
+
+  if (normalized === "SUCCEEDED") return "#10b981";
+  if (normalized === "FAILED") return "#ef4444";
+  if (
+    normalized === "PENDING" ||
+    normalized === "IN_PROGRESS" ||
+    normalized === "RUNNING" ||
+    normalized === "ROLLBACK_STARTED"
+  ) {
+    return "#f59e0b";
+  }
+
+  return "#94a3b8";
+}
+
+function formatStageLabel(stage) {
+  if (!stage) return "—";
+  return String(stage)
+    .replace(/_/g, " ")
+    .trim();
 }
 
 function buildChecklist(customer) {
@@ -74,14 +103,16 @@ function buildChecklist(customer) {
     {
       key: "preview",
       label: "Preview klaar",
-      done: customer?.websiteBuildStatus === "PREVIEW_READY" ||
+      done:
+        customer?.websiteBuildStatus === "PREVIEW_READY" ||
         customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" ||
         customer?.status === "active",
     },
     {
       key: "approval",
       label: "Klant akkoord",
-      done: customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" ||
+      done:
+        customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" ||
         customer?.status === "active",
     },
     {
@@ -95,7 +126,6 @@ function buildChecklist(customer) {
 export default function CustomersPage({ store: storeProp }) {
   /** @type {{ store: any }} */
   const outletContext = useOutletContext();
-
   const store = storeProp || outletContext.store;
   const checklist = buildChecklist(store.selectedCustomer);
 
@@ -197,7 +227,7 @@ export default function CustomersPage({ store: storeProp }) {
             style={{
               width: "100%",
               borderCollapse: "collapse",
-              minWidth: 1260,
+              minWidth: 1440,
               background: "#ffffff",
             }}
           >
@@ -215,6 +245,7 @@ export default function CustomersPage({ store: storeProp }) {
                   "Pakket",
                   "Bouwfase",
                   "Workflow",
+                  "Deployment stage",
                   "Preview",
                   "Omzet p/m",
                   "Acties",
@@ -241,6 +272,7 @@ export default function CustomersPage({ store: storeProp }) {
               {store.filteredCustomers.map((customer) => {
                 const workflowState = (() => {
                   if (customer?.status === "active") return "LIVE";
+                  if (customer?.status === "failed") return "FAILED";
                   if (customer?.status === "provisioning") return "DEPLOYING";
                   if (customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION") return "APPROVED";
                   if (customer?.websiteBuildStatus === "PREVIEW_READY") return "PREVIEW_READY";
@@ -305,6 +337,22 @@ export default function CustomersPage({ store: storeProp }) {
                       </span>
                     </td>
                     <td style={{ padding: "18px" }}>
+                      <span
+                        style={{
+                          padding: "7px 12px",
+                          borderRadius: 999,
+                          background: `${deploymentTone(customer?.deployment?.status)}18`,
+                          color: deploymentTone(customer?.deployment?.status),
+                          fontWeight: 900,
+                          fontSize: 12,
+                          border: `1px solid ${deploymentTone(customer?.deployment?.status)}25`,
+                          display: "inline-block",
+                        }}
+                      >
+                        {formatStageLabel(customer?.deployment?.currentStage)}
+                      </span>
+                    </td>
+                    <td style={{ padding: "18px" }}>
                       {customer.preview?.fullUrl ? (
                         <a
                           href={customer.preview.fullUrl}
@@ -342,6 +390,15 @@ export default function CustomersPage({ store: storeProp }) {
                             Open Base44
                           </Button>
                         ) : null}
+                        {canManageDeployment(customer) ? (
+                          <Button
+                            tone="soft"
+                            onClick={() => store.redeployCustomer(customer)}
+                            disabled={store.isUpdatingWorkflow}
+                          >
+                            Redeploy
+                          </Button>
+                        ) : null}
                         <Button
                           tone="danger"
                           onClick={() => store.requestDeleteCustomer(customer)}
@@ -357,7 +414,7 @@ export default function CustomersPage({ store: storeProp }) {
               {store.filteredCustomers.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={9}
+                    colSpan={10}
                     style={{
                       padding: "34px 16px",
                       color: "#64748b",
@@ -394,6 +451,35 @@ export default function CustomersPage({ store: storeProp }) {
                 >
                   {store.selectedCustomerWorkflowState}
                 </span>
+
+                <span
+                  style={{
+                    padding: "7px 12px",
+                    borderRadius: 999,
+                    background: `${deploymentTone(store.selectedCustomer?.deployment?.status)}18`,
+                    color: deploymentTone(store.selectedCustomer?.deployment?.status),
+                    fontWeight: 900,
+                    fontSize: 12,
+                    border: `1px solid ${deploymentTone(store.selectedCustomer?.deployment?.status)}25`,
+                  }}
+                >
+                  {store.selectedCustomer?.deployment?.status || "NO_DEPLOYMENT"}
+                </span>
+
+                <span
+                  style={{
+                    padding: "7px 12px",
+                    borderRadius: 999,
+                    background: "#0f172a10",
+                    color: "#0f172a",
+                    fontWeight: 900,
+                    fontSize: 12,
+                    border: "1px solid #0f172a15",
+                  }}
+                >
+                  {formatStageLabel(store.selectedCustomer?.deployment?.currentStage)}
+                </span>
+
                 {store.isAutoRefreshing ? (
                   <span
                     style={{
@@ -409,11 +495,13 @@ export default function CustomersPage({ store: storeProp }) {
                     Auto-refresh actief
                   </span>
                 ) : null}
+
                 {store.selectedCustomer.base44?.editorUrl ? (
                   <Button tone="soft" onClick={() => store.openBase44Editor(store.selectedCustomer)}>
                     Open in Base44
                   </Button>
                 ) : null}
+
                 {store.selectedCustomer.preview?.fullUrl ? (
                   <Button onClick={() => window.open(store.selectedCustomer.preview.fullUrl, "_blank", "noopener,noreferrer")}>
                     Open preview
@@ -458,6 +546,77 @@ export default function CustomersPage({ store: storeProp }) {
                   <div style={{ fontWeight: 800 }}>{item.label}</div>
                 </div>
               ))}
+            </div>
+          </Card>
+
+          <Card style={{ marginBottom: 18 }}>
+            <SectionTitle
+              title="Deployment status"
+              subtitle="Actuele status van provisioning, stage en recovery-acties."
+              action={
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <Button
+                    tone="soft"
+                    onClick={() => store.runAutoRefreshCycle()}
+                    disabled={store.isAutoRefreshing}
+                  >
+                    {store.isAutoRefreshing ? "Verversen..." : "Status verversen"}
+                  </Button>
+
+                  {canManageDeployment(store.selectedCustomer) ? (
+                    <Button
+                      tone="soft"
+                      onClick={() => store.redeployCustomer(store.selectedCustomer)}
+                      disabled={store.isUpdatingWorkflow}
+                    >
+                      {store.isUpdatingWorkflow ? "Bezig..." : "Redeploy"}
+                    </Button>
+                  ) : null}
+
+                  {canManageDeployment(store.selectedCustomer) ? (
+                    <Button
+                      tone="danger"
+                      onClick={() => store.rollbackCustomer(store.selectedCustomer)}
+                      disabled={store.isUpdatingWorkflow}
+                    >
+                      {store.isUpdatingWorkflow ? "Bezig..." : "Rollback"}
+                    </Button>
+                  ) : null}
+                </div>
+              }
+            />
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                gap: 16,
+              }}
+            >
+              <StatCard
+                title="Deployment status"
+                value={store.selectedCustomer?.deployment?.status || "—"}
+                subtitle="Laatste backend status"
+                tone={deploymentTone(store.selectedCustomer?.deployment?.status)}
+              />
+              <StatCard
+                title="Current stage"
+                value={formatStageLabel(store.selectedCustomer?.deployment?.currentStage)}
+                subtitle="Huidige deployment stage"
+                tone="#0ea5e9"
+              />
+              <StatCard
+                title="Deployment ID"
+                value={store.selectedCustomer?.deployment?.deploymentId || "—"}
+                subtitle="Actieve deployment"
+                tone="#8b5cf6"
+              />
+              <StatCard
+                title="Live domein"
+                value={store.selectedCustomer?.deployment?.liveDomain || store.selectedCustomer?.domain || "—"}
+                subtitle="Doeldomein"
+                tone="#10b981"
+              />
             </div>
           </Card>
 
@@ -678,6 +837,14 @@ export default function CustomersPage({ store: storeProp }) {
                   <Input value={store.selectedCustomer.deployment?.deploymentId || ""} readOnly />
                 </Field>
 
+                <Field label="Huidige stage">
+                  <Input value={formatStageLabel(store.selectedCustomer.deployment?.currentStage)} readOnly />
+                </Field>
+
+                <Field label="Live domein">
+                  <Input value={store.selectedCustomer.deployment?.liveDomain || ""} readOnly />
+                </Field>
+
                 <Field label="Aangemaakt op">
                   <Input value={dateLabel(store.selectedCustomer.createdAt)} readOnly />
                 </Field>
@@ -895,6 +1062,26 @@ export default function CustomersPage({ store: storeProp }) {
                       {store.isAutoRefreshing ? "Verversen..." : "Status verversen"}
                     </Button>
 
+                    {canManageDeployment(store.selectedCustomer) ? (
+                      <Button
+                        tone="soft"
+                        onClick={() => store.redeployCustomer(store.selectedCustomer)}
+                        disabled={store.isUpdatingWorkflow}
+                      >
+                        {store.isUpdatingWorkflow ? "Bezig..." : "Redeploy"}
+                      </Button>
+                    ) : null}
+
+                    {canManageDeployment(store.selectedCustomer) ? (
+                      <Button
+                        tone="danger"
+                        onClick={() => store.rollbackCustomer(store.selectedCustomer)}
+                        disabled={store.isUpdatingWorkflow}
+                      >
+                        {store.isUpdatingWorkflow ? "Bezig..." : "Rollback"}
+                      </Button>
+                    ) : null}
+
                     <Button
                       tone="success"
                       onClick={() => store.deployCustomer(store.selectedCustomer)}
@@ -1017,7 +1204,8 @@ export default function CustomersPage({ store: storeProp }) {
                   return (
                     serialized.includes(store.selectedCustomer.id) ||
                     serialized.includes(store.selectedCustomer.domain) ||
-                    serialized.includes(store.selectedCustomer.base44?.appId || "___no_app___")
+                    serialized.includes(store.selectedCustomer.base44?.appId || "___no_app___") ||
+                    serialized.includes(store.selectedCustomer.deployment?.deploymentId || "___no_deployment___")
                   );
                 })
                 .map((entry) => (
@@ -1069,7 +1257,8 @@ export default function CustomersPage({ store: storeProp }) {
                 return (
                   serialized.includes(store.selectedCustomer.id) ||
                   serialized.includes(store.selectedCustomer.domain) ||
-                  serialized.includes(store.selectedCustomer.base44?.appId || "___no_app___")
+                  serialized.includes(store.selectedCustomer.base44?.appId || "___no_app___") ||
+                  serialized.includes(store.selectedCustomer.deployment?.deploymentId || "___no_deployment___")
                 );
               }).length === 0 ? (
                 <div style={{ color: "#64748b" }}>Nog geen backend acties.</div>

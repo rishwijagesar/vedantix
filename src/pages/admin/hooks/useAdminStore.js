@@ -22,9 +22,7 @@ import {
   periodMultiplier,
   isWithinFilter,
 } from "../utils/adminStorage";
-
 import { updateCustomer, deleteCustomer } from "../../../api/customers.api";
-import { fetchCustomers } from "../../../api/customers.api";
 
 function buildHeaders(settings, method) {
   const headers = {
@@ -182,6 +180,7 @@ function buildBase44Prompt(form) {
 
 function deriveWorkflowStateLabel(customer) {
   if (customer?.status === "active") return "LIVE";
+  if (customer?.status === "failed") return "FAILED";
   if (customer?.status === "provisioning") return "DEPLOYING";
   if (customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION") return "APPROVED";
   if (customer?.websiteBuildStatus === "PREVIEW_READY") return "PREVIEW_READY";
@@ -193,6 +192,54 @@ function deriveWorkflowStateLabel(customer) {
 function isCustomerBusy(customer) {
   const workflow = deriveWorkflowStateLabel(customer);
   return workflow === "BUILDING" || workflow === "DEPLOYING";
+}
+
+function normalizeDeploymentStatusToCustomerStatus(status, fallbackStatus) {
+  const normalized = String(status || "").toUpperCase();
+
+  if (normalized === "SUCCEEDED") return "active";
+  if (normalized === "FAILED") return "failed";
+  if (
+    normalized === "PENDING" ||
+    normalized === "IN_PROGRESS" ||
+    normalized === "RUNNING" ||
+    normalized === "ROLLBACK_STARTED"
+  ) {
+    return "provisioning";
+  }
+
+  return fallbackStatus;
+}
+
+function normalizeDeploymentSnapshot(existingCustomer, deployment) {
+  return {
+    ...(existingCustomer?.deployment || {}),
+    deploymentId:
+      deployment?.deploymentId ||
+      existingCustomer?.deployment?.deploymentId ||
+      "",
+    status:
+      deployment?.status ||
+      existingCustomer?.deployment?.status ||
+      "",
+    currentStage:
+      deployment?.currentStage ??
+      existingCustomer?.deployment?.currentStage ??
+      null,
+    liveDomain:
+      deployment?.liveDomain ||
+      existingCustomer?.deployment?.liveDomain ||
+      existingCustomer?.domain ||
+      "",
+    operationId:
+      deployment?.operationId ||
+      existingCustomer?.deployment?.operationId ||
+      "",
+    targetRef:
+      deployment?.targetRef ||
+      existingCustomer?.deployment?.targetRef ||
+      "",
+  };
 }
 
 export function useAdminStore() {
@@ -381,6 +428,8 @@ export function useAdminStore() {
         customer.base44?.appName,
         customer.base44?.appId,
         customer.contentSync?.repositoryName,
+        customer.deployment?.status,
+        customer.deployment?.currentStage,
       ]
         .join(" ")
         .toLowerCase()
@@ -391,20 +440,6 @@ export function useAdminStore() {
   const selectedCustomer = useMemo(() => {
     return customers.find((item) => item.id === selectedCustomerId) || null;
   }, [customers, selectedCustomerId]);
-
-  async function fetchCustomersFromApi() {
-    try {
-      const apiKey = settings.apiKey;
-  
-      const data = await fetchCustomers({ apiKey });
-  
-      if (Array.isArray(data)) {
-        setCustomers(data);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }
 
   useEffect(() => {
     if (!selectedCustomer) {
@@ -856,35 +891,61 @@ export function useAdminStore() {
     setIsPricingSaving(true);
     setPricingError("");
     setPricingSaveMessage("");
-  
+
     try {
-      const apiKey = settings.apiKey;
-  
       await Promise.all(
         packageDrafts.map((item) =>
           updatePricingPackage({
             code: item.code,
-            apiKey,
+            apiKey: settings.apiKey,
             payload: {
               label: item.label,
               description: item.description || item.label,
               slug: item.slug || String(item.code || "").toLowerCase(),
-              monthlyPriceInclVat: Number(item.monthlyPriceInclVat),
-              setupPriceInclVat: Number(item.setupPriceInclVat),
-              monthlyInfraCostExclVat: Number(item.monthlyInfraCostExclVat),
-              vatRate: Number(item.vatRate || 0.21),
+              monthlyPriceInclVat: toNumber(item.monthlyPriceInclVat),
+              setupPriceInclVat: toNumber(item.setupPriceInclVat),
+              monthlyInfraCostExclVat: toNumber(item.monthlyInfraCostExclVat),
+              vatRate: toNumber(item.vatRate || 0.21),
               featured: Boolean(item.featured),
               isActive: item.isActive !== false,
-              sortOrder: Number(item.sortOrder || 0),
+              sortOrder: toNumber(item.sortOrder || 0),
+              fit: item.fit || "",
+              cancelNote: item.cancelNote || "",
+              cta: item.cta || "",
+              bullets: Array.isArray(item.bullets) ? item.bullets : [],
+              included: Array.isArray(item.included) ? item.included : [],
+              notIncluded: Array.isArray(item.notIncluded) ? item.notIncluded : [],
+              addons: Array.isArray(item.addons) ? item.addons : [],
             },
           })
         )
       );
-  
-      setPricingSaveMessage("Pricing succesvol opgeslagen");
-    } catch (e) {
-      console.error(e);
-      setPricingError("Opslaan mislukt");
+
+      await Promise.all(
+        addonDrafts.map((item) =>
+          updatePricingAddon({
+            code: item.code,
+            apiKey: settings.apiKey,
+            payload: {
+              label: item.label,
+              description: item.description || item.label,
+              monthlyPriceInclVat: toNumber(item.monthlyPriceInclVat),
+              setupPriceInclVat: toNumber(item.setupPriceInclVat),
+              monthlyInfraCostExclVat: toNumber(item.monthlyInfraCostExclVat),
+              vatRate: toNumber(item.vatRate || 0.21),
+              isActive: item.isActive !== false,
+              sortOrder: toNumber(item.sortOrder || 0),
+            },
+          })
+        )
+      );
+
+      await loadPricingFromBackend();
+      setPricingSaveMessage("Prijzen succesvol opgeslagen.");
+    } catch (error) {
+      setPricingError(
+        error instanceof Error ? error.message : "Opslaan van pricing is mislukt."
+      );
     } finally {
       setIsPricingSaving(false);
     }
@@ -1354,10 +1415,27 @@ export function useAdminStore() {
       result,
     };
 
-    if (result.ok && result?.data?.data?.customer) {
-      const updatedCustomer = result.data.data.customer;
+    if (result.ok && result?.data?.data) {
+      const payload = result.data.data;
+      const updatedCustomerFromBackend = payload.customer || customer;
+
       setCustomers((prev) =>
-        prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
+        prev.map((item) =>
+          item.id === customer.id
+            ? {
+                ...item,
+                ...updatedCustomerFromBackend,
+                status: "provisioning",
+                deployment: normalizeDeploymentSnapshot(
+                  {
+                    ...item,
+                    ...updatedCustomerFromBackend,
+                  },
+                  payload
+                ),
+              }
+            : item
+        )
       );
     }
 
@@ -1391,21 +1469,10 @@ export function useAdminStore() {
     );
 
     const deployment = result?.data?.data || result?.data || {};
-    const normalizedStatus = String(deployment.status || "").toUpperCase();
-
-    let nextStatus = customer.status;
-
-    if (normalizedStatus === "SUCCEEDED") {
-      nextStatus = "active";
-    }
-
-    if (normalizedStatus === "FAILED") {
-      nextStatus = "failed";
-    }
-
-    if (normalizedStatus === "IN_PROGRESS" || normalizedStatus === "PENDING") {
-      nextStatus = "provisioning";
-    }
+    const nextStatus = normalizeDeploymentStatusToCustomerStatus(
+      deployment.status,
+      customer.status
+    );
 
     const historyEntry = {
       id: createId("refresh"),
@@ -1420,13 +1487,7 @@ export function useAdminStore() {
           ? {
               ...item,
               status: nextStatus,
-              deployment: {
-                ...(item.deployment || {}),
-                status: deployment.status || item.deployment?.status,
-                currentStage: deployment.currentStage || item.deployment?.currentStage,
-                deploymentId:
-                  item.deployment?.deploymentId || deployment.deploymentId || "",
-              },
+              deployment: normalizeDeploymentSnapshot(item, deployment),
             }
           : item
       )
@@ -1455,7 +1516,8 @@ export function useAdminStore() {
       (customer) =>
         isCustomerBusy(customer) ||
         customer?.deployment?.status === "PENDING" ||
-        customer?.deployment?.status === "IN_PROGRESS"
+        customer?.deployment?.status === "IN_PROGRESS" ||
+        customer?.deployment?.status === "RUNNING"
     );
 
     if (busyCustomers.length === 0) {
@@ -1483,7 +1545,8 @@ export function useAdminStore() {
       (customer) =>
         isCustomerBusy(customer) ||
         customer?.deployment?.status === "PENDING" ||
-        customer?.deployment?.status === "IN_PROGRESS"
+        customer?.deployment?.status === "IN_PROGRESS" ||
+        customer?.deployment?.status === "RUNNING"
     );
 
     if (!hasBusyCustomers) {
@@ -1513,6 +1576,8 @@ export function useAdminStore() {
       return;
     }
 
+    setIsUpdatingWorkflow(true);
+
     const result = await apiRequest(
       settings,
       "POST",
@@ -1533,24 +1598,78 @@ export function useAdminStore() {
           ? {
               ...item,
               status: result.ok ? "provisioning" : "failed",
+              deployment: {
+                ...(item.deployment || {}),
+                status: result.ok
+                  ? "IN_PROGRESS"
+                  : item.deployment?.status || "",
+                currentStage: result.ok
+                  ? item.deployment?.currentStage || "REDEPLOY_REQUESTED"
+                  : item.deployment?.currentStage || null,
+              },
             }
           : item
       )
     );
 
     pushRequestLogEntries(historyEntry);
+    setIsUpdatingWorkflow(false);
+  }
+
+  async function rollbackCustomer(customer, targetRef = "") {
+    if (!customer || !customer.deployment?.deploymentId) {
+      return;
+    }
+
+    setIsUpdatingWorkflow(true);
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/deployments/${customer.deployment.deploymentId}/rollback`,
+      {
+        targetRef: targetRef || undefined,
+      }
+    );
+
+    const historyEntry = {
+      id: createId("rollback"),
+      at: new Date().toISOString(),
+      type: "ROLLBACK",
+      result,
+    };
+
+    setCustomers((prev) =>
+      prev.map((item) =>
+        item.id === customer.id
+          ? {
+              ...item,
+              status: result.ok ? "provisioning" : item.status,
+              deployment: {
+                ...(item.deployment || {}),
+                status: result.ok ? "ROLLBACK_STARTED" : item.deployment?.status || "",
+                currentStage: result.ok ? "ROLLBACK_REQUESTED" : item.deployment?.currentStage || null,
+                targetRef: targetRef || item.deployment?.targetRef || "",
+              },
+            }
+          : item
+      )
+    );
+
+    pushRequestLogEntries(historyEntry);
+    setIsUpdatingWorkflow(false);
   }
 
   async function saveCustomerEdits(updatedCustomer) {
     try {
       const apiKey = settings.apiKey;
-  
+
       const saved = await updateCustomer({
         id: updatedCustomer.id,
         payload: updatedCustomer,
         apiKey,
       });
-  
+
       setCustomers((prev) =>
         prev.map((c) => (c.id === saved.id ? saved : c))
       );
@@ -1566,19 +1685,19 @@ export function useAdminStore() {
 
   async function confirmDeleteCustomer() {
     if (!deleteCandidate) return;
-  
+
     try {
       const apiKey = settings.apiKey;
-  
+
       await deleteCustomer({
         id: deleteCandidate.id,
         apiKey,
       });
-  
+
       setCustomers((prev) =>
         prev.filter((c) => c.id !== deleteCandidate.id)
       );
-  
+
       setDeleteCandidate(null);
     } catch (e) {
       console.error(e);
@@ -1738,6 +1857,7 @@ export function useAdminStore() {
     refreshSingleCustomer,
     runAutoRefreshCycle,
     redeployCustomer,
+    rollbackCustomer,
     saveCustomerEdits,
     requestDeleteCustomer,
     confirmDeleteCustomer,
