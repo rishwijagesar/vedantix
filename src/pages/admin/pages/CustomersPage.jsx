@@ -44,8 +44,19 @@ function canDeployCustomer(customer) {
   return (
     Boolean(customer?.base44?.appId) &&
     Boolean(customer?.base44?.previewUrl) &&
-    customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION"
+    customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" &&
+    customer?.contentSync?.status === "SYNCED"
   );
+}
+
+function workflowTone(state) {
+  if (state === "LIVE") return "#10b981";
+  if (state === "DEPLOYING") return "#f59e0b";
+  if (state === "APPROVED") return "#22c55e";
+  if (state === "PREVIEW_READY") return "#2563eb";
+  if (state === "CONTENT_SYNCED") return "#8b5cf6";
+  if (state === "BUILDING") return "#0ea5e9";
+  return "#94a3b8";
 }
 
 export default function CustomersPage({ store: storeProp }) {
@@ -107,6 +118,21 @@ export default function CustomersPage({ store: storeProp }) {
               >
                 + Klant aanmaken
               </Button>
+
+              <Button
+                onClick={() => store.createCustomerAndStartBuild()}
+                disabled={store.isProvisioning || store.isStartingBuildFlow}
+                style={{
+                  minHeight: 54,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  borderRadius: 18,
+                }}
+              >
+                {store.isProvisioning || store.isStartingBuildFlow
+                  ? "Bezig..."
+                  : "Klant aanmaken + start build"}
+              </Button>
             </div>
           }
         />
@@ -123,7 +149,7 @@ export default function CustomersPage({ store: storeProp }) {
             style={{
               width: "100%",
               borderCollapse: "collapse",
-              minWidth: 1180,
+              minWidth: 1260,
               background: "#ffffff",
             }}
           >
@@ -140,7 +166,7 @@ export default function CustomersPage({ store: storeProp }) {
                   "Domeinnaam",
                   "Pakket",
                   "Bouwfase",
-                  "Base44",
+                  "Workflow",
                   "Preview",
                   "Omzet p/m",
                   "Acties",
@@ -164,102 +190,121 @@ export default function CustomersPage({ store: storeProp }) {
               </tr>
             </thead>
             <tbody>
-              {store.filteredCustomers.map((customer) => (
-                <tr
-                  key={customer.id}
-                  style={{
-                    borderBottom: "1px solid #edf2f7",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => store.setSelectedCustomerId(customer.id)}
-                >
-                  <td style={{ padding: "18px" }}>
-                    <div style={{ fontWeight: 900 }}>{customer.companyName}</div>
-                    <div style={{ color: "#64748b", fontSize: 13 }}>{customer.id}</div>
-                  </td>
-                  <td style={{ padding: "18px" }}>
-                    <div>{customer.contactName}</div>
-                    <div style={{ color: "#64748b", fontSize: 13 }}>
-                      {customer.email}
-                    </div>
-                  </td>
-                  <td style={{ padding: "18px", fontWeight: 700 }}>
-                    {customer.domain}
-                  </td>
-                  <td style={{ padding: "18px" }}>
-                    {store.packageOptions.find((item) => item.code === customer.packageCode)?.label || customer.packageCode}
-                  </td>
-                  <td style={{ padding: "18px" }}>
-                    <span
-                      style={{
-                        padding: "7px 12px",
-                        borderRadius: 999,
-                        background: `${STATUS_COLORS[customer.status] || "#94a3b8"}18`,
-                        color: STATUS_COLORS[customer.status] || "#94a3b8",
-                        fontWeight: 900,
-                        fontSize: 12,
-                        border: `1px solid ${STATUS_COLORS[customer.status] || "#94a3b8"}25`,
-                      }}
-                    >
-                      {STATUS_LABELS[customer.status] || customer.status}
-                    </span>
-                  </td>
-                  <td style={{ padding: "18px" }}>
-                    <div style={{ fontWeight: 800 }}>
-                      {customer.base44?.appName || "Nog niet gekoppeld"}
-                    </div>
-                    <div style={{ color: "#64748b", fontSize: 13 }}>
-                      {customer.base44?.appId || customer.websiteBuildStatus || "APP_REQUESTED"}
-                    </div>
-                  </td>
-                  <td style={{ padding: "18px" }}>
-                    {customer.preview?.fullUrl ? (
-                      <a
-                        href={customer.preview.fullUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={(e) => e.stopPropagation()}
+              {store.filteredCustomers.map((customer) => {
+                const workflowState = (() => {
+                  if (customer?.status === "active") return "LIVE";
+                  if (customer?.status === "provisioning") return "DEPLOYING";
+                  if (customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION") return "APPROVED";
+                  if (customer?.websiteBuildStatus === "PREVIEW_READY") return "PREVIEW_READY";
+                  if (customer?.contentSync?.status === "SYNCED") return "CONTENT_SYNCED";
+                  if (customer?.base44?.appId) return "BUILDING";
+                  return "NOT_STARTED";
+                })();
+
+                return (
+                  <tr
+                    key={customer.id}
+                    style={{
+                      borderBottom: "1px solid #edf2f7",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => store.setSelectedCustomerId(customer.id)}
+                  >
+                    <td style={{ padding: "18px" }}>
+                      <div style={{ fontWeight: 900 }}>{customer.companyName}</div>
+                      <div style={{ color: "#64748b", fontSize: 13 }}>{customer.id}</div>
+                    </td>
+                    <td style={{ padding: "18px" }}>
+                      <div>{customer.contactName}</div>
+                      <div style={{ color: "#64748b", fontSize: 13 }}>
+                        {customer.email}
+                      </div>
+                    </td>
+                    <td style={{ padding: "18px", fontWeight: 700 }}>
+                      {customer.domain}
+                    </td>
+                    <td style={{ padding: "18px" }}>
+                      {store.packageOptions.find((item) => item.code === customer.packageCode)?.label || customer.packageCode}
+                    </td>
+                    <td style={{ padding: "18px" }}>
+                      <span
                         style={{
-                          color: "#1d4ed8",
-                          fontWeight: 800,
-                          textDecoration: "none",
+                          padding: "7px 12px",
+                          borderRadius: 999,
+                          background: `${STATUS_COLORS[customer.status] || "#94a3b8"}18`,
+                          color: STATUS_COLORS[customer.status] || "#94a3b8",
+                          fontWeight: 900,
+                          fontSize: 12,
+                          border: `1px solid ${STATUS_COLORS[customer.status] || "#94a3b8"}25`,
                         }}
                       >
-                        {customer.preview.path || "Open preview"}
-                      </a>
-                    ) : (
-                      <span style={{ color: "#94a3b8" }}>Nog niet klaar</span>
-                    )}
-                  </td>
-                  <td style={{ padding: "18px", fontWeight: 900 }}>
-                    {currency(store.calcMonthlyRevenue(customer))}
-                  </td>
-                  <td
-                    style={{ padding: "18px" }}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                      <Button
-                        tone="soft"
-                        onClick={() => store.setSelectedCustomerId(customer.id)}
+                        {STATUS_LABELS[customer.status] || customer.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: "18px" }}>
+                      <span
+                        style={{
+                          padding: "7px 12px",
+                          borderRadius: 999,
+                          background: `${workflowTone(workflowState)}18`,
+                          color: workflowTone(workflowState),
+                          fontWeight: 900,
+                          fontSize: 12,
+                          border: `1px solid ${workflowTone(workflowState)}25`,
+                        }}
                       >
-                        Beheren
-                      </Button>
-                      {customer.base44?.editorUrl ? (
-                        <Button onClick={() => store.openBase44Editor(customer)}>
-                          Open Base44
+                        {workflowState}
+                      </span>
+                    </td>
+                    <td style={{ padding: "18px" }}>
+                      {customer.preview?.fullUrl ? (
+                        <a
+                          href={customer.preview.fullUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            color: "#1d4ed8",
+                            fontWeight: 800,
+                            textDecoration: "none",
+                          }}
+                        >
+                          {customer.preview.path || "Open preview"}
+                        </a>
+                      ) : (
+                        <span style={{ color: "#94a3b8" }}>Nog niet klaar</span>
+                      )}
+                    </td>
+                    <td style={{ padding: "18px", fontWeight: 900 }}>
+                      {currency(store.calcMonthlyRevenue(customer))}
+                    </td>
+                    <td
+                      style={{ padding: "18px" }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                        <Button
+                          tone="soft"
+                          onClick={() => store.setSelectedCustomerId(customer.id)}
+                        >
+                          Beheren
                         </Button>
-                      ) : null}
-                      <Button
-                        tone="danger"
-                        onClick={() => store.requestDeleteCustomer(customer)}
-                      >
-                        Verwijderen
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                        {customer.base44?.editorUrl ? (
+                          <Button onClick={() => store.openBase44Editor(customer)}>
+                            Open Base44
+                          </Button>
+                        ) : null}
+                        <Button
+                          tone="danger"
+                          onClick={() => store.requestDeleteCustomer(customer)}
+                        >
+                          Verwijderen
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
 
               {store.filteredCustomers.length === 0 ? (
                 <tr>
@@ -287,7 +332,20 @@ export default function CustomersPage({ store: storeProp }) {
             title={`Klantdetail — ${store.selectedCustomer.companyName}`}
             subtitle="Alle klantgegevens, Base44-koppeling, preview en financieel overzicht per periode."
             action={
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                <span
+                  style={{
+                    padding: "7px 12px",
+                    borderRadius: 999,
+                    background: `${workflowTone(store.selectedCustomerWorkflowState)}18`,
+                    color: workflowTone(store.selectedCustomerWorkflowState),
+                    fontWeight: 900,
+                    fontSize: 12,
+                    border: `1px solid ${workflowTone(store.selectedCustomerWorkflowState)}25`,
+                  }}
+                >
+                  {store.selectedCustomerWorkflowState}
+                </span>
                 {store.selectedCustomer.base44?.editorUrl ? (
                   <Button tone="soft" onClick={() => store.openBase44Editor(store.selectedCustomer)}>
                     Open in Base44
@@ -503,6 +561,14 @@ export default function CustomersPage({ store: storeProp }) {
                   <Input value={store.selectedCustomer.preview?.status || ""} readOnly />
                 </Field>
 
+                <Field label="Content sync">
+                  <Input value={store.selectedCustomer.contentSync?.status || ""} readOnly />
+                </Field>
+
+                <Field label="GitHub repo">
+                  <Input value={store.selectedCustomer.contentSync?.repositoryName || ""} readOnly />
+                </Field>
+
                 <Field label="Deployment status">
                   <Input value={store.selectedCustomer.deployment?.status || ""} readOnly />
                 </Field>
@@ -542,10 +608,17 @@ export default function CustomersPage({ store: storeProp }) {
               }}
             >
               <SectionTitle
-                title="Base44 koppeling + workflow"
-                subtitle="Maak automatisch een app aan, zet preview klaar en zet daarna live."
+                title="Base44 + GitHub sync workflow"
+                subtitle="One-click buildflow voor klantwebsite."
                 action={
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    <Button
+                      tone="primary"
+                      onClick={() => store.startBuildFlow(store.selectedCustomer)}
+                      disabled={store.isStartingBuildFlow}
+                    >
+                      {store.isStartingBuildFlow ? "Bezig..." : "Start buildflow"}
+                    </Button>
                     {store.selectedCustomer.base44?.editorUrl ? (
                       <Button tone="soft" onClick={() => store.openBase44Editor(store.selectedCustomer)}>
                         Open editor
@@ -625,6 +698,38 @@ export default function CustomersPage({ store: storeProp }) {
                   </Field>
                 </div>
 
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <Field label="Project ID voor GitHub sync">
+                    <Input
+                      value={store.contentSyncForm.projectId}
+                      onChange={(e) => store.updateContentSyncForm("projectId", e.target.value)}
+                      placeholder="base44 app id of project id"
+                    />
+                  </Field>
+                </div>
+
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <Field label="index.html export">
+                    <Textarea
+                      value={store.contentSyncForm.indexHtml}
+                      onChange={(e) => store.updateContentSyncForm("indexHtml", e.target.value)}
+                      placeholder="<html>...</html>"
+                      rows={10}
+                    />
+                  </Field>
+                </div>
+
+                <div style={{ gridColumn: "1 / -1" }}>
+                  <Field label="Extra files JSON">
+                    <Textarea
+                      value={store.contentSyncForm.additionalFilesJson}
+                      onChange={(e) => store.updateContentSyncForm("additionalFilesJson", e.target.value)}
+                      placeholder='[{"path":"assets/app.js","content":"console.log(\"hi\")","encoding":"utf-8"}]'
+                      rows={6}
+                    />
+                  </Field>
+                </div>
+
                 <div
                   style={{
                     gridColumn: "1 / -1",
@@ -637,6 +742,14 @@ export default function CustomersPage({ store: storeProp }) {
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                     <Button
                       tone="primary"
+                      onClick={() => store.startBuildFlow(store.selectedCustomer)}
+                      disabled={store.isStartingBuildFlow}
+                    >
+                      {store.isStartingBuildFlow ? "Bezig..." : "Start buildflow"}
+                    </Button>
+
+                    <Button
+                      tone="soft"
                       onClick={() => store.autoCreateBase44App(store.selectedCustomer)}
                       disabled={store.isAutoCreatingBase44}
                     >
@@ -645,10 +758,10 @@ export default function CustomersPage({ store: storeProp }) {
 
                     <Button
                       tone="soft"
-                      onClick={() => store.linkBase44App(store.selectedCustomer)}
-                      disabled={store.isLinkingBase44}
+                      onClick={() => store.syncCustomerContent(store.selectedCustomer)}
+                      disabled={store.isSyncingContent || !store.contentSyncForm.indexHtml.trim()}
                     >
-                      {store.isLinkingBase44 ? "Bezig..." : "Handmatig koppelen"}
+                      {store.isSyncingContent ? "Bezig..." : "Sync naar GitHub"}
                     </Button>
 
                     <Button

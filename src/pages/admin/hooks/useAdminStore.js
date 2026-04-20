@@ -177,6 +177,16 @@ function buildBase44Prompt(form) {
     .join(" ");
 }
 
+function deriveWorkflowStateLabel(customer) {
+  if (customer?.status === "active") return "LIVE";
+  if (customer?.status === "provisioning") return "DEPLOYING";
+  if (customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION") return "APPROVED";
+  if (customer?.websiteBuildStatus === "PREVIEW_READY") return "PREVIEW_READY";
+  if (customer?.contentSync?.status === "SYNCED") return "CONTENT_SYNCED";
+  if (customer?.base44?.appId) return "BUILDING";
+  return "NOT_STARTED";
+}
+
 export function useAdminStore() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [pricingTab, setPricingTab] = useState("packages");
@@ -208,6 +218,8 @@ export function useAdminStore() {
   const [isProvisioning, setIsProvisioning] = useState(false);
   const [isLinkingBase44, setIsLinkingBase44] = useState(false);
   const [isAutoCreatingBase44, setIsAutoCreatingBase44] = useState(false);
+  const [isSyncingContent, setIsSyncingContent] = useState(false);
+  const [isStartingBuildFlow, setIsStartingBuildFlow] = useState(false);
   const [isUpdatingWorkflow, setIsUpdatingWorkflow] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
   const [deleteCandidate, setDeleteCandidate] = useState(null);
@@ -230,6 +242,12 @@ export function useAdminStore() {
     niche: "",
     templateKey: "",
     requestedPrompt: "",
+  });
+
+  const [contentSyncForm, setContentSyncForm] = useState({
+    projectId: "",
+    indexHtml: "",
+    additionalFilesJson: "[]",
   });
 
   useEffect(() => {
@@ -351,6 +369,7 @@ export function useAdminStore() {
         customer.status,
         customer.base44?.appName,
         customer.base44?.appId,
+        customer.contentSync?.repositoryName,
       ]
         .join(" ")
         .toLowerCase()
@@ -373,6 +392,11 @@ export function useAdminStore() {
         templateKey: "",
         requestedPrompt: "",
       });
+      setContentSyncForm({
+        projectId: "",
+        indexHtml: "",
+        additionalFilesJson: "[]",
+      });
       return;
     }
 
@@ -391,6 +415,15 @@ export function useAdminStore() {
           templateKey:
             selectedCustomer.base44?.templateKey || selectedCustomer.templateKey || "",
         }),
+    });
+
+    setContentSyncForm({
+      projectId:
+        selectedCustomer.base44?.appId ||
+        selectedCustomer.contentSync?.repositoryName ||
+        "",
+      indexHtml: "",
+      additionalFilesJson: "[]",
     });
   }, [selectedCustomer]);
 
@@ -713,6 +746,13 @@ export function useAdminStore() {
     }));
   }
 
+  function updateContentSyncForm(key, value) {
+    setContentSyncForm((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  }
+
   function updateSettings(key, value) {
     setSettings((prev) => ({
       ...prev,
@@ -864,7 +904,7 @@ export function useAdminStore() {
       !customerForm.email ||
       !customerForm.domain
     ) {
-      return;
+      return null;
     }
 
     setIsProvisioning(true);
@@ -886,7 +926,7 @@ export function useAdminStore() {
     if (!selectedPackage) {
       setPricingError("Geselecteerd pakket kon niet geladen worden.");
       setIsProvisioning(false);
-      return;
+      return null;
     }
 
     const monthlyRevenueInclVat =
@@ -978,10 +1018,17 @@ export function useAdminStore() {
         requestedPrompt: buildBase44Prompt(customerForm),
       });
 
+      setContentSyncForm({
+        projectId: "",
+        indexHtml: "",
+        additionalFilesJson: "[]",
+      });
+
       pushRequestLogEntries(requestEntries);
       resetCustomerForm();
       setIsCreateCustomerOpen(false);
       setActiveTab("customers");
+      return nextCustomer;
     } catch (error) {
       const failedEntry = {
         id: createId("req-x"),
@@ -1001,6 +1048,7 @@ export function useAdminStore() {
       setPricingError(
         error instanceof Error ? error.message : "Klant aanmaken is mislukt."
       );
+      return null;
     } finally {
       setIsProvisioning(false);
     }
@@ -1047,6 +1095,117 @@ export function useAdminStore() {
 
     pushRequestLogEntries(historyEntry);
     setIsAutoCreatingBase44(false);
+  }
+
+  async function startBuildFlow(customer) {
+    if (!customer?.id) {
+      return;
+    }
+
+    setIsStartingBuildFlow(true);
+
+    let additionalFiles = [];
+    try {
+      additionalFiles = JSON.parse(contentSyncForm.additionalFilesJson || "[]");
+    } catch {
+      additionalFiles = [];
+    }
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/customers/${customer.id}/start-build`,
+      {
+        niche: base44LinkForm.niche,
+        templateKey: base44LinkForm.templateKey,
+        requestedPrompt:
+          base44LinkForm.requestedPrompt ||
+          buildBase44Prompt({
+            ...customer,
+            niche: base44LinkForm.niche,
+            templateKey: base44LinkForm.templateKey,
+          }),
+        projectId: contentSyncForm.projectId || customer.base44?.appId || "",
+        indexHtml: contentSyncForm.indexHtml,
+        additionalFiles,
+      }
+    );
+
+    const historyEntry = {
+      id: createId("start-build"),
+      at: new Date().toISOString(),
+      type: "START_BUILD_FLOW",
+      result,
+    };
+
+    if (result.ok && result?.data?.data?.customer) {
+      const updatedCustomer = result.data.data.customer;
+      setCustomers((prev) =>
+        prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
+      );
+      setSelectedCustomerId(updatedCustomer.id);
+    }
+
+    pushRequestLogEntries(historyEntry);
+    setIsStartingBuildFlow(false);
+  }
+
+  async function createCustomerAndStartBuild() {
+    const createdCustomer = await addCustomerAndProvision();
+    if (!createdCustomer?.id) {
+      return;
+    }
+
+    const customerForBuild = {
+      ...createdCustomer,
+      niche: customerForm.niche || createdCustomer.niche || "",
+      templateKey: customerForm.templateKey || createdCustomer.templateKey || "",
+    };
+
+    await startBuildFlow(customerForBuild);
+  }
+
+  async function syncCustomerContent(customer) {
+    if (!customer?.id || !contentSyncForm.indexHtml.trim()) {
+      return;
+    }
+
+    setIsSyncingContent(true);
+
+    let additionalFiles = [];
+    try {
+      additionalFiles = JSON.parse(contentSyncForm.additionalFilesJson || "[]");
+    } catch {
+      additionalFiles = [];
+    }
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/customers/${customer.id}/content-sync`,
+      {
+        projectId: contentSyncForm.projectId || customer.base44?.appId || "",
+        indexHtml: contentSyncForm.indexHtml,
+        additionalFiles,
+      }
+    );
+
+    const historyEntry = {
+      id: createId("content-sync"),
+      at: new Date().toISOString(),
+      type: "SYNC_CUSTOMER_CONTENT",
+      result,
+    };
+
+    if (result.ok && result?.data?.data?.customer) {
+      const updatedCustomer = result.data.data.customer;
+      setCustomers((prev) =>
+        prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
+      );
+    }
+
+    pushRequestLogEntries(historyEntry);
+    setIsSyncingContent(false);
   }
 
   async function linkBase44App(customer) {
@@ -1208,7 +1367,7 @@ export function useAdminStore() {
   }
 
   function openBase44Preview(customer) {
-    const url = customer?.base44?.previewUrl;
+    const url = customer?.preview?.fullUrl || customer?.base44?.previewUrl;
     if (url) {
       window.open(url, "_blank", "noopener,noreferrer");
     }
@@ -1429,6 +1588,13 @@ export function useAdminStore() {
     };
   }, [customers, packageOptions, extraOptions, financeExpenses, vatFilter]);
 
+  const selectedCustomerWorkflowState = useMemo(() => {
+    if (!selectedCustomer) {
+      return "NOT_SELECTED";
+    }
+    return deriveWorkflowStateLabel(selectedCustomer);
+  }, [selectedCustomer]);
+
   return {
     activeTab,
     setActiveTab,
@@ -1439,6 +1605,7 @@ export function useAdminStore() {
     customers,
     filteredCustomers,
     selectedCustomer,
+    selectedCustomerWorkflowState,
     setSelectedCustomerId,
     customerSearch,
     setCustomerSearch,
@@ -1455,6 +1622,8 @@ export function useAdminStore() {
     isProvisioning,
     isLinkingBase44,
     isAutoCreatingBase44,
+    isSyncingContent,
+    isStartingBuildFlow,
     isUpdatingWorkflow,
     isCreateCustomerOpen,
     setIsCreateCustomerOpen,
@@ -1465,6 +1634,7 @@ export function useAdminStore() {
     toggleExtra,
     resetCustomerForm,
     addCustomerAndProvision,
+    createCustomerAndStartBuild,
     refreshCustomerDeployment,
     redeployCustomer,
     saveCustomerEdits,
@@ -1502,7 +1672,11 @@ export function useAdminStore() {
     loadCustomersFromBackend,
     base44LinkForm,
     updateBase44LinkForm,
+    contentSyncForm,
+    updateContentSyncForm,
     autoCreateBase44App,
+    startBuildFlow,
+    syncCustomerContent,
     linkBase44App,
     markPreviewReady,
     approveCustomerForProduction,
