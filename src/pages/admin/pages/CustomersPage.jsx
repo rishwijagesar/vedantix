@@ -59,11 +59,45 @@ function workflowTone(state) {
   return "#94a3b8";
 }
 
+function buildChecklist(customer) {
+  return [
+    {
+      key: "base44",
+      label: "Base44 gekoppeld",
+      done: Boolean(customer?.base44?.appId),
+    },
+    {
+      key: "content",
+      label: "GitHub sync klaar",
+      done: customer?.contentSync?.status === "SYNCED",
+    },
+    {
+      key: "preview",
+      label: "Preview klaar",
+      done: customer?.websiteBuildStatus === "PREVIEW_READY" ||
+        customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" ||
+        customer?.status === "active",
+    },
+    {
+      key: "approval",
+      label: "Klant akkoord",
+      done: customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" ||
+        customer?.status === "active",
+    },
+    {
+      key: "live",
+      label: "Live",
+      done: customer?.status === "active",
+    },
+  ];
+}
+
 export default function CustomersPage({ store: storeProp }) {
   /** @type {{ store: any }} */
   const outletContext = useOutletContext();
 
   const store = storeProp || outletContext.store;
+  const checklist = buildChecklist(store.selectedCustomer);
 
   return (
     <div style={{ display: "grid", gap: 18 }}>
@@ -132,6 +166,20 @@ export default function CustomersPage({ store: storeProp }) {
                 {store.isProvisioning || store.isStartingBuildFlow
                   ? "Bezig..."
                   : "Klant aanmaken + start build"}
+              </Button>
+
+              <Button
+                tone="soft"
+                onClick={() => store.runAutoRefreshCycle()}
+                disabled={store.isAutoRefreshing}
+                style={{
+                  minHeight: 54,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                  borderRadius: 18,
+                }}
+              >
+                {store.isAutoRefreshing ? "Verversen..." : "Nu verversen"}
               </Button>
             </div>
           }
@@ -346,6 +394,21 @@ export default function CustomersPage({ store: storeProp }) {
                 >
                   {store.selectedCustomerWorkflowState}
                 </span>
+                {store.isAutoRefreshing ? (
+                  <span
+                    style={{
+                      padding: "7px 12px",
+                      borderRadius: 999,
+                      background: "#0f172a10",
+                      color: "#0f172a",
+                      fontWeight: 900,
+                      fontSize: 12,
+                      border: "1px solid #0f172a15",
+                    }}
+                  >
+                    Auto-refresh actief
+                  </span>
+                ) : null}
                 {store.selectedCustomer.base44?.editorUrl ? (
                   <Button tone="soft" onClick={() => store.openBase44Editor(store.selectedCustomer)}>
                     Open in Base44
@@ -359,6 +422,44 @@ export default function CustomersPage({ store: storeProp }) {
               </div>
             }
           />
+
+          <Card style={{ marginBottom: 18 }}>
+            <SectionTitle
+              title="Workflow checklist"
+              subtitle="Dit laat direct zien waar de klant zich in het proces bevindt."
+            />
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+                gap: 12,
+              }}
+            >
+              {checklist.map((item) => (
+                <div
+                  key={item.key}
+                  style={{
+                    border: `1px solid ${item.done ? "#10b98125" : "#cbd5e1"}`,
+                    borderRadius: 18,
+                    padding: 14,
+                    background: item.done ? "#10b98110" : "#f8fafc",
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 900,
+                      color: item.done ? "#10b981" : "#64748b",
+                      marginBottom: 6,
+                    }}
+                  >
+                    {item.done ? "DONE" : "OPEN"}
+                  </div>
+                  <div style={{ fontWeight: 800 }}>{item.label}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
 
           <div
             style={{
@@ -785,16 +886,26 @@ export default function CustomersPage({ store: storeProp }) {
                     </Button>
                   </div>
 
-                  <Button
-                    tone="success"
-                    onClick={() => store.deployCustomer(store.selectedCustomer)}
-                    disabled={
-                      store.isUpdatingWorkflow ||
-                      !canDeployCustomer(store.selectedCustomer)
-                    }
-                  >
-                    {store.isUpdatingWorkflow ? "Bezig..." : "Site live zetten"}
-                  </Button>
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                    <Button
+                      tone="soft"
+                      onClick={() => store.runAutoRefreshCycle()}
+                      disabled={store.isAutoRefreshing}
+                    >
+                      {store.isAutoRefreshing ? "Verversen..." : "Status verversen"}
+                    </Button>
+
+                    <Button
+                      tone="success"
+                      onClick={() => store.deployCustomer(store.selectedCustomer)}
+                      disabled={
+                        store.isUpdatingWorkflow ||
+                        !canDeployCustomer(store.selectedCustomer)
+                      }
+                    >
+                      {store.isUpdatingWorkflow ? "Bezig..." : "Site live zetten"}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </Card>

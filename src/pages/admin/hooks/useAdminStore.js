@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   fetchPricingSummary,
   updatePricingPackage,
@@ -187,6 +187,11 @@ function deriveWorkflowStateLabel(customer) {
   return "NOT_STARTED";
 }
 
+function isCustomerBusy(customer) {
+  const workflow = deriveWorkflowStateLabel(customer);
+  return workflow === "BUILDING" || workflow === "DEPLOYING";
+}
+
 export function useAdminStore() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [pricingTab, setPricingTab] = useState("packages");
@@ -222,6 +227,7 @@ export function useAdminStore() {
   const [isStartingBuildFlow, setIsStartingBuildFlow] = useState(false);
   const [isUpdatingWorkflow, setIsUpdatingWorkflow] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
+  const [isAutoRefreshing, setIsAutoRefreshing] = useState(false);
   const [deleteCandidate, setDeleteCandidate] = useState(null);
 
   const [packageOptions, setPackageOptions] = useState([]);
@@ -249,6 +255,8 @@ export function useAdminStore() {
     indexHtml: "",
     additionalFilesJson: "[]",
   });
+
+  const pollingRef = useRef(null);
 
   useEffect(() => {
     saveJson(STORAGE_KEYS.settings, settings);
@@ -1151,6 +1159,12 @@ export function useAdminStore() {
   }
 
   async function createCustomerAndStartBuild() {
+    const draftSnapshot = {
+      niche: customerForm.niche,
+      templateKey: customerForm.templateKey,
+      requestedPrompt: buildBase44Prompt(customerForm),
+    };
+
     const createdCustomer = await addCustomerAndProvision();
     if (!createdCustomer?.id) {
       return;
@@ -1158,9 +1172,16 @@ export function useAdminStore() {
 
     const customerForBuild = {
       ...createdCustomer,
-      niche: customerForm.niche || createdCustomer.niche || "",
-      templateKey: customerForm.templateKey || createdCustomer.templateKey || "",
+      niche: draftSnapshot.niche || createdCustomer.niche || "",
+      templateKey: draftSnapshot.templateKey || createdCustomer.templateKey || "",
     };
+
+    setBase44LinkForm((prev) => ({
+      ...prev,
+      niche: draftSnapshot.niche || prev.niche,
+      templateKey: draftSnapshot.templateKey || prev.templateKey,
+      requestedPrompt: draftSnapshot.requestedPrompt || prev.requestedPrompt,
+    }));
 
     await startBuildFlow(customerForBuild);
   }
@@ -1429,6 +1450,79 @@ export function useAdminStore() {
     pushRequestLogEntries(historyEntry);
   }
 
+  async function refreshSingleCustomer(customerId) {
+    if (!customerId) {
+      return;
+    }
+
+    const result = await apiRequest(settings, "GET", `/api/customers/${customerId}`);
+    const nextCustomer = result?.data?.data || null;
+
+    if (result.ok && nextCustomer?.id) {
+      setCustomers((prev) =>
+        prev.map((item) => (item.id === nextCustomer.id ? nextCustomer : item))
+      );
+    }
+  }
+
+  async function runAutoRefreshCycle() {
+    const busyCustomers = customers.filter(
+      (customer) =>
+        isCustomerBusy(customer) ||
+        customer?.deployment?.status === "PENDING" ||
+        customer?.deployment?.status === "IN_PROGRESS"
+    );
+
+    if (busyCustomers.length === 0) {
+      return;
+    }
+
+    setIsAutoRefreshing(true);
+
+    try {
+      await Promise.all(
+        busyCustomers.map(async (customer) => {
+          await refreshSingleCustomer(customer.id);
+          if (customer?.deployment?.deploymentId) {
+            await refreshCustomerDeployment(customer);
+          }
+        })
+      );
+    } finally {
+      setIsAutoRefreshing(false);
+    }
+  }
+
+  useEffect(() => {
+    const hasBusyCustomers = customers.some(
+      (customer) =>
+        isCustomerBusy(customer) ||
+        customer?.deployment?.status === "PENDING" ||
+        customer?.deployment?.status === "IN_PROGRESS"
+    );
+
+    if (!hasBusyCustomers) {
+      if (pollingRef.current) {
+        window.clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+      return;
+    }
+
+    if (!pollingRef.current) {
+      pollingRef.current = window.setInterval(() => {
+        runAutoRefreshCycle();
+      }, 10000);
+    }
+
+    return () => {
+      if (pollingRef.current) {
+        window.clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
+  }, [customers, settings.baseUrl, settings.apiKey, settings.tenantId, settings.actorId, settings.source]);
+
   async function redeployCustomer(customer) {
     if (!customer || !customer.deployment?.deploymentId) {
       return;
@@ -1627,6 +1721,7 @@ export function useAdminStore() {
     isUpdatingWorkflow,
     isCreateCustomerOpen,
     setIsCreateCustomerOpen,
+    isAutoRefreshing,
     deleteCandidate,
     setDeleteCandidate,
     customerForm,
@@ -1636,6 +1731,8 @@ export function useAdminStore() {
     addCustomerAndProvision,
     createCustomerAndStartBuild,
     refreshCustomerDeployment,
+    refreshSingleCustomer,
+    runAutoRefreshCycle,
     redeployCustomer,
     saveCustomerEdits,
     requestDeleteCustomer,
