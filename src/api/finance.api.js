@@ -1,60 +1,70 @@
-import { readAdminSessionToken } from "../pages/admin/auth/adminAuth";
+import { apiClient } from "./client";
 
-const API_BASE =
-  (import.meta.env.VITE_API_BASE_URL || "https://api.vedantix.nl").replace(/\/$/, "");
-
-function getHeaders() {
-  const token = readAdminSessionToken();
-
-  return {
-    "Content-Type": "application/json",
-    "X-Tenant-Id": "default",
-    "X-Actor-Id": "admin-panel",
-    "X-Source": "ADMIN_PANEL",
-    Authorization: token ? `Bearer ${token}` : "",
-  };
-}
-
-export async function fetchFinanceOverview(range = "month") {
-  const res = await fetch(
-    `${API_BASE}/api/finance/overview?range=${range}`,
+export async function bootstrapFinanceCustomer({
+  customerId,
+  companyName,
+  packageCode,
+  extras = [],
+  monthlyInfraCost = 0,
+  oneTimeSetupCost = 0,
+  isActive = true,
+  apiKey,
+}) {
+  return apiClient.post(
+    "/api/finance/customers/bootstrap",
     {
-      headers: getHeaders(),
-    }
+      customerId,
+      companyName,
+      packageCode,
+      extras,
+      monthlyInfraCost,
+      oneTimeSetupCost,
+      isActive,
+    },
+    { apiKey }
   );
-
-  if (!res.ok) {
-    throw new Error("Unauthorized");
-  }
-
-  return res.json();
 }
 
-export async function fetchFinanceCustomerDetails(customerId, range = "month") {
-  const res = await fetch(
-    `${API_BASE}/api/finance/customer/${customerId}?range=${range}`,
-    {
-      headers: getHeaders(),
-    }
-  );
+export async function fetchFinanceOverview({
+  range = "month",
+  apiKey,
+}) {
+  const query = new URLSearchParams({ range }).toString();
 
-  if (!res.ok) {
-    throw new Error("Unauthorized");
-  }
-
-  return res.json();
-}
-
-export async function createFinanceExpense(payload) {
-  const res = await fetch(`${API_BASE}/api/finance/expense`, {
-    method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify(payload),
+  return apiClient.get(`/api/finance/overview?${query}`, {
+    apiKey,
   });
+}
 
-  if (!res.ok) {
-    throw new Error("Failed to create expense");
-  }
+export async function fetchFinanceCustomerDetails({
+  customerId,
+  range = "month",
+  apiKey,
+}) {
+  const query = new URLSearchParams({ range }).toString();
 
-  return res.json();
+  return apiClient.get(`/api/finance/customers/${customerId}?${query}`, {
+    apiKey,
+  });
+}
+
+export async function createFinanceExpense({
+  title,
+  amount,
+  category = "Overig",
+  expenseDate,
+  customerId,
+  apiKey,
+}) {
+  return apiClient.post(
+    "/api/finance/expenses",
+    {
+      title,
+      amount: Number(amount),
+      category,
+      expenseDate,
+      customerId: customerId || undefined,
+    },
+    { apiKey }
+  );
 }
