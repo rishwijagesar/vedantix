@@ -53,13 +53,18 @@ function canManageDeployment(customer) {
   return Boolean(customer?.deployment?.deploymentId);
 }
 
+function canStartBuildFlow(customer) {
+  return Boolean(customer?.base44?.appId);
+}
+
 function workflowTone(state) {
   if (state === "LIVE") return "#10b981";
   if (state === "DEPLOYING") return "#f59e0b";
   if (state === "APPROVED") return "#22c55e";
   if (state === "PREVIEW_READY") return "#2563eb";
   if (state === "CONTENT_SYNCED") return "#8b5cf6";
-  if (state === "BUILDING") return "#0ea5e9";
+  if (state === "BUILD_REQUESTED") return "#0ea5e9";
+  if (state === "APP_LINKED") return "#0ea5e9";
   if (state === "FAILED") return "#ef4444";
   return "#94a3b8";
 }
@@ -105,11 +110,35 @@ function formatEventLabel(eventType) {
   return String(eventType).replace(/_/g, " ").trim();
 }
 
+function getWorkflowState(customer) {
+  if (customer?.status === "active") return "LIVE";
+  if (customer?.status === "failed") return "FAILED";
+  if (customer?.status === "provisioning") return "DEPLOYING";
+  if (customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION") return "APPROVED";
+  if (customer?.websiteBuildStatus === "PREVIEW_READY") return "PREVIEW_READY";
+  if (customer?.contentSync?.status === "SYNCED") return "CONTENT_SYNCED";
+  if (customer?.base44?.appId) return "APP_LINKED";
+  if (
+    customer?.websiteBuildStatus === "APP_REQUESTED" ||
+    customer?.base44?.status === "CREATING"
+  ) {
+    return "BUILD_REQUESTED";
+  }
+  return "NOT_STARTED";
+}
+
 function buildChecklist(customer) {
   return [
     {
+      key: "request",
+      label: "Buildverzoek opgeslagen",
+      done:
+        customer?.websiteBuildStatus === "APP_REQUESTED" ||
+        Boolean(customer?.base44?.appId),
+    },
+    {
       key: "base44",
-      label: "Base44 gekoppeld",
+      label: "Base44 app gekoppeld",
       done: Boolean(customer?.base44?.appId),
     },
     {
@@ -127,15 +156,10 @@ function buildChecklist(customer) {
     },
     {
       key: "approval",
-      label: "Klant akkoord",
+      label: "Klant akkoord / live",
       done:
         customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" ||
         customer?.status === "active",
-    },
-    {
-      key: "live",
-      label: "Live",
-      done: customer?.status === "active",
     },
   ];
 }
@@ -197,21 +221,6 @@ export default function CustomersPage({ store: storeProp }) {
                 }}
               >
                 + Klant aanmaken
-              </Button>
-
-              <Button
-                onClick={() => store.createCustomerAndStartBuild()}
-                disabled={store.isProvisioning || store.isStartingBuildFlow}
-                style={{
-                  minHeight: 54,
-                  paddingLeft: 20,
-                  paddingRight: 20,
-                  borderRadius: 18,
-                }}
-              >
-                {store.isProvisioning || store.isStartingBuildFlow
-                  ? "Bezig..."
-                  : "Klant aanmaken + start build"}
               </Button>
 
               <Button
@@ -286,16 +295,7 @@ export default function CustomersPage({ store: storeProp }) {
             </thead>
             <tbody>
               {store.filteredCustomers.map((customer) => {
-                const workflowState = (() => {
-                  if (customer?.status === "active") return "LIVE";
-                  if (customer?.status === "failed") return "FAILED";
-                  if (customer?.status === "provisioning") return "DEPLOYING";
-                  if (customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION") return "APPROVED";
-                  if (customer?.websiteBuildStatus === "PREVIEW_READY") return "PREVIEW_READY";
-                  if (customer?.contentSync?.status === "SYNCED") return "CONTENT_SYNCED";
-                  if (customer?.base44?.appId) return "BUILDING";
-                  return "NOT_STARTED";
-                })();
+                const workflowState = getWorkflowState(customer);
 
                 return (
                   <tr
@@ -960,16 +960,16 @@ export default function CustomersPage({ store: storeProp }) {
               }}
             >
               <SectionTitle
-                title="Base44 + GitHub sync workflow"
-                subtitle="One-click buildflow voor klantwebsite."
+                title="Base44 + GitHub workflow"
+                subtitle="Production flow: buildverzoek opslaan, app handmatig koppelen, daarna sync en preview."
                 action={
                   <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <Button
                       tone="primary"
                       onClick={() => store.startBuildFlow(store.selectedCustomer)}
-                      disabled={store.isStartingBuildFlow}
+                      disabled={store.isStartingBuildFlow || !canStartBuildFlow(store.selectedCustomer)}
                     >
-                      {store.isStartingBuildFlow ? "Bezig..." : "Start buildflow"}
+                      {store.isStartingBuildFlow ? "Bezig..." : "Start sync + previewflow"}
                     </Button>
                     {store.selectedCustomer.base44?.editorUrl ? (
                       <Button tone="soft" onClick={() => store.openBase44Editor(store.selectedCustomer)}>
@@ -984,6 +984,21 @@ export default function CustomersPage({ store: storeProp }) {
                   </div>
                 }
               />
+
+              <div
+                style={{
+                  marginBottom: 14,
+                  padding: 14,
+                  borderRadius: 16,
+                  background: "#eff6ff",
+                  border: "1px solid #bfdbfe",
+                  color: "#1e3a8a",
+                  lineHeight: 1.6,
+                  fontSize: 14,
+                }}
+              >
+                <strong>Flow:</strong> eerst bouwverzoek opslaan, daarna app in Base44 maken of klonen, vervolgens hieronder de app koppelen. Zodra de app gekoppeld is kun je content syncen, preview klaarzetten en daarna live deployen.
+              </div>
 
               <div
                 style={{
@@ -1020,7 +1035,7 @@ export default function CustomersPage({ store: storeProp }) {
                   <Input
                     value={store.base44LinkForm.previewUrl}
                     onChange={(e) => store.updateBase44LinkForm("previewUrl", e.target.value)}
-                    placeholder="https://preview.vedantix.nl/degoudenkapper"
+                    placeholder="https://preview...."
                   />
                 </Field>
 
@@ -1041,7 +1056,7 @@ export default function CustomersPage({ store: storeProp }) {
                 </Field>
 
                 <div style={{ gridColumn: "1 / -1" }}>
-                  <Field label="Base44 prompt">
+                  <Field label="Build prompt">
                     <Textarea
                       value={store.base44LinkForm.requestedPrompt}
                       onChange={(e) => store.updateBase44LinkForm("requestedPrompt", e.target.value)}
@@ -1055,7 +1070,7 @@ export default function CustomersPage({ store: storeProp }) {
                     <Input
                       value={store.contentSyncForm.projectId}
                       onChange={(e) => store.updateContentSyncForm("projectId", e.target.value)}
-                      placeholder="base44 app id of project id"
+                      placeholder="Base44 app ID of project ID"
                     />
                   </Field>
                 </div>
@@ -1093,19 +1108,30 @@ export default function CustomersPage({ store: storeProp }) {
                 >
                   <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
                     <Button
-                      tone="primary"
-                      onClick={() => store.startBuildFlow(store.selectedCustomer)}
-                      disabled={store.isStartingBuildFlow}
-                    >
-                      {store.isStartingBuildFlow ? "Bezig..." : "Start buildflow"}
-                    </Button>
-
-                    <Button
                       tone="soft"
                       onClick={() => store.autoCreateBase44App(store.selectedCustomer)}
                       disabled={store.isAutoCreatingBase44}
                     >
-                      {store.isAutoCreatingBase44 ? "Bezig..." : "Auto-create Base44 app"}
+                      {store.isAutoCreatingBase44 ? "Bezig..." : "Bouwverzoek opslaan"}
+                    </Button>
+
+                    <Button
+                      tone="primary"
+                      onClick={() => store.linkBase44App(store.selectedCustomer)}
+                      disabled={
+                        store.isLinkingBase44 ||
+                        !store.base44LinkForm.appId.trim()
+                      }
+                    >
+                      {store.isLinkingBase44 ? "Bezig..." : "Base44 app koppelen"}
+                    </Button>
+
+                    <Button
+                      tone="soft"
+                      onClick={() => store.startBuildFlow(store.selectedCustomer)}
+                      disabled={store.isStartingBuildFlow || !canStartBuildFlow(store.selectedCustomer)}
+                    >
+                      {store.isStartingBuildFlow ? "Bezig..." : "Start sync + previewflow"}
                     </Button>
 
                     <Button
