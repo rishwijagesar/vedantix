@@ -52,11 +52,24 @@ function generateIdempotencyKey(prefix = "req") {
  */
 async function parseResponse(res) {
   const text = await res.text();
+  const trimmed = String(text || "").trim();
+  const contentType = String(res.headers.get("content-type") || "");
+
+  const looksLikeHtml =
+    trimmed.startsWith("<!doctype html") ||
+    trimmed.startsWith("<html") ||
+    contentType.includes("text/html");
+
+  if (looksLikeHtml) {
+    throw new Error(
+      `API routing error: HTML ontvangen in plaats van JSON (${res.status})`
+    );
+  }
 
   try {
-    return text ? JSON.parse(text) : null;
+    return trimmed ? JSON.parse(trimmed) : null;
   } catch {
-    throw new Error(`Invalid JSON response: ${text}`);
+    throw new Error(`Invalid JSON response: ${trimmed.slice(0, 500)}`);
   }
 }
 
@@ -101,6 +114,7 @@ async function request(options) {
 
   if (!res.ok) {
     const message =
+      json?.error?.message ||
       json?.error ||
       json?.message ||
       `Request failed (${res.status})`;
@@ -112,33 +126,15 @@ async function request(options) {
 }
 
 export const apiClient = {
-  /**
-   * @param {string} path
-   * @param {object} options
-   */
   get: (path, options = {}) =>
     request({ path, method: "GET", ...options }),
 
-  /**
-   * @param {string} path
-   * @param {any} body
-   * @param {object} options
-   */
   post: (path, body, options = {}) =>
     request({ path, method: "POST", body, idempotency: true, ...options }),
 
-  /**
-   * @param {string} path
-   * @param {any} body
-   * @param {object} options
-   */
   put: (path, body, options = {}) =>
     request({ path, method: "PUT", body, idempotency: true, ...options }),
 
-  /**
-   * @param {string} path
-   * @param {object} options
-   */
   delete: (path, options = {}) =>
     request({ path, method: "DELETE", idempotency: true, ...options }),
 };

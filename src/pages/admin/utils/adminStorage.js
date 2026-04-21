@@ -1,8 +1,8 @@
 export const STORAGE_KEYS = {
-  settings: "vedantix_admin_settings_v8",
-  customers: "vedantix_admin_customers_v8",
-  expenses: "vedantix_admin_expenses_v8",
-  requestLog: "vedantix_admin_request_log_v8",
+  settings: "vedantix_admin_settings_v10",
+  customers: "vedantix_admin_customers_v10",
+  expenses: "vedantix_admin_expenses_v10",
+  requestLog: "vedantix_admin_request_log_v10",
   packageOptions: "vedantix_package_options_v2",
   extraOptions: "vedantix_extra_options_v2",
 };
@@ -200,7 +200,7 @@ export const DEFAULT_SETTINGS = {
   actorId: "admin-dashboard",
   source: "ADMIN_PANEL",
   autoIdempotency: true,
-  autoProvisionMail: true,
+  autoProvisionMail: false,
 };
 
 export const DEFAULT_CUSTOMER_FORM = {
@@ -324,7 +324,10 @@ export function calcExVatFromInc(amountInclVat, vatRate = 0.21) {
 }
 
 export function calcVatFromInc(amountInclVat, vatRate = 0.21) {
-  return round2(calcIncVatFromEx(calcExVatFromInc(amountInclVat, vatRate), vatRate) - calcExVatFromInc(amountInclVat, vatRate));
+  return round2(
+    calcIncVatFromEx(calcExVatFromInc(amountInclVat, vatRate), vatRate) -
+      calcExVatFromInc(amountInclVat, vatRate)
+  );
 }
 
 export function calcIncVatFromEx(amountExclVat, vatRate = 0.21) {

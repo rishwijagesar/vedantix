@@ -62,28 +62,71 @@ function buildHeaders(settings, method) {
 async function apiRequest(settings, method, path, body) {
   const url = `${String(settings.baseUrl || "").replace(/\/$/, "")}${path}`;
 
-  const response = await fetch(url, {
-    method,
-    headers: buildHeaders(settings, method),
-    body: method === "GET" ? undefined : JSON.stringify(body || {}),
-  });
-
-  const text = await response.text();
-  let data = null;
-
   try {
-    data = text ? JSON.parse(text) : null;
-  } catch {
-    data = text;
-  }
+    const response = await fetch(url, {
+      method,
+      headers: buildHeaders(settings, method),
+      body: method === "GET" ? undefined : JSON.stringify(body || {}),
+    });
 
-  return {
-    ok: response.ok,
-    status: response.status,
-    data,
-    url,
-    method,
-  };
+    const text = await response.text();
+    const trimmed = String(text || "").trim();
+    const contentType = String(response.headers.get("content-type") || "");
+
+    const looksLikeHtml =
+      trimmed.startsWith("<!doctype html") ||
+      trimmed.startsWith("<html") ||
+      contentType.includes("text/html");
+
+    if (looksLikeHtml) {
+      return {
+        ok: false,
+        status: response.status || 0,
+        data: {
+          message:
+            "API routing error: HTML ontvangen in plaats van JSON. Controleer deployment, cache en Base URL.",
+          raw: trimmed.slice(0, 500),
+        },
+        url,
+        method,
+      };
+    }
+
+    let data = null;
+
+    try {
+      data = trimmed ? JSON.parse(trimmed) : null;
+    } catch {
+      return {
+        ok: false,
+        status: response.status || 0,
+        data: {
+          message: "Ongeldige JSON response ontvangen van de API.",
+          raw: trimmed.slice(0, 500),
+        },
+        url,
+        method,
+      };
+    }
+
+    return {
+      ok: response.ok,
+      status: response.status,
+      data,
+      url,
+      method,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      status: 0,
+      data: {
+        message: error instanceof Error ? error.message : "Onbekende netwerkfout",
+      },
+      url,
+      method,
+    };
+  }
 }
 
 function createId(prefix) {
@@ -267,15 +310,9 @@ function normalizeOperationsResponse(result) {
 
 function normalizeAuditResponse(result) {
   const payload = result?.data?.data;
-  if (Array.isArray(payload)) {
-    return payload;
-  }
-  if (Array.isArray(payload?.events)) {
-    return payload.events;
-  }
-  if (Array.isArray(payload?.items)) {
-    return payload.items;
-  }
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.events)) return payload.events;
+  if (Array.isArray(payload?.items)) return payload.items;
   return [];
 }
 
@@ -364,6 +401,16 @@ export function useAdminStore() {
     saveJson(STORAGE_KEYS.requestLog, requestLog);
   }, [requestLog]);
 
+  function pushRequestLogEntries(entries) {
+    const nextEntries = Array.isArray(entries)
+      ? entries.filter(Boolean)
+      : [entries].filter(Boolean);
+
+    if (nextEntries.length === 0) return;
+
+    setRequestLog((prev) => [...nextEntries, ...prev].slice(0, 100));
+  }
+
   async function loadPricingFromBackend() {
     setIsPricingLoading(true);
     setPricingError("");
@@ -404,41 +451,24 @@ export function useAdminStore() {
   }
 
   async function loadCustomersFromBackend() {
-    try {
-      const result = await apiRequest(settings, "GET", "/api/customers");
-      const nextCustomers = result?.data?.data || [];
+    const result = await apiRequest(settings, "GET", "/api/customers");
 
-      if (result.ok && Array.isArray(nextCustomers)) {
-        setCustomers(nextCustomers);
-      }
-    } catch {
-      // keep local fallback
+    pushRequestLogEntries({
+      id: createId("list-customers"),
+      at: new Date().toISOString(),
+      type: "LIST_CUSTOMERS",
+      result,
+    });
+
+    if (result.ok && Array.isArray(result?.data?.data)) {
+      setCustomers(result.data.data);
+      return;
     }
-  }
 
-  async function getFreshPricingSnapshot() {
-    try {
-      const summary = await fetchPricingSummary();
-      const normalized = normalizePricingSummary(summary);
-
-      setPackageOptions(normalized.packages);
-      setExtraOptions(normalized.addons);
-      setPackageDrafts(clonePricingData(normalized.packages));
-      setAddonDrafts(clonePricingData(normalized.addons));
-
-      return normalized;
-    } catch {
-      const fallback = getFallbackPricingState();
-
-      setPackageOptions(fallback.packages);
-      setExtraOptions(fallback.addons);
-      setPackageDrafts(clonePricingData(fallback.packages));
-      setAddonDrafts(clonePricingData(fallback.addons));
-
-      return {
-        ...fallback,
-        usedFallback: true,
-      };
+    if (!result.ok) {
+      notifyError(
+        result?.data?.message || "Klanten laden is mislukt."
+      );
     }
   }
 
@@ -453,9 +483,7 @@ export function useAdminStore() {
   const filteredCustomers = useMemo(() => {
     const query = customerSearch.trim().toLowerCase();
 
-    if (!query) {
-      return customers;
-    }
+    if (!query) return customers;
 
     return customers.filter((customer) =>
       [
@@ -588,22 +616,12 @@ export function useAdminStore() {
   }
 
   const totalMonthlyRevenue = useMemo(() => {
-    return customers.reduce(
-      (sum, customer) => sum + calcMonthlyRevenue(customer),
-      0
-    );
+    return customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0);
   }, [customers, packageOptions, extraOptions]);
 
   const totalMonthlyCosts = useMemo(() => {
-    const infra = customers.reduce(
-      (sum, customer) => sum + calcMonthlyInfraCost(customer),
-      0
-    );
-    const manual = financeExpenses.reduce(
-      (sum, expense) => sum + Number(expense.amount || 0),
-      0
-    );
-
+    const infra = customers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0);
+    const manual = financeExpenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
     return infra + manual;
   }, [customers, financeExpenses, packageOptions, extraOptions]);
 
@@ -659,10 +677,7 @@ export function useAdminStore() {
   }
 
   const selectedCustomerStats = useMemo(() => {
-    if (!selectedCustomer) {
-      return null;
-    }
-
+    if (!selectedCustomer) return null;
     return buildCustomerPeriodStats(selectedCustomer, detailFilter);
   }, [selectedCustomer, expenses, detailFilter, packageOptions, extraOptions]);
 
@@ -825,24 +840,9 @@ export function useAdminStore() {
   }, [customers, expenses, financeFilter, packageOptions, extraOptions]);
 
   const selectedCustomerTrendData = useMemo(() => {
-    if (!selectedCustomer) {
-      return [];
-    }
-
+    if (!selectedCustomer) return [];
     return buildCustomerTrendData(selectedCustomer, detailFilter);
   }, [selectedCustomer, expenses, detailFilter, packageOptions, extraOptions]);
-
-  function pushRequestLogEntries(entries) {
-    const nextEntries = Array.isArray(entries)
-      ? entries.filter(Boolean)
-      : [entries].filter(Boolean);
-
-    if (nextEntries.length === 0) {
-      return;
-    }
-
-    setRequestLog((prev) => [...nextEntries, ...prev].slice(0, 100));
-  }
 
   async function loadDeploymentHistory(customer) {
     if (!customer?.deployment?.deploymentId) {
@@ -851,41 +851,36 @@ export function useAdminStore() {
       return;
     }
 
-    try {
-      const [operationsResult, auditResult] = await Promise.all([
-        apiRequest(
-          settings,
-          "GET",
-          `/api/deployments/${customer.deployment.deploymentId}/operations`
-        ),
-        apiRequest(
-          settings,
-          "GET",
-          `/api/deployments/${customer.deployment.deploymentId}/audit`
-        ),
-      ]);
+    const [operationsResult, auditResult] = await Promise.all([
+      apiRequest(
+        settings,
+        "GET",
+        `/api/deployments/${customer.deployment.deploymentId}/operations`
+      ),
+      apiRequest(
+        settings,
+        "GET",
+        `/api/deployments/${customer.deployment.deploymentId}/audit`
+      ),
+    ]);
 
-      setDeploymentOperations(normalizeOperationsResponse(operationsResult));
-      setDeploymentAuditEvents(normalizeAuditResponse(auditResult));
+    setDeploymentOperations(normalizeOperationsResponse(operationsResult));
+    setDeploymentAuditEvents(normalizeAuditResponse(auditResult));
 
-      pushRequestLogEntries([
-        {
-          id: createId("deployment-operations"),
-          at: new Date().toISOString(),
-          type: "GET_DEPLOYMENT_OPERATIONS",
-          result: operationsResult,
-        },
-        {
-          id: createId("deployment-audit"),
-          at: new Date().toISOString(),
-          type: "GET_DEPLOYMENT_AUDIT",
-          result: auditResult,
-        },
-      ]);
-    } catch (error) {
-      console.error(error);
-      notifyError("Deployment historie laden is mislukt.");
-    }
+    pushRequestLogEntries([
+      {
+        id: createId("deployment-operations"),
+        at: new Date().toISOString(),
+        type: "GET_DEPLOYMENT_OPERATIONS",
+        result: operationsResult,
+      },
+      {
+        id: createId("deployment-audit"),
+        at: new Date().toISOString(),
+        type: "GET_DEPLOYMENT_AUDIT",
+        result: auditResult,
+      },
+    ]);
   }
 
   function updateCustomerForm(key, value) {
@@ -1063,22 +1058,13 @@ export function useAdminStore() {
     setIsProvisioning(true);
     setPricingError("");
 
-    const pricingSnapshot =
-      packageOptions.length > 0
-        ? {
-            packages: packageOptions,
-            addons: extraOptions,
-          }
-        : await getFreshPricingSnapshot();
-
     const selectedPackage =
-      pricingSnapshot.packages.find(
-        (item) => item.code === customerForm.packageCode
-      ) || null;
+      packageOptions.find((item) => item.code === customerForm.packageCode) || null;
 
     if (!selectedPackage) {
-      setPricingError("Geselecteerd pakket kon niet geladen worden.");
-      notifyError("Geselecteerd pakket kon niet geladen worden.");
+      const message = "Geselecteerd pakket kon niet geladen worden.";
+      setPricingError(message);
+      notifyError(message);
       setIsProvisioning(false);
       return null;
     }
@@ -1086,24 +1072,21 @@ export function useAdminStore() {
     const monthlyRevenueInclVat =
       Number(selectedPackage?.monthlyPriceInclVat || 0) +
       (customerForm.extras || []).reduce((sum, code) => {
-        const addon =
-          pricingSnapshot.addons.find((item) => item.code === code) || null;
+        const addon = extraOptions.find((item) => item.code === code) || null;
         return sum + Number(addon?.monthlyPriceInclVat || 0);
       }, 0);
 
     const monthlyInfraCostInclVat =
       Number(selectedPackage?.monthlyInfraCostInclVat || 0) +
       (customerForm.extras || []).reduce((sum, code) => {
-        const addon =
-          pricingSnapshot.addons.find((item) => item.code === code) || null;
+        const addon = extraOptions.find((item) => item.code === code) || null;
         return sum + Number(addon?.monthlyInfraCostInclVat || 0);
       }, 0);
 
     const oneTimeSetupInclVat =
       Number(selectedPackage?.setupPriceInclVat || 0) +
       (customerForm.extras || []).reduce((sum, code) => {
-        const addon =
-          pricingSnapshot.addons.find((item) => item.code === code) || null;
+        const addon = extraOptions.find((item) => item.code === code) || null;
         return sum + Number(addon?.setupPriceInclVat || 0);
       }, 0);
 
@@ -1126,28 +1109,27 @@ export function useAdminStore() {
       vatRate: Number(selectedPackage?.vatRate || 0.21),
     };
 
-    const requestEntries = [];
+    const createCustomerResult = await apiRequest(
+      settings,
+      "POST",
+      "/api/customers",
+      createPayload
+    );
+
+    pushRequestLogEntries({
+      id: createId("req-customer"),
+      at: new Date().toISOString(),
+      type: "CREATE_CUSTOMER",
+      result: createCustomerResult,
+    });
 
     try {
-      const createCustomerResult = await apiRequest(
-        settings,
-        "POST",
-        "/api/customers",
-        createPayload
-      );
-
-      requestEntries.push({
-        id: createId("req-customer"),
-        at: new Date().toISOString(),
-        type: "CREATE_CUSTOMER",
-        result: createCustomerResult,
-      });
-
       const createdCustomer = createCustomerResult?.data?.data || null;
 
       if (!createCustomerResult.ok || !createdCustomer?.id) {
         throw new Error(
-          createCustomerResult?.data?.error ||
+          createCustomerResult?.data?.error?.message ||
+            createCustomerResult?.data?.error ||
             createCustomerResult?.data?.message ||
             "Klant aanmaken is mislukt."
         );
@@ -1159,7 +1141,10 @@ export function useAdminStore() {
         templateKey: customerForm.templateKey || "",
       };
 
-      setCustomers((prev) => [nextCustomer, ...prev.filter((item) => item.id !== nextCustomer.id)]);
+      setCustomers((prev) => [
+        nextCustomer,
+        ...prev.filter((item) => item.id !== nextCustomer.id),
+      ]);
       setSelectedCustomerId(nextCustomer.id);
 
       setBase44LinkForm({
@@ -1178,28 +1163,12 @@ export function useAdminStore() {
         additionalFilesJson: "[]",
       });
 
-      pushRequestLogEntries(requestEntries);
       resetCustomerForm();
       setIsCreateCustomerOpen(false);
       setActiveTab("customers");
       notifySuccess("Klant succesvol aangemaakt.");
       return nextCustomer;
     } catch (error) {
-      const failedEntry = {
-        id: createId("req-x"),
-        at: new Date().toISOString(),
-        type: "UNKNOWN_ERROR",
-        result: {
-          ok: false,
-          status: 0,
-          data: {
-            message: error instanceof Error ? error.message : "Unknown error",
-          },
-        },
-      };
-
-      requestEntries.push(failedEntry);
-      pushRequestLogEntries(requestEntries);
       const message =
         error instanceof Error ? error.message : "Klant aanmaken is mislukt.";
       setPricingError(message);
@@ -1211,9 +1180,7 @@ export function useAdminStore() {
   }
 
   async function autoCreateBase44App(customer) {
-    if (!customer?.id) {
-      return;
-    }
+    if (!customer?.id) return;
 
     setIsAutoCreatingBase44(true);
 
@@ -1249,7 +1216,7 @@ export function useAdminStore() {
       );
       notifySuccess("Base44 app succesvol gekoppeld.");
     } else {
-      notifyError("Base44 app koppelen is mislukt.");
+      notifyError(result?.data?.message || "Base44 app koppelen is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1257,9 +1224,7 @@ export function useAdminStore() {
   }
 
   async function startBuildFlow(customer) {
-    if (!customer?.id) {
-      return;
-    }
+    if (!customer?.id) return;
 
     setIsStartingBuildFlow(true);
 
@@ -1305,7 +1270,7 @@ export function useAdminStore() {
       setSelectedCustomerId(updatedCustomer.id);
       notifySuccess("Buildflow gestart.");
     } else {
-      notifyError("Buildflow starten is mislukt.");
+      notifyError(result?.data?.message || "Buildflow starten is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1320,9 +1285,7 @@ export function useAdminStore() {
     };
 
     const createdCustomer = await addCustomerAndProvision();
-    if (!createdCustomer?.id) {
-      return;
-    }
+    if (!createdCustomer?.id) return;
 
     const customerForBuild = {
       ...createdCustomer,
@@ -1380,7 +1343,7 @@ export function useAdminStore() {
       );
       notifySuccess("Content succesvol naar GitHub gesynchroniseerd.");
     } else {
-      notifyError("Content synchroniseren is mislukt.");
+      notifyError(result?.data?.message || "Content synchroniseren is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1431,7 +1394,7 @@ export function useAdminStore() {
       );
       notifySuccess("Base44 app succesvol handmatig gekoppeld.");
     } else {
-      notifyError("Base44 app handmatig koppelen is mislukt.");
+      notifyError(result?.data?.message || "Base44 app handmatig koppelen is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1439,9 +1402,7 @@ export function useAdminStore() {
   }
 
   async function markPreviewReady(customer) {
-    if (!customer?.id) {
-      return;
-    }
+    if (!customer?.id) return;
 
     setIsUpdatingWorkflow(true);
 
@@ -1469,7 +1430,7 @@ export function useAdminStore() {
       );
       notifySuccess("Preview is klaar gezet.");
     } else {
-      notifyError("Preview klaarzetten is mislukt.");
+      notifyError(result?.data?.message || "Preview klaarzetten is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1477,9 +1438,7 @@ export function useAdminStore() {
   }
 
   async function approveCustomerForProduction(customer) {
-    if (!customer?.id) {
-      return;
-    }
+    if (!customer?.id) return;
 
     setIsUpdatingWorkflow(true);
 
@@ -1507,7 +1466,7 @@ export function useAdminStore() {
       );
       notifySuccess("Klant is goedgekeurd voor productie.");
     } else {
-      notifyError("Goedkeuren voor productie is mislukt.");
+      notifyError(result?.data?.message || "Goedkeuren voor productie is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1515,9 +1474,7 @@ export function useAdminStore() {
   }
 
   async function deployCustomer(customer) {
-    if (!customer?.id) {
-      return;
-    }
+    if (!customer?.id) return;
 
     setIsUpdatingWorkflow(true);
 
@@ -1561,7 +1518,7 @@ export function useAdminStore() {
       );
       notifySuccess("Deployment gestart.");
     } else {
-      notifyError("Deployment starten is mislukt.");
+      notifyError(result?.data?.message || "Deployment starten is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1583,9 +1540,7 @@ export function useAdminStore() {
   }
 
   async function refreshCustomerDeployment(customer) {
-    if (!customer || !customer.deployment?.deploymentId) {
-      return;
-    }
+    if (!customer || !customer.deployment?.deploymentId) return;
 
     const result = await apiRequest(
       settings,
@@ -1622,9 +1577,7 @@ export function useAdminStore() {
   }
 
   async function refreshSingleCustomer(customerId) {
-    if (!customerId) {
-      return;
-    }
+    if (!customerId) return;
 
     const result = await apiRequest(settings, "GET", `/api/customers/${customerId}`);
     const nextCustomer = result?.data?.data || null;
@@ -1645,9 +1598,7 @@ export function useAdminStore() {
         customer?.deployment?.status === "RUNNING"
     );
 
-    if (busyCustomers.length === 0) {
-      return;
-    }
+    if (busyCustomers.length === 0) return;
 
     setIsAutoRefreshing(true);
 
@@ -1697,17 +1648,13 @@ export function useAdminStore() {
   }, [customers, settings.baseUrl, settings.apiKey, settings.tenantId, settings.actorId, settings.source]);
 
   async function redeployCustomer(customer) {
-    if (!customer || !customer.deployment?.deploymentId) {
-      return;
-    }
+    if (!customer || !customer.deployment?.deploymentId) return;
 
     const confirmed = window.confirm(
       `Weet je zeker dat je ${customer.companyName} opnieuw wilt deployen?`
     );
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
     setIsUpdatingWorkflow(true);
 
@@ -1748,7 +1695,7 @@ export function useAdminStore() {
     if (result.ok) {
       notifySuccess("Redeploy gestart.");
     } else {
-      notifyError("Redeploy starten is mislukt.");
+      notifyError(result?.data?.message || "Redeploy starten is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1756,9 +1703,7 @@ export function useAdminStore() {
   }
 
   async function rollbackCustomer(customer, targetRef = "") {
-    if (!customer || !customer.deployment?.deploymentId) {
-      return;
-    }
+    if (!customer || !customer.deployment?.deploymentId) return;
 
     const resolvedTargetRef =
       targetRef ||
@@ -1772,9 +1717,7 @@ export function useAdminStore() {
       `Weet je zeker dat je een rollback wilt starten voor ${customer.companyName}?`
     );
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
     setIsUpdatingWorkflow(true);
 
@@ -1814,7 +1757,7 @@ export function useAdminStore() {
     if (result.ok) {
       notifySuccess("Rollback gestart.");
     } else {
-      notifyError("Rollback starten is mislukt.");
+      notifyError(result?.data?.message || "Rollback starten is mislukt.");
     }
 
     pushRequestLogEntries(historyEntry);
@@ -1822,17 +1765,13 @@ export function useAdminStore() {
   }
 
   async function retryDeploymentStage(customer, stage) {
-    if (!customer?.deployment?.deploymentId || !stage) {
-      return;
-    }
+    if (!customer?.deployment?.deploymentId || !stage) return;
 
     const confirmed = window.confirm(
       `Weet je zeker dat je stage ${stage} opnieuw wilt draaien voor ${customer.companyName}?`
     );
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
     setIsUpdatingWorkflow(true);
 
@@ -1869,7 +1808,7 @@ export function useAdminStore() {
       notifySuccess(`Retry gestart voor stage ${stage}.`);
       await loadDeploymentHistory(customer);
     } else {
-      notifyError(`Retry starten voor stage ${stage} is mislukt.`);
+      notifyError(result?.data?.message || `Retry starten voor stage ${stage} is mislukt.`);
     }
 
     pushRequestLogEntries(historyEntry);
