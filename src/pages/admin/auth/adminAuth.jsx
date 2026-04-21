@@ -5,7 +5,7 @@ const ADMIN_AUTH_STORAGE_KEY = "vedantix_admin_auth_v1";
 const AdminAuthContext = createContext(null);
 
 const RAW_API_BASE =
-  import.meta.env.VITE_API_BASE_URL || "/provisioning-api";
+  import.meta.env.VITE_API_BASE_URL || "https://api.vedantix.nl";
 
 const API_BASE = String(RAW_API_BASE).replace(/\/$/, "");
 
@@ -32,6 +32,10 @@ export function readAdminSessionToken() {
   return session?.token || "";
 }
 
+export function readAdminSession() {
+  return readStoredSession();
+}
+
 export function AdminAuthProvider({ children }) {
   const [session, setSession] = useState(() => readStoredSession());
 
@@ -39,7 +43,7 @@ export function AdminAuthProvider({ children }) {
     writeStoredSession(session);
   }, [session]);
 
-  async function login({ password }) {
+  async function login({ email, password }) {
     const response = await fetch(`${API_BASE}/api/admin/auth/login`, {
       method: "POST",
       headers: {
@@ -48,7 +52,10 @@ export function AdminAuthProvider({ children }) {
         "X-Actor-Id": "admin-login",
         "X-Source": "ADMIN_PANEL",
       },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({
+        email: String(email || "").trim().toLowerCase(),
+        password: String(password || ""),
+      }),
     });
 
     const text = await response.text();
@@ -61,20 +68,20 @@ export function AdminAuthProvider({ children }) {
     }
 
     if (!response.ok) {
-      throw new Error(
-        json?.error || json?.message || "Inloggen mislukt"
-      );
+      throw new Error(json?.error || json?.message || "Inloggen mislukt");
     }
 
     const token = json?.data?.token || "";
+    const user = json?.data?.user || null;
 
-    if (!token) {
-      throw new Error("Geen token ontvangen");
+    if (!token || !user?.id) {
+      throw new Error("Ongeldige login response");
     }
 
     const nextSession = {
       isAuthenticated: true,
       token,
+      user,
       loggedInAt: new Date().toISOString(),
     };
 
@@ -90,6 +97,7 @@ export function AdminAuthProvider({ children }) {
     () => ({
       isAuthenticated: Boolean(session?.isAuthenticated && session?.token),
       session,
+      user: session?.user || null,
       login,
       logout,
     }),

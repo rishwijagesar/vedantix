@@ -8,6 +8,7 @@ export default function AdminLoginPage() {
   const location = useLocation();
   const { isAuthenticated, login } = useAdminAuth();
 
+  const [email, setEmail] = useState("admin@vedantix.nl");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,7 +25,7 @@ export default function AdminLoginPage() {
     setIsSubmitting(true);
 
     try {
-      await login({ password });
+      await login({ email, password });
       navigate(redirectTo, { replace: true });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Inloggen mislukt");
@@ -39,8 +40,7 @@ export default function AdminLoginPage() {
         minHeight: "100vh",
         display: "grid",
         placeItems: "center",
-        background:
-          "linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%)",
+        background: "linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%)",
         padding: 24,
       }}
     >
@@ -87,6 +87,38 @@ export default function AdminLoginPage() {
         <form onSubmit={handleSubmit} style={{ display: "grid", gap: 18 }}>
           <div style={{ display: "grid", gap: 8 }}>
             <label
+              htmlFor="admin-email"
+              style={{
+                fontSize: 13,
+                fontWeight: 800,
+                color: "#334155",
+              }}
+            >
+              E-mail
+            </label>
+
+            <input
+              id="admin-email"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="admin@vedantix.nl"
+              autoComplete="username"
+              style={{
+                width: "100%",
+                minHeight: 52,
+                borderRadius: 16,
+                border: "1px solid #cbd5e1",
+                padding: "0 16px",
+                fontSize: 15,
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+            />
+          </div>
+
+          <div style={{ display: "grid", gap: 8 }}>
+            <label
               htmlFor="admin-password"
               style={{
                 fontSize: 13,
@@ -102,7 +134,7 @@ export default function AdminLoginPage() {
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              placeholder="Voer je admin wachtwoord in"
+              placeholder="Voer je wachtwoord in"
               autoComplete="current-password"
               style={{
                 width: "100%",

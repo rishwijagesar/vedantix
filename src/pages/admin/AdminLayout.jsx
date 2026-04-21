@@ -18,7 +18,7 @@ export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
   const store = useAdminStore();
-  const { logout } = useAdminAuth();
+  const { logout, user } = useAdminAuth();
 
   const navItems = [
     { label: "Dashboard", path: "/admin" },
@@ -49,6 +49,25 @@ export default function AdminLayout() {
       >
         <div style={{ marginBottom: 30 }}>
           <VedantixLogo variant="full" size="md" theme="light" />
+        </div>
+
+        <div
+          style={{
+            marginBottom: 20,
+            padding: 12,
+            borderRadius: 12,
+            background: "rgba(255,255,255,0.08)",
+          }}
+        >
+          <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 4 }}>
+            Ingelogd als
+          </div>
+          <div style={{ fontWeight: 800, color: "#ffffff" }}>
+            {user?.displayName || "Admin"}
+          </div>
+          <div style={{ fontSize: 12, color: "#cbd5e1", marginTop: 4 }}>
+            {user?.email || ""}
+          </div>
         </div>
 
         <nav style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
