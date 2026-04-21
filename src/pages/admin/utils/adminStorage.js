@@ -194,7 +194,7 @@ export const DEFAULT_PRICING_ADDONS = [
 ];
 
 export const DEFAULT_SETTINGS = {
-  baseUrl: "/provisioning-api",
+  baseUrl: "https://api.vedantix.nl",
   apiKey: "",
   tenantId: "default",
   actorId: "admin-dashboard",

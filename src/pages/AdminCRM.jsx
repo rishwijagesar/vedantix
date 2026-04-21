@@ -13,10 +13,8 @@ import {
 } from "recharts";
 
 const STORAGE_KEYS = {
-  settings: "vedantix_admin_settings_v8",
-  customers: "vedantix_admin_customers_v8",
-  expenses: "vedantix_admin_expenses_v8",
-  requestLog: "vedantix_admin_request_log_v8",
+  settings: "vedantix_admin_settings_v9",
+  requestLog: "vedantix_admin_request_log_v9",
   packageOptions: "vedantix_package_options_v2",
   extraOptions: "vedantix_extra_options_v2",
 };
@@ -145,6 +143,9 @@ const STATUS_LABELS = {
   failed: "Fout",
   paused: "Gepauzeerd",
   cancelled: "Opgezegd",
+  awaiting_approval: "Wacht op goedkeuring",
+  approved: "Goedgekeurd",
+  deleted: "Verwijderd",
 };
 
 const STATUS_COLORS = {
@@ -157,6 +158,9 @@ const STATUS_COLORS = {
   failed: "#ef4444",
   paused: "#475569",
   cancelled: "#94a3b8",
+  awaiting_approval: "#a855f7",
+  approved: "#22c55e",
+  deleted: "#991b1b",
 };
 
 const TIME_FILTERS = [
@@ -169,13 +173,13 @@ const TIME_FILTERS = [
 ];
 
 const DEFAULT_SETTINGS = {
-  baseUrl: "/provisioning-api",
-  apiKey: "d1e07740dce2a9102635aee441926de52e341fde95cfa10778e465d64d0f6251",
+  baseUrl: "https://api.vedantix.nl",
+  apiKey: "",
   tenantId: "default",
   actorId: "admin-dashboard",
   source: "ADMIN_PANEL",
   autoIdempotency: true,
-  autoProvisionMail: true,
+  autoProvisionMail: false,
 };
 
 const DEFAULT_CUSTOMER_FORM = {
@@ -309,6 +313,49 @@ function calcMonthlyInfraCost(customer, packageOptions, extraOptions) {
   );
 }
 
+function normalizeCustomerFromApi(customer) {
+  if (!customer) return null;
+
+  const normalizedExtras = Array.isArray(customer.extras) ? customer.extras : [];
+  const normalizedFinance = customer.finance || {};
+
+  return {
+    ...customer,
+    extras: normalizedExtras,
+    documents: Array.isArray(customer.documents) ? customer.documents : [],
+    requestHistory: Array.isArray(customer.requestHistory) ? customer.requestHistory : [],
+    finance: {
+      monthlyRevenue:
+        Number(normalizedFinance.monthlyRevenueInclVat) ||
+        Number(normalizedFinance.monthlyRevenue) ||
+        0,
+      monthlyInfraCost:
+        Number(normalizedFinance.monthlyInfraCostInclVat) ||
+        Number(normalizedFinance.monthlyInfraCost) ||
+        0,
+      oneTimeSetupCost:
+        Number(normalizedFinance.oneTimeSetupInclVat) ||
+        Number(normalizedFinance.oneTimeSetupCost) ||
+        0,
+      ...normalizedFinance,
+    },
+    monthlyInfraCost:
+      Number(customer.monthlyInfraCost) ||
+      Number(normalizedFinance.monthlyInfraCostInclVat) ||
+      0,
+    oneTimeSetupCost:
+      Number(customer.oneTimeSetupCost) ||
+      Number(normalizedFinance.oneTimeSetupInclVat) ||
+      0,
+  };
+}
+
+function normalizeCustomersFromApi(customers) {
+  return Array.isArray(customers)
+    ? customers.map(normalizeCustomerFromApi).filter(Boolean)
+    : [];
+}
+
 function buildHeaders(settings, method) {
   const headers = {
     "Content-Type": "application/json",
@@ -328,7 +375,8 @@ function buildHeaders(settings, method) {
 }
 
 async function apiRequest(settings, method, path, body) {
-  const url = `${settings.baseUrl.replace(/\/$/, "")}${path}`;
+  const url = `${String(settings.baseUrl || "").replace(/\/$/, "")}${path}`;
+
   const response = await fetch(url, {
     method,
     headers: buildHeaders(settings, method),
@@ -521,7 +569,8 @@ function buildDashboardTrendData(
       );
 
       const infraCost = customers.reduce(
-        (sum, customer) => sum + calcMonthlyInfraCost(customer, packageOptions, extraOptions),
+        (sum, customer) =>
+          sum + calcMonthlyInfraCost(customer, packageOptions, extraOptions),
         0
       );
 
@@ -553,7 +602,8 @@ function buildDashboardTrendData(
 
       const infraCost =
         customers.reduce(
-          (sum, customer) => sum + calcMonthlyInfraCost(customer, packageOptions, extraOptions),
+          (sum, customer) =>
+            sum + calcMonthlyInfraCost(customer, packageOptions, extraOptions),
           0
         ) / 30;
 
@@ -928,12 +978,8 @@ export default function AdminCRM() {
   const [settings, setSettings] = useState(() =>
     loadJson(STORAGE_KEYS.settings, DEFAULT_SETTINGS)
   );
-  const [customers, setCustomers] = useState(() =>
-    loadJson(STORAGE_KEYS.customers, [])
-  );
-  const [expenses, setExpenses] = useState(() =>
-    loadJson(STORAGE_KEYS.expenses, [])
-  );
+  const [customers, setCustomers] = useState([]);
+  const [expenses, setExpenses] = useState([]);
   const [requestLog, setRequestLog] = useState(() =>
     loadJson(STORAGE_KEYS.requestLog, [])
   );
@@ -947,10 +993,11 @@ export default function AdminCRM() {
   const [isProvisioning, setIsProvisioning] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
   const [deleteCandidate, setDeleteCandidate] = useState(null);
+  const [isLoadingCustomers, setIsLoadingCustomers] = useState(false);
+  const [isSavingCustomer, setIsSavingCustomer] = useState(false);
+  const [isDeletingCustomer, setIsDeletingCustomer] = useState(false);
 
   useEffect(() => saveJson(STORAGE_KEYS.settings, settings), [settings]);
-  useEffect(() => saveJson(STORAGE_KEYS.customers, customers), [customers]);
-  useEffect(() => saveJson(STORAGE_KEYS.expenses, expenses), [expenses]);
   useEffect(() => saveJson(STORAGE_KEYS.requestLog, requestLog), [requestLog]);
   useEffect(() => saveJson(STORAGE_KEYS.packageOptions, packageOptions), [packageOptions]);
   useEffect(() => saveJson(STORAGE_KEYS.extraOptions, extraOptions), [extraOptions]);
@@ -991,7 +1038,8 @@ export default function AdminCRM() {
 
   const totalMonthlyCosts = useMemo(() => {
     const infra = customers.reduce(
-      (sum, customer) => sum + Number(calcMonthlyInfraCost(customer, packageOptions, extraOptions) || 0),
+      (sum, customer) =>
+        sum + Number(calcMonthlyInfraCost(customer, packageOptions, extraOptions) || 0),
       0
     );
     const manual = financeExpenses.reduce(
@@ -1135,194 +1183,152 @@ export default function AdminCRM() {
     );
   }
 
-  function createCustomerDraft() {
-    const companySlug = slugify(customerForm.companyName);
-    const domainSlug = slugify(
-      customerForm.domain.split(".")[0] || customerForm.companyName
+  function buildCreateCustomerPayload() {
+    const selectedPackage = packageMeta(customerForm.packageCode, packageOptions);
+
+    const monthlyRevenueInclVat = calcMonthlyRevenue(
+      customerForm,
+      packageOptions,
+      extraOptions
     );
 
-    const customerId = `cust_${companySlug || domainSlug || Date.now()}`;
-    const selectedPackage = packageMeta(customerForm.packageCode, packageOptions);
-    const selectedExtras = (customerForm.extras || [])
-      .map((code) => extraMeta(code, extraOptions))
-      .filter(Boolean);
+    const monthlyInfraCostInclVat = calcMonthlyInfraCost(
+      customerForm,
+      packageOptions,
+      extraOptions
+    );
 
-    const monthlyRevenue =
-      Number(selectedPackage?.monthlyPrice || 0) +
-      selectedExtras.reduce((sum, item) => sum + Number(item.monthlyPrice || 0), 0);
+    const oneTimeSetupInclVat = calcSetupRevenue(
+      customerForm,
+      packageOptions,
+      extraOptions
+    );
 
-    const monthlyInfraCost =
-      Number(selectedPackage?.monthlyInfraCost || 0) +
-      selectedExtras.reduce((sum, item) => sum + Number(item.monthlyInfraCost || 0), 0);
-
-    const oneTimeSetupCost =
-      Number(selectedPackage?.setupPrice || 0) +
-      selectedExtras.reduce((sum, item) => sum + Number(item.setupPrice || 0), 0);
-
-      return {
-        id: customerId,
-        companyName: customerForm.companyName,
-        contactName: customerForm.contactName,
-        email: customerForm.email,
-        phone: customerForm.phone,
-        domain: customerForm.domain.trim().toLowerCase(),
-        packageCode: customerForm.packageCode,
-        extras: customerForm.extras,
-        notes: customerForm.notes,
-        monthlyInfraCost,
-        oneTimeSetupCost,
-        address: customerForm.address,
-        postalCode: customerForm.postalCode,
-        city: customerForm.city,
-        country: customerForm.country,
-        status: "intake",
-        createdAt: new Date().toISOString(),
-        deploymentId: "",
-        deploymentStatus: "NOT_STARTED",
-        deploymentStage: null,
-        mailProvisioned: false,
-        mailDomainId: "",
-        documents: [],
-        requestHistory: [],
-        financeSynced: false,
-        finance: {
-          monthlyRevenue,
-          monthlyInfraCost,
-          oneTimeSetupCost,
-        },
-      };
+    return {
+      companyName: customerForm.companyName.trim(),
+      contactName: customerForm.contactName.trim(),
+      email: customerForm.email.trim(),
+      phone: customerForm.phone.trim(),
+      domain: customerForm.domain.trim().toLowerCase(),
+      packageCode: customerForm.packageCode,
+      extras: customerForm.extras || [],
+      notes: customerForm.notes || "",
+      address: customerForm.address || "",
+      postalCode: customerForm.postalCode || "",
+      city: customerForm.city || "",
+      country: customerForm.country || "Nederland",
+      monthlyRevenueInclVat,
+      monthlyInfraCostInclVat,
+      oneTimeSetupInclVat,
+      vatRate: Number(selectedPackage?.vatRate || 0.21),
+    };
   }
+
+  async function loadCustomers() {
+    setIsLoadingCustomers(true);
+
+    const result = await apiRequest(settings, "GET", "/api/customers");
+
+    const entry = {
+      id:
+        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+        `customers-load-${Date.now()}`,
+      at: new Date().toISOString(),
+      type: "LIST_CUSTOMERS",
+      result,
+    };
+
+    pushRequestLogEntries(entry);
+
+    if (result.ok) {
+      const nextCustomers = normalizeCustomersFromApi(result?.data?.data || result?.data || []);
+      setCustomers(nextCustomers);
+
+      if (selectedCustomerId) {
+        const stillExists = nextCustomers.some((item) => item.id === selectedCustomerId);
+        if (!stillExists) {
+          setSelectedCustomerId(nextCustomers[0]?.id || null);
+        }
+      } else if (nextCustomers.length > 0) {
+        setSelectedCustomerId(nextCustomers[0].id);
+      }
+    }
+
+    setIsLoadingCustomers(false);
+  }
+
+  useEffect(() => {
+    void loadCustomers();
+  }, []);
 
   async function addCustomerAndProvision() {
     if (
-      !customerForm.companyName ||
-      !customerForm.contactName ||
-      !customerForm.email ||
-      !customerForm.domain
+      !customerForm.companyName?.trim() ||
+      !customerForm.contactName?.trim() ||
+      !customerForm.email?.trim() ||
+      !customerForm.domain?.trim()
     ) {
+      const validationEntry = {
+        id:
+          (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+          `req-${Date.now()}-validation`,
+        at: new Date().toISOString(),
+        type: "CREATE_CUSTOMER_VALIDATION",
+        result: {
+          ok: false,
+          status: 0,
+          data: {
+            message:
+              "Bedrijfsnaam, contactpersoon, e-mail en domeinnaam zijn verplicht.",
+          },
+        },
+      };
+
+      pushRequestLogEntries(validationEntry);
       return;
     }
-  
+
     setIsProvisioning(true);
-  
-    const customer = createCustomerDraft();
-    setCustomers((prev) => [customer, ...prev]);
-    setSelectedCustomerId(customer.id);
-  
+
+    const payload = buildCreateCustomerPayload();
     const requestEntries = [];
-  
+
     try {
-      const deployResult = await apiRequest(settings, "POST", "/api/deployments", {
-        customerId: customer.id,
-        projectName: slugify(customer.companyName || customer.domain),
-        domain: customer.domain,
-        packageCode: customer.packageCode,
-        addOns: customer.extras,
-      });
-  
+      const createResult = await apiRequest(settings, "POST", "/api/customers", payload);
+
       requestEntries.push({
         id:
           (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-          `req-${Date.now()}-1`,
+          `req-${Date.now()}-create`,
         at: new Date().toISOString(),
-        type: "CREATE_DEPLOYMENT",
-        result: deployResult,
+        type: "CREATE_CUSTOMER",
+        result: createResult,
       });
-  
-      const deploymentId =
-        deployResult?.data?.data?.deploymentId ||
-        deployResult?.data?.deploymentId ||
-        "";
-  
-      const deploymentStatus =
-        deployResult?.data?.data?.status ||
-        deployResult?.data?.status ||
-        (deployResult.ok ? "PENDING" : "FAILED");
-  
-      let nextStatus = deployResult.ok ? "provisioning" : "failed";
-      let mailProvisioned = false;
-  
-      if (settings.autoProvisionMail) {
-        const mailResult = await apiRequest(
-          settings,
-          "POST",
-          `/api/customers/${customer.id}/provision-mail`,
-          {
-            domain: customer.domain,
-            packageCode: customer.packageCode,
-          }
+
+      if (!createResult.ok) {
+        throw new Error(
+          createResult?.data?.error?.message ||
+            createResult?.data?.message ||
+            "Klant aanmaken mislukt"
         );
-  
-        requestEntries.push({
-          id:
-            (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-            `req-${Date.now()}-2`,
-          at: new Date().toISOString(),
-          type: "PROVISION_MAIL",
-          result: mailResult,
-        });
-  
-        mailProvisioned = mailResult.ok;
-        nextStatus = deployResult.ok
-          ? mailResult.ok
-            ? "active"
-            : "warning"
-          : "failed";
-      } else {
-        nextStatus = deployResult.ok ? "active" : "failed";
       }
-      const pkg = packageOptions.find(p => p.code === customer.packageCode);
-  
-      const financeBootstrapPayload = {
-        tenantId: settings.tenantId || "default",
-        customerId: customer.id,
-        customerName: customer.companyName,
-        packageCode: customer.packageCode,
-        extras: customer.extras || [],
-        monthlyRevenueInclVat: Number(customer.finance?.monthlyRevenue || 0),
-        monthlyInfraCostInclVat: Number(customer.monthlyInfraCost || 0),
-        oneTimeSetupInclVat: Number(customer.oneTimeSetupCost || 0),
-        currency: "EUR",
-        vatRate: Number(pkg?.vatRate) || 0.21,
-      };
-  
-      const financeResult = await apiRequest(
-        settings,
-        "POST",
-        "/api/finance/customers/bootstrap",
-        financeBootstrapPayload
+
+      const createdCustomer = normalizeCustomerFromApi(
+        createResult?.data?.data || createResult?.data
       );
-  
-      requestEntries.push({
-        id:
-          (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-          `req-${Date.now()}-3`,
-        at: new Date().toISOString(),
-        type: "BOOTSTRAP_FINANCE",
-        result: financeResult,
+
+      if (!createdCustomer?.id) {
+        throw new Error("Backend gaf geen geldig customer object terug");
+      }
+
+      setCustomers((prev) => {
+        const withoutExisting = prev.filter((item) => item.id !== createdCustomer.id);
+        return [createdCustomer, ...withoutExisting];
       });
-  
-      setCustomers((prev) =>
-        prev.map((item) =>
-          item.id === customer.id
-            ? {
-                ...item,
-                deploymentId,
-                deploymentStatus,
-                deploymentStage:
-                  deployResult?.data?.data?.currentStage ||
-                  deployResult?.data?.currentStage ||
-                  null,
-                mailProvisioned,
-                status: nextStatus,
-                financeSynced: financeResult.ok,
-                requestHistory: requestEntries,
-              }
-            : item
-        )
-      );
-  
+
+      setSelectedCustomerId(createdCustomer.id);
       pushRequestLogEntries(requestEntries);
+
       resetCustomerForm();
       setIsCreateCustomerOpen(false);
       setActiveTab("customers");
@@ -1330,9 +1336,9 @@ export default function AdminCRM() {
       const failedEntry = {
         id:
           (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
-          `req-${Date.now()}-x`,
+          `req-${Date.now()}-error`,
         at: new Date().toISOString(),
-        type: "UNKNOWN_ERROR",
+        type: "CREATE_CUSTOMER_ERROR",
         result: {
           ok: false,
           status: 0,
@@ -1341,21 +1347,8 @@ export default function AdminCRM() {
           },
         },
       };
-  
+
       requestEntries.push(failedEntry);
-  
-      setCustomers((prev) =>
-        prev.map((item) =>
-          item.id === customer.id
-            ? {
-                ...item,
-                status: "failed",
-                requestHistory: requestEntries,
-              }
-            : item
-        )
-      );
-  
       pushRequestLogEntries(requestEntries);
     } finally {
       setIsProvisioning(false);
@@ -1441,27 +1434,96 @@ export default function AdminCRM() {
     pushRequestLogEntries(historyEntry);
   }
 
-  function saveCustomerEdits(nextCustomer) {
-    setCustomers((prev) =>
-      prev.map((item) => (item.id === nextCustomer.id ? nextCustomer : item))
+  async function saveCustomerEdits(nextCustomer) {
+    if (!nextCustomer?.id) return;
+
+    setIsSavingCustomer(true);
+
+    const payload = {
+      companyName: nextCustomer.companyName,
+      contactName: nextCustomer.contactName,
+      email: nextCustomer.email,
+      phone: nextCustomer.phone,
+      domain: String(nextCustomer.domain || "").trim().toLowerCase(),
+      packageCode: nextCustomer.packageCode,
+      extras: nextCustomer.extras || [],
+      notes: nextCustomer.notes || "",
+      address: nextCustomer.address || "",
+      postalCode: nextCustomer.postalCode || "",
+      city: nextCustomer.city || "",
+      country: nextCustomer.country || "",
+    };
+
+    const result = await apiRequest(
+      settings,
+      "PUT",
+      `/api/customers/${nextCustomer.id}`,
+      payload
     );
+
+    const historyEntry = {
+      id:
+        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+        `update-${Date.now()}`,
+      at: new Date().toISOString(),
+      type: "UPDATE_CUSTOMER",
+      result,
+    };
+
+    pushRequestLogEntries(historyEntry);
+
+    if (result.ok) {
+      const updatedCustomer = normalizeCustomerFromApi(result?.data?.data || result?.data);
+      if (updatedCustomer?.id) {
+        setCustomers((prev) =>
+          prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
+        );
+      }
+    }
+
+    setIsSavingCustomer(false);
   }
 
   function requestDeleteCustomer(customer) {
     setDeleteCandidate(customer);
   }
 
-  function confirmDeleteCustomer() {
-    if (!deleteCandidate) return;
+  async function confirmDeleteCustomer() {
+    if (!deleteCandidate?.id) return;
 
-    const customerId = deleteCandidate.id;
-    setCustomers((prev) => prev.filter((item) => item.id !== customerId));
+    setIsDeletingCustomer(true);
 
-    if (selectedCustomerId === customerId) {
-      setSelectedCustomerId(null);
+    const result = await apiRequest(
+      settings,
+      "DELETE",
+      `/api/customers/${deleteCandidate.id}`,
+      {}
+    );
+
+    const historyEntry = {
+      id:
+        (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+        `delete-${Date.now()}`,
+      at: new Date().toISOString(),
+      type: "DELETE_CUSTOMER",
+      result,
+    };
+
+    pushRequestLogEntries(historyEntry);
+
+    if (result.ok) {
+      const customerId = deleteCandidate.id;
+      setCustomers((prev) => prev.filter((item) => item.id !== customerId));
+
+      if (selectedCustomerId === customerId) {
+        const nextCustomer = customers.find((item) => item.id !== customerId);
+        setSelectedCustomerId(nextCustomer?.id || null);
+      }
+
+      setDeleteCandidate(null);
     }
 
-    setDeleteCandidate(null);
+    setIsDeletingCustomer(false);
   }
 
   function addExpense() {
@@ -1780,6 +1842,10 @@ export default function AdminCRM() {
                       </span>
                     </div>
 
+                    <Button onClick={loadCustomers} tone="soft" disabled={isLoadingCustomers}>
+                      {isLoadingCustomers ? "Laden..." : "Refresh klanten"}
+                    </Button>
+
                     <Button
                       tone="primary"
                       onClick={() => setIsCreateCustomerOpen(true)}
@@ -1926,7 +1992,7 @@ export default function AdminCRM() {
                             fontSize: 15,
                           }}
                         >
-                          Geen klanten gevonden.
+                          {isLoadingCustomers ? "Klanten laden..." : "Geen klanten gevonden."}
                         </td>
                       </tr>
                     ) : null}
@@ -2003,6 +2069,15 @@ export default function AdminCRM() {
                     <SectionTitle
                       title="Algemene gegevens"
                       subtitle="Wijzigbare klantinformatie."
+                      action={
+                        <Button
+                          tone="primary"
+                          onClick={() => saveCustomerEdits(selectedCustomer)}
+                          disabled={isSavingCustomer}
+                        >
+                          {isSavingCustomer ? "Opslaan..." : "Opslaan"}
+                        </Button>
+                      }
                     />
                     <div
                       style={{
@@ -2013,72 +2088,90 @@ export default function AdminCRM() {
                     >
                       <Field label="Bedrijfsnaam">
                         <Input
-                          value={selectedCustomer.companyName}
+                          value={selectedCustomer.companyName || ""}
                           onChange={(e) =>
-                            saveCustomerEdits({
-                              ...selectedCustomer,
-                              companyName: e.target.value,
-                            })
+                            setCustomers((prev) =>
+                              prev.map((item) =>
+                                item.id === selectedCustomer.id
+                                  ? { ...item, companyName: e.target.value }
+                                  : item
+                              )
+                            )
                           }
                         />
                       </Field>
 
                       <Field label="Contactpersoon">
                         <Input
-                          value={selectedCustomer.contactName}
+                          value={selectedCustomer.contactName || ""}
                           onChange={(e) =>
-                            saveCustomerEdits({
-                              ...selectedCustomer,
-                              contactName: e.target.value,
-                            })
+                            setCustomers((prev) =>
+                              prev.map((item) =>
+                                item.id === selectedCustomer.id
+                                  ? { ...item, contactName: e.target.value }
+                                  : item
+                              )
+                            )
                           }
                         />
                       </Field>
 
                       <Field label="E-mail">
                         <Input
-                          value={selectedCustomer.email}
+                          value={selectedCustomer.email || ""}
                           onChange={(e) =>
-                            saveCustomerEdits({
-                              ...selectedCustomer,
-                              email: e.target.value,
-                            })
+                            setCustomers((prev) =>
+                              prev.map((item) =>
+                                item.id === selectedCustomer.id
+                                  ? { ...item, email: e.target.value }
+                                  : item
+                              )
+                            )
                           }
                         />
                       </Field>
 
                       <Field label="Telefoon">
                         <Input
-                          value={selectedCustomer.phone}
+                          value={selectedCustomer.phone || ""}
                           onChange={(e) =>
-                            saveCustomerEdits({
-                              ...selectedCustomer,
-                              phone: e.target.value,
-                            })
+                            setCustomers((prev) =>
+                              prev.map((item) =>
+                                item.id === selectedCustomer.id
+                                  ? { ...item, phone: e.target.value }
+                                  : item
+                              )
+                            )
                           }
                         />
                       </Field>
 
                       <Field label="Domeinnaam">
                         <Input
-                          value={selectedCustomer.domain}
+                          value={selectedCustomer.domain || ""}
                           onChange={(e) =>
-                            saveCustomerEdits({
-                              ...selectedCustomer,
-                              domain: e.target.value,
-                            })
+                            setCustomers((prev) =>
+                              prev.map((item) =>
+                                item.id === selectedCustomer.id
+                                  ? { ...item, domain: e.target.value }
+                                  : item
+                              )
+                            )
                           }
                         />
                       </Field>
 
                       <Field label="Pakket">
                         <Select
-                          value={selectedCustomer.packageCode}
+                          value={selectedCustomer.packageCode || "STARTER"}
                           onChange={(e) =>
-                            saveCustomerEdits({
-                              ...selectedCustomer,
-                              packageCode: e.target.value,
-                            })
+                            setCustomers((prev) =>
+                              prev.map((item) =>
+                                item.id === selectedCustomer.id
+                                  ? { ...item, packageCode: e.target.value }
+                                  : item
+                              )
+                            )
                           }
                         >
                           {activePackageOptions(packageOptions).map((item) => (
@@ -2093,10 +2186,13 @@ export default function AdminCRM() {
                         <Input
                           value={selectedCustomer.address || ""}
                           onChange={(e) =>
-                            saveCustomerEdits({
-                              ...selectedCustomer,
-                              address: e.target.value,
-                            })
+                            setCustomers((prev) =>
+                              prev.map((item) =>
+                                item.id === selectedCustomer.id
+                                  ? { ...item, address: e.target.value }
+                                  : item
+                              )
+                            )
                           }
                         />
                       </Field>
@@ -2105,10 +2201,13 @@ export default function AdminCRM() {
                         <Input
                           value={selectedCustomer.postalCode || ""}
                           onChange={(e) =>
-                            saveCustomerEdits({
-                              ...selectedCustomer,
-                              postalCode: e.target.value,
-                            })
+                            setCustomers((prev) =>
+                              prev.map((item) =>
+                                item.id === selectedCustomer.id
+                                  ? { ...item, postalCode: e.target.value }
+                                  : item
+                              )
+                            )
                           }
                         />
                       </Field>
@@ -2117,10 +2216,13 @@ export default function AdminCRM() {
                         <Input
                           value={selectedCustomer.city || ""}
                           onChange={(e) =>
-                            saveCustomerEdits({
-                              ...selectedCustomer,
-                              city: e.target.value,
-                            })
+                            setCustomers((prev) =>
+                              prev.map((item) =>
+                                item.id === selectedCustomer.id
+                                  ? { ...item, city: e.target.value }
+                                  : item
+                              )
+                            )
                           }
                         />
                       </Field>
@@ -2129,10 +2231,13 @@ export default function AdminCRM() {
                         <Input
                           value={selectedCustomer.country || ""}
                           onChange={(e) =>
-                            saveCustomerEdits({
-                              ...selectedCustomer,
-                              country: e.target.value,
-                            })
+                            setCustomers((prev) =>
+                              prev.map((item) =>
+                                item.id === selectedCustomer.id
+                                  ? { ...item, country: e.target.value }
+                                  : item
+                              )
+                            )
                           }
                         />
                       </Field>
@@ -2161,10 +2266,13 @@ export default function AdminCRM() {
                           <Textarea
                             value={selectedCustomer.notes || ""}
                             onChange={(e) =>
-                              saveCustomerEdits({
-                                ...selectedCustomer,
-                                notes: e.target.value,
-                              })
+                              setCustomers((prev) =>
+                                prev.map((item) =>
+                                  item.id === selectedCustomer.id
+                                    ? { ...item, notes: e.target.value }
+                                    : item
+                                )
+                              )
                             }
                           />
                         </Field>
@@ -2618,7 +2726,11 @@ export default function AdminCRM() {
                               min="0"
                               value={item.monthlyInfraCost}
                               onChange={(e) =>
-                                updatePackageOption(item.code, "monthlyInfraCost", e.target.value)
+                                updatePackageOption(
+                                  item.code,
+                                  "monthlyInfraCost",
+                                  e.target.value
+                                )
                               }
                             />
                           </Field>
@@ -2776,7 +2888,7 @@ export default function AdminCRM() {
                   <Input
                     value={settings.baseUrl}
                     onChange={(e) => updateSettings("baseUrl", e.target.value)}
-                    placeholder="/provisioning-api"
+                    placeholder="https://api.vedantix.nl"
                   />
                 </Field>
 
@@ -2829,9 +2941,7 @@ export default function AdminCRM() {
                   <input
                     type="checkbox"
                     checked={Boolean(settings.autoIdempotency)}
-                    onChange={(e) =>
-                      updateSettings("autoIdempotency", e.target.checked)
-                    }
+                    onChange={(e) => updateSettings("autoIdempotency", e.target.checked)}
                   />
                   Automatisch idempotency key toevoegen
                 </label>
@@ -2848,12 +2958,16 @@ export default function AdminCRM() {
                   <input
                     type="checkbox"
                     checked={Boolean(settings.autoProvisionMail)}
-                    onChange={(e) =>
-                      updateSettings("autoProvisionMail", e.target.checked)
-                    }
+                    onChange={(e) => updateSettings("autoProvisionMail", e.target.checked)}
                   />
                   Automatisch mail provisioning starten na deploy
                 </label>
+
+                <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 8 }}>
+                  <Button tone="primary" onClick={loadCustomers} disabled={isLoadingCustomers}>
+                    {isLoadingCustomers ? "Verbinden..." : "Test / klanten laden"}
+                  </Button>
+                </div>
               </div>
             </Card>
 
@@ -3222,8 +3336,8 @@ export default function AdminCRM() {
             }}
           >
             <Button onClick={() => setDeleteCandidate(null)}>Annuleren</Button>
-            <Button tone="danger" onClick={confirmDeleteCustomer}>
-              Ja, verwijder klant
+            <Button tone="danger" onClick={confirmDeleteCustomer} disabled={isDeletingCustomer}>
+              {isDeletingCustomer ? "Verwijderen..." : "Ja, verwijder klant"}
             </Button>
           </div>
         </div>
