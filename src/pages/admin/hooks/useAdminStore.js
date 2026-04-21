@@ -220,7 +220,9 @@ function normalizeDeploymentStatusToCustomerStatus(status, fallbackStatus) {
     normalized === "PENDING" ||
     normalized === "IN_PROGRESS" ||
     normalized === "RUNNING" ||
-    normalized === "ROLLBACK_STARTED"
+    normalized === "ROLLBACK_STARTED" ||
+    normalized === "RETRY_STAGE_STARTED" ||
+    normalized === "REDEPLOY_STARTED"
   ) {
     return "provisioning";
   }
@@ -257,6 +259,24 @@ function normalizeDeploymentSnapshot(existingCustomer, deployment) {
       existingCustomer?.deployment?.targetRef ||
       "",
   };
+}
+
+function normalizeOperationsResponse(result) {
+  return result?.data?.data?.operations || [];
+}
+
+function normalizeAuditResponse(result) {
+  const payload = result?.data?.data;
+  if (Array.isArray(payload)) {
+    return payload;
+  }
+  if (Array.isArray(payload?.events)) {
+    return payload.events;
+  }
+  if (Array.isArray(payload?.items)) {
+    return payload.items;
+  }
+  return [];
 }
 
 export function useAdminStore() {
@@ -322,6 +342,9 @@ export function useAdminStore() {
     indexHtml: "",
     additionalFilesJson: "[]",
   });
+
+  const [deploymentOperations, setDeploymentOperations] = useState([]);
+  const [deploymentAuditEvents, setDeploymentAuditEvents] = useState([]);
 
   const pollingRef = useRef(null);
 
@@ -474,6 +497,8 @@ export function useAdminStore() {
         indexHtml: "",
         additionalFilesJson: "[]",
       });
+      setDeploymentOperations([]);
+      setDeploymentAuditEvents([]);
       return;
     }
 
@@ -503,6 +528,16 @@ export function useAdminStore() {
       additionalFilesJson: "[]",
     });
   }, [selectedCustomer]);
+
+  useEffect(() => {
+    if (!selectedCustomer?.deployment?.deploymentId) {
+      setDeploymentOperations([]);
+      setDeploymentAuditEvents([]);
+      return;
+    }
+
+    void loadDeploymentHistory(selectedCustomer);
+  }, [selectedCustomer?.deployment?.deploymentId]);
 
   const financeExpenses = useMemo(() => {
     return expenses.filter((item) => isWithinFilter(item.date, financeFilter));
@@ -807,6 +842,50 @@ export function useAdminStore() {
     }
 
     setRequestLog((prev) => [...nextEntries, ...prev].slice(0, 100));
+  }
+
+  async function loadDeploymentHistory(customer) {
+    if (!customer?.deployment?.deploymentId) {
+      setDeploymentOperations([]);
+      setDeploymentAuditEvents([]);
+      return;
+    }
+
+    try {
+      const [operationsResult, auditResult] = await Promise.all([
+        apiRequest(
+          settings,
+          "GET",
+          `/api/deployments/${customer.deployment.deploymentId}/operations`
+        ),
+        apiRequest(
+          settings,
+          "GET",
+          `/api/deployments/${customer.deployment.deploymentId}/audit`
+        ),
+      ]);
+
+      setDeploymentOperations(normalizeOperationsResponse(operationsResult));
+      setDeploymentAuditEvents(normalizeAuditResponse(auditResult));
+
+      pushRequestLogEntries([
+        {
+          id: createId("deployment-operations"),
+          at: new Date().toISOString(),
+          type: "GET_DEPLOYMENT_OPERATIONS",
+          result: operationsResult,
+        },
+        {
+          id: createId("deployment-audit"),
+          at: new Date().toISOString(),
+          type: "GET_DEPLOYMENT_AUDIT",
+          result: auditResult,
+        },
+      ]);
+    } catch (error) {
+      console.error(error);
+      notifyError("Deployment historie laden is mislukt.");
+    }
   }
 
   function updateCustomerForm(key, value) {
@@ -1742,6 +1821,61 @@ export function useAdminStore() {
     setIsUpdatingWorkflow(false);
   }
 
+  async function retryDeploymentStage(customer, stage) {
+    if (!customer?.deployment?.deploymentId || !stage) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Weet je zeker dat je stage ${stage} opnieuw wilt draaien voor ${customer.companyName}?`
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setIsUpdatingWorkflow(true);
+
+    const result = await apiRequest(
+      settings,
+      "POST",
+      `/api/deployments/${customer.deployment.deploymentId}/retry/${stage}`
+    );
+
+    const historyEntry = {
+      id: createId("retry-stage"),
+      at: new Date().toISOString(),
+      type: "RETRY_STAGE",
+      result,
+    };
+
+    setCustomers((prev) =>
+      prev.map((item) =>
+        item.id === customer.id
+          ? {
+              ...item,
+              status: result.ok ? "provisioning" : item.status,
+              deployment: {
+                ...(item.deployment || {}),
+                status: result.ok ? "IN_PROGRESS" : item.deployment?.status || "",
+                currentStage: stage,
+              },
+            }
+          : item
+      )
+    );
+
+    if (result.ok) {
+      notifySuccess(`Retry gestart voor stage ${stage}.`);
+      await loadDeploymentHistory(customer);
+    } else {
+      notifyError(`Retry starten voor stage ${stage} is mislukt.`);
+    }
+
+    pushRequestLogEntries(historyEntry);
+    setIsUpdatingWorkflow(false);
+  }
+
   async function saveCustomerEdits(updatedCustomer) {
     try {
       const apiKey = settings.apiKey;
@@ -1899,6 +2033,14 @@ export function useAdminStore() {
     return deriveWorkflowStateLabel(selectedCustomer);
   }, [selectedCustomer]);
 
+  const failedStageOptions = useMemo(() => {
+    if (!selectedCustomer?.deployment?.currentStage) {
+      return [];
+    }
+
+    return [String(selectedCustomer.deployment.currentStage)];
+  }, [selectedCustomer?.deployment?.currentStage]);
+
   return {
     activeTab,
     setActiveTab,
@@ -1945,6 +2087,7 @@ export function useAdminStore() {
     runAutoRefreshCycle,
     redeployCustomer,
     rollbackCustomer,
+    retryDeploymentStage,
     saveCustomerEdits,
     requestDeleteCustomer,
     confirmDeleteCustomer,
@@ -1978,6 +2121,7 @@ export function useAdminStore() {
     calcMonthlyInfraCost,
     loadPricingFromBackend,
     loadCustomersFromBackend,
+    loadDeploymentHistory,
     base44LinkForm,
     updateBase44LinkForm,
     contentSyncForm,
@@ -1991,5 +2135,8 @@ export function useAdminStore() {
     deployCustomer,
     openBase44Editor,
     openBase44Preview,
+    deploymentOperations,
+    deploymentAuditEvents,
+    failedStageOptions,
   };
 }

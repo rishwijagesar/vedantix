@@ -73,8 +73,22 @@ function deploymentTone(status) {
     normalized === "PENDING" ||
     normalized === "IN_PROGRESS" ||
     normalized === "RUNNING" ||
-    normalized === "ROLLBACK_STARTED"
+    normalized === "ROLLBACK_STARTED" ||
+    normalized === "RETRY_STAGE_STARTED" ||
+    normalized === "REDEPLOY_STARTED"
   ) {
+    return "#f59e0b";
+  }
+
+  return "#94a3b8";
+}
+
+function operationTone(status) {
+  const normalized = String(status || "").toUpperCase();
+
+  if (normalized === "SUCCEEDED" || normalized === "COMPLETED") return "#10b981";
+  if (normalized === "FAILED") return "#ef4444";
+  if (normalized === "RUNNING" || normalized === "PENDING" || normalized === "ACCEPTED") {
     return "#f59e0b";
   }
 
@@ -83,9 +97,12 @@ function deploymentTone(status) {
 
 function formatStageLabel(stage) {
   if (!stage) return "—";
-  return String(stage)
-    .replace(/_/g, " ")
-    .trim();
+  return String(stage).replace(/_/g, " ").trim();
+}
+
+function formatEventLabel(eventType) {
+  if (!eventType) return "—";
+  return String(eventType).replace(/_/g, " ").trim();
 }
 
 function buildChecklist(customer) {
@@ -124,8 +141,7 @@ function buildChecklist(customer) {
 }
 
 export default function CustomersPage({ store: storeProp }) {
-  /** @type {{ store: any }} */
-  const outletContext = useOutletContext();
+  const outletContext = /** @type {{ store: any }} */ (useOutletContext());
   const store = storeProp || outletContext.store;
   const checklist = buildChecklist(store.selectedCustomer);
 
@@ -620,6 +636,74 @@ export default function CustomersPage({ store: storeProp }) {
             </div>
           </Card>
 
+          <Card style={{ marginBottom: 18 }}>
+            <SectionTitle
+              title="Deployment recovery"
+              subtitle="Voer herstelacties uit op deploymentniveau."
+              action={
+                canManageDeployment(store.selectedCustomer) ? (
+                  <Button
+                    tone="soft"
+                    onClick={() => store.loadDeploymentHistory(store.selectedCustomer)}
+                    disabled={store.isUpdatingWorkflow}
+                  >
+                    Vernieuw historie
+                  </Button>
+                ) : null
+              }
+            />
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "2fr 1fr",
+                gap: 16,
+                alignItems: "end",
+              }}
+            >
+              <div
+                style={{
+                  border: "1px solid #dbe4ef",
+                  borderRadius: 18,
+                  padding: 16,
+                  background: "#ffffff",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 800,
+                    color: "#64748b",
+                    marginBottom: 8,
+                  }}
+                >
+                  Retry huidige stage
+                </div>
+                <div style={{ color: "#334155", lineHeight: 1.6 }}>
+                  Gebruik dit alleen als de deployment op een specifieke stage is vastgelopen.
+                  Huidige stage: <strong>{formatStageLabel(store.selectedCustomer?.deployment?.currentStage)}</strong>
+                </div>
+              </div>
+
+              <Button
+                tone="soft"
+                disabled={
+                  store.isUpdatingWorkflow ||
+                  !store.selectedCustomer?.deployment?.currentStage
+                }
+                onClick={() =>
+                  store.retryDeploymentStage(
+                    store.selectedCustomer,
+                    store.selectedCustomer?.deployment?.currentStage
+                  )
+                }
+                style={{ minHeight: 54 }}
+              >
+                {store.isUpdatingWorkflow ? "Bezig..." : "Retry stage"}
+              </Button>
+            </div>
+          </Card>
+
           <div
             style={{
               display: "grid",
@@ -1097,6 +1181,158 @@ export default function CustomersPage({ store: storeProp }) {
               </div>
             </Card>
           </div>
+
+          <Card style={{ marginBottom: 18 }}>
+            <SectionTitle
+              title="Deployment historie"
+              subtitle="Operations en audit-events voor deze deployment."
+            />
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 18,
+              }}
+            >
+              <div
+                style={{
+                  border: "1px solid #dbe4ef",
+                  borderRadius: 20,
+                  background: "#ffffff",
+                  padding: 16,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 900,
+                    color: "#64748b",
+                    marginBottom: 12,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  Operations
+                </div>
+
+                <div style={{ display: "grid", gap: 10 }}>
+                  {store.deploymentOperations.length > 0 ? (
+                    store.deploymentOperations.map((operation) => (
+                      <div
+                        key={operation.operationId || operation.id}
+                        style={{
+                          border: "1px solid #e2e8f0",
+                          borderRadius: 16,
+                          padding: 14,
+                          background: "#f8fafc",
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            gap: 12,
+                            flexWrap: "wrap",
+                            marginBottom: 8,
+                          }}
+                        >
+                          <strong>{operation.type || "OPERATION"}</strong>
+                          <span
+                            style={{
+                              color: operationTone(operation.status),
+                              fontWeight: 900,
+                              fontSize: 12,
+                            }}
+                          >
+                            {operation.status || "UNKNOWN"}
+                          </span>
+                        </div>
+
+                        <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6 }}>
+                          Stage: <strong>{formatStageLabel(operation.requestedStage)}</strong>
+                        </div>
+                        <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6 }}>
+                          Actor: <strong>{operation.actorId || "—"}</strong>
+                        </div>
+                        <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6 }}>
+                          Tijd: <strong>{dateLabel(operation.createdAt || operation.updatedAt)}</strong>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ color: "#64748b" }}>Nog geen operations gevonden.</div>
+                  )}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  border: "1px solid #dbe4ef",
+                  borderRadius: 20,
+                  background: "#ffffff",
+                  padding: 16,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 900,
+                    color: "#64748b",
+                    marginBottom: 12,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                  }}
+                >
+                  Audit events
+                </div>
+
+                <div style={{ display: "grid", gap: 10 }}>
+                  {store.deploymentAuditEvents.length > 0 ? (
+                    store.deploymentAuditEvents.map((event, index) => (
+                      <div
+                        key={event.id || `${event.eventType}-${index}`}
+                        style={{
+                          border: "1px solid #e2e8f0",
+                          borderRadius: 16,
+                          padding: 14,
+                          background: "#f8fafc",
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontWeight: 900,
+                            color: "#0f172a",
+                            marginBottom: 8,
+                          }}
+                        >
+                          {formatEventLabel(event.eventType)}
+                        </div>
+
+                        <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6 }}>
+                          Tijd: <strong>{dateLabel(event.createdAt || event.at || event.timestamp)}</strong>
+                        </div>
+
+                        <pre
+                          style={{
+                            margin: "10px 0 0",
+                            whiteSpace: "pre-wrap",
+                            wordBreak: "break-word",
+                            color: "#334155",
+                            fontSize: 12,
+                          }}
+                        >
+                          {pretty(event.metadata || event.details || {})}
+                        </pre>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ color: "#64748b" }}>Nog geen audit-events gevonden.</div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Card>
 
           <Card style={{ marginBottom: 18 }}>
             <SectionTitle
