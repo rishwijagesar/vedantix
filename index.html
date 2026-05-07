@@ -1,52 +1,54 @@
 <!doctype html>
 <html lang="nl">
-  <head>
-    <meta charset="UTF-8" />
 
-    <!-- Sitemap -->
-    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+<head>
+  <meta charset="UTF-8" />
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/vedantix_logo.png" />
+  <!-- Sitemap -->
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
-    <!-- Viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/vedantix_logo.png" />
 
-    <!-- Default SEO fallback -->
-    <title>Vedantix | Websites voor lokale bedrijven</title>
-    <meta
-      name="description"
-      content="Vedantix bouwt snelle, moderne websites voor lokale bedrijven."
-    />
-    <meta name="robots" content="index, follow" />
-    <meta name="author" content="Vedantix" />
-    <link rel="canonical" href="https://vedantix.nl/" />
+  <!-- Viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Vedantix | Websites voor lokale bedrijven" />
-    <meta
-      property="og:description"
-      content="Vedantix bouwt snelle, moderne websites voor lokale bedrijven."
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://vedantix.nl/" />
-    <meta property="og:image" content="https://vedantix.nl/preview.png" />
-    <meta property="og:site_name" content="Vedantix" />
+  <!-- Default SEO fallback -->
+  <title>Vedantix | Websites voor lokale bedrijven</title>
+  <meta name="description" content="Vedantix bouwt snelle, moderne websites voor lokale bedrijven." />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Vedantix" />
+  <link rel="canonical" href="https://vedantix.nl/" />
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Vedantix | Websites voor lokale bedrijven" />
-    <meta
-      name="twitter:description"
-      content="Vedantix bouwt snelle, moderne websites voor lokale bedrijven."
-    />
-    <meta name="twitter:image" content="https://vedantix.nl/preview.png" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="Vedantix | Websites voor lokale bedrijven" />
+  <meta property="og:description" content="Vedantix bouwt snelle, moderne websites voor lokale bedrijven." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vedantix.nl/" />
+  <meta property="og:image" content="https://vedantix.nl/preview.png" />
+  <meta property="og:site_name" content="Vedantix" />
 
-    <!-- Theme color -->
-    <meta name="theme-color" content="#0f172a" />
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Vedantix | Websites voor lokale bedrijven" />
+  <meta name="twitter:description" content="Vedantix bouwt snelle, moderne websites voor lokale bedrijven." />
+  <meta name="twitter:image" content="https://vedantix.nl/preview.png" />
 
-    <!-- Structured Data -->
-    <script type="application/ld+json">
+  <!-- Theme color -->
+  <meta name="theme-color" content="#0f172a" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5PBX3BC9SX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-5PBX3BC9SX');
+  </script>
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@graph": [
@@ -91,10 +93,11 @@
         ]
       }
     </script>
-  </head>
+</head>
 
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>
