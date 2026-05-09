@@ -401,6 +401,115 @@ async function apiRequest(settings, method, path, body) {
   };
 }
 
+function normalizeDomainInput(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/\/.*$/, "")
+    .replace(/\.$/, "");
+}
+
+function getDomainCheckMessage(domainCheck) {
+  if (!domainCheck) return null;
+
+  if (domainCheck.loading) {
+    return {
+      text: "Domein wordt gecontroleerd...",
+      background: "#eef2ff",
+      border: "#c7d2fe",
+      color: "#3730a3",
+    };
+  }
+
+  if (domainCheck.error) {
+    return {
+      text: domainCheck.error,
+      background: "#fef2f2",
+      border: "#fecaca",
+      color: "#b91c1c",
+    };
+  }
+
+  const result = domainCheck.result;
+
+  if (result?.status === "AVAILABLE" && result?.canProceed) {
+    return {
+      text: "Domein is beschikbaar voor provisioning.",
+      background: "#ecfdf5",
+      border: "#bbf7d0",
+      color: "#047857",
+    };
+  }
+
+  if (result?.status === "INVALID") {
+    return {
+      text: "Ongeldig domein. Gebruik bijvoorbeeld bedrijf.nl.",
+      background: "#fef2f2",
+      border: "#fecaca",
+      color: "#b91c1c",
+    };
+  }
+
+  if (result?.status === "HOSTED_ZONE_NOT_FOUND") {
+    return {
+      text: "Geen Route53 hosted zone gevonden voor dit domein.",
+      background: "#fff7ed",
+      border: "#fed7aa",
+      color: "#c2410c",
+    };
+  }
+
+  if (result?.status === "RECORD_CONFLICT") {
+    return {
+      text: "Dit domein heeft al DNS-records.",
+      background: "#fff7ed",
+      border: "#fed7aa",
+      color: "#c2410c",
+    };
+  }
+
+  if (result?.status === "HTTP_ACTIVE") {
+    return {
+      text: "Dit domein lijkt al een actieve website te hebben.",
+      background: "#fff7ed",
+      border: "#fed7aa",
+      color: "#c2410c",
+    };
+  }
+
+  return {
+    text: "Domeincontrole afgerond.",
+    background: "#f8fafc",
+    border: "#cbd5e1",
+    color: "#475569",
+  };
+}
+
+function DomainCheckStatus({ domainCheck }) {
+  const message = getDomainCheckMessage(domainCheck);
+  if (!message) return null;
+
+  return (
+    <div
+      style={{
+        marginTop: 8,
+        padding: "10px 12px",
+        borderRadius: 14,
+        background: message.background,
+        border: `1px solid ${message.border}`,
+        color: message.color,
+        fontSize: 13,
+        fontWeight: 800,
+        lineHeight: 1.45,
+      }}
+    >
+      {message.text}
+    </div>
+  );
+}
+
 function periodMultiplier(filterKey) {
   if (filterKey === "day") return 1 / 30;
   if (filterKey === "week") return 7 / 30;
@@ -996,11 +1105,77 @@ export default function AdminCRM() {
   const [isLoadingCustomers, setIsLoadingCustomers] = useState(false);
   const [isSavingCustomer, setIsSavingCustomer] = useState(false);
   const [isDeletingCustomer, setIsDeletingCustomer] = useState(false);
+  const [domainCheck, setDomainCheck] = useState(null);
+  const [lastCheckedDomain, setLastCheckedDomain] = useState("");
+
+  const normalizedDomain = useMemo(
+    () => normalizeDomainInput(customerForm.domain),
+    [customerForm.domain]
+  );
 
   useEffect(() => saveJson(STORAGE_KEYS.settings, settings), [settings]);
   useEffect(() => saveJson(STORAGE_KEYS.requestLog, requestLog), [requestLog]);
   useEffect(() => saveJson(STORAGE_KEYS.packageOptions, packageOptions), [packageOptions]);
   useEffect(() => saveJson(STORAGE_KEYS.extraOptions, extraOptions), [extraOptions]);
+
+  useEffect(() => {
+    if (!isCreateCustomerOpen) {
+      setDomainCheck(null);
+      setLastCheckedDomain("");
+      return;
+    }
+
+    if (!normalizedDomain || normalizedDomain.length < 4) {
+      setDomainCheck(null);
+      setLastCheckedDomain("");
+      return;
+    }
+
+    const timeout = window.setTimeout(async () => {
+      setDomainCheck({
+        loading: true,
+        error: "",
+        result: null,
+      });
+
+      try {
+        const result = await apiRequest(settings, "POST", "/api/domains/check", {
+          domain: normalizedDomain,
+        });
+
+        if (!result.ok || !result.data?.success) {
+          setDomainCheck({
+            loading: false,
+            error:
+              result.data?.error?.message ||
+              result.data?.error ||
+              result.data?.message ||
+              "Domeincontrole is mislukt.",
+            result: null,
+          });
+          return;
+        }
+
+        setLastCheckedDomain(normalizedDomain);
+        setDomainCheck({
+          loading: false,
+          error: "",
+          result: result.data.result,
+        });
+      } catch (error) {
+        setDomainCheck({
+          loading: false,
+          error:
+            error instanceof Error
+              ? error.message
+              : "Kan domein nu niet controleren.",
+          result: null,
+        });
+      }
+    }, 650);
+
+    return () => window.clearTimeout(timeout);
+  }, [normalizedDomain, isCreateCustomerOpen, settings]);
 
   const filteredCustomers = useMemo(() => {
     const q = customerSearch.trim().toLowerCase();
@@ -1111,6 +1286,12 @@ export default function AdminCRM() {
     );
   }, [selectedCustomer, expenses, detailFilter, packageOptions, extraOptions]);
 
+  const domainBlocksCreate =
+    normalizedDomain &&
+    lastCheckedDomain === normalizedDomain &&
+    domainCheck?.result &&
+    domainCheck.result.canProceed === false;
+
   function pushRequestLogEntries(entries) {
     const nextEntries = Array.isArray(entries)
       ? entries.filter(Boolean)
@@ -1143,6 +1324,8 @@ export default function AdminCRM() {
 
   function resetCustomerForm() {
     setCustomerForm(DEFAULT_CUSTOMER_FORM);
+    setDomainCheck(null);
+    setLastCheckedDomain("");
   }
 
   function updatePackageOption(code, key, value) {
@@ -1209,7 +1392,7 @@ export default function AdminCRM() {
       contactName: customerForm.contactName.trim(),
       email: customerForm.email.trim(),
       phone: customerForm.phone.trim(),
-      domain: customerForm.domain.trim().toLowerCase(),
+      domain: normalizeDomainInput(customerForm.domain),
       packageCode: customerForm.packageCode,
       extras: customerForm.extras || [],
       notes: customerForm.notes || "",
@@ -1280,6 +1463,27 @@ export default function AdminCRM() {
           data: {
             message:
               "Bedrijfsnaam, contactpersoon, e-mail en domeinnaam zijn verplicht.",
+          },
+        },
+      };
+
+      pushRequestLogEntries(validationEntry);
+      return;
+    }
+
+    if (domainBlocksCreate) {
+      const validationEntry = {
+        id:
+          (window.crypto && window.crypto.randomUUID && window.crypto.randomUUID()) ||
+          `req-${Date.now()}-domain-validation`,
+        at: new Date().toISOString(),
+        type: "CREATE_CUSTOMER_DOMAIN_VALIDATION",
+        result: {
+          ok: false,
+          status: 0,
+          data: {
+            message: "Domeincontrole blokkeert het aanmaken van deze klant.",
+            domainCheck: domainCheck?.result || null,
           },
         },
       };
@@ -1444,7 +1648,7 @@ export default function AdminCRM() {
       contactName: nextCustomer.contactName,
       email: nextCustomer.email,
       phone: nextCustomer.phone,
-      domain: String(nextCustomer.domain || "").trim().toLowerCase(),
+      domain: normalizeDomainInput(nextCustomer.domain),
       packageCode: nextCustomer.packageCode,
       extras: nextCustomer.extras || [],
       notes: nextCustomer.notes || "",
@@ -3086,6 +3290,7 @@ export default function AdminCRM() {
               onChange={(e) => updateCustomerForm("domain", e.target.value)}
               placeholder="bedrijf.nl"
             />
+            <DomainCheckStatus domainCheck={domainCheck} />
           </Field>
 
           <Field label="Pakket">
@@ -3279,7 +3484,11 @@ export default function AdminCRM() {
           >
             Annuleren
           </Button>
-          <Button tone="primary" onClick={addCustomerAndProvision} disabled={isProvisioning}>
+          <Button
+            tone="primary"
+            onClick={addCustomerAndProvision}
+            disabled={isProvisioning || domainCheck?.loading || domainBlocksCreate}
+          >
             {isProvisioning ? "Bezig..." : "Klant aanmaken"}
           </Button>
         </div>
