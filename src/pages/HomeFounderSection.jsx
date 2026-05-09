@@ -185,7 +185,7 @@ export default function HomeFounderSection() {
       <div className="founder-grid">
         <div className="founder-photo">
           <img
-            src="/images/founder_long.jpeg"
+            src="/images/founder_long.png"
             alt="Rishwi van Vedantix"
             className="founder-image"
           />
