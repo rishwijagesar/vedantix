@@ -101,6 +101,7 @@ async function request(options) {
 
   const res = await fetch(`${API_BASE}${path}`, {
     method,
+    credentials: "include",
     headers: buildHeaders({
       apiKey,
       actorId,
