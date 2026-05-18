@@ -1,3 +1,4 @@
+export { default as AdminCRMPage } from './AdminCRMPage';
 export * from './config';
 export * from './constants';
 export * from './hooks';
