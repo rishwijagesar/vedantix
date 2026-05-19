@@ -7,88 +7,24 @@ import { fetchPackages } from "../api/pricing.api";
 
 const PACKAGE_DETAILS_FALLBACK = {
   starter: {
-    included: [
-      "Professionele website",
-      "Tot 5 pagina’s",
-      "1 zakelijk mailadres",
-      "Mobielvriendelijk ontwerp",
-      "Contactformulier en WhatsApp-knop",
-      "Onderhoud en kleine updates",
-      "Je website blijft online en veilig",
-    ],
-    notIncluded: [
-      "Geen klantomgeving of login",
-      "Geen uitgebreide reserveringsmodule",
-      "Geen maatwerk functionaliteit",
-      "Niet bedoeld voor complexe processen",
-    ],
-    addons: [
-      "Extra mailadressen",
-      "Extra pagina’s",
-      "Lokale SEO uitbreiding",
-      "Blog of FAQ uitbreiding",
-      "Extra formulieren of secties",
-    ],
+    included: ["Professionele website", "Tot 5 pagina’s", "1 zakelijk mailadres", "Mobielvriendelijk ontwerp", "Contactformulier en WhatsApp-knop", "Onderhoud en kleine updates", "Je website blijft online en veilig"],
+    notIncluded: ["Geen klantomgeving of login", "Geen uitgebreide reserveringsmodule", "Geen maatwerk functionaliteit", "Niet bedoeld voor complexe processen"],
+    addons: ["Extra mailadressen", "Extra pagina’s", "Lokale SEO uitbreiding", "Blog of FAQ uitbreiding", "Extra formulieren of secties"],
   },
   growth: {
-    included: [
-      "Alles uit Starter",
-      "Meer pagina’s en meer inhoud",
-      "5 zakelijke mailadressen",
-      "Blog of FAQ mogelijk",
-      "Sterkere SEO-opbouw",
-      "Meer ruimte voor dienstenpagina’s en landingspagina’s",
-    ],
-    notIncluded: [
-      "Geen uitgebreide klantomgeving standaard",
-      "Geen zwaar maatwerk standaard",
-      "Niet bedoeld voor complexe interne workflows",
-    ],
-    addons: [
-      "Extra pagina’s",
-      "Extra mailadressen",
-      "Reserveringsmodule",
-      "Uitgebreidere leadformulieren",
-      "Extra SEO-landingspagina’s",
-    ],
+    included: ["Alles uit Starter", "Meer pagina’s en meer inhoud", "5 zakelijke mailadressen", "Blog of FAQ mogelijk", "Sterkere SEO-opbouw", "Meer ruimte voor dienstenpagina’s en landingspagina’s"],
+    notIncluded: ["Geen uitgebreide klantomgeving standaard", "Geen zwaar maatwerk standaard", "Niet bedoeld voor complexe interne workflows"],
+    addons: ["Extra pagina’s", "Extra mailadressen", "Reserveringsmodule", "Uitgebreidere leadformulieren", "Extra SEO-landingspagina’s"],
   },
   pro: {
-    included: [
-      "Alles uit Growth",
-      "10 zakelijke mailadressen",
-      "Klantomgeving of dashboard mogelijk",
-      "Reserveringen, intake of workflows mogelijk",
-      "Meer maatwerk en doorontwikkeling",
-      "Geschikt voor bedrijven die online processen willen ondersteunen",
-    ],
-    notIncluded: [
-      "Zeer specialistisch maatwerk alleen op offertebasis",
-    ],
-    addons: [
-      "Extra mailadressen",
-      "Extra opslag of uitgebreide formulieren",
-      "Extra beveiliging",
-      "Extra maatwerk modules",
-    ],
+    included: ["Alles uit Growth", "10 zakelijke mailadressen", "Klantomgeving of dashboard mogelijk", "Reserveringen, intake of workflows mogelijk", "Meer maatwerk en doorontwikkeling", "Geschikt voor bedrijven die online processen willen ondersteunen"],
+    notIncluded: ["Zeer specialistisch maatwerk alleen op offertebasis"],
+    addons: ["Extra mailadressen", "Extra opslag of uitgebreide formulieren", "Extra beveiliging", "Extra maatwerk modules"],
   },
   custom: {
-    included: [
-      "Scope op maat",
-      "Geschikt voor complexere wensen",
-      "Mogelijkheid tot koppelingen en afwijkende flows",
-      "Maatwerk op basis van jouw proces",
-    ],
-    notIncluded: [
-      "Geen vaste standaardscope",
-      "Geen vaste standaarddoorlooptijd",
-      "Prijs alleen op basis van concrete invulling",
-    ],
-    addons: [
-      "Externe integraties",
-      "Complexe dashboards",
-      "Geavanceerde workflows",
-      "Aanvullende maatwerkmodules",
-    ],
+    included: ["Scope op maat", "Geschikt voor complexere wensen", "Mogelijkheid tot koppelingen en afwijkende flows", "Maatwerk op basis van jouw proces"],
+    notIncluded: ["Geen vaste standaardscope", "Geen vaste standaarddoorlooptijd", "Prijs alleen op basis van concrete invulling"],
+    addons: ["Externe integraties", "Complexe dashboards", "Geavanceerde workflows", "Aanvullende maatwerkmodules"],
   },
 };
 
@@ -237,11 +173,7 @@ export default function PricingDetails() {
               {isLoading ? (
                 <div className="pricing-loading-card">Pakketten laden...</div>
               ) : (
-                <div
-                  className={`pricing-compare-table ${
-                    visiblePackages.length === 4 ? "is-four-columns" : ""
-                  }`}
-                >
+                <div className={`pricing-compare-table ${visiblePackages.length === 4 ? "is-four-columns" : ""}`}>
                   {visiblePackages.map((pkg) => {
                     const slug = slugFromCode(pkg.code);
                     const fallbackDetails = PACKAGE_DETAILS_FALLBACK[slug] || {
@@ -262,38 +194,26 @@ export default function PricingDetails() {
                     const addons = listOrFallback(pkg.addons, fallbackDetails.addons);
 
                     return (
-                      <div
-                        key={pkg.code}
-                        className={`pricing-column ${pkg.featured ? "featured" : ""}`}
-                      >
+                      <div key={pkg.code} className={`pricing-column ${pkg.featured ? "featured" : ""}`}>
                         <div className={`pricing-head ${headClass(slug)}`}>
                           <div className="pricing-tag">
                             {pkg.label}
-                            {pkg.featured ? (
-                              <span className="pricing-featured-badge">
-                                Meest gekozen
-                              </span>
-                            ) : null}
+                            {pkg.featured ? <span className="pricing-featured-badge">Meest gekozen</span> : null}
                           </div>
 
-                          <div className="pricing-title">
-                            {pkg.description || fallbackMeta.title}
-                          </div>
-
-                          <div className="pricing-sub">
-                            {pkg.fit || "Pakketinformatie"}
-                          </div>
+                          <div className="pricing-title">{pkg.description || fallbackMeta.title}</div>
+                          <div className="pricing-sub">{pkg.fit || "Pakketinformatie"}</div>
                         </div>
 
                         <div className="pricing-price-wrap">
                           <div className="pricing-price">
                             <sup>€</sup>
                             {Math.round(monthlyIncl)}
-                            <span>/m incl. btw</span>
+                            <span>/m</span>
                           </div>
 
                           <div className="pricing-setup">
-                            + {currency(setupIncl)} eenmalige setup incl. btw
+                            + {currency(setupIncl)} eenmalige setup
                           </div>
 
                           <div className="pricing-terms">
@@ -304,33 +224,25 @@ export default function PricingDetails() {
                         <div className="pricing-section-block">
                           <div className="pricing-block-title">Inbegrepen</div>
                           <ul className="pricing-list">
-                            {included.map((item) => (
-                              <li key={item}>{item}</li>
-                            ))}
+                            {included.map((item) => <li key={item}>{item}</li>)}
                           </ul>
                         </div>
 
                         <div className="pricing-section-block">
                           <div className="pricing-block-title">Niet inbegrepen</div>
                           <ul className="pricing-list minus">
-                            {notIncluded.map((item) => (
-                              <li key={item}>{item}</li>
-                            ))}
+                            {notIncluded.map((item) => <li key={item}>{item}</li>)}
                           </ul>
                         </div>
 
                         <div className="pricing-section-block">
                           <div className="pricing-block-title">Uitbreidingen</div>
                           <ul className="pricing-list">
-                            {addons.map((item) => (
-                              <li key={item}>{item}</li>
-                            ))}
+                            {addons.map((item) => <li key={item}>{item}</li>)}
                           </ul>
                         </div>
 
-                        <div className="pricing-cta-note">
-                          {fallbackMeta.note}
-                        </div>
+                        <div className="pricing-cta-note">{fallbackMeta.note}</div>
                       </div>
                     );
                   })}
@@ -349,29 +261,17 @@ export default function PricingDetails() {
               <div className="notes-grid">
                 <div className="note-card">
                   <h3>Mailadressen</h3>
-                  <ul>
-                    {MAILBOX_BUNDLES.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
+                  <ul>{MAILBOX_BUNDLES.map((item) => <li key={item}>{item}</li>)}</ul>
                 </div>
 
                 <div className="note-card">
                   <h3>Groei en functionaliteit</h3>
-                  <ul>
-                    {DATA_RULES.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
+                  <ul>{DATA_RULES.map((item) => <li key={item}>{item}</li>)}</ul>
                 </div>
 
                 <div className="note-card">
                   <h3>In alle pakketten centraal</h3>
-                  <ul>
-                    {PACKAGE_BASICS.map((item) => (
-                      <li key={item}>{item}</li>
-                    ))}
-                  </ul>
+                  <ul>{PACKAGE_BASICS.map((item) => <li key={item}>{item}</li>)}</ul>
                 </div>
               </div>
 
