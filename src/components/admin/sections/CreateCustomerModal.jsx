@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CustomerInfoSection from './CustomerInfoSection';
 import PackageSection from './PackageSection';
 import MailboxSection from './MailboxSection';
@@ -15,6 +15,8 @@ export default function CreateCustomerModal({
   onClose,
   submitting = false,
 }) {
+  const [domainStatus, setDomainStatus] = useState(null);
+
   if (!open) {
     return null;
   }
@@ -25,6 +27,12 @@ export default function CreateCustomerModal({
       ...patch,
     });
   };
+
+  const domainValid =
+    !form?.domain ||
+    (domainStatus && domainStatus.status === 'AVAILABLE' && domainStatus.canProceed);
+
+  const disableSubmit = submitting || !domainValid;
 
   return (
     <div
@@ -65,6 +73,7 @@ export default function CreateCustomerModal({
         <CustomerInfoSection
           form={form}
           onFieldChange={onFieldChange}
+          onDomainStatusChange={setDomainStatus}
         />
 
         <PackageSection
@@ -85,6 +94,22 @@ export default function CreateCustomerModal({
           value={form.notes}
           onChange={(value) => onFieldChange?.('notes', value)}
         />
+
+        {!domainValid && (
+          <div
+            style={{
+              padding: '12px 14px',
+              borderRadius: 12,
+              background: '#fef2f2',
+              color: '#991b1b',
+              border: '1px solid #fecaca',
+              fontSize: 14,
+              fontWeight: 600,
+            }}
+          >
+            Het geselecteerde domein is niet beschikbaar. Kies een ander domein om door te gaan.
+          </div>
+        )}
 
         <div
           style={{
@@ -112,15 +137,15 @@ export default function CreateCustomerModal({
           <button
             type="button"
             onClick={onSubmit}
-            disabled={submitting}
+            disabled={disableSubmit}
             style={{
               padding: '12px 16px',
               borderRadius: 12,
               border: 'none',
-              background: '#0f172a',
+              background: disableSubmit ? '#94a3b8' : '#0f172a',
               color: '#ffffff',
               fontWeight: 700,
-              cursor: 'pointer',
+              cursor: disableSubmit ? 'not-allowed' : 'pointer',
             }}
           >
             {submitting ? 'Opslaan...' : 'Klant aanmaken'}
