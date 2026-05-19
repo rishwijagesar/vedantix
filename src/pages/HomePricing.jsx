@@ -118,11 +118,7 @@ export default function HomePricing() {
             : copy.bullets,
         cta: pkg.cta || copy.cta || `Bespreek ${pkg.label} →`,
         priceInclVat: Number(pkg.monthlyPriceInclVat || 0),
-        priceExclVat: Number(pkg.monthlyPriceExclVat || 0),
-        priceVat: Number(pkg.monthlyVatAmount || 0),
         setupInclVat: Number(pkg.setupPriceInclVat || 0),
-        setupExclVat: Number(pkg.setupPriceExclVat || 0),
-        setupVat: Number(pkg.setupVatAmount || 0),
       };
     });
   }, [pricing]);
@@ -166,11 +162,6 @@ export default function HomePricing() {
               </div>
 
               <div className="p-setup">+ {currency(pkg.setupInclVat)} setup incl. btw</div>
-
-              <div className="p-tax-meta">
-                <div>Excl. btw: {currency(pkg.priceExclVat)}/m</div>
-                <div>Btw: {currency(pkg.priceVat)}/m</div>
-              </div>
 
               <div className="p-terms">{pkg.cancelNote}</div>
               <div className="p-divider" />
