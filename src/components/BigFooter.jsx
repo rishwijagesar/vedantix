@@ -453,7 +453,7 @@ export default function BigFooter() {
                   <strong>KvK:</strong> 42056482
                 </div>
                 <div className="big-footer__company-line">
-                  <strong>BTW:</strong> NL123456789B01
+                  <strong>BTW:</strong> NL005461438B38
                 </div>
               </div>
             </div>
