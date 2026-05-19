@@ -379,7 +379,7 @@ export default function BigFooter() {
               <div className="big-footer__socials">
                 <a
                   className="big-footer__social"
-                  href="https://instagram.com"
+                  href="https://instagram.com/vedantix.nl"
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Instagram"
@@ -388,7 +388,7 @@ export default function BigFooter() {
                 </a>
                 <a
                   className="big-footer__social"
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/vedantix"
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Facebook"
@@ -397,7 +397,7 @@ export default function BigFooter() {
                 </a>
                 <a
                   className="big-footer__social"
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/company/vedantix-nl"
                   target="_blank"
                   rel="noreferrer"
                   aria-label="LinkedIn"
