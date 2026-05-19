@@ -1,5 +1,5 @@
 /**
- * VedantixLogo — Premium minimal logo component
+ * VedantixLogo - Premium minimal logo component
  * 
  * The "V" mark: two clean angled lines forming a V,
  * with a thin horizontal bar across the middle — 
@@ -10,6 +10,15 @@
  *   variant: "full" (icon + wordmark) | "icon" (icon only)
  *   size: "sm" | "md" | "lg" | number (height in px)
  *   theme: "dark" (default) | "light" | "white"
+ */
+/**
+ * @param {{
+ *   variant?: "full" | "icon",
+ *   size?: "sm" | "md" | "lg" | number,
+ *   theme?: "dark" | "light" | "white",
+ *   className?: string,
+ *   style?: import("react").CSSProperties,
+ * }} props
  */
 export default function VedantixLogo({
   variant = "full",

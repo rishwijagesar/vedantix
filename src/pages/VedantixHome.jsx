@@ -2,7 +2,9 @@ import { useState } from "react";
 
 // Ensure mobile viewport
 if (typeof document !== "undefined") {
-  let vp = document.querySelector('meta[name="viewport"]');
+  let vp = /** @type {HTMLMetaElement | null} */ (
+    document.querySelector('meta[name="viewport"]')
+  );
   if (!vp) {
     vp = document.createElement("meta");
     vp.name = "viewport";

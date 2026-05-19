@@ -20,6 +20,8 @@ Any change pushed to the repo will also be reflected in the Base44 Builder.
 ```
 VITE_BASE44_APP_ID=your_app_id
 VITE_BASE44_APP_BASE_URL=your_backend_url
+VITE_API_BASE_URL=https://api.vedantix.nl
+VITE_TENANT_ID=default
 
 e.g.
 VITE_BASE44_APP_ID=cbef744a8545c389ef439ea6
@@ -27,6 +29,19 @@ VITE_BASE44_APP_BASE_URL=https://my-to-do-list-81bfaad7.base44.app
 ```
 
 Run the app: `npm run dev`
+
+**Production checks**
+
+Run these before publishing:
+
+```
+npm run lint
+npm run typecheck
+npm run build
+npm audit --omit=dev --audit-level=high
+```
+
+The frontend expects the provisioning backend to expose the `/api/*`, `/health`, and `/ready` endpoints at `VITE_API_BASE_URL`.
 
 **Publish your changes**
 

@@ -50,7 +50,11 @@ export default function ChatInbox() {
         sessionMap[m.session_id].unread++;
       }
     });
-    setSessions(Object.values(sessionMap).sort((a, b) => new Date(b.last_date) - new Date(a.last_date)));
+    setSessions(
+      Object.values(sessionMap).sort(
+        (a, b) => new Date(b.last_date).getTime() - new Date(a.last_date).getTime()
+      )
+    );
   };
 
   const loadMessages = async (sessionId) => {

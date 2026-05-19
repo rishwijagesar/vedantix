@@ -6,7 +6,6 @@ import {
   Button,
   Field,
   Input,
-  StatCard,
   Textarea,
 } from "../components/AdminUI";
 import { currency } from "../utils/adminStorage";

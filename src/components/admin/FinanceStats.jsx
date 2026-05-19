@@ -32,7 +32,7 @@ function ProgressBar({ value, max, color = "#1a73e8" }) {
   );
 }
 
-function StatCard({ label, value, sub, color = "#1a73e8", icon, trend }) {
+function StatCard({ label, value, sub, color = "#1a73e8", icon, trend = undefined }) {
   return (
     <div style={{ background: "#fff", borderRadius: 16, padding: "20px 22px", border: "1px solid #e5e7eb", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>

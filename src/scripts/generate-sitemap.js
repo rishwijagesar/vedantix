@@ -41,28 +41,26 @@ const excludedPaths = new Set([
   "/home",
 ]);
 
-const urls = Array.from(
-  new Map(
-    rawUrls
-      .filter((item) => item?.path && typeof item.path === "string")
-      .map((item) => {
-        const normalizedPath =
-          item.path === "/"
-            ? "/"
-            : `/${item.path.replace(/^\/+/, "").replace(/\/+$/, "")}`;
+const uniqueUrls = new Map();
 
-        return [
-          normalizedPath,
-          {
-            path: normalizedPath,
-            priority: item.priority ?? "0.7",
-            changefreq: item.changefreq ?? "monthly",
-          },
-        ];
-      })
-      .filter(([normalizedPath]) => !excludedPaths.has(normalizedPath))
-  ).values()
-);
+for (const item of rawUrls) {
+  if (!item?.path || typeof item.path !== "string") continue;
+
+  const normalizedPath =
+    item.path === "/"
+      ? "/"
+      : `/${item.path.replace(/^\/+/, "").replace(/\/+$/, "")}`;
+
+  if (excludedPaths.has(normalizedPath)) continue;
+
+  uniqueUrls.set(normalizedPath, {
+    path: normalizedPath,
+    priority: item.priority ?? "0.7",
+    changefreq: item.changefreq ?? "monthly",
+  });
+}
+
+const urls = Array.from(uniqueUrls.values());
 
 const today = new Date().toISOString().split("T")[0];
 

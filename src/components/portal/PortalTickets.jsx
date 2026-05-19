@@ -20,7 +20,12 @@ export default function PortalTickets({ klant }) {
   const load = async () => {
     setLoading(true);
     const t = await Ticket.filter({ customer_id: klant.id });
-    setTickets(t.sort((a, b) => new Date(b.created_date) - new Date(a.created_date)));
+    setTickets(
+      t.sort(
+        (a, b) =>
+          new Date(b.created_date).getTime() - new Date(a.created_date).getTime()
+      )
+    );
     setLoading(false);
   };
 

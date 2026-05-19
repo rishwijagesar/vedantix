@@ -13,7 +13,12 @@ export default function PortalFacturen({ klant }) {
 
   useEffect(() => {
     Payment.filter({ customer_id: klant.id }).then(f => {
-      setFacturen(f.sort((a, b) => new Date(b.factuurdatum) - new Date(a.factuurdatum)));
+      setFacturen(
+        f.sort(
+          (a, b) =>
+            new Date(b.factuurdatum).getTime() - new Date(a.factuurdatum).getTime()
+        )
+      );
       setLoading(false);
     });
   }, [klant]);
