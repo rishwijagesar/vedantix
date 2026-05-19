@@ -1,6 +1,59 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-export default function CustomerInfoSection({ form, onFieldChange }) {
+function DomainCheckStatus({ checking, result }) {
+  if (checking) return <div style={{ marginTop: 6, fontSize: 12, color: '#2563eb' }}>⏳ Domein controleren...</div>;
+  if (!result) return null;
+  if (result.status === 'AVAILABLE' && result.canProceed) {
+    return <div style={{ marginTop: 6, fontSize: 12, color: '#059669' }}>✅ Domein is beschikbaar</div>;
+  }
+  if (result.status === 'DNS_EXISTS' || result.status === 'HTTP_ACTIVE') {
+    return <div style={{ marginTop: 6, fontSize: 12, color: '#d97706' }}>⚠️ Domein lijkt al in gebruik</div>;
+  }
+  return <div style={{ marginTop: 6, fontSize: 12, color: '#dc2626' }}>❌ Ongeldig of niet beschikbaar domein</div>;
+}
+
+export default function CustomerInfoSection({ form, onFieldChange, onDomainStatusChange }) {
+  const [checkingDomain, setCheckingDomain] = useState(false);
+  const [domainResult, setDomainResult] = useState(null);
+
+  useEffect(() => {
+    const domain = (form?.domain || '').trim().toLowerCase();
+
+    if (!domain || domain.length < 4 || !domain.includes('.')) {
+      setDomainResult(null);
+      onDomainStatusChange?.(null);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      setCheckingDomain(true);
+
+      try {
+        const response = await fetch('/api/domains/check', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ domain }),
+        });
+
+        const data = await response.json();
+        const result = data?.result || { status: 'ERROR', canProceed: false };
+
+        setDomainResult(result);
+        onDomainStatusChange?.(result);
+      } catch {
+        const result = { status: 'ERROR', canProceed: false };
+        setDomainResult(result);
+        onDomainStatusChange?.(result);
+      } finally {
+        setCheckingDomain(false);
+      }
+    }, 650);
+
+    return () => clearTimeout(timer);
+  }, [form?.domain, onDomainStatusChange]);
+
   const fields = [
     ['companyName', 'Bedrijfsnaam'],
     ['contactName', 'Contactpersoon'],
@@ -43,6 +96,9 @@ export default function CustomerInfoSection({ form, onFieldChange }) {
                 fontSize: 14,
               }}
             />
+            {key === 'domain' && (
+              <DomainCheckStatus checking={checkingDomain} result={domainResult} />
+            )}
           </div>
         ))}
       </div>
