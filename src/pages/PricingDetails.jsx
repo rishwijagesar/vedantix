@@ -147,15 +147,6 @@ function currency(value) {
   }).format(Number(value || 0));
 }
 
-function currency2(value) {
-  return new Intl.NumberFormat("nl-NL", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(Number(value || 0));
-}
-
 function normalizePackages(payload) {
   if (Array.isArray(payload)) return payload;
   if (Array.isArray(payload?.data)) return payload.data;
@@ -264,16 +255,7 @@ export default function PricingDetails() {
                     };
 
                     const monthlyIncl = Number(pkg.monthlyPriceInclVat ?? pkg.monthlyPrice ?? 0);
-                    const monthlyExcl =
-                      Number(pkg.monthlyPriceExclVat ?? (monthlyIncl ? monthlyIncl / 1.21 : 0)) || 0;
-                    const monthlyVat =
-                      Number(pkg.monthlyVatAmount ?? (monthlyIncl ? monthlyIncl - monthlyExcl : 0)) || 0;
-
                     const setupIncl = Number(pkg.setupPriceInclVat ?? pkg.setupPrice ?? 0);
-                    const setupExcl =
-                      Number(pkg.setupPriceExclVat ?? (setupIncl ? setupIncl / 1.21 : 0)) || 0;
-                    const setupVat =
-                      Number(pkg.setupVatAmount ?? (setupIncl ? setupIncl - setupExcl : 0)) || 0;
 
                     const included = listOrFallback(pkg.included, fallbackDetails.included);
                     const notIncluded = listOrFallback(pkg.notIncluded, fallbackDetails.notIncluded);
@@ -307,39 +289,11 @@ export default function PricingDetails() {
                           <div className="pricing-price">
                             <sup>€</sup>
                             {Math.round(monthlyIncl)}
-                            <span>/m</span>
+                            <span>/m incl. btw</span>
                           </div>
 
                           <div className="pricing-setup">
-                            + {currency(setupIncl)} eenmalige setup
-                          </div>
-
-                          <div className="pricing-tax-box">
-                            <div className="pricing-tax-row">
-                              <span>Per maand incl. btw</span>
-                              <strong>{currency2(monthlyIncl)}</strong>
-                            </div>
-                            <div className="pricing-tax-row">
-                              <span>Per maand excl. btw</span>
-                              <strong>{currency2(monthlyExcl)}</strong>
-                            </div>
-                            <div className="pricing-tax-row">
-                              <span>Btw-deel per maand</span>
-                              <strong>{currency2(monthlyVat)}</strong>
-                            </div>
-                            <div className="pricing-tax-divider" />
-                            <div className="pricing-tax-row">
-                              <span>Setup incl. btw</span>
-                              <strong>{currency2(setupIncl)}</strong>
-                            </div>
-                            <div className="pricing-tax-row">
-                              <span>Setup excl. btw</span>
-                              <strong>{currency2(setupExcl)}</strong>
-                            </div>
-                            <div className="pricing-tax-row">
-                              <span>Btw-deel setup</span>
-                              <strong>{currency2(setupVat)}</strong>
-                            </div>
+                            + {currency(setupIncl)} eenmalige setup incl. btw
                           </div>
 
                           <div className="pricing-terms">
