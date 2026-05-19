@@ -22,42 +22,10 @@ function activePackageOptions(options) {
 }
 
 const PACKAGE_COPY = {
-  STARTER: {
-    tier: "Starter",
-    name: "",
-    fit: "",
-    featured: false,
-    cancelNote: "",
-    bullets: [],
-    cta: "",
-  },
-  GROWTH: {
-    tier: "Growth",
-    name: "",
-    fit: "",
-    featured: true,
-    cancelNote: "",
-    bullets: [],
-    cta: "",
-  },
-  PRO: {
-    tier: "Pro",
-    name: "",
-    fit: "",
-    featured: false,
-    cancelNote: "",
-    bullets: [],
-    cta: "",
-  },
-  CUSTOM: {
-    tier: "Custom",
-    name: "",
-    fit: "",
-    featured: false,
-    cancelNote: "",
-    bullets: [],
-    cta: "",
-  },
+  STARTER: { tier: "Starter", name: "", fit: "", featured: false, cancelNote: "", bullets: [], cta: "" },
+  GROWTH: { tier: "Growth", name: "", fit: "", featured: true, cancelNote: "", bullets: [], cta: "" },
+  PRO: { tier: "Pro", name: "", fit: "", featured: false, cancelNote: "", bullets: [], cta: "" },
+  CUSTOM: { tier: "Custom", name: "", fit: "", featured: false, cancelNote: "", bullets: [], cta: "" },
 };
 
 export default function HomePricing() {
@@ -70,7 +38,6 @@ export default function HomePricing() {
     async function load() {
       try {
         const data = await fetchPricingSummary();
-
         if (!active) return;
 
         setPricing({
@@ -157,11 +124,11 @@ export default function HomePricing() {
                 <div className="p-price">
                   <sup>€</sup>
                   {Math.round(pkg.priceInclVat)}
-                  <span>/m incl. btw</span>
+                  <span>/m</span>
                 </div>
               </div>
 
-              <div className="p-setup">+ {currency(pkg.setupInclVat)} setup incl. btw</div>
+              <div className="p-setup">+ {currency(pkg.setupInclVat)} eenmalige setup</div>
 
               <div className="p-terms">{pkg.cancelNote}</div>
               <div className="p-divider" />
