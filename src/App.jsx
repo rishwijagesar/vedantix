@@ -7,6 +7,7 @@ import CustomersPage from "./pages/admin/pages/CustomersPage";
 import DashboardPage from "./pages/admin/pages/DashboardPage";
 import FinancePage from "./pages/admin/pages/FinancePage";
 import PricingPage from "./pages/admin/pages/PricingPage";
+import ProductsPage from "./pages/admin/pages/ProductsPage";
 import SettingsPage from "./pages/admin/pages/SettingsPage";
 import { AdminAuthProvider } from "./pages/admin/auth/adminAuth";
 import AdminProtectedRoute from "./pages/admin/auth/AdminProtectedRoute";
@@ -82,6 +83,7 @@ function AppRoutes() {
             <Route path="customers" element={<CustomersPage store={undefined} />} />
             <Route path="customers/:id" element={<CustomerDetailPage store={undefined} />} />
             <Route path="finance" element={<FinancePage store={undefined} />} />
+            <Route path="products" element={<ProductsPage store={undefined} />} />
             <Route path="pricing" element={<PricingPage store={undefined} />} />
             <Route path="settings" element={<SettingsPage store={undefined} />} />
           </Route>

@@ -24,6 +24,7 @@ export default function AdminLayout() {
     { label: "Dashboard", path: "/admin" },
     { label: "Klanten", path: "/admin/customers" },
     { label: "Financiën", path: "/admin/finance" },
+    { label: "Products", path: "/admin/products" },
     { label: "Prijzen", path: "/admin/pricing" },
     { label: "Instellingen", path: "/admin/settings" },
   ];
