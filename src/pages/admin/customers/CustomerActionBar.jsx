@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Button, Card } from "../components/AdminUI";
+import { generateOfferPdf } from "../offers/generateOfferPdf";
 import {
   canApproveCustomer,
   canDeployCustomer,
@@ -84,21 +85,6 @@ export default function CustomerActionBar({ store }) {
           >
             {formatStageLabel(customer?.deployment?.currentStage)}
           </span>
-          {store.isAutoRefreshing ? (
-            <span
-              style={{
-                padding: "6px 10px",
-                borderRadius: 999,
-                background: "#ecfeff",
-                color: "#0e7490",
-                fontWeight: 900,
-                fontSize: 12,
-                border: "1px solid #bae6fd",
-              }}
-            >
-              Auto-refresh actief
-            </span>
-          ) : null}
         </div>
       </div>
 
@@ -110,6 +96,9 @@ export default function CustomerActionBar({ store }) {
         }}
       >
         <ActionGroup title="Klant">
+          <Button tone="soft" onClick={() => generateOfferPdf(customer)}>
+            Genereer Offerte
+          </Button>
           {customer.base44?.editorUrl ? (
             <Button tone="soft" onClick={() => store.openBase44Editor(customer)}>
               Open Base44
@@ -158,98 +147,8 @@ export default function CustomerActionBar({ store }) {
         </ActionGroup>
 
         <ActionGroup title="Workflow">
-          <Button
-            tone="soft"
-            onClick={() => store.autoCreateBase44App(customer)}
-            disabled={store.isAutoCreatingBase44}
-          >
-            {store.isAutoCreatingBase44 ? "Bezig..." : "Bouwverzoek"}
-          </Button>
-          <Button
-            tone="primary"
-            onClick={() => store.linkBase44App(customer)}
-            disabled={store.isLinkingBase44 || !store.base44LinkForm.appId.trim()}
-          >
-            {store.isLinkingBase44 ? "Bezig..." : "Base44 koppelen"}
-          </Button>
-          <Button
-            tone="soft"
-            onClick={() => store.startBuildFlow(customer)}
-            disabled={store.isStartingBuildFlow || !canStartBuildFlow(customer)}
-          >
-            {store.isStartingBuildFlow ? "Bezig..." : "Sync + preview"}
-          </Button>
-          <Button
-            tone="soft"
-            onClick={() => store.syncCustomerContent(customer)}
-            disabled={store.isSyncingContent || !store.contentSyncForm.indexHtml.trim()}
-          >
-            {store.isSyncingContent ? "Bezig..." : "Sync GitHub"}
-          </Button>
-          <Button
-            onClick={() => store.markPreviewReady(customer)}
-            disabled={store.isUpdatingWorkflow || !canMarkPreviewReady(customer)}
-          >
-            {store.isUpdatingWorkflow ? "Bezig..." : "Preview klaar"}
-          </Button>
-          <Button
-            onClick={() => store.approveCustomerForProduction(customer)}
-            disabled={store.isUpdatingWorkflow || !canApproveCustomer(customer)}
-          >
-            {store.isUpdatingWorkflow ? "Bezig..." : "Klant akkoord"}
-          </Button>
-        </ActionGroup>
-
-        <ActionGroup title="Deployment">
-          <Button
-            tone="soft"
-            onClick={() => store.runAutoRefreshCycle()}
-            disabled={store.isAutoRefreshing}
-          >
-            {store.isAutoRefreshing ? "Verversen..." : "Status verversen"}
-          </Button>
-          {canManageDeployment(customer) ? (
-            <Button
-              tone="soft"
-              onClick={() => store.loadDeploymentHistory(customer)}
-              disabled={store.isUpdatingWorkflow}
-            >
-              Historie
-            </Button>
-          ) : null}
-          <Button
-            tone="soft"
-            disabled={store.isUpdatingWorkflow || !customer?.deployment?.currentStage}
-            onClick={() =>
-              store.retryDeploymentStage(customer, customer?.deployment?.currentStage)
-            }
-          >
-            {store.isUpdatingWorkflow ? "Bezig..." : "Retry stage"}
-          </Button>
-          {canManageDeployment(customer) ? (
-            <Button
-              tone="soft"
-              onClick={() => store.redeployCustomer(customer)}
-              disabled={store.isUpdatingWorkflow}
-            >
-              {store.isUpdatingWorkflow ? "Bezig..." : "Redeploy"}
-            </Button>
-          ) : null}
-          {canManageDeployment(customer) ? (
-            <Button
-              tone="danger"
-              onClick={() => store.rollbackCustomer(customer)}
-              disabled={store.isUpdatingWorkflow}
-            >
-              {store.isUpdatingWorkflow ? "Bezig..." : "Rollback"}
-            </Button>
-          ) : null}
-          <Button
-            tone="success"
-            onClick={() => store.deployCustomer(customer)}
-            disabled={store.isUpdatingWorkflow || !canDeployCustomer(customer)}
-          >
-            {store.isUpdatingWorkflow ? "Bezig..." : "Site live"}
+          <Button tone="soft" onClick={() => store.autoCreateBase44App(customer)}>
+            Bouwverzoek
           </Button>
         </ActionGroup>
       </div>
