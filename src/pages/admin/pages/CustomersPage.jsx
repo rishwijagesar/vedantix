@@ -4,24 +4,110 @@ import { useOutletContext } from "react-router-dom";
 import CustomerDetail from "../customers/CustomerDetail";
 import CustomersTable from "../customers/CustomersTable";
 
-export default function CustomersPage({ store: storeProp }) {
-  const outletContext =
-    /** @type {{ store?: any }} */ (useOutletContext() || {});
+async function postJson(apiBaseUrl, apiKey, path, body) {
+  const response = await fetch(`${apiBaseUrl}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(apiKey ? { "X-Api-Key": apiKey } : {}),
+    },
+    body: JSON.stringify(body),
+  });
 
-  const hasStripeActions =
-    typeof storeProp?.createStripeCustomer === "function";
+  const data = await response.json();
 
-  const store = hasStripeActions
-    ? storeProp
-    : outletContext.store;
-
-  if (!store) {
-    return (
-      <div style={{ padding: 24 }}>
-        Store kon niet worden geladen.
-      </div>
-    );
+  if (!response.ok) {
+    throw new Error(data?.error || data?.message || "Request failed");
   }
+
+  return data;
+}
+
+export default function CustomersPage({ store: storeProp }) {
+  const outletContext = useOutletContext() || {};
+
+  const baseStore =
+    storeProp && typeof storeProp === "object"
+      ? storeProp
+      : outletContext.store;
+
+  if (!baseStore) {
+    return <div style={{ padding: 24 }}>Store kon niet worden geladen.</div>;
+  }
+
+  const apiBaseUrl =
+    baseStore.apiBaseUrl ||
+    storeProp?.apiBaseUrl ||
+    "https://api.vedantix.nl";
+
+  const apiKey = baseStore.apiKey || storeProp?.apiKey;
+
+  const store = {
+    ...baseStore,
+
+    async createStripeCustomer(customer) {
+      if (typeof baseStore.createStripeCustomer === "function") {
+        return baseStore.createStripeCustomer(customer);
+      }
+
+      const result = await postJson(
+        apiBaseUrl,
+        apiKey,
+        "/api/billing/customers",
+        {
+          customerId: customer.id,
+        }
+      );
+
+      if (typeof baseStore.loadCustomers === "function") {
+        await baseStore.loadCustomers();
+      }
+
+      return result;
+    },
+
+    async createStripeCheckout(customer) {
+      if (typeof baseStore.createStripeCheckout === "function") {
+        return baseStore.createStripeCheckout(customer);
+      }
+
+      const result = await postJson(
+        apiBaseUrl,
+        apiKey,
+        "/api/billing/checkout-session",
+        {
+          customerId: customer.id,
+        }
+      );
+
+      if (result?.url) {
+        window.open(result.url, "_blank", "noopener,noreferrer");
+      }
+
+      return result;
+    },
+
+    async openBillingPortal(customer) {
+      if (typeof baseStore.openBillingPortal === "function") {
+        return baseStore.openBillingPortal(customer);
+      }
+
+      const result = await postJson(
+        apiBaseUrl,
+        apiKey,
+        "/api/billing/portal",
+        {
+          customerId: customer.id,
+        }
+      );
+
+      if (result?.url) {
+        window.open(result.url, "_blank", "noopener,noreferrer");
+      }
+
+      return result;
+    },
+  };
 
   return (
     <div style={{ display: "grid", gap: 18 }}>
