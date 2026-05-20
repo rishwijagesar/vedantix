@@ -55,21 +55,30 @@ export function StatCard({ title, value, subtitle, tone = "#0ea5e9" }) {
   return (
     <div
       style={{
-        background:
-          "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.98) 100%)",
-        border: "1px solid #dbe4ef",
-        borderRadius: 22,
-        padding: 20,
-        boxShadow: "0 18px 40px rgba(15,23,42,0.06)",
+        minWidth: 0,
+        background: "#ffffff",
+        border: "1px solid #d9e2ee",
+        borderRadius: 12,
+        padding: 14,
+        boxShadow: "0 8px 18px rgba(15,23,42,0.04)",
       }}
     >
-      <div style={{ color: "#64748b", fontSize: 13, fontWeight: 800, marginBottom: 10 }}>
+      <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800, marginBottom: 6 }}>
         {title}
       </div>
-      <div style={{ color: "#0f172a", fontSize: 30, fontWeight: 900, marginBottom: 8 }}>
+      <div
+        style={{
+          color: "#0f172a",
+          fontSize: 22,
+          lineHeight: 1.15,
+          fontWeight: 900,
+          marginBottom: 6,
+          wordBreak: "break-word",
+        }}
+      >
         {value}
       </div>
-      <div style={{ color: tone, fontSize: 13, fontWeight: 800 }}>{subtitle}</div>
+      <div style={{ color: tone, fontSize: 12, fontWeight: 800 }}>{subtitle}</div>
     </div>
   );
 }
@@ -78,12 +87,12 @@ export function Card({ children, style = {} }) {
   return (
     <div
       style={{
-        background:
-          "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(250,252,255,0.98) 100%)",
-        border: "1px solid #dbe4ef",
-        borderRadius: 28,
-        padding: 22,
-        boxShadow: "0 18px 40px rgba(15,23,42,0.06)",
+        minWidth: 0,
+        background: "#ffffff",
+        border: "1px solid #d9e2ee",
+        borderRadius: 12,
+        padding: 16,
+        boxShadow: "0 8px 18px rgba(15,23,42,0.04)",
         ...style,
       }}
     >
@@ -99,25 +108,24 @@ export function SectionTitle({ title, subtitle, action = null }) {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "flex-start",
-        gap: 16,
-        marginBottom: 20,
+        gap: 12,
+        marginBottom: 14,
         flexWrap: "wrap",
       }}
     >
       <div>
         <h2
           style={{
-            fontSize: 28,
+            fontSize: 20,
             fontWeight: 900,
             color: "#0f172a",
-            marginBottom: 8,
-            letterSpacing: "-0.03em",
+            marginBottom: 4,
           }}
         >
           {title}
         </h2>
         {subtitle ? (
-          <p style={{ color: "#64748b", fontSize: 15, lineHeight: 1.6 }}>{subtitle}</p>
+          <p style={{ color: "#64748b", fontSize: 13, lineHeight: 1.45 }}>{subtitle}</p>
         ) : null}
       </div>
       {action}
@@ -142,31 +150,31 @@ export function Button(props) {
       background: "#ffffff",
       color: "#0f172a",
       border: "1px solid #cbd5e1",
-      boxShadow: "0 8px 20px rgba(15,23,42,0.05)",
+      boxShadow: "0 4px 10px rgba(15,23,42,0.04)",
     },
     primary: {
-      background: "linear-gradient(135deg, #0f172a 0%, #172554 100%)",
+      background: "#0f172a",
       color: "#ffffff",
       border: "1px solid #0f172a",
-      boxShadow: "0 14px 30px rgba(15,23,42,0.18)",
+      boxShadow: "0 8px 16px rgba(15,23,42,0.12)",
     },
     success: {
-      background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+      background: "#0f9f6e",
       color: "#ffffff",
-      border: "1px solid #059669",
-      boxShadow: "0 14px 30px rgba(16,185,129,0.2)",
+      border: "1px solid #0f9f6e",
+      boxShadow: "0 8px 16px rgba(16,185,129,0.12)",
     },
     danger: {
-      background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+      background: "#dc2626",
       color: "#ffffff",
       border: "1px solid #dc2626",
-      boxShadow: "0 14px 30px rgba(239,68,68,0.16)",
+      boxShadow: "0 8px 16px rgba(239,68,68,0.12)",
     },
     soft: {
-      background: "linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)",
+      background: "#eff6ff",
       color: "#1d4ed8",
       border: "1px solid #bfdbfe",
-      boxShadow: "0 10px 22px rgba(59,130,246,0.08)",
+      boxShadow: "0 4px 10px rgba(59,130,246,0.06)",
     },
   };
 
@@ -178,10 +186,11 @@ export function Button(props) {
       disabled={disabled}
       onClick={onClick}
       style={{
-        padding: "11px 16px",
-        borderRadius: 14,
+        padding: "8px 11px",
+        borderRadius: 8,
         fontWeight: 800,
-        fontSize: 14,
+        fontSize: 13,
+        lineHeight: 1.2,
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.6 : 1,
         transition: "all 0.18s ease",
@@ -200,14 +209,14 @@ export function Input(props) {
       {...props}
       style={{
         width: "100%",
-        borderRadius: 18,
+        minHeight: 38,
+        borderRadius: 9,
         border: "1px solid #cbd5e1",
-        background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
-        padding: "14px 16px",
+        background: "#ffffff",
+        padding: "8px 10px",
         color: "#0f172a",
         outline: "none",
-        fontSize: 15,
-        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
+        fontSize: 14,
         ...(props.style || {}),
       }}
     />
@@ -220,14 +229,14 @@ export function Textarea(props) {
       {...props}
       style={{
         width: "100%",
-        minHeight: 100,
-        borderRadius: 18,
+        minHeight: 84,
+        borderRadius: 9,
         border: "1px solid #cbd5e1",
-        background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
-        padding: "14px 16px",
+        background: "#ffffff",
+        padding: "8px 10px",
         color: "#0f172a",
         outline: "none",
-        fontSize: 15,
+        fontSize: 14,
         resize: "vertical",
         ...(props.style || {}),
       }}
@@ -241,13 +250,14 @@ export function Select(props) {
       {...props}
       style={{
         width: "100%",
-        borderRadius: 18,
+        minHeight: 38,
+        borderRadius: 9,
         border: "1px solid #cbd5e1",
-        background: "linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)",
-        padding: "14px 16px",
+        background: "#ffffff",
+        padding: "8px 10px",
         color: "#0f172a",
         outline: "none",
-        fontSize: 15,
+        fontSize: 14,
         ...(props.style || {}),
       }}
     />
@@ -256,8 +266,8 @@ export function Select(props) {
 
 export function Field({ label, children }) {
   return (
-    <label style={{ display: "grid", gap: 8 }}>
-      <span style={{ color: "#334155", fontSize: 13, fontWeight: 800 }}>{label}</span>
+    <label style={{ display: "grid", gap: 6, minWidth: 0 }}>
+      <span style={{ color: "#334155", fontSize: 12, fontWeight: 800 }}>{label}</span>
       {children}
     </label>
   );
@@ -278,7 +288,7 @@ export function Modal({ open, title, children, onClose, maxWidth = 900 }) {
         alignItems: "center",
         justifyContent: "center",
         zIndex: 1000,
-        padding: 24,
+        padding: 18,
       }}
     >
       <div
@@ -286,14 +296,13 @@ export function Modal({ open, title, children, onClose, maxWidth = 900 }) {
         style={{
           width: "100%",
           maxWidth,
-          maxHeight: "90vh",
+          maxHeight: "92vh",
           overflow: "auto",
-          background:
-            "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.98) 100%)",
-          borderRadius: 30,
-          padding: 26,
+          background: "#ffffff",
+          borderRadius: 14,
+          padding: 18,
           border: "1px solid rgba(219,228,239,0.95)",
-          boxShadow: "0 40px 100px rgba(15,23,42,0.22)",
+          boxShadow: "0 26px 70px rgba(15,23,42,0.2)",
         }}
       >
         <div
@@ -301,17 +310,16 @@ export function Modal({ open, title, children, onClose, maxWidth = 900 }) {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            gap: 16,
-            marginBottom: 22,
+            gap: 12,
+            marginBottom: 16,
           }}
         >
           <h3
             style={{
-              fontSize: 28,
+              fontSize: 20,
               fontWeight: 900,
               margin: 0,
               color: "#0f172a",
-              letterSpacing: "-0.03em",
             }}
           >
             {title}
@@ -322,13 +330,13 @@ export function Modal({ open, title, children, onClose, maxWidth = 900 }) {
             style={{
               border: "1px solid #dbe4ef",
               background: "#ffffff",
-              width: 44,
-              height: 44,
-              borderRadius: 14,
+              width: 34,
+              height: 34,
+              borderRadius: 8,
               cursor: "pointer",
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: 900,
-              boxShadow: "0 10px 20px rgba(15,23,42,0.06)",
+              boxShadow: "0 4px 10px rgba(15,23,42,0.05)",
             }}
           >
             ×

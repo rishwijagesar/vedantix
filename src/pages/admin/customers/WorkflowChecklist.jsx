@@ -4,7 +4,7 @@ import { Card, SectionTitle } from "../components/AdminUI";
 
 export default function WorkflowChecklist({ checklist }) {
   return (
-    <Card style={{ marginBottom: 18 }}>
+    <Card style={{ marginBottom: 14 }}>
       <SectionTitle
         title="Workflow checklist"
         subtitle="Dit laat direct zien waar de klant zich in het proces bevindt."
@@ -12,7 +12,7 @@ export default function WorkflowChecklist({ checklist }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+          gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
           gap: 12,
         }}
       >
@@ -21,8 +21,8 @@ export default function WorkflowChecklist({ checklist }) {
             key={item.key}
             style={{
               border: `1px solid ${item.done ? "#10b98125" : "#cbd5e1"}`,
-              borderRadius: 18,
-              padding: 14,
+              borderRadius: 10,
+              padding: 10,
               background: item.done ? "#10b98110" : "#f8fafc",
             }}
           >

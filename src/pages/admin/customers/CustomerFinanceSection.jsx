@@ -16,7 +16,7 @@ export default function CustomerFinanceSection({ store }) {
   const stats = store.selectedCustomerStats;
 
   return (
-    <Card style={{ marginBottom: 18 }}>
+    <Card style={{ marginBottom: 14 }}>
       <SectionTitle
         title="Financieel overzicht per klant"
         subtitle="Wat deze klant kost en oplevert per geselecteerde periode."
@@ -35,7 +35,7 @@ export default function CustomerFinanceSection({ store }) {
         }
       />
 
-      <div style={{ width: "100%", height: 320, marginBottom: 18 }}>
+      <div style={{ width: "100%", height: 240, marginBottom: 14 }}>
         <ResponsiveContainer>
           <AreaChart data={store.selectedCustomerTrendData}>
             <defs>
@@ -73,8 +73,8 @@ export default function CustomerFinanceSection({ store }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-          gap: 16,
+          gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+          gap: 12,
         }}
       >
         <StatCard

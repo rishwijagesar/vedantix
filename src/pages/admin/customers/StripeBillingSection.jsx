@@ -1,17 +1,15 @@
 import React from "react";
 
-import { Button, Card, Field, Input, SectionTitle } from "../components/AdminUI";
+import { Card, Field, Input, SectionTitle } from "../components/AdminUI";
 
 export default function StripeBillingSection({ store }) {
   const customer = store.selectedCustomer;
   const stripeCustomerId = customer.stripeCustomerId || customer.billing?.stripeCustomerId;
-  const isBusy = Boolean(store.isUpdatingBilling);
 
   return (
     <Card
       style={{
-        background:
-          "linear-gradient(180deg, rgba(248,250,252,0.9) 0%, rgba(255,255,255,0.9) 100%)",
+        background: "#ffffff",
       }}
     >
       <SectionTitle
@@ -22,9 +20,8 @@ export default function StripeBillingSection({ store }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 14,
-          marginBottom: 20,
+          gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+          gap: 12,
         }}
       >
         <Field label="Stripe Customer ID">
@@ -51,36 +48,6 @@ export default function StripeBillingSection({ store }) {
             readOnly
           />
         </Field>
-      </div>
-
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-        {!stripeCustomerId ? (
-          <Button
-            tone="primary"
-            onClick={() => store.createStripeCustomer(customer)}
-            disabled={isBusy}
-          >
-            {isBusy ? "Bezig..." : "Stripe klant aanmaken"}
-          </Button>
-        ) : null}
-
-        <Button
-          tone="success"
-          onClick={() => store.createStripeCheckout(customer)}
-          disabled={isBusy}
-        >
-          {isBusy ? "Bezig..." : "Open Checkout"}
-        </Button>
-
-        {stripeCustomerId ? (
-          <Button
-            tone="soft"
-            onClick={() => store.openBillingPortal(customer)}
-            disabled={isBusy}
-          >
-            {isBusy ? "Bezig..." : "Open Billing Portal"}
-          </Button>
-        ) : null}
       </div>
     </Card>
   );

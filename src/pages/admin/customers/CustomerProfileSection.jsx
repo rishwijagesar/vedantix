@@ -16,16 +16,15 @@ export default function CustomerProfileSection({ store }) {
   return (
     <Card
       style={{
-        background:
-          "linear-gradient(180deg, rgba(248,250,252,0.9) 0%, rgba(255,255,255,0.9) 100%)",
+        background: "#ffffff",
       }}
     >
       <SectionTitle title="Algemene gegevens" subtitle="Wijzigbare klantinformatie." />
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 14,
+          gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
+          gap: 12,
         }}
       >
         <Field label="Bedrijfsnaam">

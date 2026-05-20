@@ -10,8 +10,7 @@ export default function BackendActionsSection({ store }) {
   return (
     <Card
       style={{
-        background:
-          "linear-gradient(180deg, rgba(248,250,252,0.9) 0%, rgba(255,255,255,0.9) 100%)",
+        background: "#ffffff",
       }}
     >
       <SectionTitle title="Backend acties" subtitle="Laatste calls voor deze klant." />
@@ -20,10 +19,10 @@ export default function BackendActionsSection({ store }) {
           <div
             key={entry.id}
             style={{
-              borderRadius: 16,
+              borderRadius: 10,
               border: "1px solid #e2e8f0",
               background: "#ffffff",
-              padding: 14,
+              padding: 10,
             }}
           >
             <div

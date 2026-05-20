@@ -1,74 +1,24 @@
 import React from "react";
 
-import { Button, Card, Field, Input, SectionTitle, Textarea } from "../components/AdminUI";
-import {
-  canApproveCustomer,
-  canDeployCustomer,
-  canManageDeployment,
-  canMarkPreviewReady,
-  canStartBuildFlow,
-} from "./customerWorkflow";
+import { Card, Field, Input, SectionTitle, Textarea } from "../components/AdminUI";
 
 export default function Base44WorkflowSection({ store }) {
-  const customer = store.selectedCustomer;
-
   return (
     <Card
       style={{
-        background:
-          "linear-gradient(180deg, rgba(248,250,252,0.9) 0%, rgba(255,255,255,0.9) 100%)",
+        background: "#ffffff",
       }}
     >
       <SectionTitle
         title="Base44 + GitHub workflow"
-        subtitle="Production flow: buildverzoek opslaan, app handmatig koppelen, daarna sync en preview."
-        action={
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <Button
-              tone="primary"
-              onClick={() => store.startBuildFlow(customer)}
-              disabled={store.isStartingBuildFlow || !canStartBuildFlow(customer)}
-            >
-              {store.isStartingBuildFlow ? "Bezig..." : "Start sync + previewflow"}
-            </Button>
-            {customer.base44?.editorUrl ? (
-              <Button tone="soft" onClick={() => store.openBase44Editor(customer)}>
-                Open editor
-              </Button>
-            ) : null}
-            {customer.preview?.fullUrl ? (
-              <Button
-                onClick={() =>
-                  window.open(customer.preview.fullUrl, "_blank", "noopener,noreferrer")
-                }
-              >
-                Open preview
-              </Button>
-            ) : null}
-          </div>
-        }
+        subtitle="Build, content sync en previewvelden."
       />
 
       <div
         style={{
-          marginBottom: 14,
-          padding: 14,
-          borderRadius: 16,
-          background: "#eff6ff",
-          border: "1px solid #bfdbfe",
-          color: "#1e3a8a",
-          lineHeight: 1.6,
-          fontSize: 14,
-        }}
-      >
-        <strong>Flow:</strong> eerst bouwverzoek opslaan, daarna app in Base44 maken of klonen, vervolgens hieronder de app koppelen. Zodra de app gekoppeld is kun je content syncen, preview klaarzetten en daarna live deployen.
-      </div>
-
-      <div
-        style={{
           display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 14,
+          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+          gap: 12,
         }}
       >
         <Field label="Base44 app ID">
@@ -158,106 +108,10 @@ export default function Base44WorkflowSection({ store }) {
                 store.updateContentSyncForm("additionalFilesJson", e.target.value)
               }
               placeholder='[{"path":"assets/app.js","content":"console.log(\"hi\")","encoding":"utf-8"}]'
-              rows={6}
-            />
-          </Field>
-        </div>
-
-        <div
-          style={{
-            gridColumn: "1 / -1",
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 10,
-            flexWrap: "wrap",
-          }}
-        >
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <Button
-              tone="soft"
-              onClick={() => store.autoCreateBase44App(customer)}
-              disabled={store.isAutoCreatingBase44}
-            >
-              {store.isAutoCreatingBase44 ? "Bezig..." : "Bouwverzoek opslaan"}
-            </Button>
-
-            <Button
-              tone="primary"
-              onClick={() => store.linkBase44App(customer)}
-              disabled={store.isLinkingBase44 || !store.base44LinkForm.appId.trim()}
-            >
-              {store.isLinkingBase44 ? "Bezig..." : "Base44 app koppelen"}
-            </Button>
-
-            <Button
-              tone="soft"
-              onClick={() => store.startBuildFlow(customer)}
-              disabled={store.isStartingBuildFlow || !canStartBuildFlow(customer)}
-            >
-              {store.isStartingBuildFlow ? "Bezig..." : "Start sync + previewflow"}
-            </Button>
-
-            <Button
-              tone="soft"
-              onClick={() => store.syncCustomerContent(customer)}
-              disabled={store.isSyncingContent || !store.contentSyncForm.indexHtml.trim()}
-            >
-              {store.isSyncingContent ? "Bezig..." : "Sync naar GitHub"}
-            </Button>
-
-            <Button
-              onClick={() => store.markPreviewReady(customer)}
-              disabled={store.isUpdatingWorkflow || !canMarkPreviewReady(customer)}
-            >
-              {store.isUpdatingWorkflow ? "Bezig..." : "Preview klaarzetten"}
-            </Button>
-
-            <Button
-              onClick={() => store.approveCustomerForProduction(customer)}
-              disabled={store.isUpdatingWorkflow || !canApproveCustomer(customer)}
-            >
-              {store.isUpdatingWorkflow ? "Bezig..." : "Klant akkoord"}
-            </Button>
-          </div>
-
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <Button
-              tone="soft"
-              onClick={() => store.runAutoRefreshCycle()}
-              disabled={store.isAutoRefreshing}
-            >
-              {store.isAutoRefreshing ? "Verversen..." : "Status verversen"}
-            </Button>
-
-            {canManageDeployment(customer) ? (
-              <Button
-                tone="soft"
-                onClick={() => store.redeployCustomer(customer)}
-                disabled={store.isUpdatingWorkflow}
-              >
-                {store.isUpdatingWorkflow ? "Bezig..." : "Redeploy"}
-              </Button>
-            ) : null}
-
-            {canManageDeployment(customer) ? (
-              <Button
-                tone="danger"
-                onClick={() => store.rollbackCustomer(customer)}
-                disabled={store.isUpdatingWorkflow}
-              >
-                {store.isUpdatingWorkflow ? "Bezig..." : "Rollback"}
-              </Button>
-            ) : null}
-
-            <Button
-              tone="success"
-              onClick={() => store.deployCustomer(customer)}
-              disabled={store.isUpdatingWorkflow || !canDeployCustomer(customer)}
-            >
-              {store.isUpdatingWorkflow ? "Bezig..." : "Site live zetten"}
-            </Button>
-          </div>
-        </div>
+            rows={6}
+          />
+        </Field>
+      </div>
       </div>
     </Card>
   );

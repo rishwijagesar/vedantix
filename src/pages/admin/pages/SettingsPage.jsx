@@ -9,7 +9,13 @@ export default function SettingsPage({ store: storeProp }) {
 
   const store = storeProp || outletContext.store;
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
+        gap: 14,
+      }}
+    >
       <Card>
         <SectionTitle
           title="Backend instellingen"
@@ -114,8 +120,8 @@ export default function SettingsPage({ store: storeProp }) {
               key={entry.id}
               style={{
                 border: "1px solid #e2e8f0",
-                borderRadius: 16,
-                padding: 14,
+                borderRadius: 10,
+                padding: 10,
                 background: "#ffffff",
               }}
             >

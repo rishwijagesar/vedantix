@@ -3,7 +3,6 @@ import React from "react";
 import { Button, Card, Input, SectionTitle } from "../components/AdminUI";
 import { STATUS_COLORS, STATUS_LABELS, currency } from "../utils/adminStorage";
 import {
-  canManageDeployment,
   deploymentTone,
   formatStageLabel,
   getWorkflowState,
@@ -34,22 +33,19 @@ function CustomersTableToolbar({ store }) {
         alignItems: "center",
       }}
     >
-      <div style={{ minWidth: 360, position: "relative" }}>
+      <div style={{ minWidth: 320, position: "relative" }}>
         <Input
           value={store.customerSearch}
           onChange={(e) => store.setCustomerSearch(e.target.value)}
           placeholder="Zoek op bedrijf, contact, domein..."
           style={{
-            paddingLeft: 44,
-            borderRadius: 18,
-            minHeight: 54,
-            boxShadow: "0 12px 30px rgba(15,23,42,0.05)",
+            paddingLeft: 36,
           }}
         />
         <span
           style={{
             position: "absolute",
-            left: 16,
+            left: 13,
             top: "50%",
             transform: "translateY(-50%)",
             color: "#94a3b8",
@@ -63,12 +59,6 @@ function CustomersTableToolbar({ store }) {
       <Button
         tone="primary"
         onClick={() => store.setIsCreateCustomerOpen(true)}
-        style={{
-          minHeight: 54,
-          paddingLeft: 20,
-          paddingRight: 20,
-          borderRadius: 18,
-        }}
       >
         + Klant aanmaken
       </Button>
@@ -77,12 +67,6 @@ function CustomersTableToolbar({ store }) {
         tone="soft"
         onClick={() => store.runAutoRefreshCycle()}
         disabled={store.isAutoRefreshing}
-        style={{
-          minHeight: 54,
-          paddingLeft: 20,
-          paddingRight: 20,
-          borderRadius: 18,
-        }}
       >
         {store.isAutoRefreshing ? "Verversen..." : "Nu verversen"}
       </Button>
@@ -102,33 +86,33 @@ function CustomerRow({ customer, store }) {
       }}
       onClick={() => store.setSelectedCustomerId(customer.id)}
     >
-      <td style={{ padding: "18px" }}>
+      <td style={{ padding: "12px 14px" }}>
         <div style={{ fontWeight: 900 }}>{customer.companyName}</div>
         <div style={{ color: "#64748b", fontSize: 13 }}>{customer.id}</div>
       </td>
-      <td style={{ padding: "18px" }}>
+      <td style={{ padding: "12px 14px" }}>
         <div>{customer.contactName}</div>
         <div style={{ color: "#64748b", fontSize: 13 }}>{customer.email}</div>
       </td>
-      <td style={{ padding: "18px", fontWeight: 700 }}>{customer.domain}</td>
-      <td style={{ padding: "18px" }}>
+      <td style={{ padding: "12px 14px", fontWeight: 700 }}>{customer.domain}</td>
+      <td style={{ padding: "12px 14px" }}>
         {store.packageOptions.find((item) => item.code === customer.packageCode)?.label ||
           customer.packageCode}
       </td>
-      <td style={{ padding: "18px" }}>
+      <td style={{ padding: "12px 14px" }}>
         <StatusPill tone={statusTone}>
           {STATUS_LABELS[customer.status] || customer.status}
         </StatusPill>
       </td>
-      <td style={{ padding: "18px" }}>
+      <td style={{ padding: "12px 14px" }}>
         <StatusPill tone={workflowTone(workflowState)}>{workflowState}</StatusPill>
       </td>
-      <td style={{ padding: "18px" }}>
+      <td style={{ padding: "12px 14px" }}>
         <StatusPill tone={deploymentTone(customer?.deployment?.status)}>
           {formatStageLabel(customer?.deployment?.currentStage)}
         </StatusPill>
       </td>
-      <td style={{ padding: "18px" }}>
+      <td style={{ padding: "12px 14px" }}>
         {customer.preview?.fullUrl ? (
           <a
             href={customer.preview.fullUrl}
@@ -147,26 +131,14 @@ function CustomerRow({ customer, store }) {
           <span style={{ color: "#94a3b8" }}>Nog niet klaar</span>
         )}
       </td>
-      <td style={{ padding: "18px", fontWeight: 900 }}>
+      <td style={{ padding: "12px 14px", fontWeight: 900 }}>
         {currency(store.calcMonthlyRevenue(customer))}
       </td>
-      <td style={{ padding: "18px" }} onClick={(e) => e.stopPropagation()}>
+      <td style={{ padding: "12px 14px" }} onClick={(e) => e.stopPropagation()}>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
           <Button tone="soft" onClick={() => store.setSelectedCustomerId(customer.id)}>
             Beheren
           </Button>
-          {customer.base44?.editorUrl ? (
-            <Button onClick={() => store.openBase44Editor(customer)}>Open Base44</Button>
-          ) : null}
-          {canManageDeployment(customer) ? (
-            <Button
-              tone="soft"
-              onClick={() => store.redeployCustomer(customer)}
-              disabled={store.isUpdatingWorkflow}
-            >
-              Redeploy
-            </Button>
-          ) : null}
           <Button tone="danger" onClick={() => store.requestDeleteCustomer(customer)}>
             Verwijderen
           </Button>
@@ -189,7 +161,7 @@ export default function CustomersTable({ store }) {
         style={{
           overflowX: "auto",
           border: "1px solid #dbe4ef",
-          borderRadius: 22,
+          borderRadius: 10,
           background: "#ffffff",
         }}
       >
@@ -197,7 +169,7 @@ export default function CustomersTable({ store }) {
           style={{
             width: "100%",
             borderCollapse: "collapse",
-            minWidth: 1440,
+            minWidth: 1240,
             background: "#ffffff",
           }}
         >
@@ -213,7 +185,7 @@ export default function CustomersTable({ store }) {
                   key={header}
                   style={{
                     textAlign: "left",
-                    padding: "16px 18px",
+                    padding: "11px 14px",
                     color: "#475569",
                     fontSize: 12,
                     fontWeight: 900,

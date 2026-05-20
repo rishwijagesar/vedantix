@@ -9,9 +9,9 @@ function OperationsList({ operations }) {
     <div
       style={{
         border: "1px solid #dbe4ef",
-        borderRadius: 20,
+        borderRadius: 10,
         background: "#ffffff",
-        padding: 16,
+        padding: 12,
       }}
     >
       <div
@@ -34,8 +34,8 @@ function OperationsList({ operations }) {
               key={operation.operationId || operation.id}
               style={{
                 border: "1px solid #e2e8f0",
-                borderRadius: 16,
-                padding: 14,
+                borderRadius: 10,
+                padding: 10,
                 background: "#f8fafc",
               }}
             >
@@ -84,9 +84,9 @@ function AuditEventsList({ events }) {
     <div
       style={{
         border: "1px solid #dbe4ef",
-        borderRadius: 20,
+        borderRadius: 10,
         background: "#ffffff",
-        padding: 16,
+        padding: 12,
       }}
     >
       <div
@@ -109,8 +109,8 @@ function AuditEventsList({ events }) {
               key={event.id || `${event.eventType}-${index}`}
               style={{
                 border: "1px solid #e2e8f0",
-                borderRadius: 16,
-                padding: 14,
+                borderRadius: 10,
+                padding: 10,
                 background: "#f8fafc",
               }}
             >
@@ -151,7 +151,7 @@ function AuditEventsList({ events }) {
 
 export default function DeploymentHistorySection({ store }) {
   return (
-    <Card style={{ marginBottom: 18 }}>
+    <Card style={{ marginBottom: 14 }}>
       <SectionTitle
         title="Deployment historie"
         subtitle="Operations en audit-events voor deze deployment."
@@ -161,7 +161,7 @@ export default function DeploymentHistorySection({ store }) {
         style={{
           display: "grid",
           gridTemplateColumns: "1fr 1fr",
-          gap: 18,
+          gap: 14,
         }}
       >
         <OperationsList operations={store.deploymentOperations} />

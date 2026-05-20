@@ -9,7 +9,7 @@ export default function CustomersPage({ store: storeProp }) {
   const store = storeProp || outletContext.store;
 
   return (
-    <div style={{ display: "grid", gap: 18 }}>
+    <div style={{ display: "grid", gap: 14 }}>
       <CustomersTable store={store} />
       <CustomerDetail store={store} />
     </div>

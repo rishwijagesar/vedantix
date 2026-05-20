@@ -22,12 +22,12 @@ export default function DashboardPage({ store: storeProp }) {
 
   const store = storeProp || outletContext.store;
   return (
-    <div style={{ display: "grid", gap: 18 }}>
+    <div style={{ display: "grid", gap: 14 }}>
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-          gap: 16,
+          gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+          gap: 12,
         }}
       >
         <StatCard
@@ -65,8 +65,8 @@ export default function DashboardPage({ store: storeProp }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1.2fr 0.8fr",
-          gap: 18,
+          gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))",
+          gap: 14,
         }}
       >
         <Card>
@@ -87,7 +87,7 @@ export default function DashboardPage({ store: storeProp }) {
               </div>
             }
           />
-          <div style={{ width: "100%", height: 340 }}>
+          <div style={{ width: "100%", height: 280 }}>
             <ResponsiveContainer>
               <AreaChart data={store.dashboardTrendData}>
                 <defs>
@@ -128,7 +128,7 @@ export default function DashboardPage({ store: storeProp }) {
             title="Pakketten"
             subtitle="Aantal klanten en omzet per pakket."
           />
-          <div style={{ width: "100%", height: 340 }}>
+          <div style={{ width: "100%", height: 280 }}>
             <ResponsiveContainer>
               <BarChart data={store.packageChartData}>
                 <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" />

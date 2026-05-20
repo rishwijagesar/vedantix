@@ -60,19 +60,28 @@ export default function FinancePage({ store: storeProp }) {
     const apiKey = store.settings.apiKey;
 
     await Promise.all(
-      store.customers.map((customer) =>
-        bootstrapFinanceCustomer({
+      store.customers.map((customer) => {
+        const billing = customer.billing || {};
+
+        return bootstrapFinanceCustomer({
           customerId: customer.id,
           companyName: customer.companyName,
           packageCode: customer.packageCode,
           extras: Array.isArray(customer.extras) ? customer.extras : [],
+          monthlyRevenue: Number(store.calcMonthlyRevenue(customer) || 0),
           monthlyInfraCost: Number(store.calcMonthlyInfraCost(customer) || 0),
           oneTimeSetupCost: Number(store.calcSetupRevenue(customer) || 0),
+          stripeCustomerId: customer.stripeCustomerId || billing.stripeCustomerId || "",
+          stripeSubscriptionId:
+            customer.stripeSubscriptionId || billing.stripeSubscriptionId || "",
+          subscriptionStatus:
+            customer.subscriptionStatus || billing.subscriptionStatus || "",
+          paymentStatus: customer.paymentStatus || billing.paymentStatus || "",
           isActive:
             customer.status === "active" || customer.status === "provisioning",
           apiKey,
-        }).catch(() => null)
-      )
+        }).catch(() => null);
+      })
     );
   }
 
@@ -185,7 +194,7 @@ export default function FinancePage({ store: storeProp }) {
   }
 
   return (
-    <div style={{ display: "grid", gap: 18 }}>
+    <div style={{ display: "grid", gap: 14 }}>
       <Card>
         <SectionTitle
           title="Finance overzicht"
@@ -216,8 +225,8 @@ export default function FinancePage({ store: storeProp }) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-            gap: 16,
+            gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+            gap: 12,
           }}
         >
           <StatCard
@@ -267,8 +276,8 @@ export default function FinancePage({ store: storeProp }) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-            gap: 14,
+            gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
+            gap: 12,
           }}
         >
           <Field label="Titel">
@@ -342,46 +351,82 @@ export default function FinancePage({ store: storeProp }) {
           subtitle="Dit overzicht komt uit /api/finance/overview en niet uit lokale berekeningen."
         />
 
-        <div style={{ display: "grid", gap: 10 }}>
-          {(overview?.customers || []).map((item) => {
-            const customer = customerLookup.get(item.customerId);
+        <div style={{ overflowX: "auto" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 1fr",
+              gap: 10,
+              padding: "0 10px",
+              minWidth: 980,
+              color: "#64748b",
+              fontSize: 11,
+              fontWeight: 900,
+              textTransform: "uppercase",
+            }}
+          >
+            <span>Klant</span>
+            <span>Omzet</span>
+            <span>Kosten</span>
+            <span>Stripe</span>
+            <span>Status</span>
+            <span>Winst</span>
+          </div>
 
-            return (
-              <div
-                key={item.customerId}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "2fr 1fr 1fr 1fr",
-                  gap: 12,
-                  padding: 14,
-                  borderRadius: 16,
-                  border: "1px solid #e2e8f0",
-                  background: "#ffffff",
-                  alignItems: "center",
-                }}
-              >
-                <div>
-                  <div style={{ fontWeight: 800 }}>
-                    {item.companyName || customer?.companyName || item.customerId}
-                  </div>
-                  <div style={{ color: "#64748b", fontSize: 13 }}>
-                    {item.packageCode}
-                  </div>
-                </div>
+          <div style={{ display: "grid", gap: 8, minWidth: 980, marginTop: 8 }}>
+            {(overview?.customers || []).map((item) => {
+              const customer = customerLookup.get(item.customerId);
 
-                <div style={{ fontWeight: 800 }}>{currency(item.revenue || 0)}</div>
-                <div style={{ fontWeight: 800 }}>{currency(item.costs || 0)}</div>
+              return (
                 <div
+                  key={item.customerId}
                   style={{
-                    fontWeight: 900,
-                    color: (item.profit || 0) >= 0 ? "#10b981" : "#ef4444",
+                    display: "grid",
+                    gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 1fr",
+                    gap: 10,
+                    padding: 10,
+                    borderRadius: 10,
+                    border: "1px solid #e2e8f0",
+                    background: "#ffffff",
+                    alignItems: "center",
+                    fontSize: 13,
                   }}
                 >
-                  {currency(item.profit || 0)}
+                  <div>
+                    <div style={{ fontWeight: 800 }}>
+                      {item.companyName || customer?.companyName || item.customerId}
+                    </div>
+                    <div style={{ color: "#64748b", fontSize: 13 }}>
+                      {item.packageCode}
+                    </div>
+                  </div>
+
+                  <div style={{ fontWeight: 800 }}>{currency(item.revenue || 0)}</div>
+                  <div style={{ fontWeight: 800 }}>{currency(item.costs || 0)}</div>
+                  <div
+                    style={{
+                      fontWeight: 800,
+                      color: item.stripeCustomerId ? "#0f172a" : "#94a3b8",
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {item.stripeCustomerId || "Geen Stripe"}
+                  </div>
+                  <div style={{ fontWeight: 800, color: "#475569" }}>
+                    {item.subscriptionStatus || item.paymentStatus || "—"}
+                  </div>
+                  <div
+                    style={{
+                      fontWeight: 900,
+                      color: (item.profit || 0) >= 0 ? "#10b981" : "#ef4444",
+                    }}
+                  >
+                    {currency(item.profit || 0)}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
 
           {(overview?.customers || []).length === 0 ? (
             <div style={{ color: "#64748b" }}>
@@ -424,12 +469,12 @@ export default function FinancePage({ store: storeProp }) {
         />
 
         {selectedFinanceCustomerDetails ? (
-          <div style={{ display: "grid", gap: 18 }}>
+          <div style={{ display: "grid", gap: 14 }}>
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                gap: 16,
+                gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
+                gap: 12,
               }}
             >
               <StatCard
@@ -467,15 +512,15 @@ export default function FinancePage({ store: storeProp }) {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1.2fr 1fr",
-                gap: 18,
+                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                gap: 14,
               }}
             >
               <div
                 style={{
                   border: "1px solid #e2e8f0",
-                  borderRadius: 18,
-                  padding: 16,
+                  borderRadius: 10,
+                  padding: 12,
                   background: "#ffffff",
                 }}
               >
@@ -517,6 +562,24 @@ export default function FinancePage({ store: storeProp }) {
                     )}
                   </div>
                   <div>
+                    <strong>Stripe:</strong>{" "}
+                    {selectedFinanceCustomerDetails?.customer?.stripeCustomerId ||
+                      "Geen Stripe klant"}
+                  </div>
+                  <div>
+                    <strong>Subscription:</strong>{" "}
+                    {selectedFinanceCustomerDetails?.customer?.subscriptionStatus || "—"}
+                  </div>
+                  <div>
+                    <strong>Payment:</strong>{" "}
+                    {selectedFinanceCustomerDetails?.customer?.paymentStatus || "—"}
+                  </div>
+                  <div>
+                    <strong>Stripe subscription:</strong>{" "}
+                    {selectedFinanceCustomerDetails?.customer?.stripeSubscriptionId ||
+                      "—"}
+                  </div>
+                  <div>
                     <strong>Aangemaakt:</strong>{" "}
                     {dateLabel(selectedFinanceCustomerDetails?.customer?.createdAt)}
                   </div>
@@ -530,8 +593,8 @@ export default function FinancePage({ store: storeProp }) {
               <div
                 style={{
                   border: "1px solid #e2e8f0",
-                  borderRadius: 18,
-                  padding: 16,
+                  borderRadius: 10,
+                  padding: 12,
                   background: "#ffffff",
                 }}
               >
@@ -554,7 +617,7 @@ export default function FinancePage({ store: storeProp }) {
                         justifyContent: "space-between",
                         gap: 12,
                         padding: 12,
-                        borderRadius: 14,
+                        borderRadius: 10,
                         background: "#f8fafc",
                         border: "1px solid #e2e8f0",
                       }}

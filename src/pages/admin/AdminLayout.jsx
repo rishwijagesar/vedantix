@@ -34,7 +34,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#f8fafc" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#f3f6fa" }}>
       <NotificationCenter />
 
       <aside
@@ -109,7 +109,7 @@ export default function AdminLayout() {
         </Button>
       </aside>
 
-      <main style={{ flex: 1, padding: 30 }}>
+      <main style={{ flex: 1, padding: 18, minWidth: 0 }}>
         <Outlet context={{ store }} />
       </main>
 
@@ -124,8 +124,8 @@ export default function AdminLayout() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-            gap: 14,
+            gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+            gap: 12,
           }}
         >
           <Field label="Bedrijfsnaam">
@@ -237,11 +237,11 @@ export default function AdminLayout() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
                   gap: 10,
                   border: "1px solid #dbe4ef",
-                  borderRadius: 18,
-                  padding: 14,
+                  borderRadius: 10,
+                  padding: 10,
                   background: "#ffffff",
                 }}
               >
@@ -276,24 +276,23 @@ export default function AdminLayout() {
           <div style={{ gridColumn: "1 / -1" }}>
             <Card
               style={{
-                borderRadius: 20,
-                padding: 18,
-                background:
-                  "linear-gradient(180deg, rgba(239,246,255,0.85) 0%, rgba(255,255,255,0.98) 100%)",
+                borderRadius: 10,
+                padding: 12,
+                background: "#f8fbff",
               }}
             >
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-                  gap: 14,
+                  gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                  gap: 12,
                 }}
               >
                 <div>
                   <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800 }}>
                     Maandprijs
                   </div>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: "#0f172a" }}>
+                  <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>
                     {currency(store.calcMonthlyRevenue(store.customerForm))}
                   </div>
                 </div>
@@ -301,7 +300,7 @@ export default function AdminLayout() {
                   <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800 }}>
                     Setup prijs
                   </div>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: "#0f172a" }}>
+                  <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>
                     {currency(store.calcSetupRevenue(store.customerForm))}
                   </div>
                 </div>
@@ -309,7 +308,7 @@ export default function AdminLayout() {
                   <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800 }}>
                     Infra p/m
                   </div>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: "#0f172a" }}>
+                  <div style={{ fontSize: 18, fontWeight: 900, color: "#0f172a" }}>
                     {currency(store.calcMonthlyInfraCost(store.customerForm))}
                   </div>
                 </div>
@@ -317,7 +316,7 @@ export default function AdminLayout() {
                   <div style={{ color: "#64748b", fontSize: 12, fontWeight: 800 }}>
                     Brutomarge p/m
                   </div>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: "#10b981" }}>
+                  <div style={{ fontSize: 18, fontWeight: 900, color: "#10b981" }}>
                     {currency(
                       store.calcMonthlyRevenue(store.customerForm) -
                         store.calcMonthlyInfraCost(store.customerForm)
@@ -344,7 +343,7 @@ export default function AdminLayout() {
             display: "flex",
             justifyContent: "flex-end",
             gap: 10,
-            marginTop: 24,
+            marginTop: 16,
           }}
         >
           <Button
@@ -371,15 +370,15 @@ export default function AdminLayout() {
           style={{
             padding: 4,
             display: "grid",
-            gap: 18,
+            gap: 12,
           }}
         >
-          <div
-            style={{
-              borderRadius: 20,
-              padding: 18,
-              background: "linear-gradient(180deg, #fff1f2 0%, #ffffff 100%)",
-              border: "1px solid #fecdd3",
+            <div
+              style={{
+                borderRadius: 10,
+                padding: 14,
+                background: "linear-gradient(180deg, #fff1f2 0%, #ffffff 100%)",
+                border: "1px solid #fecdd3",
             }}
           >
             <div
