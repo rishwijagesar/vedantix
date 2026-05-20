@@ -35,13 +35,16 @@ export async function bootstrapFinanceCustomer({
   );
 }
 
-export async function fetchFinanceOverview({
-  range = "month",
-  apiKey,
-}) {
+export async function fetchFinanceOverview({ range = "month", apiKey }) {
   const query = new URLSearchParams({ range }).toString();
 
   return apiClient.get(`/api/finance/overview?${query}`, {
+    apiKey,
+  });
+}
+
+export async function fetchStripeFinanceSummary({ apiKey }) {
+  return apiClient.get("/api/finance/summary", {
     apiKey,
   });
 }
