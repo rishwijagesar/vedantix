@@ -350,6 +350,7 @@ export function useAdminStore() {
   const [isSyncingContent, setIsSyncingContent] = useState(false);
   const [isStartingBuildFlow, setIsStartingBuildFlow] = useState(false);
   const [isUpdatingWorkflow, setIsUpdatingWorkflow] = useState(false);
+  const [isUpdatingBilling, setIsUpdatingBilling] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
   const [isAutoRefreshing, setIsAutoRefreshing] = useState(false);
   const [deleteCandidate, setDeleteCandidate] = useState(null);
@@ -1539,6 +1540,245 @@ export function useAdminStore() {
     }
   }
 
+  function getStripeCustomerId(customer) {
+    return customer?.stripeCustomerId || customer?.billing?.stripeCustomerId || "";
+  }
+
+  function getStripeUrl(result) {
+    return (
+      result?.data?.url ||
+      result?.data?.checkoutUrl ||
+      result?.data?.data?.url ||
+      result?.data?.data?.checkoutUrl ||
+      ""
+    );
+  }
+
+  function getBillingReturnUrl() {
+    return window.location.href;
+  }
+
+  async function persistCustomerBillingState(customer, billingPatch, historyPrefix) {
+    const updatedCustomer = {
+      ...customer,
+      ...billingPatch,
+      billing: {
+        ...(customer.billing || {}),
+        ...(billingPatch.billing || {}),
+      },
+    };
+
+    const result = await apiRequest(
+      settings,
+      "PUT",
+      `/api/customers/${customer.id}`,
+      updatedCustomer
+    );
+
+    pushRequestLogEntries({
+      id: createId(historyPrefix),
+      at: new Date().toISOString(),
+      type: "UPDATE_CUSTOMER_BILLING",
+      result,
+    });
+
+    const savedCustomer = result?.data?.data || updatedCustomer;
+
+    if (result.ok && savedCustomer?.id) {
+      setCustomers((prev) =>
+        prev.map((item) => (item.id === savedCustomer.id ? savedCustomer : item))
+      );
+      return savedCustomer;
+    }
+
+    throw new Error(
+      result?.data?.error?.message ||
+        result?.data?.error ||
+        result?.data?.message ||
+        "Stripe gegevens opslaan is mislukt."
+    );
+  }
+
+  async function createStripeCustomer(customer) {
+    if (!customer?.id) return null;
+
+    setIsUpdatingBilling(true);
+
+    try {
+      const result = await apiRequest(settings, "POST", "/api/billing/customers", {
+        customerId: customer.id,
+        email: customer.email,
+        name: customer.companyName || customer.contactName,
+        metadata: {
+          customerId: customer.id,
+          domain: customer.domain || "",
+          packageCode: customer.packageCode || "",
+        },
+      });
+
+      pushRequestLogEntries({
+        id: createId("stripe-customer"),
+        at: new Date().toISOString(),
+        type: "CREATE_STRIPE_CUSTOMER",
+        result,
+      });
+
+      const payload = result?.data?.data || result?.data || {};
+      const stripeCustomerId = payload.stripeCustomerId || payload.id || "";
+
+      if (!result.ok || !stripeCustomerId) {
+        throw new Error(
+          result?.data?.error?.message ||
+            result?.data?.error ||
+            result?.data?.message ||
+            "Stripe klant aanmaken is mislukt."
+        );
+      }
+
+      const savedCustomer = await persistCustomerBillingState(
+        customer,
+        {
+          stripeCustomerId,
+          billing: {
+            stripeCustomerId,
+            stripeCustomerCreatedAt: new Date().toISOString(),
+          },
+        },
+        "stripe-customer-save"
+      );
+
+      notifySuccess("Stripe klant aangemaakt.");
+      return savedCustomer;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Stripe klant aanmaken is mislukt.";
+      notifyError(message);
+      return null;
+    } finally {
+      setIsUpdatingBilling(false);
+    }
+  }
+
+  async function createStripeCheckout(customer) {
+    if (!customer?.id) return null;
+
+    setIsUpdatingBilling(true);
+
+    try {
+      const stripeCustomerId = getStripeCustomerId(customer);
+
+      if (!stripeCustomerId) {
+        throw new Error("Maak eerst een Stripe klant aan.");
+      }
+
+      const packageMeta = getPackageByCode(customer.packageCode);
+      const priceId =
+        customer.billing?.stripePriceId ||
+        packageMeta?.stripePriceId ||
+        packageMeta?.priceId ||
+        import.meta.env.VITE_STRIPE_DEFAULT_PRICE_ID ||
+        "";
+
+      const result = await apiRequest(
+        settings,
+        "POST",
+        "/api/billing/checkout-session",
+        {
+          customerId: stripeCustomerId,
+          stripeCustomerId,
+          internalCustomerId: customer.id,
+          priceId,
+          successUrl: getBillingReturnUrl(),
+          cancelUrl: getBillingReturnUrl(),
+        }
+      );
+
+      pushRequestLogEntries({
+        id: createId("stripe-checkout"),
+        at: new Date().toISOString(),
+        type: "CREATE_STRIPE_CHECKOUT",
+        result,
+      });
+
+      if (!result.ok) {
+        throw new Error(
+          result?.data?.error?.message ||
+            result?.data?.error ||
+            result?.data?.message ||
+            "Stripe checkout openen is mislukt."
+        );
+      }
+
+      const checkoutUrl = getStripeUrl(result);
+      if (!checkoutUrl) {
+        throw new Error("Stripe checkout gaf geen URL terug.");
+      }
+
+      window.open(checkoutUrl, "_blank", "noopener,noreferrer");
+      notifySuccess("Stripe checkout geopend.");
+      return result;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Stripe checkout openen is mislukt.";
+      notifyError(message);
+      return null;
+    } finally {
+      setIsUpdatingBilling(false);
+    }
+  }
+
+  async function openBillingPortal(customer) {
+    if (!customer?.id) return null;
+
+    const stripeCustomerId = getStripeCustomerId(customer);
+    if (!stripeCustomerId) {
+      notifyInfo("Maak eerst een Stripe klant aan.");
+      return null;
+    }
+
+    setIsUpdatingBilling(true);
+
+    try {
+      const result = await apiRequest(settings, "POST", "/api/billing/portal", {
+        customerId: stripeCustomerId,
+        stripeCustomerId,
+        internalCustomerId: customer.id,
+        returnUrl: getBillingReturnUrl(),
+      });
+
+      pushRequestLogEntries({
+        id: createId("stripe-portal"),
+        at: new Date().toISOString(),
+        type: "OPEN_STRIPE_PORTAL",
+        result,
+      });
+
+      if (!result.ok) {
+        throw new Error(
+          result?.data?.error?.message ||
+            result?.data?.error ||
+            result?.data?.message ||
+            "Billing Portal openen is mislukt."
+        );
+      }
+
+      const portalUrl = getStripeUrl(result);
+      if (!portalUrl) {
+        throw new Error("Stripe Billing Portal gaf geen URL terug.");
+      }
+
+      window.open(portalUrl, "_blank", "noopener,noreferrer");
+      return result;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Billing Portal openen is mislukt.";
+      notifyError(message);
+      return null;
+    } finally {
+      setIsUpdatingBilling(false);
+    }
+  }
+
   async function refreshCustomerDeployment(customer) {
     if (!customer || !customer.deployment?.deploymentId) return;
 
@@ -2010,6 +2250,7 @@ export function useAdminStore() {
     isSyncingContent,
     isStartingBuildFlow,
     isUpdatingWorkflow,
+    isUpdatingBilling,
     isCreateCustomerOpen,
     setIsCreateCustomerOpen,
     isAutoRefreshing,
@@ -2074,6 +2315,9 @@ export function useAdminStore() {
     deployCustomer,
     openBase44Editor,
     openBase44Preview,
+    createStripeCustomer,
+    createStripeCheckout,
+    openBillingPortal,
     deploymentOperations,
     deploymentAuditEvents,
     failedStageOptions,

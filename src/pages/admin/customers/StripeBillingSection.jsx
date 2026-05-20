@@ -5,6 +5,7 @@ import { Button, Card, Field, Input, SectionTitle } from "../components/AdminUI"
 export default function StripeBillingSection({ store }) {
   const customer = store.selectedCustomer;
   const stripeCustomerId = customer.stripeCustomerId || customer.billing?.stripeCustomerId;
+  const isBusy = Boolean(store.isUpdatingBilling);
 
   return (
     <Card
@@ -57,18 +58,27 @@ export default function StripeBillingSection({ store }) {
           <Button
             tone="primary"
             onClick={() => store.createStripeCustomer(customer)}
+            disabled={isBusy}
           >
-            Stripe klant aanmaken
+            {isBusy ? "Bezig..." : "Stripe klant aanmaken"}
           </Button>
         ) : null}
 
-        <Button tone="success" onClick={() => store.createStripeCheckout(customer)}>
-          Open Checkout
+        <Button
+          tone="success"
+          onClick={() => store.createStripeCheckout(customer)}
+          disabled={isBusy}
+        >
+          {isBusy ? "Bezig..." : "Open Checkout"}
         </Button>
 
         {stripeCustomerId ? (
-          <Button tone="soft" onClick={() => store.openBillingPortal(customer)}>
-            Open Billing Portal
+          <Button
+            tone="soft"
+            onClick={() => store.openBillingPortal(customer)}
+            disabled={isBusy}
+          >
+            {isBusy ? "Bezig..." : "Open Billing Portal"}
           </Button>
         ) : null}
       </div>
