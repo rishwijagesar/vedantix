@@ -29,6 +29,8 @@ import {
   notifySuccess,
 } from "../utils/adminNotifications";
 
+let activeAdminAuthToken = "";
+
 function buildHeaders(settings, method) {
   const headers = {
     "Content-Type": "application/json",
@@ -41,7 +43,7 @@ function buildHeaders(settings, method) {
   try {
     const raw = localStorage.getItem("vedantix_admin_auth_v1");
     const session = raw ? JSON.parse(raw) : null;
-    const token = session?.token || "";
+    const token = settings.adminAuthToken || activeAdminAuthToken || session?.token || "";
 
     if (token) {
       headers.Authorization = `Bearer ${token}`;
@@ -316,7 +318,22 @@ function normalizeAuditResponse(result) {
   return [];
 }
 
-export function useAdminStore() {
+function getRequestErrorMessage(result, fallback) {
+  if (result?.status === 401) {
+    return "Admin sessie ontbreekt of is verlopen. Log opnieuw in en probeer opnieuw.";
+  }
+
+  return (
+    result?.data?.error?.message ||
+    result?.data?.error ||
+    result?.data?.message ||
+    fallback
+  );
+}
+
+export function useAdminStore({ adminAuthToken = "" } = {}) {
+  activeAdminAuthToken = adminAuthToken;
+
   const [activeTab, setActiveTab] = useState("dashboard");
   const [pricingTab, setPricingTab] = useState("packages");
 
@@ -1592,10 +1609,7 @@ export function useAdminStore() {
     }
 
     throw new Error(
-      result?.data?.error?.message ||
-        result?.data?.error ||
-        result?.data?.message ||
-        "Stripe gegevens opslaan is mislukt."
+      getRequestErrorMessage(result, "Stripe gegevens opslaan is mislukt.")
     );
   }
 
@@ -1627,12 +1641,7 @@ export function useAdminStore() {
       const stripeCustomerId = payload.stripeCustomerId || payload.id || "";
 
       if (!result.ok || !stripeCustomerId) {
-        throw new Error(
-          result?.data?.error?.message ||
-            result?.data?.error ||
-            result?.data?.message ||
-            "Stripe klant aanmaken is mislukt."
-        );
+        throw new Error(getRequestErrorMessage(result, "Stripe klant aanmaken is mislukt."));
       }
 
       const savedCustomer = await persistCustomerBillingState(
@@ -1701,12 +1710,7 @@ export function useAdminStore() {
       });
 
       if (!result.ok) {
-        throw new Error(
-          result?.data?.error?.message ||
-            result?.data?.error ||
-            result?.data?.message ||
-            "Stripe checkout openen is mislukt."
-        );
+        throw new Error(getRequestErrorMessage(result, "Stripe checkout openen is mislukt."));
       }
 
       const checkoutUrl = getStripeUrl(result);
@@ -1754,12 +1758,7 @@ export function useAdminStore() {
       });
 
       if (!result.ok) {
-        throw new Error(
-          result?.data?.error?.message ||
-            result?.data?.error ||
-            result?.data?.message ||
-            "Billing Portal openen is mislukt."
-        );
+        throw new Error(getRequestErrorMessage(result, "Billing Portal openen is mislukt."));
       }
 
       const portalUrl = getStripeUrl(result);

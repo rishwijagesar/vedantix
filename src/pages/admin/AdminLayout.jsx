@@ -17,8 +17,8 @@ import { currency } from "./utils/adminStorage";
 export default function AdminLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const store = useAdminStore();
-  const { logout, user } = useAdminAuth();
+  const { logout, user, session } = useAdminAuth();
+  const store = useAdminStore({ adminAuthToken: session?.token || "" });
 
   const navItems = [
     { label: "Dashboard", path: "/admin" },
