@@ -746,6 +746,112 @@ export default function CustomersPage({ store: storeProp }) {
               marginBottom: 18,
             }}
           >
+
+            <Card
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(248,250,252,0.9) 0%, rgba(255,255,255,0.9) 100%)",
+              }}
+            >
+              <SectionTitle
+                title="Stripe Billing"
+                subtitle="Beheer abonnementen, betalingen en facturen."
+              />
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+                  gap: 14,
+                  marginBottom: 20,
+                }}
+              >
+                <Field label="Stripe Customer ID">
+                  <Input
+                    value={
+                      store.selectedCustomer.stripeCustomerId ||
+                      store.selectedCustomer.billing?.stripeCustomerId ||
+                      ""
+                    }
+                    readOnly
+                  />
+                </Field>
+
+                <Field label="Subscription status">
+                  <Input
+                    value={
+                      store.selectedCustomer.subscriptionStatus ||
+                      store.selectedCustomer.billing?.subscriptionStatus ||
+                      ""
+                    }
+                    readOnly
+                  />
+                </Field>
+
+                <Field label="Payment status">
+                  <Input
+                    value={
+                      store.selectedCustomer.paymentStatus ||
+                      store.selectedCustomer.billing?.paymentStatus ||
+                      ""
+                    }
+                    readOnly
+                  />
+                </Field>
+
+                <Field label="Stripe Subscription ID">
+                  <Input
+                    value={
+                      store.selectedCustomer.stripeSubscriptionId ||
+                      store.selectedCustomer.billing?.stripeSubscriptionId ||
+                      ""
+                    }
+                    readOnly
+                  />
+                </Field>
+              </div>
+
+              <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                {!(
+                  store.selectedCustomer.stripeCustomerId ||
+                  store.selectedCustomer.billing?.stripeCustomerId
+                ) ? (
+                  <Button
+                    tone="primary"
+                    onClick={() =>
+                      store.createStripeCustomer(store.selectedCustomer)
+                    }
+                  >
+                    Stripe klant aanmaken
+                  </Button>
+                ) : null}
+
+                <Button
+                  tone="success"
+                  onClick={() =>
+                    store.createStripeCheckout(store.selectedCustomer)
+                  }
+                >
+                  Open Checkout
+                </Button>
+
+                {(
+                  store.selectedCustomer.stripeCustomerId ||
+                  store.selectedCustomer.billing?.stripeCustomerId
+                ) ? (
+                  <Button
+                    tone="soft"
+                    onClick={() =>
+                      store.openBillingPortal(store.selectedCustomer)
+                    }
+                  >
+                    Open Billing Portal
+                  </Button>
+                ) : null}
+              </div>
+            </Card>
+
+
             <Card
               style={{
                 background:
