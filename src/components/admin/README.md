@@ -24,13 +24,16 @@ import {
 } from '@/components/admin';
 ```
 
-## Recommended Migration Strategy for AdminCRM.jsx
+## AdminCRM.jsx
 
-1. Replace local constants with imports from `config` and `constants`.
-2. Replace inline helper functions with imports from `utils`.
-3. Replace direct fetch calls with imports from `services`.
-4. Replace inline JSX sections with components from `sections`.
-5. Move stateful logic into hooks.
+`src/pages/AdminCRM.jsx` is now a compatibility wrapper around `AdminCRMPage`.
+New admin work should live in this module:
+
+1. Static navigation/configuration belongs in `config/` and `constants.js`.
+2. Stateful behavior belongs in `hooks/`.
+3. API communication belongs in `services/`.
+4. Formatting and small pure helpers belong in `utils/`.
+5. Feature UI belongs in `sections/`.
 
 ## Supported Domains
 
