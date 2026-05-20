@@ -3,11 +3,6 @@ import React from "react";
 import { Button, Card } from "../components/AdminUI";
 import { generateOfferPdf } from "../offers/generateOfferPdf";
 import {
-  canApproveCustomer,
-  canDeployCustomer,
-  canManageDeployment,
-  canMarkPreviewReady,
-  canStartBuildFlow,
   deploymentTone,
   formatStageLabel,
   workflowTone,

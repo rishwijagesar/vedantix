@@ -24,7 +24,7 @@ async function postJson(apiBaseUrl, apiKey, path, body) {
 }
 
 export default function CustomersPage({ store: storeProp }) {
-  const outletContext = useOutletContext() || {};
+  const outletContext = /** @type {{ store?: any }} */ (useOutletContext() || {});
 
   const baseStore =
     storeProp && typeof storeProp === "object"

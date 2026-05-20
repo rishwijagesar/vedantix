@@ -3,12 +3,9 @@ import {
   Card,
   SectionTitle,
   Button,
-  Field,
-  Input,
-  Select,
   StatCard,
 } from "../components/AdminUI";
-import { currency, dateLabel } from "../utils/adminStorage";
+import { currency } from "../utils/adminStorage";
 import { useOutletContext } from "react-router-dom";
 import {
   bootstrapFinanceCustomer,
@@ -31,7 +28,7 @@ function mapRangeLabel(key) {
 }
 
 export default function FinancePage({ store: storeProp }) {
-  const outletContext = useOutletContext();
+  const outletContext = /** @type {{ store: any }} */ (useOutletContext());
   const store = storeProp || outletContext.store;
 
   const [overviewRange, setOverviewRange] = useState("month");
