@@ -66,6 +66,52 @@ function buildEnvVars(product) {
   ];
 }
 
+function productFromPricingPackage(item) {
+  const code = String(item?.code || "").trim().toUpperCase();
+  const label = String(item?.label || code).trim();
+
+  return {
+    code,
+    name: label.startsWith("Vedantix") ? label : `Vedantix ${label}`,
+    description: item?.description || "",
+    monthlyPrice: Number(item?.monthlyPriceInclVat || 0),
+    setupPrice: Number(item?.setupPriceInclVat || 0),
+    stripeProductId: "",
+    stripeMonthlyPriceId: "",
+    stripeSetupPriceId: "",
+    createdAt: item?.createdAt || "",
+    updatedAt: item?.updatedAt || "",
+  };
+}
+
+function buildProductsFromPricingPackages(packageOptions = []) {
+  return packageOptions
+    .map(productFromPricingPackage)
+    .filter((product) => product.code);
+}
+
+function mergeProducts(catalogProducts = [], fallbackProducts = []) {
+  const byCode = new Map();
+
+  for (const product of fallbackProducts) {
+    byCode.set(product.code, product);
+  }
+
+  for (const product of catalogProducts) {
+    const code = String(product?.code || "").trim().toUpperCase();
+    if (!code) continue;
+    byCode.set(code, {
+      ...byCode.get(code),
+      ...product,
+      code,
+    });
+  }
+
+  return Array.from(byCode.values()).sort((a, b) =>
+    String(a.code).localeCompare(String(b.code))
+  );
+}
+
 function validateDraft(draft) {
   const code = String(draft.code || "").trim().toUpperCase();
   const name = String(draft.name || "").trim();
@@ -220,6 +266,10 @@ export default function ProductsPage({ store: storeProp }) {
   const [isSyncing, setIsSyncing] = useState("");
   const [lastSync, setLastSync] = useState(null);
 
+  const localPricingProducts = useMemo(() => {
+    return buildProductsFromPricingPackages(store.packageOptions);
+  }, [store.packageOptions]);
+
   const selectedProduct = useMemo(() => {
     return products.find((product) => product.code === draft.code) || draft;
   }, [products, draft]);
@@ -238,7 +288,10 @@ export default function ProductsPage({ store: storeProp }) {
 
     try {
       const data = await fetchCatalogProducts({ apiKey: store.settings.apiKey });
-      const nextProducts = Array.isArray(data) ? data : [];
+      const nextProducts = mergeProducts(
+        Array.isArray(data) ? data : [],
+        localPricingProducts
+      );
       setProducts(nextProducts);
 
       if (!draft.code && nextProducts.length > 0) {
@@ -246,7 +299,17 @@ export default function ProductsPage({ store: storeProp }) {
       }
     } catch (error) {
       console.error(error);
-      notifyError("Producten laden is mislukt.");
+      if (localPricingProducts.length > 0) {
+        setProducts(localPricingProducts);
+        if (!draft.code) {
+          setDraft(normalizeDraft(localPricingProducts[0]));
+        }
+        notifyInfo(
+          "Backend productcatalogus kon niet laden; bestaande prijsproducten zijn getoond."
+        );
+      } else {
+        notifyError("Producten laden is mislukt.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -255,6 +318,17 @@ export default function ProductsPage({ store: storeProp }) {
   useEffect(() => {
     void loadProducts();
   }, []);
+
+  useEffect(() => {
+    if (products.length > 0 || localPricingProducts.length === 0) {
+      return;
+    }
+
+    setProducts(localPricingProducts);
+    if (!draft.code) {
+      setDraft(normalizeDraft(localPricingProducts[0]));
+    }
+  }, [draft.code, localPricingProducts, products.length]);
 
   function updateDraft(field, value) {
     setDraft((prev) => ({
