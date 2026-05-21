@@ -401,13 +401,7 @@ export default function ProductsPage({ store: storeProp }) {
         return;
       }
 
-      product = await handleSave();
-      if (!product) {
-        product = draftToProductPayload(draft);
-        notifyInfo(
-          "Product opslaan lukte niet; ik probeer direct te synchroniseren."
-        );
-      }
+      product = draftToProductPayload(draft);
     }
 
     setIsSyncing(product.code);
