@@ -23,6 +23,7 @@ import {
   isWithinFilter,
 } from "../utils/adminStorage";
 import { updateCustomer, deleteCustomer } from "../../../api/customers.api";
+import { deleteFinanceCustomer } from "../../../api/finance.api";
 import {
   notifyError,
   notifyInfo,
@@ -2086,6 +2087,13 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       await deleteCustomer({
         id: deleteCandidate.id,
         apiKey,
+      });
+
+      await deleteFinanceCustomer({
+        customerId: deleteCandidate.id,
+        apiKey,
+      }).catch((error) => {
+        console.warn("Finance cleanup failed after customer delete", error);
       });
 
       setCustomers((prev) =>

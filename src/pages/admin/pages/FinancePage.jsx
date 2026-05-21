@@ -13,6 +13,8 @@ import { useOutletContext } from "react-router-dom";
 import {
   bootstrapFinanceCustomer,
   createFinanceExpense,
+  deleteFinanceCustomer,
+  deleteFinanceExpense,
   fetchFinanceCustomerDetails,
   fetchFinanceOverview,
   fetchStripeFinanceSummary,
@@ -38,6 +40,8 @@ export default function FinancePage({ store: storeProp }) {
   const [customerRange, setCustomerRange] = useState("month");
   const [isLoadingOverview, setIsLoadingOverview] = useState(false);
   const [isSavingExpense, setIsSavingExpense] = useState(false);
+  const [deletingFinanceCustomerId, setDeletingFinanceCustomerId] = useState("");
+  const [deletingExpenseId, setDeletingExpenseId] = useState("");
   const [stripeSummary, setStripeSummary] = useState(null);
   const [overview, setOverview] = useState({
     totals: {
@@ -51,6 +55,9 @@ export default function FinancePage({ store: storeProp }) {
   });
   const [selectedFinanceCustomerId, setSelectedFinanceCustomerId] = useState("");
   const [selectedFinanceCustomerDetails, setSelectedFinanceCustomerDetails] = useState(null);
+  const [deletedFinanceCustomerIds, setDeletedFinanceCustomerIds] = useState(
+    () => new Set()
+  );
 
   const customerLookup = useMemo(() => {
     return new Map(store.customers.map((customer) => [customer.id, customer]));
@@ -156,40 +163,44 @@ export default function FinancePage({ store: storeProp }) {
     };
   }
 
-  async function syncCustomersToFinance() {
+  async function syncCustomersToFinance(skipCustomerIds = deletedFinanceCustomerIds) {
     const apiKey = store.settings.apiKey;
 
     await Promise.all(
-      store.customers.map((customer) => {
-        const billing = customer.billing || {};
+      store.customers
+        .filter((customer) => !skipCustomerIds.has(customer.id))
+        .map((customer) => {
+          const billing = customer.billing || {};
 
-        return bootstrapFinanceCustomer({
-          customerId: customer.id,
-          companyName: customer.companyName,
-          packageCode: customer.packageCode,
-          extras: Array.isArray(customer.extras) ? customer.extras : [],
-          monthlyRevenue: Number(store.calcMonthlyRevenue(customer) || 0),
-          monthlyInfraCost: Number(store.calcMonthlyInfraCost(customer) || 0),
-          oneTimeSetupCost: Number(store.calcSetupRevenue(customer) || 0),
-          stripeCustomerId: customer.stripeCustomerId || billing.stripeCustomerId || "",
-          stripeSubscriptionId:
-            customer.stripeSubscriptionId || billing.stripeSubscriptionId || "",
-          subscriptionStatus:
-            customer.subscriptionStatus || billing.subscriptionStatus || "",
-          paymentStatus: customer.paymentStatus || billing.paymentStatus || "",
-          isActive:
-            customer.status === "active" || customer.status === "provisioning",
-          apiKey,
-        }).catch(() => null);
-      })
+          return bootstrapFinanceCustomer({
+            customerId: customer.id,
+            companyName: customer.companyName,
+            packageCode: customer.packageCode,
+            extras: Array.isArray(customer.extras) ? customer.extras : [],
+            monthlyRevenue: Number(store.calcMonthlyRevenue(customer) || 0),
+            monthlyInfraCost: Number(store.calcMonthlyInfraCost(customer) || 0),
+            oneTimeSetupCost: Number(store.calcSetupRevenue(customer) || 0),
+            stripeCustomerId: customer.stripeCustomerId || billing.stripeCustomerId || "",
+            stripeSubscriptionId:
+              customer.stripeSubscriptionId || billing.stripeSubscriptionId || "",
+            subscriptionStatus:
+              customer.subscriptionStatus || billing.subscriptionStatus || "",
+            paymentStatus: customer.paymentStatus || billing.paymentStatus || "",
+            isActive:
+              customer.status === "active" || customer.status === "provisioning",
+            apiKey,
+          }).catch(() => null);
+        })
     );
   }
 
-  async function loadOverview() {
+  async function loadOverview(options = {}) {
     setIsLoadingOverview(true);
 
     try {
-      await syncCustomersToFinance();
+      await syncCustomersToFinance(
+        options.skipCustomerIds || deletedFinanceCustomerIds
+      );
 
       const [overviewData, stripeData] = await Promise.all([
         fetchFinanceOverview({
@@ -299,6 +310,79 @@ export default function FinancePage({ store: storeProp }) {
       notifyError("Uitgave opslaan is mislukt.");
     } finally {
       setIsSavingExpense(false);
+    }
+  }
+
+  async function handleDeleteFinanceCustomer(customerId, companyName) {
+    if (!customerId) return;
+
+    const confirmed = window.confirm(
+      `Finance record voor ${companyName || customerId} verwijderen? Gekoppelde uitgaven worden ook verwijderd.`
+    );
+
+    if (!confirmed) return;
+
+    const nextDeletedIds = new Set(deletedFinanceCustomerIds);
+    nextDeletedIds.add(customerId);
+    setDeletingFinanceCustomerId(customerId);
+
+    try {
+      await deleteFinanceCustomer({
+        customerId,
+        apiKey: store.settings.apiKey,
+      });
+
+      setDeletedFinanceCustomerIds(nextDeletedIds);
+      setOverview((prev) => ({
+        ...prev,
+        customers: (prev?.customers || []).filter(
+          (item) => item.customerId !== customerId
+        ),
+      }));
+
+      if (selectedFinanceCustomerId === customerId) {
+        setSelectedFinanceCustomerId("");
+        setSelectedFinanceCustomerDetails(null);
+      }
+
+      notifySuccess("Finance record verwijderd.");
+      await loadOverview({ skipCustomerIds: nextDeletedIds });
+    } catch (error) {
+      console.error(error);
+      notifyError("Finance record verwijderen is mislukt.");
+    } finally {
+      setDeletingFinanceCustomerId("");
+    }
+  }
+
+  async function handleDeleteFinanceExpense(expense) {
+    if (!expense?.id) return;
+
+    const confirmed = window.confirm(
+      `Uitgave "${expense.title || expense.id}" verwijderen?`
+    );
+
+    if (!confirmed) return;
+
+    setDeletingExpenseId(expense.id);
+
+    try {
+      await deleteFinanceExpense({
+        expenseId: expense.id,
+        apiKey: store.settings.apiKey,
+      });
+
+      notifySuccess("Uitgave verwijderd.");
+      await loadOverview();
+
+      if (selectedFinanceCustomerId) {
+        await loadCustomerDetails(selectedFinanceCustomerId);
+      }
+    } catch (error) {
+      console.error(error);
+      notifyError("Uitgave verwijderen is mislukt.");
+    } finally {
+      setDeletingExpenseId("");
     }
   }
 
@@ -563,10 +647,10 @@ export default function FinancePage({ store: storeProp }) {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 1fr",
+              gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 1fr auto",
               gap: 10,
               padding: "0 10px",
-              minWidth: 980,
+              minWidth: 1080,
               color: "#64748b",
               fontSize: 11,
               fontWeight: 900,
@@ -579,9 +663,10 @@ export default function FinancePage({ store: storeProp }) {
             <span>Stripe</span>
             <span>Status</span>
             <span>Winst</span>
+            <span>Acties</span>
           </div>
 
-          <div style={{ display: "grid", gap: 8, minWidth: 980, marginTop: 8 }}>
+          <div style={{ display: "grid", gap: 8, minWidth: 1080, marginTop: 8 }}>
             {(overview?.customers || []).map((item) => {
               const customer = customerLookup.get(item.customerId);
 
@@ -590,7 +675,7 @@ export default function FinancePage({ store: storeProp }) {
                   key={item.customerId}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 1fr",
+                    gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 1fr auto",
                     gap: 10,
                     padding: 10,
                     borderRadius: 10,
@@ -631,6 +716,20 @@ export default function FinancePage({ store: storeProp }) {
                   >
                     {currency(item.profit || 0)}
                   </div>
+                  <Button
+                    tone="danger"
+                    onClick={() =>
+                      handleDeleteFinanceCustomer(
+                        item.customerId,
+                        item.companyName || customer?.companyName
+                      )
+                    }
+                    disabled={deletingFinanceCustomerId === item.customerId}
+                  >
+                    {deletingFinanceCustomerId === item.customerId
+                      ? "Verwijderen..."
+                      : "Verwijderen"}
+                  </Button>
                 </div>
               );
             })}
@@ -670,6 +769,23 @@ export default function FinancePage({ store: storeProp }) {
                   {mapRangeLabel(key)}
                 </Button>
               ))}
+
+              {selectedFinanceCustomerId ? (
+                <Button
+                  tone="danger"
+                  onClick={() =>
+                    handleDeleteFinanceCustomer(
+                      selectedFinanceCustomerId,
+                      selectedFinanceCustomerDetails?.customer?.companyName
+                    )
+                  }
+                  disabled={deletingFinanceCustomerId === selectedFinanceCustomerId}
+                >
+                  {deletingFinanceCustomerId === selectedFinanceCustomerId
+                    ? "Verwijderen..."
+                    : "Finance verwijderen"}
+                </Button>
+              ) : null}
             </div>
           }
         />
@@ -834,8 +950,27 @@ export default function FinancePage({ store: storeProp }) {
                           {expense.category} · {dateLabel(expense.expenseDate)}
                         </div>
                       </div>
-                      <div style={{ fontWeight: 900 }}>
-                        {currency(expense.amount || 0)}
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 8,
+                          flexWrap: "wrap",
+                          justifyContent: "flex-end",
+                        }}
+                      >
+                        <div style={{ fontWeight: 900 }}>
+                          {currency(expense.amount || 0)}
+                        </div>
+                        <Button
+                          tone="danger"
+                          onClick={() => handleDeleteFinanceExpense(expense)}
+                          disabled={deletingExpenseId === expense.id}
+                        >
+                          {deletingExpenseId === expense.id
+                            ? "Verwijderen..."
+                            : "Verwijderen"}
+                        </Button>
                       </div>
                     </div>
                   ))}

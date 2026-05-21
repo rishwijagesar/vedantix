@@ -81,3 +81,15 @@ export async function createFinanceExpense({
     { apiKey }
   );
 }
+
+export async function deleteFinanceCustomer({ customerId, apiKey }) {
+  return apiClient.delete(`/api/finance/customers/${customerId}`, {
+    apiKey,
+  });
+}
+
+export async function deleteFinanceExpense({ expenseId, apiKey }) {
+  return apiClient.delete(`/api/finance/expenses/${expenseId}`, {
+    apiKey,
+  });
+}
