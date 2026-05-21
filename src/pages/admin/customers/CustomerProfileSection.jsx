@@ -118,6 +118,10 @@ export default function CustomerProfileSection({ store }) {
           <Input value={customer.preview?.path || ""} readOnly />
         </Field>
 
+        <Field label="Publieke preview URL">
+          <Input value={customer.preview?.fullUrl || ""} readOnly />
+        </Field>
+
         <Field label="Preview status">
           <Input value={customer.preview?.status || ""} readOnly />
         </Field>

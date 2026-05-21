@@ -5,6 +5,8 @@ const RAW_API_BASE =
 
 const API_BASE = String(RAW_API_BASE).replace(/\/$/, "");
 
+export const API_BASE_URL = API_BASE;
+
 const DEFAULT_TENANT_ID =
   import.meta.env.VITE_TENANT_ID || "default";
 

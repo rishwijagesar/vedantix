@@ -25,6 +25,7 @@ const VoorWie = lazy(() => import("./pages/VoorWie"));
 const Voorwaarden = lazy(() => import("./pages/Voorwaarden"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const PricingDetails = lazy(() => import("./pages/PricingDetails.jsx"));
+const CustomerPreviewPage = lazy(() => import("./pages/CustomerPreviewPage.jsx"));
 
 const WebsiteKapper = lazy(() => import("./pages/WebsiteKapper"));
 const WebsiteSalon = lazy(() => import("./pages/WebsiteSalon"));
@@ -114,6 +115,8 @@ function AppRoutes() {
         <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
         <Route path="/CRM" element={<Navigate to="/admin" replace />} />
         <Route path="/ClientPortal" element={<Navigate to="/klantenportaal" replace />} />
+
+        <Route path="/:previewSlug" element={<CustomerPreviewPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

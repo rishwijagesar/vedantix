@@ -293,7 +293,6 @@ function normalizeDeploymentSnapshot(existingCustomer, deployment) {
     liveDomain:
       deployment?.liveDomain ||
       existingCustomer?.deployment?.liveDomain ||
-      existingCustomer?.domain ||
       "",
     operationId:
       deployment?.operationId ||

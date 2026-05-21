@@ -41,8 +41,8 @@ export default function DeploymentStatusSection({ store }) {
           />
           <StatCard
             title="Live domein"
-            value={customer?.deployment?.liveDomain || customer?.domain || "—"}
-            subtitle="Doeldomein"
+            value={customer?.deployment?.liveDomain || "—"}
+            subtitle="Na productie deployment"
             tone="#10b981"
           />
         </div>

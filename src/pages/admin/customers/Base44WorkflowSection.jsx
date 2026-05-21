@@ -1,8 +1,20 @@
 import React from "react";
 
-import { Card, Field, Input, SectionTitle, Textarea } from "../components/AdminUI";
+import { Button, Card, Field, Input, SectionTitle, Textarea } from "../components/AdminUI";
+import {
+  canApproveCustomer,
+  canDeployCustomer,
+  canMarkPreviewReady,
+} from "./customerWorkflow";
 
 export default function Base44WorkflowSection({ store }) {
+  const customer = store.selectedCustomer;
+  const isBusy =
+    store.isLinkingBase44 ||
+    store.isSyncingContent ||
+    store.isStartingBuildFlow ||
+    store.isUpdatingWorkflow;
+
   return (
     <Card
       style={{
@@ -45,11 +57,11 @@ export default function Base44WorkflowSection({ store }) {
           />
         </Field>
 
-        <Field label="Preview URL">
+        <Field label="Base44 preview URL">
           <Input
             value={store.base44LinkForm.previewUrl}
             onChange={(e) => store.updateBase44LinkForm("previewUrl", e.target.value)}
-            placeholder="https://preview...."
+            placeholder="Base44 preview URL"
           />
         </Field>
 
@@ -108,10 +120,76 @@ export default function Base44WorkflowSection({ store }) {
                 store.updateContentSyncForm("additionalFilesJson", e.target.value)
               }
               placeholder='[{"path":"assets/app.js","content":"console.log(\"hi\")","encoding":"utf-8"}]'
-            rows={6}
-          />
-        </Field>
-      </div>
+              rows={6}
+            />
+          </Field>
+        </div>
+
+        <div
+          style={{
+            gridColumn: "1 / -1",
+            display: "flex",
+            gap: 8,
+            flexWrap: "wrap",
+            alignItems: "center",
+          }}
+        >
+          <Button
+            tone="soft"
+            onClick={() => store.linkBase44App(customer)}
+            disabled={isBusy || !customer?.id || !store.base44LinkForm.appId}
+          >
+            Base44 koppelen
+          </Button>
+
+          <Button
+            tone="soft"
+            onClick={() => store.startBuildFlow(customer)}
+            disabled={isBusy || !customer?.base44?.appId}
+          >
+            Buildflow starten
+          </Button>
+
+          <Button
+            tone="soft"
+            onClick={() => store.syncCustomerContent(customer)}
+            disabled={
+              isBusy ||
+              !customer?.base44?.appId ||
+              !store.contentSyncForm.indexHtml.trim()
+            }
+          >
+            Content syncen
+          </Button>
+
+          <Button
+            tone="primary"
+            onClick={() => store.markPreviewReady(customer)}
+            disabled={
+              isBusy ||
+              !canMarkPreviewReady(customer) ||
+              !(store.base44LinkForm.previewUrl || customer?.base44?.previewUrl)
+            }
+          >
+            Preview klaarzetten
+          </Button>
+
+          <Button
+            tone="success"
+            onClick={() => store.approveCustomerForProduction(customer)}
+            disabled={isBusy || !canApproveCustomer(customer)}
+          >
+            Goedkeuren
+          </Button>
+
+          <Button
+            tone="success"
+            onClick={() => store.deployCustomer(customer)}
+            disabled={isBusy || !canDeployCustomer(customer)}
+          >
+            Publiceren
+          </Button>
+        </div>
       </div>
     </Card>
   );
