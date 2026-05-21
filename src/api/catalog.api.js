@@ -15,8 +15,12 @@ export async function saveCatalogProduct({ product, apiKey }) {
 }
 
 /**
- * @param {{ code: string, apiKey?: string }} params
+ * @param {{ code: string, product?: any, apiKey?: string }} params
  */
-export async function syncCatalogProduct({ code, apiKey }) {
-  return apiClient.post(`/api/catalog/products/${code}/sync`, {}, { apiKey });
+export async function syncCatalogProduct({ code, product, apiKey }) {
+  return apiClient.post(
+    `/api/catalog/products/${code}/sync`,
+    product ? { product } : {},
+    { apiKey }
+  );
 }

@@ -130,6 +130,16 @@ function validateDraft(draft) {
   return "";
 }
 
+function draftToProductPayload(draft) {
+  return {
+    code: String(draft.code || "").trim().toUpperCase(),
+    name: String(draft.name || "").trim(),
+    description: String(draft.description || "").trim(),
+    monthlyPrice: Number(draft.monthlyPrice),
+    setupPrice: Number(draft.setupPrice),
+  };
+}
+
 function ProductStatus({ product }) {
   const synced = Boolean(
     product?.stripeProductId &&
@@ -359,13 +369,7 @@ export default function ProductsPage({ store: storeProp }) {
     try {
       const product = await saveCatalogProduct({
         apiKey: store.settings.apiKey,
-        product: {
-          code: String(draft.code || "").trim().toUpperCase(),
-          name: String(draft.name || "").trim(),
-          description: String(draft.description || "").trim(),
-          monthlyPrice: Number(draft.monthlyPrice),
-          setupPrice: Number(draft.setupPrice),
-        },
+        product: draftToProductPayload(draft),
       });
 
       setProducts((prev) => {
@@ -391,8 +395,19 @@ export default function ProductsPage({ store: storeProp }) {
     let product = productInput;
 
     if (productInput.code === draft.code) {
+      const validationMessage = validateDraft(draft);
+      if (validationMessage) {
+        notifyInfo(validationMessage);
+        return;
+      }
+
       product = await handleSave();
-      if (!product) return;
+      if (!product) {
+        product = draftToProductPayload(draft);
+        notifyInfo(
+          "Product opslaan lukte niet; ik probeer direct te synchroniseren."
+        );
+      }
     }
 
     setIsSyncing(product.code);
@@ -400,6 +415,7 @@ export default function ProductsPage({ store: storeProp }) {
     try {
       const result = await syncCatalogProduct({
         code: product.code,
+        product,
         apiKey: store.settings.apiKey,
       });
       const syncedProduct = result?.product || null;
@@ -412,7 +428,20 @@ export default function ProductsPage({ store: storeProp }) {
       }
 
       setLastSync(result);
-      notifySuccess("Product gesynchroniseerd met Stripe en App Runner.");
+      const warnings = [
+        ...(Array.isArray(result?.warnings) ? result.warnings : []),
+        result?.appRunner?.warning
+          ? `App Runner: ${result.appRunner.warning}`
+          : "",
+      ].filter(Boolean);
+
+      if (warnings.length > 0) {
+        notifyInfo(
+          `Stripe Price IDs zijn aangemaakt. Let op: ${warnings[0]}`
+        );
+      } else {
+        notifySuccess("Product gesynchroniseerd met Stripe en App Runner.");
+      }
     } catch (error) {
       console.error(error);
       notifyError(
