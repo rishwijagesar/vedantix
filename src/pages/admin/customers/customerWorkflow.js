@@ -2,17 +2,111 @@ export function canMarkPreviewReady(customer) {
   return Boolean(customer?.base44?.appId);
 }
 
-export function deriveBase44PreviewUrl(editorUrl) {
-  const value = String(editorUrl || "").trim();
-  if (!value) return "";
-  return value.replace("/editor", "/editor/preview");
+function slugify(value) {
+  return String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function parseUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return null;
+
+  try {
+    return new URL(raw);
+  } catch {
+    if (/^[a-z0-9.-]+\.[a-z]{2,}(\/.*)?$/i.test(raw)) {
+      try {
+        return new URL(`https://${raw}`);
+      } catch {
+        return null;
+      }
+    }
+  }
+
+  return null;
+}
+
+function isBase44PublicHost(hostname) {
+  return String(hostname || "").toLowerCase().endsWith(".base44.app");
+}
+
+function isUnsafePreviewTarget(url) {
+  const hostname = String(url?.hostname || "").toLowerCase();
+  return (
+    hostname === "app.base44.com" ||
+    hostname === "preview.vedantix.nl" ||
+    String(url?.pathname || "").toLowerCase().includes("/editor")
+  );
+}
+
+function normalizeBase44PublicUrl(value) {
+  const url = parseUrl(value);
+  if (!url || !isBase44PublicHost(url.hostname)) return "";
+  return url.origin;
+}
+
+function normalizeSafePreviewTarget(value) {
+  const url = parseUrl(value);
+  if (!url || isUnsafePreviewTarget(url)) return "";
+  url.hash = "";
+  return url.toString();
+}
+
+function buildBase44PublicUrlFromName(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+
+  const publicUrl = normalizeBase44PublicUrl(raw);
+  if (publicUrl) return publicUrl;
+
+  if (parseUrl(raw)) return "";
+
+  const slug = slugify(raw.replace(/\.base44\.app$/i, ""));
+  if (!slug || /^app-/.test(slug)) return "";
+
+  return `https://${slug}.base44.app`;
+}
+
+function buildBase44PublicUrlFromEditorUrl(value) {
+  const url = parseUrl(value);
+  if (!url) return "";
+
+  if (isBase44PublicHost(url.hostname)) return url.origin;
+
+  const parts = String(url.pathname || "").split("/").filter(Boolean);
+  const appsIndex = parts.findIndex((part) => part.toLowerCase() === "apps");
+  const slug = slugify(appsIndex >= 0 ? parts[appsIndex + 1] : "");
+
+  if (!slug || /^app-/.test(slug) || /^[a-f0-9-]{16,}$/i.test(slug)) {
+    return "";
+  }
+
+  return `https://${slug}.base44.app`;
+}
+
+export function deriveBase44PreviewUrl(editorUrl, appName) {
+  return (
+    buildBase44PublicUrlFromName(appName) ||
+    buildBase44PublicUrlFromEditorUrl(editorUrl)
+  );
 }
 
 export function resolveBase44PreviewUrl(customer, input) {
+  const directInput = String(input || "").trim();
+  const storedPreviewUrl = String(customer?.base44?.previewUrl || "").trim();
+  const storedTargetUrl = String(customer?.preview?.targetUrl || "").trim();
+
   return (
-    String(input || "").trim() ||
-    String(customer?.base44?.previewUrl || "").trim() ||
-    deriveBase44PreviewUrl(customer?.base44?.editorUrl)
+    normalizeBase44PublicUrl(directInput) ||
+    buildBase44PublicUrlFromName(directInput) ||
+    normalizeSafePreviewTarget(directInput) ||
+    normalizeBase44PublicUrl(storedPreviewUrl) ||
+    deriveBase44PreviewUrl(customer?.base44?.editorUrl, customer?.base44?.appName) ||
+    normalizeSafePreviewTarget(storedPreviewUrl) ||
+    normalizeSafePreviewTarget(storedTargetUrl)
   );
 }
 

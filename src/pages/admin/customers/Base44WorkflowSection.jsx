@@ -10,6 +10,19 @@ import {
 
 export default function Base44WorkflowSection({ store }) {
   const customer = store.selectedCustomer;
+  const customerWithBase44Form = {
+    ...customer,
+    base44: {
+      ...customer?.base44,
+      appName: store.base44LinkForm.appName || customer?.base44?.appName,
+      editorUrl: store.base44LinkForm.editorUrl || customer?.base44?.editorUrl,
+      previewUrl: store.base44LinkForm.previewUrl || customer?.base44?.previewUrl,
+    },
+  };
+  const previewUrl = resolveBase44PreviewUrl(
+    customerWithBase44Form,
+    store.base44LinkForm.previewUrl
+  );
   const isBusy =
     store.isLinkingBase44 ||
     store.isSyncingContent ||
@@ -58,11 +71,11 @@ export default function Base44WorkflowSection({ store }) {
           />
         </Field>
 
-        <Field label="Base44 preview URL">
+        <Field label="Publieke Base44 URL">
           <Input
             value={store.base44LinkForm.previewUrl}
             onChange={(e) => store.updateBase44LinkForm("previewUrl", e.target.value)}
-            placeholder="Base44 preview URL"
+            placeholder="https://nature-heals-denbosch.base44.app"
           />
         </Field>
 
@@ -169,7 +182,7 @@ export default function Base44WorkflowSection({ store }) {
             disabled={
               isBusy ||
               !canMarkPreviewReady(customer) ||
-              !resolveBase44PreviewUrl(customer, store.base44LinkForm.previewUrl)
+              !previewUrl
             }
           >
             Preview klaarzetten
@@ -178,7 +191,7 @@ export default function Base44WorkflowSection({ store }) {
           <Button
             tone="success"
             onClick={() => store.approveCustomerForProduction(customer)}
-            disabled={isBusy || !canApproveCustomer(customer)}
+            disabled={isBusy || !canApproveCustomer(customerWithBase44Form)}
           >
             Goedkeuren
           </Button>

@@ -28,3 +28,25 @@ export async function resolveCustomerPreview(slug) {
 
   return payload?.data ?? payload;
 }
+
+export async function fetchCustomerPreviewHtml(slug) {
+  const response = await fetch(
+    `${API_BASE_URL}/api/preview/${encodeURIComponent(slug)}/html`,
+    {
+      method: "GET",
+      headers: {
+        "X-Tenant-Id": import.meta.env.VITE_TENANT_ID || "default",
+        "X-Actor-Id": "public-preview",
+        "X-Source": "API",
+      },
+    }
+  );
+
+  const html = await response.text();
+
+  if (!response.ok) {
+    throw new Error(html || "Preview kon niet worden geladen.");
+  }
+
+  return html;
+}

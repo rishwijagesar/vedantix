@@ -29,22 +29,9 @@ import {
   notifyInfo,
   notifySuccess,
 } from "../utils/adminNotifications";
+import { resolveBase44PreviewUrl } from "../customers/customerWorkflow";
 
 let activeAdminAuthToken = "";
-
-function deriveBase44PreviewUrl(editorUrl) {
-  const value = String(editorUrl || "").trim();
-  if (!value) return "";
-  return value.replace("/editor", "/editor/preview");
-}
-
-function resolveBase44PreviewUrl(customer, input) {
-  return (
-    String(input || "").trim() ||
-    String(customer?.base44?.previewUrl || "").trim() ||
-    deriveBase44PreviewUrl(customer?.base44?.editorUrl)
-  );
-}
 
 function buildHeaders(settings, method) {
   const headers = {
@@ -566,7 +553,10 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       appId: selectedCustomer.base44?.appId || "",
       appName: selectedCustomer.base44?.appName || selectedCustomer.companyName || "",
       editorUrl: selectedCustomer.base44?.editorUrl || "",
-      previewUrl: selectedCustomer.base44?.previewUrl || "",
+      previewUrl:
+        resolveBase44PreviewUrl(selectedCustomer) ||
+        selectedCustomer.base44?.previewUrl ||
+        "",
       niche: selectedCustomer.base44?.niche || selectedCustomer.niche || "",
       templateKey: selectedCustomer.base44?.templateKey || selectedCustomer.templateKey || "",
       requestedPrompt:
@@ -1389,6 +1379,18 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     }
 
     setIsLinkingBase44(true);
+    const resolvedPreviewUrl = resolveBase44PreviewUrl(
+      {
+        ...customer,
+        base44: {
+          ...customer.base44,
+          appName: base44LinkForm.appName || customer.companyName,
+          editorUrl: base44LinkForm.editorUrl,
+          previewUrl: base44LinkForm.previewUrl,
+        },
+      },
+      base44LinkForm.previewUrl
+    );
 
     const result = await apiRequest(
       settings,
@@ -1398,7 +1400,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
         appId: base44LinkForm.appId,
         appName: base44LinkForm.appName || customer.companyName,
         editorUrl: base44LinkForm.editorUrl,
-        previewUrl: base44LinkForm.previewUrl,
+        previewUrl: resolvedPreviewUrl || base44LinkForm.previewUrl,
         templateKey: base44LinkForm.templateKey,
         niche: base44LinkForm.niche,
         requestedPrompt:
@@ -1437,13 +1439,22 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     if (!customer?.id) return;
 
     setIsUpdatingWorkflow(true);
+    const workflowCustomer = {
+      ...customer,
+      base44: {
+        ...customer.base44,
+        appName: base44LinkForm.appName || customer.base44?.appName,
+        editorUrl: base44LinkForm.editorUrl || customer.base44?.editorUrl,
+        previewUrl: base44LinkForm.previewUrl || customer.base44?.previewUrl,
+      },
+    };
 
     const result = await apiRequest(
       settings,
       "POST",
       `/api/customers/${customer.id}/preview-ready`,
       {
-        previewUrl: resolveBase44PreviewUrl(customer, base44LinkForm.previewUrl),
+        previewUrl: resolveBase44PreviewUrl(workflowCustomer, base44LinkForm.previewUrl),
       }
     );
 
@@ -1472,13 +1483,22 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     if (!customer?.id) return;
 
     setIsUpdatingWorkflow(true);
+    const workflowCustomer = {
+      ...customer,
+      base44: {
+        ...customer.base44,
+        appName: base44LinkForm.appName || customer.base44?.appName,
+        editorUrl: base44LinkForm.editorUrl || customer.base44?.editorUrl,
+        previewUrl: base44LinkForm.previewUrl || customer.base44?.previewUrl,
+      },
+    };
 
     const result = await apiRequest(
       settings,
       "POST",
       `/api/customers/${customer.id}/approve`,
       {
-        previewUrl: resolveBase44PreviewUrl(customer, base44LinkForm.previewUrl),
+        previewUrl: resolveBase44PreviewUrl(workflowCustomer, base44LinkForm.previewUrl),
       }
     );
 
