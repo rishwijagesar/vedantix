@@ -2,10 +2,24 @@ export function canMarkPreviewReady(customer) {
   return Boolean(customer?.base44?.appId);
 }
 
+export function deriveBase44PreviewUrl(editorUrl) {
+  const value = String(editorUrl || "").trim();
+  if (!value) return "";
+  return value.replace("/editor", "/editor/preview");
+}
+
+export function resolveBase44PreviewUrl(customer, input) {
+  return (
+    String(input || "").trim() ||
+    String(customer?.base44?.previewUrl || "").trim() ||
+    deriveBase44PreviewUrl(customer?.base44?.editorUrl)
+  );
+}
+
 export function canApproveCustomer(customer) {
   return (
     Boolean(customer?.base44?.appId) &&
-    Boolean(customer?.base44?.previewUrl) &&
+    Boolean(resolveBase44PreviewUrl(customer)) &&
     customer?.websiteBuildStatus === "PREVIEW_READY"
   );
 }
@@ -13,7 +27,7 @@ export function canApproveCustomer(customer) {
 export function canDeployCustomer(customer) {
   return (
     Boolean(customer?.base44?.appId) &&
-    Boolean(customer?.base44?.previewUrl) &&
+    Boolean(resolveBase44PreviewUrl(customer)) &&
     customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" &&
     customer?.contentSync?.status === "SYNCED"
   );

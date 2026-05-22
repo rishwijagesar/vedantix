@@ -32,6 +32,20 @@ import {
 
 let activeAdminAuthToken = "";
 
+function deriveBase44PreviewUrl(editorUrl) {
+  const value = String(editorUrl || "").trim();
+  if (!value) return "";
+  return value.replace("/editor", "/editor/preview");
+}
+
+function resolveBase44PreviewUrl(customer, input) {
+  return (
+    String(input || "").trim() ||
+    String(customer?.base44?.previewUrl || "").trim() ||
+    deriveBase44PreviewUrl(customer?.base44?.editorUrl)
+  );
+}
+
 function buildHeaders(settings, method) {
   const headers = {
     "Content-Type": "application/json",
@@ -1429,8 +1443,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       "POST",
       `/api/customers/${customer.id}/preview-ready`,
       {
-        previewUrl:
-          base44LinkForm.previewUrl || customer?.base44?.previewUrl || "",
+        previewUrl: resolveBase44PreviewUrl(customer, base44LinkForm.previewUrl),
       }
     );
 
@@ -1465,8 +1478,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       "POST",
       `/api/customers/${customer.id}/approve`,
       {
-        previewUrl:
-          base44LinkForm.previewUrl || customer?.base44?.previewUrl || "",
+        previewUrl: resolveBase44PreviewUrl(customer, base44LinkForm.previewUrl),
       }
     );
 

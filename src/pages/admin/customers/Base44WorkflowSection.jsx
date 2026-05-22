@@ -5,6 +5,7 @@ import {
   canApproveCustomer,
   canDeployCustomer,
   canMarkPreviewReady,
+  resolveBase44PreviewUrl,
 } from "./customerWorkflow";
 
 export default function Base44WorkflowSection({ store }) {
@@ -168,7 +169,7 @@ export default function Base44WorkflowSection({ store }) {
             disabled={
               isBusy ||
               !canMarkPreviewReady(customer) ||
-              !(store.base44LinkForm.previewUrl || customer?.base44?.previewUrl)
+              !resolveBase44PreviewUrl(customer, store.base44LinkForm.previewUrl)
             }
           >
             Preview klaarzetten
