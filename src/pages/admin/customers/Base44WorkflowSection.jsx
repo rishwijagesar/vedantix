@@ -1,4 +1,5 @@
 import React from "react";
+import { Github, RefreshCw } from "lucide-react";
 
 import { Button, Card, Field, Input, SectionTitle, Textarea } from "../components/AdminUI";
 import {
@@ -10,6 +11,10 @@ import {
 
 export default function Base44WorkflowSection({ store }) {
   const customer = store.selectedCustomer;
+  const githubRepo = customer?.contentSync?.repositoryName || "";
+  const githubSynced = Boolean(
+    customer?.contentSync?.status === "SYNCED" && githubRepo
+  );
   const customerWithBase44Form = {
     ...customer,
     base44: {
@@ -28,6 +33,9 @@ export default function Base44WorkflowSection({ store }) {
     store.isSyncingContent ||
     store.isStartingBuildFlow ||
     store.isUpdatingWorkflow;
+  const canSyncGithub = Boolean(
+    customer?.base44?.appId && store.contentSyncForm.indexHtml.trim()
+  );
 
   return (
     <Card
@@ -115,6 +123,63 @@ export default function Base44WorkflowSection({ store }) {
           </Field>
         </div>
 
+        <div
+          style={{
+            gridColumn: "1 / -1",
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) auto",
+            gap: 12,
+            alignItems: "center",
+            border: "1px solid #dbeafe",
+            background: githubSynced ? "#f0fdf4" : "#eff6ff",
+            borderRadius: 10,
+            padding: 12,
+          }}
+        >
+          <div style={{ minWidth: 0 }}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                color: githubSynced ? "#047857" : "#1d4ed8",
+                fontSize: 11,
+                fontWeight: 900,
+                textTransform: "uppercase",
+                marginBottom: 4,
+              }}
+            >
+              <Github size={15} />
+              {githubSynced ? "GitHub gekoppeld" : "GitHub koppeling"}
+            </div>
+            <div
+              style={{
+                color: "#0f172a",
+                fontWeight: 900,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+              title={githubRepo}
+            >
+              {githubRepo || "Nog geen GitHub repo gekoppeld"}
+            </div>
+            <div style={{ color: "#64748b", fontSize: 12, marginTop: 3 }}>
+              Plak de Base44 index.html export hieronder en koppel daarna met GitHub.
+            </div>
+          </div>
+
+          <Button
+            tone={githubSynced ? "soft" : "primary"}
+            onClick={() => store.syncCustomerContent(customer)}
+            disabled={isBusy || !canSyncGithub}
+            style={{ display: "inline-flex", alignItems: "center", gap: 7 }}
+          >
+            {githubSynced ? <RefreshCw size={15} /> : <Github size={15} />}
+            {githubSynced ? "Opnieuw syncen" : "GitHub koppelen"}
+          </Button>
+        </div>
+
         <div style={{ gridColumn: "1 / -1" }}>
           <Field label="index.html export">
             <Textarea
@@ -173,7 +238,7 @@ export default function Base44WorkflowSection({ store }) {
               !store.contentSyncForm.indexHtml.trim()
             }
           >
-            Content syncen
+            GitHub koppelen
           </Button>
 
           <Button
