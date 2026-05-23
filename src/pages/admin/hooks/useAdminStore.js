@@ -406,6 +406,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
 
   const [contentSyncForm, setContentSyncForm] = useState({
     projectId: "",
+    repositoryUrl: "",
     indexHtml: "",
     additionalFilesJson: "[]",
   });
@@ -552,6 +553,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       });
       setContentSyncForm({
         projectId: "",
+        repositoryUrl: "",
         indexHtml: "",
         additionalFilesJson: "[]",
       });
@@ -585,6 +587,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
         selectedCustomer.base44?.appId ||
         selectedCustomer.contentSync?.repositoryName ||
         "",
+      repositoryUrl: selectedCustomer.contentSync?.repositoryName || "",
       indexHtml: "",
       additionalFilesJson: "[]",
     });
@@ -1208,6 +1211,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
 
       setContentSyncForm({
         projectId: "",
+        repositoryUrl: "",
         indexHtml: "",
         additionalFilesJson: "[]",
       });
@@ -1562,6 +1566,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     setIsUpdatingWorkflow(true);
 
     let customerForDeploy = customer;
+    const repositoryUrl = String(contentSyncForm.repositoryUrl || "").trim();
 
     let additionalFiles = [];
     try {
@@ -1570,10 +1575,10 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       additionalFiles = [];
     }
 
-    if (!hasProcessedBase44Export(customerForDeploy)) {
+    if (!hasProcessedBase44Export(customerForDeploy) && !repositoryUrl) {
       if (!contentSyncForm.indexHtml.trim()) {
         notifyError(
-          "Publiceren kan pas met een Base44 export. Vul eerst de index.html export in."
+          "Publiceren kan pas met een GitHub repo URL of Base44 index.html export."
         );
         setIsUpdatingWorkflow(false);
         return;
@@ -1587,6 +1592,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       {
         projectName: slugify(customerForDeploy.companyName || customerForDeploy.domain),
         projectId: contentSyncForm.projectId || customerForDeploy.base44?.appId || "",
+        repositoryUrl,
         indexHtml: contentSyncForm.indexHtml,
         additionalFiles,
       }

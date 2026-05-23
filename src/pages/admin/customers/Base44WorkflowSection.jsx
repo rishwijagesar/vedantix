@@ -116,11 +116,21 @@ export default function Base44WorkflowSection({ store }) {
         </div>
 
         <div style={{ gridColumn: "1 / -1" }}>
+          <Field label="GitHub repo URL">
+            <Input
+              value={store.contentSyncForm.repositoryUrl}
+              onChange={(e) => store.updateContentSyncForm("repositoryUrl", e.target.value)}
+              placeholder="https://github.com/vedantix/nature-healing"
+            />
+          </Field>
+        </div>
+
+        <div style={{ gridColumn: "1 / -1" }}>
           <Field label="index.html export">
             <Textarea
               value={store.contentSyncForm.indexHtml}
               onChange={(e) => store.updateContentSyncForm("indexHtml", e.target.value)}
-              placeholder="<html>...</html>"
+              placeholder="<html>...</html> (optioneel als de GitHub repo al door Base44 wordt bijgewerkt)"
               rows={10}
             />
           </Field>
