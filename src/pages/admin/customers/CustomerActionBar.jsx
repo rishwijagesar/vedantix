@@ -72,7 +72,9 @@ function ActionButton({ icon: Icon, children, disabled = false, ...props }) {
         alignItems: "center",
         justifyContent: "center",
         gap: 7,
+        flex: "0 0 auto",
         minHeight: 34,
+        whiteSpace: "nowrap",
         ...(props.style || {}),
       }}
     >
@@ -111,10 +113,9 @@ export default function CustomerActionBar({ store }) {
     >
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))",
+          display: "flex",
+          flexDirection: "column",
           gap: 12,
-          alignItems: "center",
         }}
       >
         <div style={{ minWidth: 0 }}>
@@ -145,8 +146,11 @@ export default function CustomerActionBar({ store }) {
           style={{
             display: "flex",
             gap: 8,
-            flexWrap: "wrap",
+            flexWrap: "nowrap",
             justifyContent: "flex-end",
+            alignItems: "center",
+            overflowX: "auto",
+            paddingBottom: 2,
           }}
         >
           <ActionButton
