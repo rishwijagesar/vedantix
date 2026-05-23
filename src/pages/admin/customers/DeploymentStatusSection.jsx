@@ -45,8 +45,15 @@ function getLatestDeploymentFailure(store) {
 function getFailureAdvice(message, domain) {
   const normalized = String(message || "").toUpperCase();
 
+  if (
+    normalized.includes("DELEGATION_PENDING") ||
+    normalized.includes("NAMESERVER DELEGATION IS STILL PENDING")
+  ) {
+    return `De backend heeft de Route53 hosted zone voor ${domain || "dit domein"} geregeld. Zet alleen nog de nameservers bij de domeinregistrar naar de Route53 nameservers uit de foutmelding en probeer daarna opnieuw.`;
+  }
+
   if (normalized.includes("HOSTED_ZONE_NOT_FOUND")) {
-    return `Maak eerst een Route53 hosted zone aan voor ${domain || "dit domein"} en zet de nameservers bij de domeinregistrar naar Route53. Daarna kun je deze stage opnieuw proberen.`;
+    return `De Route53 hosted zone voor ${domain || "dit domein"} ontbreekt nog. Publiceer opnieuw zodra de backend met automatische zone-aanmaak is uitgerold.`;
   }
 
   if (normalized.includes("RECORD_CONFLICT")) {
