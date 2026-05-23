@@ -13,6 +13,9 @@ export async function bootstrapFinanceCustomer({
   subscriptionStatus = "",
   paymentStatus = "",
   isActive = true,
+  customerStatus = "",
+  websiteBuildStatus = "",
+  deploymentStatus = "",
   apiKey,
 }) {
   return apiClient.post(
@@ -30,6 +33,9 @@ export async function bootstrapFinanceCustomer({
       subscriptionStatus,
       paymentStatus,
       isActive,
+      customerStatus,
+      websiteBuildStatus,
+      deploymentStatus,
     },
     { apiKey }
   );

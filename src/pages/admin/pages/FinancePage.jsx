@@ -32,6 +32,14 @@ function mapRangeLabel(key) {
   return key;
 }
 
+function isLiveFinanceCustomer(customer) {
+  return (
+    customer?.status === "active" ||
+    customer?.websiteBuildStatus === "LIVE" ||
+    String(customer?.deployment?.status || "").toUpperCase() === "SUCCEEDED"
+  );
+}
+
 export default function FinancePage({ store: storeProp }) {
   const outletContext = /** @type {{ store: any }} */ (useOutletContext());
   const store = storeProp || outletContext.store;
@@ -63,8 +71,13 @@ export default function FinancePage({ store: storeProp }) {
     return new Map(store.customers.map((customer) => [customer.id, customer]));
   }, [store.customers]);
 
+  const financeEligibleCustomers = useMemo(
+    () => store.customers.filter((customer) => isLiveFinanceCustomer(customer)),
+    [store.customers]
+  );
+
   function buildLocalOverviewFallback() {
-    const customers = store.customers.map((customer) => {
+    const customers = financeEligibleCustomers.map((customer) => {
       const revenue = Number(store.calcMonthlyRevenue(customer) || 0);
       const costs = Number(store.calcMonthlyInfraCost(customer) || 0);
       const billing = customer.billing || {};
@@ -94,7 +107,7 @@ export default function FinancePage({ store: storeProp }) {
         acc.costs += item.costs;
         acc.profit += item.profit;
         acc.customers += 1;
-        if (customer?.status === "active" || customer?.status === "provisioning") {
+        if (isLiveFinanceCustomer(customer)) {
           acc.activeCustomers += 1;
         }
         return acc;
@@ -118,7 +131,7 @@ export default function FinancePage({ store: storeProp }) {
 
   function buildLocalCustomerDetailsFallback(customerId) {
     const customer = customerLookup.get(customerId);
-    if (!customer) return null;
+    if (!customer || !isLiveFinanceCustomer(customer)) return null;
 
     const monthlyRevenue = Number(store.calcMonthlyRevenue(customer) || 0);
     const monthlyInfraCost = Number(store.calcMonthlyInfraCost(customer) || 0);
@@ -147,7 +160,7 @@ export default function FinancePage({ store: storeProp }) {
         subscriptionStatus:
           customer.subscriptionStatus || billing.subscriptionStatus || "",
         paymentStatus: customer.paymentStatus || billing.paymentStatus || "",
-        isActive: customer.status === "active" || customer.status === "provisioning",
+        isActive: isLiveFinanceCustomer(customer),
         createdAt: customer.createdAt,
         updatedAt: customer.updatedAt,
       },
@@ -165,12 +178,22 @@ export default function FinancePage({ store: storeProp }) {
 
   async function syncCustomersToFinance(skipCustomerIds = deletedFinanceCustomerIds) {
     const apiKey = store.settings.apiKey;
+    const financeEligibleIds = new Set(
+      financeEligibleCustomers.map((customer) => customer.id)
+    );
 
     await Promise.all(
       store.customers
         .filter((customer) => !skipCustomerIds.has(customer.id))
         .map((customer) => {
           const billing = customer.billing || {};
+
+          if (!financeEligibleIds.has(customer.id)) {
+            return deleteFinanceCustomer({
+              customerId: customer.id,
+              apiKey,
+            }).catch(() => null);
+          }
 
           return bootstrapFinanceCustomer({
             customerId: customer.id,
@@ -186,8 +209,10 @@ export default function FinancePage({ store: storeProp }) {
             subscriptionStatus:
               customer.subscriptionStatus || billing.subscriptionStatus || "",
             paymentStatus: customer.paymentStatus || billing.paymentStatus || "",
-            isActive:
-              customer.status === "active" || customer.status === "provisioning",
+            isActive: true,
+            customerStatus: customer.status,
+            websiteBuildStatus: customer.websiteBuildStatus,
+            deploymentStatus: customer.deployment?.status || "",
             apiKey,
           }).catch(() => null);
         })
@@ -490,7 +515,7 @@ export default function FinancePage({ store: storeProp }) {
       <Card>
         <SectionTitle
           title="Finance overzicht"
-          subtitle="Server-side omzet, kosten en winst op basis van backend finance records."
+          subtitle="Omzet, kosten en winst voor klanten waarvan de website live staat."
           action={
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
               {["month", "quarter", "year"].map((key) => (
@@ -557,7 +582,7 @@ export default function FinancePage({ store: storeProp }) {
       <Card>
         <SectionTitle
           title="Uitgave toevoegen"
-          subtitle="Voeg algemene of klantgebonden kosten toe via de finance backend."
+          subtitle="Voeg algemene kosten toe of koppel kosten aan een live klant."
           action={
             <Button tone="primary" onClick={handleCreateExpense} disabled={isSavingExpense}>
               {isSavingExpense ? "Opslaan..." : "Opslaan"}
@@ -627,7 +652,7 @@ export default function FinancePage({ store: storeProp }) {
               }
             >
               <option value="">Geen specifieke klant</option>
-              {store.customers.map((customer) => (
+              {financeEligibleCustomers.map((customer) => (
                 <option key={customer.id} value={customer.id}>
                   {customer.companyName}
                 </option>
@@ -640,7 +665,7 @@ export default function FinancePage({ store: storeProp }) {
       <Card>
         <SectionTitle
           title="Klanten op basis van finance backend"
-          subtitle="Dit overzicht komt uit /api/finance/overview en niet uit lokale berekeningen."
+          subtitle="Alleen klanten die live staan worden naar finance gesynchroniseerd."
         />
 
         <div style={{ overflowX: "auto" }}>
