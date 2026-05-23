@@ -335,6 +335,13 @@ function getRequestErrorMessage(result, fallback) {
   );
 }
 
+function hasDeployableContentSync(customer) {
+  return Boolean(
+    customer?.contentSync?.status === "SYNCED" &&
+      customer?.contentSync?.repositoryName
+  );
+}
+
 export function useAdminStore({ adminAuthToken = "" } = {}) {
   activeAdminAuthToken = adminAuthToken;
 
@@ -1345,10 +1352,10 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     await startBuildFlow(customerForBuild);
   }
 
-  async function syncCustomerContent(customer) {
+  async function syncCustomerContent(customer, options = {}) {
     if (!customer?.id || !contentSyncForm.indexHtml.trim()) {
       notifyInfo("Vul eerst index.html export in voordat je synchroniseert.");
-      return;
+      return null;
     }
 
     setIsSyncingContent(true);
@@ -1383,13 +1390,19 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       setCustomers((prev) =>
         prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
       );
-      notifySuccess("Content succesvol naar GitHub gesynchroniseerd.");
+      if (!options.silent) {
+        notifySuccess("Content succesvol naar GitHub gesynchroniseerd.");
+      }
+      pushRequestLogEntries(historyEntry);
+      setIsSyncingContent(false);
+      return updatedCustomer;
     } else {
-      notifyError(result?.data?.message || "Content synchroniseren is mislukt.");
+      notifyError(getRequestErrorMessage(result, "Content synchroniseren is mislukt."));
     }
 
     pushRequestLogEntries(historyEntry);
     setIsSyncingContent(false);
+    return null;
   }
 
   async function linkBase44App(customer) {
@@ -1548,12 +1561,35 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
 
     setIsUpdatingWorkflow(true);
 
+    let customerForDeploy = customer;
+
+    if (!hasDeployableContentSync(customerForDeploy)) {
+      if (!contentSyncForm.indexHtml.trim()) {
+        notifyError(
+          "Publiceren kan pas na GitHub sync. Vul eerst de index.html export in en sync de content."
+        );
+        setIsUpdatingWorkflow(false);
+        return;
+      }
+
+      notifyInfo("Content wordt eerst naar GitHub gesynchroniseerd.");
+      const syncedCustomer = await syncCustomerContent(customerForDeploy, { silent: true });
+
+      if (!syncedCustomer || !hasDeployableContentSync(syncedCustomer)) {
+        notifyError("Publiceren gestopt: GitHub sync is nog niet klaar.");
+        setIsUpdatingWorkflow(false);
+        return;
+      }
+
+      customerForDeploy = syncedCustomer;
+    }
+
     const result = await apiRequest(
       settings,
       "POST",
-      `/api/customers/${customer.id}/deploy`,
+      `/api/customers/${customerForDeploy.id}/deploy`,
       {
-        projectName: slugify(customer.companyName || customer.domain),
+        projectName: slugify(customerForDeploy.companyName || customerForDeploy.domain),
       }
     );
 
@@ -1566,11 +1602,11 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
 
     if (result.ok && result?.data?.data) {
       const payload = result.data.data;
-      const updatedCustomerFromBackend = payload.customer || customer;
+      const updatedCustomerFromBackend = payload.customer || customerForDeploy;
 
       setCustomers((prev) =>
         prev.map((item) =>
-          item.id === customer.id
+          item.id === customerForDeploy.id
             ? {
                 ...item,
                 ...updatedCustomerFromBackend,
@@ -1588,7 +1624,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       );
       notifySuccess("Deployment gestart.");
     } else {
-      notifyError(result?.data?.message || "Deployment starten is mislukt.");
+      notifyError(getRequestErrorMessage(result, "Deployment starten is mislukt."));
     }
 
     pushRequestLogEntries(historyEntry);
