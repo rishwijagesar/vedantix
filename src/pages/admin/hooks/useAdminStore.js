@@ -251,7 +251,7 @@ function deriveWorkflowStateLabel(customer) {
   if (customer?.status === "provisioning") return "DEPLOYING";
   if (customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION") return "APPROVED";
   if (customer?.websiteBuildStatus === "PREVIEW_READY") return "PREVIEW_READY";
-  if (customer?.contentSync?.status === "SYNCED") return "CONTENT_SYNCED";
+  if (customer?.contentSync?.status === "SYNCED") return "EXPORT_READY";
   if (customer?.base44?.appId) return "BUILDING";
   return "NOT_STARTED";
 }
@@ -335,7 +335,7 @@ function getRequestErrorMessage(result, fallback) {
   );
 }
 
-function hasDeployableContentSync(customer) {
+function hasProcessedBase44Export(customer) {
   return Boolean(
     customer?.contentSync?.status === "SYNCED" &&
       customer?.contentSync?.repositoryName
@@ -1391,7 +1391,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
         prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
       );
       if (!options.silent) {
-        notifySuccess("Content succesvol naar GitHub gesynchroniseerd.");
+        notifySuccess("Base44 export succesvol verwerkt.");
       }
       pushRequestLogEntries(historyEntry);
       setIsSyncingContent(false);
@@ -1563,25 +1563,21 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
 
     let customerForDeploy = customer;
 
-    if (!hasDeployableContentSync(customerForDeploy)) {
+    let additionalFiles = [];
+    try {
+      additionalFiles = JSON.parse(contentSyncForm.additionalFilesJson || "[]");
+    } catch {
+      additionalFiles = [];
+    }
+
+    if (!hasProcessedBase44Export(customerForDeploy)) {
       if (!contentSyncForm.indexHtml.trim()) {
         notifyError(
-          "Publiceren kan pas na GitHub sync. Vul eerst de index.html export in en sync de content."
+          "Publiceren kan pas met een Base44 export. Vul eerst de index.html export in."
         );
         setIsUpdatingWorkflow(false);
         return;
       }
-
-      notifyInfo("Content wordt eerst naar GitHub gesynchroniseerd.");
-      const syncedCustomer = await syncCustomerContent(customerForDeploy, { silent: true });
-
-      if (!syncedCustomer || !hasDeployableContentSync(syncedCustomer)) {
-        notifyError("Publiceren gestopt: GitHub sync is nog niet klaar.");
-        setIsUpdatingWorkflow(false);
-        return;
-      }
-
-      customerForDeploy = syncedCustomer;
     }
 
     const result = await apiRequest(
@@ -1590,6 +1586,9 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       `/api/customers/${customerForDeploy.id}/deploy`,
       {
         projectName: slugify(customerForDeploy.companyName || customerForDeploy.domain),
+        projectId: contentSyncForm.projectId || customerForDeploy.base44?.appId || "",
+        indexHtml: contentSyncForm.indexHtml,
+        additionalFiles,
       }
     );
 

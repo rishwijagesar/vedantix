@@ -16,7 +16,7 @@ import StatusPill from "./StatusPill";
 const TABLE_HEADERS = [
   "Klant",
   "Flow",
-  "Base44/GitHub",
+  "Base44/export",
   "AWS",
   "Billing",
   "Omzet",
@@ -156,7 +156,7 @@ function CustomerRow({ customer, store, onOpen }) {
       <td style={{ padding: "10px 12px" }}>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           <MiniState label="Base44" done={Boolean(customer?.base44?.appId)} />
-          <MiniState label="GitHub" done={customer?.contentSync?.status === "SYNCED"} />
+          <MiniState label="Export" done={customer?.contentSync?.status === "SYNCED"} />
         </div>
       </td>
       <td style={{ padding: "10px 12px" }}>

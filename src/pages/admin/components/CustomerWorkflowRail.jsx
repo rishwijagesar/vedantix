@@ -38,8 +38,8 @@ export default function CustomerWorkflowRail({ customer }) {
     },
     {
       key: "content",
-      title: "GitHub sync",
-      subtitle: customer?.contentSync?.repositoryName || "Nog niet gesynchroniseerd",
+      title: "Base44 export",
+      subtitle: customer?.contentSync?.status === "SYNCED" ? "Export verwerkt" : "Nog geen export",
       done: customer?.contentSync?.status === "SYNCED",
       active:
         Boolean(customer?.base44?.appId) &&

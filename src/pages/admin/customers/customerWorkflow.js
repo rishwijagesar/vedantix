@@ -251,9 +251,9 @@ export function buildCustomerStepperSteps(customer) {
       active: Boolean(customer?.id && !customer?.base44?.appId),
     },
     {
-      key: "github",
-      title: "GitHub sync",
-      subtitle: customer?.contentSync?.repositoryName || customer?.contentSync?.status || "Wacht op export",
+      key: "export",
+      title: "Base44 export",
+      subtitle: customer?.contentSync?.status === "SYNCED" ? "Export verwerkt" : "Wacht op export",
       done: hasGithubSync(customer),
       active: Boolean(customer?.base44?.appId && !hasGithubSync(customer)),
     },
@@ -314,7 +314,7 @@ export function workflowTone(state) {
   if (state === "DEPLOYING") return "#f59e0b";
   if (state === "APPROVED") return "#22c55e";
   if (state === "PREVIEW_READY") return "#2563eb";
-  if (state === "CONTENT_SYNCED") return "#8b5cf6";
+  if (state === "EXPORT_READY") return "#8b5cf6";
   if (state === "BUILD_REQUESTED") return "#0ea5e9";
   if (state === "APP_LINKED") return "#0ea5e9";
   if (state === "FAILED") return "#ef4444";
@@ -368,7 +368,7 @@ export function getWorkflowState(customer) {
   if (customer?.status === "provisioning") return "DEPLOYING";
   if (customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION") return "APPROVED";
   if (customer?.websiteBuildStatus === "PREVIEW_READY") return "PREVIEW_READY";
-  if (customer?.contentSync?.status === "SYNCED") return "CONTENT_SYNCED";
+  if (customer?.contentSync?.status === "SYNCED") return "EXPORT_READY";
   if (customer?.base44?.appId) return "APP_LINKED";
   if (
     customer?.websiteBuildStatus === "APP_REQUESTED" ||
@@ -395,7 +395,7 @@ export function buildChecklist(customer) {
     },
     {
       key: "content",
-      label: "GitHub sync klaar",
+      label: "Base44 export verwerkt",
       done: customer?.contentSync?.status === "SYNCED",
     },
     {

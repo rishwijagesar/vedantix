@@ -126,12 +126,12 @@ export default function CustomerProfileSection({ store }) {
           <Input value={customer.preview?.status || ""} readOnly />
         </Field>
 
-        <Field label="Content sync">
+        <Field label="Export status">
           <Input value={customer.contentSync?.status || ""} readOnly />
         </Field>
 
-        <Field label="GitHub repo">
-          <Input value={customer.contentSync?.repositoryName || ""} readOnly />
+        <Field label="Publicatie bron">
+          <Input value={customer.contentSync?.source || ""} readOnly />
         </Field>
 
         <Field label="Deployment status">
