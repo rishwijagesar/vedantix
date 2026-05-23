@@ -19,7 +19,12 @@ export default function CustomerDetailPage({
     }
   }, [customerId, store]);
 
-  if (!store.selectedCustomer || store.selectedCustomer.id !== customerId) {
+  const selectedCustomer =
+    store.selectedCustomer?.id === customerId
+      ? store.selectedCustomer
+      : store.customers?.find((customer) => customer.id === customerId);
+
+  if (!selectedCustomer) {
     return (
       <Card>
         <SectionTitle title="Klantdetail" subtitle="Er is geen klant geselecteerd." />
@@ -30,5 +35,5 @@ export default function CustomerDetailPage({
     );
   }
 
-  return <CustomerDetail store={store} />;
+  return <CustomerDetail store={{ ...store, selectedCustomer }} />;
 }

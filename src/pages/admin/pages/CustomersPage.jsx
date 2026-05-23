@@ -1,7 +1,6 @@
 import React from "react";
 import { useOutletContext } from "react-router-dom";
 
-import CustomerDetail from "../customers/CustomerDetail";
 import CustomersTable from "../customers/CustomersTable";
 
 async function postJson(apiBaseUrl, apiKey, path, body) {
@@ -103,7 +102,6 @@ export default function CustomersPage({ store: storeProp }) {
   return (
     <div style={{ display: "grid", gap: 14 }}>
       <CustomersTable store={store} />
-      <CustomerDetail store={store} />
     </div>
   );
 }

@@ -29,7 +29,10 @@ import {
   notifyInfo,
   notifySuccess,
 } from "../utils/adminNotifications";
-import { resolveBase44PreviewUrl } from "../customers/customerWorkflow";
+import {
+  isCustomerLive,
+  resolveBase44PreviewUrl,
+} from "../customers/customerWorkflow";
 
 let activeAdminAuthToken = "";
 
@@ -369,6 +372,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   const [isStartingBuildFlow, setIsStartingBuildFlow] = useState(false);
   const [isUpdatingWorkflow, setIsUpdatingWorkflow] = useState(false);
   const [isUpdatingBilling, setIsUpdatingBilling] = useState(false);
+  const [isProvisioningMail, setIsProvisioningMail] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
   const [isAutoRefreshing, setIsAutoRefreshing] = useState(false);
   const [deleteCandidate, setDeleteCandidate] = useState(null);
@@ -593,6 +597,20 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     return expenses.filter((item) => isWithinFilter(item.date, financeFilter));
   }, [expenses, financeFilter]);
 
+  const financeCustomers = useMemo(() => {
+    return customers.filter((customer) => isCustomerLive(customer));
+  }, [customers]);
+
+  const financeCustomerIds = useMemo(() => {
+    return new Set(financeCustomers.map((customer) => customer.id));
+  }, [financeCustomers]);
+
+  const billableFinanceExpenses = useMemo(() => {
+    return financeExpenses.filter(
+      (expense) => !expense.customerId || financeCustomerIds.has(expense.customerId)
+    );
+  }, [financeExpenses, financeCustomerIds]);
+
   function getPackageByCode(code) {
     return packageOptions.find((item) => item.code === code) || null;
   }
@@ -638,14 +656,14 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   }
 
   const totalMonthlyRevenue = useMemo(() => {
-    return customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0);
-  }, [customers, packageOptions, extraOptions]);
+    return financeCustomers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0);
+  }, [financeCustomers, packageOptions, extraOptions]);
 
   const totalMonthlyCosts = useMemo(() => {
-    const infra = customers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0);
-    const manual = financeExpenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+    const infra = financeCustomers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0);
+    const manual = billableFinanceExpenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
     return infra + manual;
-  }, [customers, financeExpenses, packageOptions, extraOptions]);
+  }, [financeCustomers, billableFinanceExpenses, packageOptions, extraOptions]);
 
   const activeCustomers = useMemo(() => {
     return customers.filter((item) => item.status === "active").length;
@@ -660,7 +678,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   }, [customers]);
 
   const packageChartData = useMemo(() => {
-    const grouped = customers.reduce((acc, customer) => {
+    const grouped = financeCustomers.reduce((acc, customer) => {
       acc[customer.packageCode] = (acc[customer.packageCode] || 0) + 1;
       return acc;
     }, {});
@@ -671,11 +689,11 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       .map((option) => ({
         name: option.label,
         klanten: grouped[option.code] || 0,
-        omzet: customers
+        omzet: financeCustomers
           .filter((customer) => customer.packageCode === option.code)
           .reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0),
       }));
-  }, [customers, packageOptions, extraOptions]);
+  }, [financeCustomers, packageOptions, extraOptions]);
 
   function buildCustomerPeriodStats(customer, filterKey) {
     const multiplier = periodMultiplier(filterKey);
@@ -730,11 +748,11 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
         const month = base.getMonth();
         const year = base.getFullYear();
 
-        const revenue = customers.reduce(
+        const revenue = financeCustomers.reduce(
           (sum, customer) => sum + calcMonthlyRevenue(customer),
           0
         );
-        const infraCost = customers.reduce(
+        const infraCost = financeCustomers.reduce(
           (sum, customer) => sum + calcMonthlyInfraCost(customer),
           0
         );
@@ -744,6 +762,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
             const date = new Date(expense.date);
             return date.getMonth() === month && date.getFullYear() === year;
           })
+          .filter((expense) => !expense.customerId || financeCustomerIds.has(expense.customerId))
           .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
 
         rows.push({
@@ -760,12 +779,13 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
         const iso = base.toISOString().slice(0, 10);
 
         const revenue =
-          customers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0) / 30;
+          financeCustomers.reduce((sum, customer) => sum + calcMonthlyRevenue(customer), 0) / 30;
         const infraCost =
-          customers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0) / 30;
+          financeCustomers.reduce((sum, customer) => sum + calcMonthlyInfraCost(customer), 0) / 30;
 
         const directExpenses = expenses
           .filter((expense) => String(expense.date).slice(0, 10) === iso)
+          .filter((expense) => !expense.customerId || financeCustomerIds.has(expense.customerId))
           .reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
 
         rows.push({
@@ -859,7 +879,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
 
   const dashboardTrendData = useMemo(() => {
     return buildDashboardTrendData(financeFilter);
-  }, [customers, expenses, financeFilter, packageOptions, extraOptions]);
+  }, [financeCustomers, financeCustomerIds, expenses, financeFilter, packageOptions, extraOptions]);
 
   const selectedCustomerTrendData = useMemo(() => {
     if (!selectedCustomer) return [];
@@ -1589,6 +1609,78 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     }
   }
 
+  async function provisionInfoMailbox(customer) {
+    if (!customer?.id || !customer?.domain) {
+      notifyInfo("Klant of domeinnaam ontbreekt.");
+      return null;
+    }
+
+    setIsProvisioningMail(true);
+
+    try {
+      const result = await apiRequest(
+        settings,
+        "POST",
+        `/api/customers/${customer.id}/provision-mail`,
+        {
+          domain: customer.domain,
+          packageCode: customer.packageCode || "STARTER",
+          selectedMailboxes: ["info"],
+        }
+      );
+
+      pushRequestLogEntries({
+        id: createId("mail-info"),
+        at: new Date().toISOString(),
+        type: "PROVISION_INFO_MAILBOX",
+        result,
+      });
+
+      if (!result.ok) {
+        throw new Error(
+          getRequestErrorMessage(result, "Mail account aanmaken is mislukt.")
+        );
+      }
+
+      const payload = result?.data?.data || result?.data || {};
+      const mailDomain = payload.mailDomain || null;
+      const mailboxes = Array.isArray(payload.mailboxes) ? payload.mailboxes : [];
+
+      setCustomers((prev) =>
+        prev.map((item) =>
+          item.id === customer.id
+            ? {
+                ...item,
+                mailDomain: mailDomain || item.mailDomain,
+                mailboxes:
+                  mailboxes.length > 0
+                    ? [
+                        ...mailboxes,
+                        ...(Array.isArray(item.mailboxes)
+                          ? item.mailboxes.filter(
+                              (mailbox) =>
+                                !mailboxes.some((next) => next.id === mailbox.id)
+                            )
+                          : []),
+                      ]
+                    : item.mailboxes,
+              }
+            : item
+        )
+      );
+
+      notifySuccess(`Mail account info@${customer.domain} is aangemaakt of aangevraagd.`);
+      return payload;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Mail account aanmaken is mislukt.";
+      notifyError(message);
+      return null;
+    } finally {
+      setIsProvisioningMail(false);
+    }
+  }
+
   function getStripeCustomerId(customer) {
     return customer?.stripeCustomerId || customer?.billing?.stripeCustomerId || "";
   }
@@ -1756,6 +1848,87 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Stripe checkout openen is mislukt.";
+      notifyError(message);
+      return null;
+    } finally {
+      setIsUpdatingBilling(false);
+    }
+  }
+
+  async function sendFirstMonthInvoice(customer) {
+    if (!customer?.id) return null;
+
+    setIsUpdatingBilling(true);
+
+    try {
+      const stripeCustomerId = getStripeCustomerId(customer);
+
+      if (!stripeCustomerId) {
+        throw new Error("Koppel eerst een Stripe klant.");
+      }
+
+      const packageMeta = getPackageByCode(customer.packageCode);
+      const priceId =
+        customer.billing?.stripePriceId ||
+        packageMeta?.stripePriceId ||
+        packageMeta?.priceId ||
+        import.meta.env.VITE_STRIPE_DEFAULT_PRICE_ID ||
+        "";
+      const setupPriceId =
+        customer.billing?.stripeSetupPriceId ||
+        packageMeta?.stripeSetupPriceId ||
+        packageMeta?.setupPriceId ||
+        "";
+
+      const result = await apiRequest(settings, "POST", "/api/billing/first-invoice", {
+        customerId: stripeCustomerId,
+        stripeCustomerId,
+        internalCustomerId: customer.id,
+        packageCode: customer.packageCode,
+        priceId,
+        setupPriceId,
+      });
+
+      pushRequestLogEntries({
+        id: createId("stripe-first-invoice"),
+        at: new Date().toISOString(),
+        type: "SEND_FIRST_MONTH_INVOICE",
+        result,
+      });
+
+      if (!result.ok) {
+        throw new Error(
+          getRequestErrorMessage(result, "Factuur voor de eerste maand versturen is mislukt.")
+        );
+      }
+
+      const payload = result?.data?.data || result?.data || {};
+      const hostedInvoiceUrl = payload.hostedInvoiceUrl || payload.hosted_invoice_url || "";
+
+      const savedCustomer = await persistCustomerBillingState(
+        customer,
+        {
+          billing: {
+            firstInvoiceId: payload.invoiceId || payload.id || "",
+            firstInvoiceStatus: payload.status || "",
+            firstInvoiceSentAt: new Date().toISOString(),
+            hostedInvoiceUrl,
+          },
+        },
+        "stripe-first-invoice-save"
+      );
+
+      if (hostedInvoiceUrl) {
+        window.open(hostedInvoiceUrl, "_blank", "noopener,noreferrer");
+      }
+
+      notifySuccess("Factuur voor de eerste maand is verstuurd.");
+      return savedCustomer;
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Factuur voor de eerste maand versturen is mislukt.";
       notifyError(message);
       return null;
     } finally {
@@ -2203,7 +2376,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     const multiplier =
       vatFilter === "month" ? 1 : vatFilter === "quarter" ? 3 : 12;
 
-    const outputVatPackages = customers.reduce((sum, customer) => {
+    const outputVatPackages = financeCustomers.reduce((sum, customer) => {
       const pkg = getPackageByCode(customer.packageCode);
       const packageVat = Number(pkg?.monthlyVatAmount || 0) * multiplier;
 
@@ -2215,7 +2388,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       return sum + packageVat + addonVat;
     }, 0);
 
-    const inputVatInfra = customers.reduce((sum, customer) => {
+    const inputVatInfra = financeCustomers.reduce((sum, customer) => {
       const pkg = getPackageByCode(customer.packageCode);
       const packageVat = Number(pkg?.monthlyInfraCostVatAmount || 0) * multiplier;
 
@@ -2227,7 +2400,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       return sum + packageVat + addonVat;
     }, 0);
 
-    const manualExpenseVat = financeExpenses.reduce((sum, expense) => {
+    const manualExpenseVat = billableFinanceExpenses.reduce((sum, expense) => {
       const amountInclVat = Number(expense.amount || 0);
       return sum + calcVatFromInc(amountInclVat, 0.21);
     }, 0);
@@ -2241,7 +2414,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       inputVat,
       payableVat,
     };
-  }, [customers, packageOptions, extraOptions, financeExpenses, vatFilter]);
+  }, [financeCustomers, packageOptions, extraOptions, billableFinanceExpenses, vatFilter]);
 
   const selectedCustomerWorkflowState = useMemo(() => {
     if (!selectedCustomer) {
@@ -2289,6 +2462,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     isStartingBuildFlow,
     isUpdatingWorkflow,
     isUpdatingBilling,
+    isProvisioningMail,
     isCreateCustomerOpen,
     setIsCreateCustomerOpen,
     isAutoRefreshing,
@@ -2353,8 +2527,10 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     deployCustomer,
     openBase44Editor,
     openBase44Preview,
+    provisionInfoMailbox,
     createStripeCustomer,
     createStripeCheckout,
+    sendFirstMonthInvoice,
     openBillingPortal,
     deploymentOperations,
     deploymentAuditEvents,

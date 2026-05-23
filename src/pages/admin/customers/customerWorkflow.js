@@ -2,6 +2,20 @@ export function canMarkPreviewReady(customer) {
   return Boolean(customer?.base44?.appId);
 }
 
+const PRIVATE_EMAIL_DOMAINS = new Set([
+  "gmail.com",
+  "hotmail.com",
+  "live.nl",
+  "live.com",
+  "icloud.com",
+  "me.com",
+  "outlook.com",
+  "proton.me",
+  "protonmail.com",
+  "yahoo.com",
+  "ziggo.nl",
+]);
+
 function slugify(value) {
   return String(value || "")
     .toLowerCase()
@@ -27,6 +41,22 @@ function parseUrl(value) {
   }
 
   return null;
+}
+
+function normalizeDomain(value) {
+  return String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .split("/")[0]
+    .split("?")[0]
+    .split("#")[0];
+}
+
+function getEmailDomain(email) {
+  const parts = String(email || "").trim().toLowerCase().split("@");
+  return parts.length === 2 ? normalizeDomain(parts[1]) : "";
 }
 
 function isBase44PublicHost(hostname) {
@@ -136,6 +166,145 @@ export function canManageDeployment(customer) {
 
 export function canStartBuildFlow(customer) {
   return Boolean(customer?.base44?.appId);
+}
+
+export function isCustomerLive(customer) {
+  return Boolean(
+    customer?.status === "active" ||
+      customer?.websiteBuildStatus === "LIVE" ||
+      String(customer?.deployment?.status || "").toUpperCase() === "SUCCEEDED"
+  );
+}
+
+export function hasGithubSync(customer) {
+  return Boolean(
+    customer?.contentSync?.status === "SYNCED" ||
+      customer?.contentSync?.repositoryName
+  );
+}
+
+export function hasBase44AndGithub(customer) {
+  return Boolean(customer?.base44?.appId && hasGithubSync(customer));
+}
+
+export function canOpenPreview(customer) {
+  return Boolean(
+    hasBase44AndGithub(customer) &&
+      (customer?.preview?.fullUrl || resolveBase44PreviewUrl(customer))
+  );
+}
+
+export function canOpenLiveWebsite(customer) {
+  return Boolean(isCustomerLive(customer) && customer?.domain);
+}
+
+export function hasCustomerMailDomain(customer) {
+  return Boolean(
+    customer?.mailDomain?.status === "ACTIVE" ||
+      customer?.mail?.domainStatus === "ACTIVE" ||
+      customer?.mail?.mailHostingEnabled ||
+      customer?.mailDomainStatus === "ACTIVE" ||
+      (Array.isArray(customer?.mailboxes) && customer.mailboxes.length > 0)
+  );
+}
+
+export function hasPrivateContactEmail(customer) {
+  const emailDomain = getEmailDomain(customer?.email);
+  const customerDomain = normalizeDomain(customer?.domain);
+
+  if (!emailDomain) return false;
+  if (PRIVATE_EMAIL_DOMAINS.has(emailDomain)) return true;
+  return Boolean(customerDomain && emailDomain !== customerDomain);
+}
+
+export function canSendOffer(customer) {
+  return Boolean(customer?.email && (hasPrivateContactEmail(customer) || hasCustomerMailDomain(customer)));
+}
+
+export function canSendFirstInvoice(customer) {
+  return Boolean(
+    isCustomerLive(customer) &&
+      (customer?.stripeCustomerId || customer?.billing?.stripeCustomerId)
+  );
+}
+
+export function buildCustomerStepperSteps(customer) {
+  const live = isCustomerLive(customer);
+  const stripeCustomerId =
+    customer?.stripeCustomerId || customer?.billing?.stripeCustomerId || "";
+
+  return [
+    {
+      key: "created",
+      title: "Klant aangemaakt",
+      subtitle: customer?.createdAt ? "In klantentabel" : "Gegevens ontbreken",
+      done: Boolean(customer?.id),
+      active: !customer?.id,
+    },
+    {
+      key: "base44",
+      title: "Base44 gekoppeld",
+      subtitle: customer?.base44?.appName || customer?.base44?.appId || "Nog geen app",
+      done: Boolean(customer?.base44?.appId),
+      active: Boolean(customer?.id && !customer?.base44?.appId),
+    },
+    {
+      key: "github",
+      title: "GitHub sync",
+      subtitle: customer?.contentSync?.repositoryName || customer?.contentSync?.status || "Wacht op export",
+      done: hasGithubSync(customer),
+      active: Boolean(customer?.base44?.appId && !hasGithubSync(customer)),
+    },
+    {
+      key: "preview",
+      title: "Preview",
+      subtitle: customer?.preview?.path || "Nog niet klaar",
+      done:
+        customer?.websiteBuildStatus === "PREVIEW_READY" ||
+        customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" ||
+        live,
+      active:
+        hasGithubSync(customer) &&
+        customer?.websiteBuildStatus !== "PREVIEW_READY" &&
+        customer?.websiteBuildStatus !== "APPROVED_FOR_PRODUCTION" &&
+        !live,
+    },
+    {
+      key: "approval",
+      title: "Akkoord",
+      subtitle:
+        customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" || live
+          ? "Klant akkoord"
+          : "Nog niet akkoord",
+      done: customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" || live,
+      active: customer?.websiteBuildStatus === "PREVIEW_READY" && !live,
+    },
+    {
+      key: "aws",
+      title: "AWS publicatie",
+      subtitle: customer?.deployment?.status || "Nog geen deployment",
+      done: live,
+      active:
+        customer?.status === "provisioning" ||
+        ["PENDING", "IN_PROGRESS", "RUNNING"].includes(
+          String(customer?.deployment?.status || "").toUpperCase()
+        ),
+    },
+    {
+      key: "mail",
+      title: "Mail",
+      subtitle: hasCustomerMailDomain(customer) ? `info@${normalizeDomain(customer?.domain)}` : "Nog geen mailbox",
+      done: hasCustomerMailDomain(customer),
+      active: live && !hasCustomerMailDomain(customer),
+    },
+    {
+      key: "billing",
+      title: "Stripe + finance",
+      subtitle: stripeCustomerId ? "Klaar voor facturatie" : "Nog niet gekoppeld",
+      done: Boolean(live && stripeCustomerId),
+      active: live && !stripeCustomerId,
+    },
+  ];
 }
 
 export function workflowTone(state) {

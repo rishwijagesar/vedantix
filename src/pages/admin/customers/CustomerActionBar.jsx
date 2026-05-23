@@ -1,36 +1,83 @@
 import React from "react";
+import {
+  CreditCard,
+  ExternalLink,
+  Eye,
+  FileText,
+  MailPlus,
+  ReceiptText,
+  Rocket,
+  Trash2,
+} from "lucide-react";
 
 import { Button, Card } from "../components/AdminUI";
 import { generateOfferPdf } from "../offers/generateOfferPdf";
 import {
+  canDeployCustomer,
+  canOpenLiveWebsite,
+  canOpenPreview,
+  canSendFirstInvoice,
+  canSendOffer,
   deploymentTone,
   formatStageLabel,
+  hasCustomerMailDomain,
+  isCustomerLive,
   workflowTone,
 } from "./customerWorkflow";
 import StatusPill from "./StatusPill";
 
-function ActionGroup({ title, children }) {
+function compactDomain(value) {
+  return String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .split("/")[0];
+}
+
+function openLiveWebsite(customer) {
+  const domain = compactDomain(customer?.domain);
+  if (!domain) return;
+  window.open(`https://${domain}`, "_blank", "noopener,noreferrer");
+}
+
+function sendOffer(customer) {
+  generateOfferPdf(customer);
+
+  const subject = encodeURIComponent(`Offerte ${customer.companyName || customer.domain}`);
+  const body = encodeURIComponent(
+    [
+      `Hi ${customer.contactName || customer.companyName || ""},`,
+      "",
+      "Bijgevoegd vind je de offerte voor je nieuwe website.",
+      "",
+      "Met vriendelijke groet,",
+      "Vedantix",
+    ].join("\n"),
+  );
+
+  if (customer.email) {
+    window.location.href = `mailto:${customer.email}?subject=${subject}&body=${body}`;
+  }
+}
+
+function ActionButton({ icon: Icon, children, disabled = false, ...props }) {
   return (
-    <div
+    <Button
+      {...props}
+      disabled={disabled}
       style={{
-        display: "grid",
-        gap: 8,
-        alignContent: "start",
-        minWidth: 0,
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7,
+        minHeight: 34,
+        ...(props.style || {}),
       }}
     >
-      <div
-        style={{
-          color: "#64748b",
-          fontSize: 11,
-          fontWeight: 900,
-          textTransform: "uppercase",
-        }}
-      >
-        {title}
-      </div>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>{children}</div>
-    </div>
+      {Icon ? <Icon size={15} strokeWidth={2.4} /> : null}
+      <span>{children}</span>
+    </Button>
   );
 }
 
@@ -39,113 +86,141 @@ export default function CustomerActionBar({ store }) {
   const stripeCustomerId =
     customer?.stripeCustomerId || customer?.billing?.stripeCustomerId || "";
   const isBillingBusy = Boolean(store.isUpdatingBilling);
+  const isWorkflowBusy = Boolean(store.isUpdatingWorkflow || store.isProvisioningMail);
 
   if (!customer) return null;
+
+  const live = isCustomerLive(customer);
+  const previewEnabled = canOpenPreview(customer);
+  const publishEnabled = canDeployCustomer(customer);
+  const websiteEnabled = canOpenLiveWebsite(customer);
+  const offerEnabled = canSendOffer(customer);
+  const invoiceEnabled = canSendFirstInvoice(customer);
+  const mailReady = hasCustomerMailDomain(customer);
 
   return (
     <Card
       style={{
-        background: "#f8fbff",
-        borderColor: "#cfe0f5",
-        marginBottom: 14,
+        background: "#ffffff",
+        borderColor: "#dbe4ef",
+        marginBottom: 12,
+        padding: 14,
       }}
     >
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 12,
-          flexWrap: "wrap",
-          marginBottom: 12,
-        }}
-      >
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          <StatusPill tone={workflowTone(store.selectedCustomerWorkflowState)}>
-            {store.selectedCustomerWorkflowState}
-          </StatusPill>
-          <StatusPill tone={deploymentTone(customer?.deployment?.status)}>
-            {customer?.deployment?.status || "NO_DEPLOYMENT"}
-          </StatusPill>
-          <span
-            style={{
-              padding: "6px 10px",
-              borderRadius: 999,
-              background: "#ffffff",
-              color: "#0f172a",
-              fontWeight: 900,
-              fontSize: 12,
-              border: "1px solid #d9e2ee",
-            }}
-          >
-            {formatStageLabel(customer?.deployment?.currentStage)}
-          </span>
-        </div>
-      </div>
-
-      <div
-        style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))",
-          gap: 14,
+          gridTemplateColumns: "repeat(auto-fit, minmax(min(260px, 100%), 1fr))",
+          gap: 12,
+          alignItems: "center",
         }}
       >
-        <ActionGroup title="Klant">
-          <Button tone="soft" onClick={() => generateOfferPdf(customer)}>
-            Genereer Offerte
-          </Button>
-          {customer.base44?.editorUrl ? (
-            <Button tone="soft" onClick={() => store.openBase44Editor(customer)}>
-              Open Base44
-            </Button>
-          ) : null}
-          {customer.preview?.fullUrl ? (
-            <Button
-              onClick={() =>
-                window.open(customer.preview.fullUrl, "_blank", "noopener,noreferrer")
-              }
-            >
-              Open preview
-            </Button>
-          ) : null}
-          <Button tone="danger" onClick={() => store.requestDeleteCustomer(customer)}>
-            Verwijderen
-          </Button>
-        </ActionGroup>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: "flex", gap: 7, flexWrap: "wrap", marginBottom: 8 }}>
+            <StatusPill tone={workflowTone(store.selectedCustomerWorkflowState)}>
+              {store.selectedCustomerWorkflowState}
+            </StatusPill>
+            <StatusPill tone={deploymentTone(customer?.deployment?.status)}>
+              {customer?.deployment?.status || "NO_DEPLOYMENT"}
+            </StatusPill>
+          </div>
+          <div
+            style={{
+              color: "#64748b",
+              fontSize: 12,
+              fontWeight: 800,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+            title={formatStageLabel(customer?.deployment?.currentStage)}
+          >
+            Stage: {formatStageLabel(customer?.deployment?.currentStage)}
+          </div>
+        </div>
 
-        <ActionGroup title="Stripe">
-          {!stripeCustomerId ? (
-            <Button
-              tone="primary"
-              onClick={() => store.createStripeCustomer(customer)}
-              disabled={isBillingBusy}
-            >
-              {isBillingBusy ? "Bezig..." : "Stripe klant aanmaken"}
-            </Button>
-          ) : null}
-          <Button
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            flexWrap: "wrap",
+            justifyContent: "flex-end",
+          }}
+        >
+          <ActionButton
+            icon={Eye}
+            onClick={() => store.openBase44Preview(customer)}
+            disabled={!previewEnabled}
+          >
+            Open Preview
+          </ActionButton>
+
+          <ActionButton
+            icon={Rocket}
             tone="success"
-            onClick={() => store.createStripeCheckout(customer)}
+            onClick={() => store.deployCustomer(customer)}
+            disabled={isWorkflowBusy || !publishEnabled}
+          >
+            Publiceren naar AWS
+          </ActionButton>
+
+          <ActionButton
+            icon={ExternalLink}
+            tone={live ? "soft" : "default"}
+            onClick={() => openLiveWebsite(customer)}
+            disabled={!websiteEnabled}
+          >
+            Open website
+          </ActionButton>
+
+          <ActionButton
+            icon={MailPlus}
+            tone={mailReady ? "soft" : "default"}
+            onClick={() => store.provisionInfoMailbox(customer)}
+            disabled={store.isProvisioningMail || !customer.domain}
+          >
+            {mailReady ? "Mail gekoppeld" : "Maak mail account aan"}
+          </ActionButton>
+
+          <ActionButton
+            icon={FileText}
+            tone="soft"
+            onClick={() => sendOffer(customer)}
+            disabled={!offerEnabled}
+          >
+            Verstuur offerte
+          </ActionButton>
+
+          <ActionButton
+            icon={CreditCard}
+            tone={stripeCustomerId ? "soft" : "primary"}
+            onClick={() =>
+              stripeCustomerId
+                ? store.openBillingPortal(customer)
+                : store.createStripeCustomer(customer)
+            }
             disabled={isBillingBusy}
           >
-            {isBillingBusy ? "Bezig..." : "Open Checkout"}
-          </Button>
-          {stripeCustomerId ? (
-            <Button
-              tone="soft"
-              onClick={() => store.openBillingPortal(customer)}
-              disabled={isBillingBusy}
-            >
-              {isBillingBusy ? "Bezig..." : "Billing Portal"}
-            </Button>
-          ) : null}
-        </ActionGroup>
+            {stripeCustomerId ? "Open Stripe" : "Koppelen aan Stripe"}
+          </ActionButton>
 
-        <ActionGroup title="Workflow">
-          <Button tone="soft" onClick={() => store.autoCreateBase44App(customer)}>
-            Bouwverzoek
-          </Button>
-        </ActionGroup>
+          <ActionButton
+            icon={ReceiptText}
+            tone="success"
+            onClick={() => store.sendFirstMonthInvoice(customer)}
+            disabled={isBillingBusy || !invoiceEnabled}
+          >
+            Factuur eerste maand
+          </ActionButton>
+
+          <ActionButton
+            icon={Trash2}
+            tone="danger"
+            onClick={() => store.requestDeleteCustomer(customer)}
+          >
+            Verwijderen
+          </ActionButton>
+        </div>
       </div>
     </Card>
   );

@@ -2,8 +2,11 @@ import React from "react";
 
 import { StatCard } from "../components/AdminUI";
 import { currency } from "../utils/adminStorage";
+import { isCustomerLive } from "./customerWorkflow";
 
 export default function CustomerStatsGrid({ store }) {
+  const isLive = isCustomerLive(store.selectedCustomer);
+
   return (
     <div
       style={{
@@ -16,7 +19,7 @@ export default function CustomerStatsGrid({ store }) {
       <StatCard
         title="Maandprijs"
         value={currency(store.calcMonthlyRevenue(store.selectedCustomer))}
-        subtitle="Pakket + extra's"
+        subtitle={isLive ? "Actieve finance omzet" : "Gepland na livegang"}
         tone="#0ea5e9"
       />
       <StatCard
@@ -27,14 +30,14 @@ export default function CustomerStatsGrid({ store }) {
       />
       <StatCard
         title="Kosten"
-        value={currency(store.selectedCustomerStats ? store.selectedCustomerStats.cost : 0)}
-        subtitle="Per gekozen periode"
+        value={currency(isLive && store.selectedCustomerStats ? store.selectedCustomerStats.cost : 0)}
+        subtitle={isLive ? "Per gekozen periode" : "Nog niet actief"}
         tone="#f97316"
       />
       <StatCard
         title="Winst"
-        value={currency(store.selectedCustomerStats ? store.selectedCustomerStats.profit : 0)}
-        subtitle="Geschat resultaat"
+        value={currency(isLive && store.selectedCustomerStats ? store.selectedCustomerStats.profit : 0)}
+        subtitle={isLive ? "Geschat resultaat" : "Nog niet actief"}
         tone="#10b981"
       />
     </div>

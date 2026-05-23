@@ -11,15 +11,43 @@ import {
 
 import { Button, Card, SectionTitle, StatCard } from "../components/AdminUI";
 import { TIME_FILTERS, currency } from "../utils/adminStorage";
+import { isCustomerLive } from "./customerWorkflow";
 
 export default function CustomerFinanceSection({ store }) {
   const stats = store.selectedCustomerStats;
+  const isLive = isCustomerLive(store.selectedCustomer);
+
+  if (!isLive) {
+    return (
+      <Card style={{ marginBottom: 0 }}>
+        <SectionTitle
+          title="Financiën"
+          subtitle="Deze klant wordt pas financieel actief zodra de website live staat."
+        />
+        <div
+          style={{
+            border: "1px dashed #cbd5e1",
+            borderRadius: 10,
+            padding: 14,
+            background: "#f8fafc",
+            color: "#475569",
+            fontSize: 13,
+            lineHeight: 1.5,
+            fontWeight: 700,
+          }}
+        >
+          Nog niet toegevoegd aan finance. Publiceer eerst naar AWS en wacht tot de
+          deployment succesvol live staat.
+        </div>
+      </Card>
+    );
+  }
 
   return (
-    <Card style={{ marginBottom: 14 }}>
+    <Card style={{ marginBottom: 0 }}>
       <SectionTitle
-        title="Financieel overzicht per klant"
-        subtitle="Wat deze klant kost en oplevert per geselecteerde periode."
+        title="Financiën"
+        subtitle="Alleen live klanten worden meegenomen in het finance overzicht."
         action={
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             {TIME_FILTERS.map((item) => (
