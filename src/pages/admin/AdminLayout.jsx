@@ -35,16 +35,29 @@ export default function AdminLayout() {
   }
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#f3f6fa" }}>
+    <div
+      style={{
+        display: "flex",
+        height: "100vh",
+        overflow: "hidden",
+        background: "#f3f6fa",
+      }}
+    >
       <NotificationCenter />
 
       <aside
         style={{
           width: 240,
+          flexShrink: 0,
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          boxSizing: "border-box",
           background: "#0f172a",
           color: "#fff",
           display: "flex",
           flexDirection: "column",
+          overflow: "hidden",
           padding: 20,
         }}
       >
@@ -71,7 +84,17 @@ export default function AdminLayout() {
           </div>
         </div>
 
-        <nav style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
+        <nav
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            flex: 1,
+            minHeight: 0,
+            overflowY: "auto",
+            paddingRight: 2,
+          }}
+        >
           {navItems.map((item) => {
             const active =
               item.path === "/admin"
@@ -104,13 +127,22 @@ export default function AdminLayout() {
             width: "100%",
             marginTop: 20,
             borderRadius: 14,
+            flexShrink: 0,
           }}
         >
           Uitloggen
         </Button>
       </aside>
 
-      <main style={{ flex: 1, padding: 18, minWidth: 0 }}>
+      <main
+        style={{
+          flex: 1,
+          minWidth: 0,
+          height: "100vh",
+          overflowY: "auto",
+          padding: 18,
+        }}
+      >
         <Outlet context={{ store }} />
       </main>
 
