@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Card, Field, Input, SectionTitle, Textarea } from "../components/AdminUI";
+import { Button, Card, Field, Input, SectionTitle } from "../components/AdminUI";
 import {
   canApproveCustomer,
   canDeployCustomer,
@@ -25,7 +25,6 @@ export default function Base44WorkflowSection({ store }) {
   );
   const isBusy =
     store.isLinkingBase44 ||
-    store.isSyncingContent ||
     store.isStartingBuildFlow ||
     store.isUpdatingWorkflow;
 
@@ -37,7 +36,7 @@ export default function Base44WorkflowSection({ store }) {
     >
       <SectionTitle
         title="Base44 export & publicatie"
-        subtitle="Koppel Base44, plak de export en publiceer naar AWS."
+        subtitle="Koppel Base44 en publiceer naar AWS."
       />
 
       <div
@@ -96,16 +95,6 @@ export default function Base44WorkflowSection({ store }) {
         </Field>
 
         <div style={{ gridColumn: "1 / -1" }}>
-          <Field label="Build prompt">
-            <Textarea
-              value={store.base44LinkForm.requestedPrompt}
-              onChange={(e) => store.updateBase44LinkForm("requestedPrompt", e.target.value)}
-              placeholder="Prompt voor deze klantwebsite..."
-            />
-          </Field>
-        </div>
-
-        <div style={{ gridColumn: "1 / -1" }}>
           <Field label="Base44 project ID">
             <Input
               value={store.contentSyncForm.projectId}
@@ -121,30 +110,6 @@ export default function Base44WorkflowSection({ store }) {
               value={store.contentSyncForm.repositoryUrl}
               onChange={(e) => store.updateContentSyncForm("repositoryUrl", e.target.value)}
               placeholder="https://github.com/vedantix/nature-healing"
-            />
-          </Field>
-        </div>
-
-        <div style={{ gridColumn: "1 / -1" }}>
-          <Field label="index.html export">
-            <Textarea
-              value={store.contentSyncForm.indexHtml}
-              onChange={(e) => store.updateContentSyncForm("indexHtml", e.target.value)}
-              placeholder="<html>...</html> (optioneel als de GitHub repo al door Base44 wordt bijgewerkt)"
-              rows={10}
-            />
-          </Field>
-        </div>
-
-        <div style={{ gridColumn: "1 / -1" }}>
-          <Field label="Extra export files JSON">
-            <Textarea
-              value={store.contentSyncForm.additionalFilesJson}
-              onChange={(e) =>
-                store.updateContentSyncForm("additionalFilesJson", e.target.value)
-              }
-              placeholder='[{"path":"assets/app.js","content":"console.log(\"hi\")","encoding":"utf-8"}]'
-              rows={6}
             />
           </Field>
         </div>

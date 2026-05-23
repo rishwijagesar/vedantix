@@ -415,19 +415,3 @@ export function buildChecklist(customer) {
     },
   ];
 }
-
-export function getCustomerRequestEntries(requestLog, customer) {
-  if (!customer) return [];
-
-  return requestLog.filter((entry) => {
-    const payload = entry?.result?.data;
-    const serialized = JSON.stringify(payload || {});
-
-    return (
-      serialized.includes(customer.id) ||
-      serialized.includes(customer.domain) ||
-      serialized.includes(customer.base44?.appId || "___no_app___") ||
-      serialized.includes(customer.deployment?.deploymentId || "___no_deployment___")
-    );
-  });
-}

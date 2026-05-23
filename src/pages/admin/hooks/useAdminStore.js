@@ -385,7 +385,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   const [isProvisioning, setIsProvisioning] = useState(false);
   const [isLinkingBase44, setIsLinkingBase44] = useState(false);
   const [isAutoCreatingBase44, setIsAutoCreatingBase44] = useState(false);
-  const [isSyncingContent, setIsSyncingContent] = useState(false);
   const [isStartingBuildFlow, setIsStartingBuildFlow] = useState(false);
   const [isUpdatingWorkflow, setIsUpdatingWorkflow] = useState(false);
   const [isUpdatingBilling, setIsUpdatingBilling] = useState(false);
@@ -418,8 +417,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   const [contentSyncForm, setContentSyncForm] = useState({
     projectId: "",
     repositoryUrl: "",
-    indexHtml: "",
-    additionalFilesJson: "[]",
   });
 
   const [deploymentOperations, setDeploymentOperations] = useState([]);
@@ -565,8 +562,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       setContentSyncForm({
         projectId: "",
         repositoryUrl: "",
-        indexHtml: "",
-        additionalFilesJson: "[]",
       });
       setDeploymentOperations([]);
       setDeploymentAuditEvents([]);
@@ -599,8 +594,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
         selectedCustomer.contentSync?.repositoryName ||
         "",
       repositoryUrl: selectedCustomer.contentSync?.repositoryName || "",
-      indexHtml: "",
-      additionalFilesJson: "[]",
     });
   }, [selectedCustomer]);
 
@@ -1223,8 +1216,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       setContentSyncForm({
         projectId: "",
         repositoryUrl: "",
-        indexHtml: "",
-        additionalFilesJson: "[]",
       });
 
       resetCustomerForm();
@@ -1292,13 +1283,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
 
     setIsStartingBuildFlow(true);
 
-    let additionalFiles = [];
-    try {
-      additionalFiles = JSON.parse(contentSyncForm.additionalFilesJson || "[]");
-    } catch {
-      additionalFiles = [];
-    }
-
     const result = await apiRequest(
       settings,
       "POST",
@@ -1314,8 +1298,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
             templateKey: base44LinkForm.templateKey,
           }),
         projectId: contentSyncForm.projectId || customer.base44?.appId || "",
-        indexHtml: contentSyncForm.indexHtml,
-        additionalFiles,
       }
     );
 
@@ -1365,59 +1347,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     }));
 
     await startBuildFlow(customerForBuild);
-  }
-
-  async function syncCustomerContent(customer, options = {}) {
-    if (!customer?.id || !contentSyncForm.indexHtml.trim()) {
-      notifyInfo("Vul eerst index.html export in voordat je synchroniseert.");
-      return null;
-    }
-
-    setIsSyncingContent(true);
-
-    let additionalFiles = [];
-    try {
-      additionalFiles = JSON.parse(contentSyncForm.additionalFilesJson || "[]");
-    } catch {
-      additionalFiles = [];
-    }
-
-    const result = await apiRequest(
-      settings,
-      "POST",
-      `/api/customers/${customer.id}/content-sync`,
-      {
-        projectId: contentSyncForm.projectId || customer.base44?.appId || "",
-        indexHtml: contentSyncForm.indexHtml,
-        additionalFiles,
-      }
-    );
-
-    const historyEntry = {
-      id: createId("content-sync"),
-      at: new Date().toISOString(),
-      type: "SYNC_CUSTOMER_CONTENT",
-      result,
-    };
-
-    if (result.ok && result?.data?.data?.customer) {
-      const updatedCustomer = result.data.data.customer;
-      setCustomers((prev) =>
-        prev.map((item) => (item.id === updatedCustomer.id ? updatedCustomer : item))
-      );
-      if (!options.silent) {
-        notifySuccess("Base44 export succesvol verwerkt.");
-      }
-      pushRequestLogEntries(historyEntry);
-      setIsSyncingContent(false);
-      return updatedCustomer;
-    } else {
-      notifyError(getRequestErrorMessage(result, "Content synchroniseren is mislukt."));
-    }
-
-    pushRequestLogEntries(historyEntry);
-    setIsSyncingContent(false);
-    return null;
   }
 
   async function linkBase44App(customer) {
@@ -1579,21 +1508,10 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     let customerForDeploy = customer;
     const repositoryUrl = String(contentSyncForm.repositoryUrl || "").trim();
 
-    let additionalFiles = [];
-    try {
-      additionalFiles = JSON.parse(contentSyncForm.additionalFilesJson || "[]");
-    } catch {
-      additionalFiles = [];
-    }
-
     if (!hasProcessedBase44Export(customerForDeploy) && !repositoryUrl) {
-      if (!contentSyncForm.indexHtml.trim()) {
-        notifyError(
-          "Publiceren kan pas met een GitHub repo URL of Base44 index.html export."
-        );
-        setIsUpdatingWorkflow(false);
-        return;
-      }
+      notifyError("Publiceren kan pas met een GitHub repo URL of verwerkte Base44 export.");
+      setIsUpdatingWorkflow(false);
+      return;
     }
 
     const result = await apiRequest(
@@ -1604,8 +1522,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
         projectName: slugify(customerForDeploy.companyName || customerForDeploy.domain),
         projectId: contentSyncForm.projectId || customerForDeploy.base44?.appId || "",
         repositoryUrl,
-        indexHtml: contentSyncForm.indexHtml,
-        additionalFiles,
         provisionMail: false,
       }
     );
@@ -2598,7 +2514,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     isProvisioning,
     isLinkingBase44,
     isAutoCreatingBase44,
-    isSyncingContent,
     isStartingBuildFlow,
     isUpdatingWorkflow,
     isUpdatingBilling,
@@ -2661,7 +2576,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     updateContentSyncForm,
     autoCreateBase44App,
     startBuildFlow,
-    syncCustomerContent,
     linkBase44App,
     markPreviewReady,
     approveCustomerForProduction,

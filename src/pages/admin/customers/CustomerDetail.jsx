@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import { Button, SectionTitle } from "../components/AdminUI";
-import BackendActionsSection from "./BackendActionsSection";
 import Base44WorkflowSection from "./Base44WorkflowSection";
 import CustomerActionBar from "./CustomerActionBar";
 import CustomerFinanceSection from "./CustomerFinanceSection";
@@ -65,8 +64,6 @@ export default function CustomerDetail({ store }) {
         <CustomerFinanceSection store={store} />
         <DeploymentHistorySection store={store} />
       </div>
-
-      <BackendActionsSection store={store} />
     </div>
   );
 }
