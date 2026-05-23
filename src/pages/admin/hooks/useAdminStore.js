@@ -1595,6 +1595,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
         repositoryUrl,
         indexHtml: contentSyncForm.indexHtml,
         additionalFiles,
+        provisionMail: false,
       }
     );
 
