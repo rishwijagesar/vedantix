@@ -45,6 +45,18 @@ function getLatestDeploymentFailure(store) {
 function getFailureAdvice(message, domain) {
   const normalized = String(message || "").toUpperCase();
 
+  if (normalized.includes("AUTOMATIC DOMAIN REGISTRATION IS DISABLED")) {
+    return "Het domein is vrij, maar automatische domeinregistratie staat nog uit in de backend-config. Zet DOMAIN_REGISTRATION_ENABLED=true en vul de DOMAIN_CONTACT_* env vars in.";
+  }
+
+  if (normalized.includes("DOMAIN REGISTRATION FOR") && normalized.includes("IN PROGRESS")) {
+    return "AWS is de domeinregistratie nog aan het verwerken. Probeer DOMAIN_CHECK straks opnieuw; er is geen handmatige AWS-actie nodig.";
+  }
+
+  if (normalized.includes("DOMAIN REGISTRATION FAILED")) {
+    return "De automatische domeinregistratie is mislukt. Controleer de foutmelding en de DOMAIN_CONTACT_* configuratie in de backend.";
+  }
+
   if (
     normalized.includes("DELEGATION_PENDING") ||
     normalized.includes("NAMESERVER DELEGATION IS STILL PENDING")
