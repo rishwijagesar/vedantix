@@ -69,6 +69,23 @@ function OperationsList({ operations }) {
               <div style={{ color: "#64748b", fontSize: 13, lineHeight: 1.6 }}>
                 Tijd: <strong>{dateLabel(operation.createdAt || operation.updatedAt)}</strong>
               </div>
+              {operation.errorMessage ? (
+                <div
+                  style={{
+                    marginTop: 8,
+                    border: "1px solid #fecaca",
+                    borderRadius: 8,
+                    background: "#fff1f2",
+                    color: "#991b1b",
+                    padding: 8,
+                    fontSize: 12,
+                    lineHeight: 1.45,
+                    fontWeight: 800,
+                  }}
+                >
+                  {operation.errorMessage}
+                </div>
+              ) : null}
             </div>
           ))
         ) : (

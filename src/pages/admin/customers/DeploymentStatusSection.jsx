@@ -1,10 +1,74 @@
 import React from "react";
 
-import { Card, SectionTitle, StatCard } from "../components/AdminUI";
+import { Button, Card, SectionTitle, StatCard } from "../components/AdminUI";
 import { deploymentTone, formatStageLabel } from "./customerWorkflow";
+
+function getMetadataValue(metadata, key) {
+  if (!metadata || typeof metadata !== "object") return "";
+  return metadata[key] || metadata?.M?.[key]?.S || "";
+}
+
+function getLatestDeploymentFailure(store) {
+  const failedOperation = (store.deploymentOperations || []).find(
+    (operation) =>
+      String(operation?.status || "").toUpperCase() === "FAILED" &&
+      operation?.errorMessage
+  );
+  const failedEvent = (store.deploymentAuditEvents || []).find(
+    (event) =>
+      event?.eventType === "STAGE_FAILED" &&
+      getMetadataValue(event?.metadata || event?.details, "error")
+  );
+
+  const eventMetadata = failedEvent?.metadata || failedEvent?.details || {};
+  const message =
+    failedOperation?.errorMessage ||
+    getMetadataValue(eventMetadata, "error") ||
+    "";
+  const stage =
+    getMetadataValue(eventMetadata, "stage") ||
+    failedOperation?.requestedStage ||
+    store.selectedCustomer?.deployment?.failureStage ||
+    store.selectedCustomer?.deployment?.currentStage ||
+    "";
+
+  if (!message && String(store.selectedCustomer?.deployment?.status || "") !== "FAILED") {
+    return null;
+  }
+
+  return {
+    message: message || "De deployment is gefaald, maar er is nog geen foutmelding geladen.",
+    stage,
+  };
+}
+
+function getFailureAdvice(message, domain) {
+  const normalized = String(message || "").toUpperCase();
+
+  if (normalized.includes("HOSTED_ZONE_NOT_FOUND")) {
+    return `Maak eerst een Route53 hosted zone aan voor ${domain || "dit domein"} en zet de nameservers bij de domeinregistrar naar Route53. Daarna kun je deze stage opnieuw proberen.`;
+  }
+
+  if (normalized.includes("RECORD_CONFLICT")) {
+    return "Er bestaan al DNS-records op dit hostname. Verwijder of migreer de conflicterende A/AAAA/CNAME records voordat je opnieuw publiceert.";
+  }
+
+  if (normalized.includes("HTTP_ACTIVE")) {
+    return "Er reageert al een bestaande website op dit domein. Controleer of dit domein al live gebruikt wordt voordat je het overschrijft.";
+  }
+
+  return "Bekijk de audit events hieronder voor extra context en probeer de gefaalde stage opnieuw nadat de oorzaak is opgelost.";
+}
 
 export default function DeploymentStatusSection({ store }) {
   const customer = store.selectedCustomer;
+  const failure = getLatestDeploymentFailure(store);
+  const failedStage = failure?.stage || customer?.deployment?.currentStage;
+  const canRetryFailedStage = Boolean(
+    customer?.deployment?.deploymentId &&
+      failedStage &&
+      String(customer?.deployment?.status || "").toUpperCase() === "FAILED"
+  );
 
   return (
     <>
@@ -46,12 +110,46 @@ export default function DeploymentStatusSection({ store }) {
             tone="#10b981"
           />
         </div>
+
+        {failure ? (
+          <div
+            style={{
+              marginTop: 12,
+              border: "1px solid #fecaca",
+              borderRadius: 10,
+              background: "#fff1f2",
+              padding: 12,
+              color: "#991b1b",
+              fontSize: 13,
+              lineHeight: 1.55,
+            }}
+          >
+            <div style={{ fontWeight: 900, marginBottom: 4 }}>
+              Deployment gefaald bij {formatStageLabel(failure.stage)}
+            </div>
+            <div style={{ fontWeight: 800 }}>{failure.message}</div>
+            <div style={{ marginTop: 6, color: "#b91c1c" }}>
+              {getFailureAdvice(failure.message, customer?.domain)}
+            </div>
+          </div>
+        ) : null}
       </Card>
 
       <Card style={{ marginBottom: 14 }}>
         <SectionTitle
           title="Deployment recovery"
           subtitle="Huidige stage en herstelcontext."
+          action={
+            canRetryFailedStage ? (
+              <Button
+                tone="soft"
+                disabled={store.isUpdatingWorkflow}
+                onClick={() => store.retryDeploymentStage(customer, failedStage)}
+              >
+                Retry {formatStageLabel(failedStage)}
+              </Button>
+            ) : null
+          }
         />
 
         <div
