@@ -5,6 +5,7 @@ import {
   Eye,
   FileText,
   MailPlus,
+  PowerOff,
   ReceiptText,
   Rocket,
   Trash2,
@@ -97,6 +98,7 @@ export default function CustomerActionBar({ store }) {
   const offerEnabled = canSendOffer(customer);
   const invoiceEnabled = canSendFirstInvoice(customer);
   const mailReady = hasCustomerMailDomain(customer);
+  const offlineEnabled = Boolean(customer?.deployment?.deploymentId && live);
 
   return (
     <Card
@@ -211,6 +213,15 @@ export default function CustomerActionBar({ store }) {
             disabled={isBillingBusy || !invoiceEnabled}
           >
             Factuur eerste maand
+          </ActionButton>
+
+          <ActionButton
+            icon={PowerOff}
+            tone="danger"
+            onClick={() => store.takeCustomerOffline(customer)}
+            disabled={store.isTakingCustomerOffline || !offlineEnabled}
+          >
+            Website offline
           </ActionButton>
 
           <ActionButton

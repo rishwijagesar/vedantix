@@ -327,6 +327,16 @@ function getRequestErrorMessage(result, fallback) {
     return "Admin sessie ontbreekt of is verlopen. Log opnieuw in en probeer opnieuw.";
   }
 
+  const errorCode = result?.data?.error?.code;
+
+  if (errorCode === "MAIL_CONFIG_MISSING") {
+    return "Mail provisioning is nog niet geconfigureerd. Vul MIGADU_USERNAME en MIGADU_PASSWORD in App Runner in.";
+  }
+
+  if (errorCode === "MAIL_PROVIDER_UNAUTHORIZED") {
+    return "Migadu weigert de mail credentials. Controleer MIGADU_USERNAME en MIGADU_PASSWORD.";
+  }
+
   return (
     result?.data?.error?.message ||
     result?.data?.error ||
@@ -380,6 +390,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   const [isUpdatingWorkflow, setIsUpdatingWorkflow] = useState(false);
   const [isUpdatingBilling, setIsUpdatingBilling] = useState(false);
   const [isProvisioningMail, setIsProvisioningMail] = useState(false);
+  const [isTakingCustomerOffline, setIsTakingCustomerOffline] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
   const [isAutoRefreshing, setIsAutoRefreshing] = useState(false);
   const [deleteCandidate, setDeleteCandidate] = useState(null);
@@ -1692,28 +1703,35 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       }
 
       const payload = result?.data?.data || result?.data || {};
-      const mailDomain = payload.mailDomain || null;
-      const mailboxes = Array.isArray(payload.mailboxes) ? payload.mailboxes : [];
+      const updatedCustomer = payload.customer || null;
+      const mailDomain = payload.mailDomain || updatedCustomer?.mailDomain || null;
+      const mailboxes = Array.isArray(payload.mailboxes)
+        ? payload.mailboxes
+        : Array.isArray(updatedCustomer?.mailboxes)
+          ? updatedCustomer.mailboxes
+          : [];
 
       setCustomers((prev) =>
         prev.map((item) =>
           item.id === customer.id
-            ? {
-                ...item,
-                mailDomain: mailDomain || item.mailDomain,
-                mailboxes:
-                  mailboxes.length > 0
-                    ? [
-                        ...mailboxes,
-                        ...(Array.isArray(item.mailboxes)
-                          ? item.mailboxes.filter(
-                              (mailbox) =>
-                                !mailboxes.some((next) => next.id === mailbox.id)
-                            )
-                          : []),
-                      ]
-                    : item.mailboxes,
-              }
+            ? updatedCustomer?.id
+              ? updatedCustomer
+              : {
+                  ...item,
+                  mailDomain: mailDomain || item.mailDomain,
+                  mailboxes:
+                    mailboxes.length > 0
+                      ? [
+                          ...mailboxes,
+                          ...(Array.isArray(item.mailboxes)
+                            ? item.mailboxes.filter(
+                                (mailbox) =>
+                                  !mailboxes.some((next) => next.id === mailbox.id)
+                              )
+                            : []),
+                        ]
+                      : item.mailboxes,
+                }
             : item
         )
       );
@@ -1727,6 +1745,79 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       return null;
     } finally {
       setIsProvisioningMail(false);
+    }
+  }
+
+  async function takeCustomerOffline(customer) {
+    if (!customer?.id) return null;
+
+    if (!customer?.deployment?.deploymentId) {
+      notifyInfo("Deze klant heeft nog geen deployment om offline te halen.");
+      return null;
+    }
+
+    const confirmed = window.confirm(
+      `Weet je zeker dat je ${customer.companyName || customer.domain} offline wilt halen? De DNS-koppeling wordt verwijderd, CloudFront wordt uitgezet en de sitebestanden worden leeggemaakt.`
+    );
+
+    if (!confirmed) return null;
+
+    setIsTakingCustomerOffline(true);
+
+    try {
+      const result = await apiRequest(
+        settings,
+        "POST",
+        `/api/customers/${customer.id}/offline`,
+        {
+          deploymentId: customer.deployment.deploymentId,
+        }
+      );
+
+      pushRequestLogEntries({
+        id: createId("customer-offline"),
+        at: new Date().toISOString(),
+        type: "TAKE_CUSTOMER_OFFLINE",
+        result,
+      });
+
+      if (!result.ok) {
+        throw new Error(
+          getRequestErrorMessage(result, "Website offline halen is mislukt.")
+        );
+      }
+
+      const payload = result?.data?.data || result?.data || {};
+      const updatedCustomer = payload.customer || null;
+
+      setCustomers((prev) =>
+        prev.map((item) =>
+          item.id === customer.id
+            ? updatedCustomer?.id
+              ? updatedCustomer
+              : {
+                  ...item,
+                  status: "paused",
+                  websiteBuildStatus: "COMPLETED",
+                  deployment: {
+                    ...(item.deployment || {}),
+                    status: "OFFLINE",
+                    currentStage: "FINALIZE_DELETE",
+                  },
+                }
+            : item
+        )
+      );
+
+      notifySuccess("Website is offline gehaald en finance is gepauzeerd.");
+      return payload;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Website offline halen is mislukt.";
+      notifyError(message);
+      return null;
+    } finally {
+      setIsTakingCustomerOffline(false);
     }
   }
 
@@ -2512,6 +2603,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     isUpdatingWorkflow,
     isUpdatingBilling,
     isProvisioningMail,
+    isTakingCustomerOffline,
     isCreateCustomerOpen,
     setIsCreateCustomerOpen,
     isAutoRefreshing,
@@ -2577,6 +2669,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     openBase44Editor,
     openBase44Preview,
     provisionInfoMailbox,
+    takeCustomerOffline,
     createStripeCustomer,
     createStripeCheckout,
     sendFirstMonthInvoice,

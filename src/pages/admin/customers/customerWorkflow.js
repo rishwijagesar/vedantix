@@ -220,7 +220,7 @@ export function hasPrivateContactEmail(customer) {
 }
 
 export function canSendOffer(customer) {
-  return Boolean(customer?.email && (hasPrivateContactEmail(customer) || hasCustomerMailDomain(customer)));
+  return Boolean(customer?.email);
 }
 
 export function canSendFirstInvoice(customer) {
