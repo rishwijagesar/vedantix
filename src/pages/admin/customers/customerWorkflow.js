@@ -64,7 +64,10 @@ function buildBase44PublicUrlFromName(value) {
 
   if (parseUrl(raw)) return "";
 
-  const slug = slugify(raw.replace(/\.base44\.app$/i, ""));
+  const withoutHost = raw.replace(/\.base44\.app$/i, "");
+  if (!/^[a-z0-9-]+$/i.test(withoutHost)) return "";
+
+  const slug = slugify(withoutHost);
   if (!slug || /^app-/.test(slug)) return "";
 
   return `https://${slug}.base44.app`;
