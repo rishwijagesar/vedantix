@@ -154,9 +154,8 @@ export function canApproveCustomer(customer) {
 export function canDeployCustomer(customer) {
   return (
     Boolean(customer?.base44?.appId) &&
-    Boolean(resolveBase44PreviewUrl(customer)) &&
-    customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" &&
-    customer?.contentSync?.status === "SYNCED"
+    Boolean(customer?.preview?.fullUrl || resolveBase44PreviewUrl(customer)) &&
+    customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION"
   );
 }
 
@@ -189,8 +188,11 @@ export function hasBase44AndGithub(customer) {
 
 export function canOpenPreview(customer) {
   return Boolean(
-    hasBase44AndGithub(customer) &&
-      (customer?.preview?.fullUrl || resolveBase44PreviewUrl(customer))
+    customer?.preview?.fullUrl ||
+      customer?.preview?.status === "READY" ||
+      customer?.websiteBuildStatus === "PREVIEW_READY" ||
+      customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" ||
+      resolveBase44PreviewUrl(customer)
   );
 }
 

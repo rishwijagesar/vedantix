@@ -1603,10 +1603,17 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   }
 
   function openBase44Preview(customer) {
-    const url = customer?.preview?.fullUrl || customer?.base44?.previewUrl;
+    const url =
+      customer?.preview?.fullUrl ||
+      resolveBase44PreviewUrl(customer) ||
+      customer?.base44?.previewUrl;
+
     if (url) {
       window.open(url, "_blank", "noopener,noreferrer");
+      return;
     }
+
+    notifyInfo("Er is nog geen preview URL beschikbaar voor deze klant.");
   }
 
   async function provisionInfoMailbox(customer) {
