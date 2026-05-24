@@ -1,6 +1,8 @@
 import React from "react";
 import {
+  BarChart3,
   CreditCard,
+  Download,
   ExternalLink,
   Eye,
   FileText,
@@ -97,6 +99,7 @@ export default function CustomerActionBar({ store }) {
   const previewEnabled = canOpenPreview(customer);
   const publishEnabled = canDeployCustomer(customer);
   const websiteEnabled = canOpenLiveWebsite(customer);
+  const analyticsEnabled = Boolean(customer?.id && customer?.domain && customer?.deployment?.deploymentId);
   const offerEnabled = canSendOffer(customer);
   const invoiceEnabled = canSendFirstInvoice(customer);
   const mailReady = hasCustomerMailDomain(customer);
@@ -177,6 +180,24 @@ export default function CustomerActionBar({ store }) {
             disabled={!websiteEnabled}
           >
             Open website
+          </ActionButton>
+
+          <ActionButton
+            icon={BarChart3}
+            tone="soft"
+            onClick={() => store.provisionCustomerAnalytics(customer)}
+            disabled={store.isProvisioningAnalytics || !analyticsEnabled}
+          >
+            Analytics koppelen
+          </ActionButton>
+
+          <ActionButton
+            icon={Download}
+            tone="soft"
+            onClick={() => store.downloadCustomerAnalyticsPdf(customer)}
+            disabled={store.isDownloadingAnalytics || !customer?.id}
+          >
+            Analytics PDF
           </ActionButton>
 
           <ActionButton

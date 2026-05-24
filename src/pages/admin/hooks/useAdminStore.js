@@ -24,6 +24,7 @@ import {
 } from "../utils/adminStorage";
 import { updateCustomer, deleteCustomer } from "../../../api/customers.api";
 import { deleteFinanceCustomer } from "../../../api/finance.api";
+import { generateAnalyticsReportPdf } from "../analytics/generateAnalyticsReportPdf";
 import {
   notifyError,
   notifyInfo,
@@ -388,6 +389,8 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   const [isStartingBuildFlow, setIsStartingBuildFlow] = useState(false);
   const [isUpdatingWorkflow, setIsUpdatingWorkflow] = useState(false);
   const [isUpdatingBilling, setIsUpdatingBilling] = useState(false);
+  const [isProvisioningAnalytics, setIsProvisioningAnalytics] = useState(false);
+  const [isDownloadingAnalytics, setIsDownloadingAnalytics] = useState(false);
   const [isProvisioningMail, setIsProvisioningMail] = useState(false);
   const [isTakingCustomerOffline, setIsTakingCustomerOffline] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
@@ -1585,6 +1588,107 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     notifyInfo("Er is nog geen preview URL beschikbaar voor deze klant.");
   }
 
+  async function provisionCustomerAnalytics(customer) {
+    if (!customer?.id || !customer?.domain) {
+      notifyInfo("Klant of domeinnaam ontbreekt.");
+      return null;
+    }
+
+    if (!customer?.deployment?.deploymentId) {
+      notifyInfo("Publiceer de website eerst naar AWS voordat je analytics koppelt.");
+      return null;
+    }
+
+    setIsProvisioningAnalytics(true);
+
+    try {
+      const result = await apiRequest(settings, "POST", "/api/analytics/provision", {
+        customerId: customer.id,
+        deploymentId: customer.deployment.deploymentId,
+        domain: customer.domain,
+        displayName: customer.companyName || customer.domain,
+      });
+
+      pushRequestLogEntries({
+        id: createId("analytics-provision"),
+        at: new Date().toISOString(),
+        type: "PROVISION_ANALYTICS",
+        result,
+      });
+
+      if (!result.ok) {
+        throw new Error(
+          getRequestErrorMessage(result, "Analytics koppelen is mislukt.")
+        );
+      }
+
+      const analytics = result?.data?.data || result?.data || {};
+
+      setCustomers((prev) =>
+        prev.map((item) =>
+          item.id === customer.id
+            ? {
+                ...item,
+                analytics,
+              }
+            : item
+        )
+      );
+
+      notifySuccess("Analytics is gekoppeld.");
+      return analytics;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Analytics koppelen is mislukt.";
+      notifyError(message);
+      return null;
+    } finally {
+      setIsProvisioningAnalytics(false);
+    }
+  }
+
+  async function downloadCustomerAnalyticsPdf(customer) {
+    if (!customer?.id) {
+      notifyInfo("Selecteer eerst een klant.");
+      return null;
+    }
+
+    setIsDownloadingAnalytics(true);
+
+    try {
+      const result = await apiRequest(
+        settings,
+        "GET",
+        `/api/analytics/${customer.id}/status`
+      );
+
+      pushRequestLogEntries({
+        id: createId("analytics-pdf"),
+        at: new Date().toISOString(),
+        type: "DOWNLOAD_ANALYTICS_PDF",
+        result,
+      });
+
+      if (!result.ok) {
+        throw new Error(
+          getRequestErrorMessage(result, "Analytics ophalen is mislukt.")
+        );
+      }
+
+      const analyticsStatus = result?.data?.data || result?.data || {};
+      generateAnalyticsReportPdf(customer, analyticsStatus);
+      notifySuccess("Analytics PDF is gedownload.");
+      return analyticsStatus;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Analytics PDF downloaden is mislukt.";
+      notifyError(message);
+      return null;
+    } finally {
+      setIsDownloadingAnalytics(false);
+    }
+  }
+
   async function provisionInfoMailbox(customer) {
     if (!customer?.id || !customer?.domain) {
       notifyInfo("Klant of domeinnaam ontbreekt.");
@@ -2517,6 +2621,8 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     isStartingBuildFlow,
     isUpdatingWorkflow,
     isUpdatingBilling,
+    isProvisioningAnalytics,
+    isDownloadingAnalytics,
     isProvisioningMail,
     isTakingCustomerOffline,
     isCreateCustomerOpen,
@@ -2582,6 +2688,8 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     deployCustomer,
     openBase44Editor,
     openBase44Preview,
+    provisionCustomerAnalytics,
+    downloadCustomerAnalyticsPdf,
     provisionInfoMailbox,
     takeCustomerOffline,
     createStripeCustomer,
