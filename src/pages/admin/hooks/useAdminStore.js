@@ -338,6 +338,22 @@ function getRequestErrorMessage(result, fallback) {
     return "Migadu weigert de mail credentials. Controleer MIGADU_USERNAME en MIGADU_PASSWORD.";
   }
 
+  if (errorCode === "GOOGLE_AUTH_CONFIG") {
+    return "Google Analytics is nog niet geconfigureerd. Vul GOOGLE_CLIENT_EMAIL en GOOGLE_PRIVATE_KEY in App Runner in.";
+  }
+
+  if (errorCode === "GOOGLE_ANALYTICS_CONFIG") {
+    return "Google Analytics account ontbreekt. Vul GOOGLE_ANALYTICS_ACCOUNT_ID in App Runner in.";
+  }
+
+  if (errorCode === "SEARCH_CONSOLE_HOSTED_ZONE_REQUIRED") {
+    return "Search Console verificatie mist de Route53 hosted zone. Publiceer of herstel eerst de deployment.";
+  }
+
+  if (errorCode === "CLARITY_API_NOT_CONFIGURED") {
+    return "Microsoft Clarity provisioning is nog niet geconfigureerd. Zet CLARITY_REQUIRED=false of configureer de Clarity API.";
+  }
+
   return (
     result?.data?.error?.message ||
     result?.data?.error ||
