@@ -5,6 +5,7 @@ import {
   canApproveCustomer,
   canDeployCustomer,
   canMarkPreviewReady,
+  isCustomerLive,
   resolveBase44PreviewUrl,
 } from "./customerWorkflow";
 
@@ -27,6 +28,12 @@ export default function Base44WorkflowSection({ store }) {
     store.isLinkingBase44 ||
     store.isStartingBuildFlow ||
     store.isUpdatingWorkflow;
+  const hasExistingDeployment = Boolean(customer?.deployment?.deploymentId);
+  const publishLabel = hasExistingDeployment
+    ? isCustomerLive(customer)
+      ? "Herdeploy"
+      : "Publiceren / herstellen"
+    : "Publiceren";
 
   return (
     <Card
@@ -164,7 +171,7 @@ export default function Base44WorkflowSection({ store }) {
             onClick={() => store.deployCustomer(customer)}
             disabled={isBusy || !canDeployCustomer(customer)}
           >
-            Publiceren
+            {publishLabel}
           </Button>
         </div>
       </div>

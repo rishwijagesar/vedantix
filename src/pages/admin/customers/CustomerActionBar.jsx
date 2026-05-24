@@ -98,6 +98,12 @@ export default function CustomerActionBar({ store }) {
   const live = isCustomerLive(customer);
   const previewEnabled = canOpenPreview(customer);
   const publishEnabled = canDeployCustomer(customer);
+  const hasExistingDeployment = Boolean(customer?.deployment?.deploymentId);
+  const publishLabel = hasExistingDeployment
+    ? live
+      ? "Herdeploy naar AWS"
+      : "Publiceren / herstellen"
+    : "Publiceren naar AWS";
   const websiteEnabled = canOpenLiveWebsite(customer);
   const analyticsEnabled = Boolean(customer?.id && customer?.domain && customer?.deployment?.deploymentId);
   const offerEnabled = canSendOffer(customer);
@@ -170,7 +176,7 @@ export default function CustomerActionBar({ store }) {
             onClick={() => store.deployCustomer(customer)}
             disabled={isWorkflowBusy || !publishEnabled}
           >
-            Publiceren naar AWS
+            {publishLabel}
           </ActionButton>
 
           <ActionButton

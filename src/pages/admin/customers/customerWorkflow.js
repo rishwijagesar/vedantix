@@ -152,10 +152,19 @@ export function canApproveCustomer(customer) {
 }
 
 export function canDeployCustomer(customer) {
+  const deploymentStatus = String(customer?.deployment?.status || "").toUpperCase();
+  const canRepublishExisting = Boolean(
+    customer?.deployment?.deploymentId &&
+      (customer?.websiteBuildStatus === "LIVE" ||
+        deploymentStatus === "SUCCEEDED" ||
+        deploymentStatus === "FAILED" ||
+        deploymentStatus === "OFFLINE")
+  );
+
   return (
     Boolean(customer?.base44?.appId) &&
     Boolean(customer?.preview?.fullUrl || resolveBase44PreviewUrl(customer)) &&
-    customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION"
+    (customer?.websiteBuildStatus === "APPROVED_FOR_PRODUCTION" || canRepublishExisting)
   );
 }
 
