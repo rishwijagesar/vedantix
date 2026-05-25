@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const ADMIN_AUTH_STORAGE_KEY = "vedantix_admin_auth_v1";
+export const ADMIN_AUTH_EXPIRED_EVENT = "vedantix-admin-auth-expired";
 
 const AdminAuthContext = createContext(null);
 
@@ -42,6 +43,53 @@ export function AdminAuthProvider({ children }) {
   useEffect(() => {
     writeStoredSession(session);
   }, [session]);
+
+  useEffect(() => {
+    function handleAuthExpired() {
+      setSession(null);
+    }
+
+    window.addEventListener(ADMIN_AUTH_EXPIRED_EVENT, handleAuthExpired);
+    return () => {
+      window.removeEventListener(ADMIN_AUTH_EXPIRED_EVENT, handleAuthExpired);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!session?.token) return undefined;
+
+    const controller = new AbortController();
+
+    async function verifyStoredSession() {
+      try {
+        const response = await fetch(`${API_BASE}/api/admin/auth/verify`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.token}`,
+            "X-Tenant-Id": "default",
+            "X-Actor-Id": "admin-session-verify",
+            "X-Source": "ADMIN_PANEL",
+          },
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          setSession(null);
+        }
+      } catch (error) {
+        if (error?.name !== "AbortError") {
+          setSession(null);
+        }
+      }
+    }
+
+    verifyStoredSession();
+
+    return () => {
+      controller.abort();
+    };
+  }, [session?.token]);
 
   async function login({ email, password }) {
     const response = await fetch(`${API_BASE}/api/admin/auth/login`, {

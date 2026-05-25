@@ -1,4 +1,7 @@
-import { readAdminSessionToken } from "../pages/admin/auth/adminAuth";
+import {
+  ADMIN_AUTH_EXPIRED_EVENT,
+  readAdminSessionToken,
+} from "../pages/admin/auth/adminAuth";
 
 const RAW_API_BASE =
   import.meta.env.VITE_API_BASE_URL || "https://api.vedantix.nl";
@@ -9,6 +12,15 @@ export const API_BASE_URL = API_BASE;
 
 const DEFAULT_TENANT_ID =
   import.meta.env.VITE_TENANT_ID || "default";
+
+function expireAdminSession() {
+  try {
+    localStorage.removeItem("vedantix_admin_auth_v1");
+    window.dispatchEvent(new Event(ADMIN_AUTH_EXPIRED_EVENT));
+  } catch {
+    // ignore storage/event errors
+  }
+}
 
 /**
  * @param {{
@@ -116,6 +128,10 @@ async function request(options) {
   const json = await parseResponse(res);
 
   if (!res.ok) {
+    if (res.status === 401) {
+      expireAdminSession();
+    }
+
     const message =
       json?.error?.message ||
       json?.error ||

@@ -36,6 +36,8 @@ import {
 } from "../customers/customerWorkflow";
 
 let activeAdminAuthToken = "";
+const ADMIN_AUTH_STORAGE_KEY = "vedantix_admin_auth_v1";
+const ADMIN_AUTH_EXPIRED_EVENT = "vedantix-admin-auth-expired";
 
 function buildHeaders(settings, method) {
   const headers = {
@@ -117,6 +119,10 @@ async function apiRequest(settings, method, path, body) {
       };
     }
 
+    if (response.status === 401) {
+      expireAdminSession();
+    }
+
     return {
       ok: response.ok,
       status: response.status,
@@ -134,6 +140,15 @@ async function apiRequest(settings, method, path, body) {
       url,
       method,
     };
+  }
+}
+
+function expireAdminSession() {
+  try {
+    localStorage.removeItem(ADMIN_AUTH_STORAGE_KEY);
+    window.dispatchEvent(new Event(ADMIN_AUTH_EXPIRED_EVENT));
+  } catch {
+    // ignore storage/event errors
   }
 }
 
