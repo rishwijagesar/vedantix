@@ -11,6 +11,7 @@ import CustomerWorkflowStepper from "./CustomerWorkflowStepper";
 import DeploymentHistorySection from "./DeploymentHistorySection";
 import DeploymentStatusSection from "./DeploymentStatusSection";
 import StripeBillingSection from "./StripeBillingSection";
+import AnalyticsProvisioningCard from "./analytics/AnalyticsProvisioningCard";
 
 export default function CustomerDetail({ store }) {
   const customer = store.selectedCustomer;
@@ -34,6 +35,7 @@ export default function CustomerDetail({ store }) {
       <CustomerActionBar store={store} />
       <CustomerWorkflowStepper customer={customer} />
       <CustomerStatsGrid store={store} />
+      <AnalyticsProvisioningCard store={store} />
 
       <div
         style={{

@@ -422,6 +422,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   const [isUpdatingBilling, setIsUpdatingBilling] = useState(false);
   const [isProvisioningAnalytics, setIsProvisioningAnalytics] = useState(false);
   const [isDownloadingAnalytics, setIsDownloadingAnalytics] = useState(false);
+  const [isLoadingAnalyticsStatus, setIsLoadingAnalyticsStatus] = useState(false);
   const [isProvisioningMail, setIsProvisioningMail] = useState(false);
   const [isTakingCustomerOffline, setIsTakingCustomerOffline] = useState(false);
   const [isCreateCustomerOpen, setIsCreateCustomerOpen] = useState(false);
@@ -455,6 +456,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
 
   const [deploymentOperations, setDeploymentOperations] = useState([]);
   const [deploymentAuditEvents, setDeploymentAuditEvents] = useState([]);
+  const [analyticsStatus, setAnalyticsStatus] = useState(null);
 
   const pollingRef = useRef(null);
 
@@ -599,6 +601,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       });
       setDeploymentOperations([]);
       setDeploymentAuditEvents([]);
+      setAnalyticsStatus(null);
       return;
     }
 
@@ -640,6 +643,15 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
 
     void loadDeploymentHistory(selectedCustomer);
   }, [selectedCustomer?.deployment?.deploymentId]);
+
+  useEffect(() => {
+    if (!selectedCustomer?.id) {
+      setAnalyticsStatus(null);
+      return;
+    }
+
+    void loadCustomerAnalyticsStatus(selectedCustomer, { silent: true });
+  }, [selectedCustomer?.id, selectedCustomer?.deployment?.deploymentId]);
 
   const financeExpenses = useMemo(() => {
     return expenses.filter((item) => isWithinFilter(item.date, financeFilter));
@@ -1619,6 +1631,45 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     notifyInfo("Er is nog geen preview URL beschikbaar voor deze klant.");
   }
 
+  async function loadCustomerAnalyticsStatus(customer, options = {}) {
+    if (!customer?.id) {
+      setAnalyticsStatus(null);
+      return null;
+    }
+
+    setIsLoadingAnalyticsStatus(true);
+
+    try {
+      const result = await apiRequest(
+        settings,
+        "GET",
+        `/api/analytics/${customer.id}/status`
+      );
+
+      if (!result.ok) {
+        if (!options.silent) {
+          throw new Error(
+            getRequestErrorMessage(result, "Analytics status ophalen is mislukt.")
+          );
+        }
+        return null;
+      }
+
+      const status = result?.data?.data || result?.data || {};
+      setAnalyticsStatus(status);
+      return status;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Analytics status ophalen is mislukt.";
+      if (!options.silent) {
+        notifyError(message);
+      }
+      return null;
+    } finally {
+      setIsLoadingAnalyticsStatus(false);
+    }
+  }
+
   async function provisionCustomerAnalytics(customer) {
     if (!customer?.id || !customer?.domain) {
       notifyInfo("Klant of domeinnaam ontbreekt.");
@@ -1633,7 +1684,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     setIsProvisioningAnalytics(true);
 
     try {
-      const result = await apiRequest(settings, "POST", "/api/analytics/provision", {
+      const result = await apiRequest(settings, "POST", "/api/analytics/provision-marketing-stack", {
         customerId: customer.id,
         deploymentId: customer.deployment.deploymentId,
         domain: customer.domain,
@@ -1654,6 +1705,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       }
 
       const analytics = result?.data?.data || result?.data || {};
+      setAnalyticsStatus(analytics);
 
       setCustomers((prev) =>
         prev.map((item) =>
@@ -1671,6 +1723,42 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Analytics koppelen is mislukt.";
+      notifyError(message);
+      return null;
+    } finally {
+      setIsProvisioningAnalytics(false);
+    }
+  }
+
+  async function retryCustomerAnalytics(customer) {
+    if (!customer?.id || !customer?.domain) {
+      notifyInfo("Klant of domeinnaam ontbreekt.");
+      return null;
+    }
+
+    setIsProvisioningAnalytics(true);
+
+    try {
+      const result = await apiRequest(settings, "POST", "/api/analytics/retry", {
+        customerId: customer.id,
+        deploymentId: customer.deployment?.deploymentId,
+        domain: customer.domain,
+        displayName: customer.companyName || customer.domain,
+      });
+
+      if (!result.ok) {
+        throw new Error(
+          getRequestErrorMessage(result, "Analytics retry is mislukt.")
+        );
+      }
+
+      const analytics = result?.data?.data || result?.data || {};
+      setAnalyticsStatus(analytics);
+      notifySuccess("Analytics retry is gestart.");
+      return analytics;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Analytics retry is mislukt.";
       notifyError(message);
       return null;
     } finally {
@@ -2654,6 +2742,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     isUpdatingBilling,
     isProvisioningAnalytics,
     isDownloadingAnalytics,
+    isLoadingAnalyticsStatus,
     isProvisioningMail,
     isTakingCustomerOffline,
     isCreateCustomerOpen,
@@ -2700,6 +2789,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     dashboardTrendData,
     selectedCustomerStats,
     selectedCustomerTrendData,
+    analyticsStatus,
     pricingVatSummary,
     calcMonthlyRevenue,
     calcSetupRevenue,
@@ -2719,7 +2809,9 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     deployCustomer,
     openBase44Editor,
     openBase44Preview,
+    loadCustomerAnalyticsStatus,
     provisionCustomerAnalytics,
+    retryCustomerAnalytics,
     downloadCustomerAnalyticsPdf,
     provisionInfoMailbox,
     takeCustomerOffline,
