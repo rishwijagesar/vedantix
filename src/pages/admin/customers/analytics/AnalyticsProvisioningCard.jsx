@@ -1,5 +1,5 @@
 import React from "react";
-import { BarChart3, Download, RefreshCw, Rocket } from "lucide-react";
+import { BarChart3, Download, KeyRound, RefreshCw, Rocket } from "lucide-react";
 
 import { Button, Card, SectionTitle } from "../../components/AdminUI";
 import GoogleAdsStatusCard from "./GoogleAdsStatusCard";
@@ -33,6 +33,9 @@ export default function AnalyticsProvisioningCard({ store }) {
   const searchConsole = status.searchConsole || {};
   const googleAds = status.googleAds || {};
   const clarity = status.clarity || {};
+  const environmentStatus = store.marketingEnvironmentStatus || {};
+  const missingEnvironment = environmentStatus.missing || [];
+  const environmentWarnings = environmentStatus.warnings || [];
   const canProvision = Boolean(customer?.id && customer?.domain && customer?.deployment?.deploymentId);
 
   if (!customer) return null;
@@ -47,10 +50,21 @@ export default function AnalyticsProvisioningCard({ store }) {
             <IconButton
               icon={RefreshCw}
               tone="soft"
-              onClick={() => store.loadCustomerAnalyticsStatus(customer)}
+              onClick={() => {
+                store.loadCustomerAnalyticsStatus(customer);
+                store.loadMarketingEnvironmentStatus();
+              }}
               disabled={store.isLoadingAnalyticsStatus}
             >
               Ververs
+            </IconButton>
+            <IconButton
+              icon={KeyRound}
+              tone="soft"
+              onClick={() => store.reconnectGoogleAnalytics(customer)}
+              disabled={!canProvision || store.isReconnectingGoogleAnalytics}
+            >
+              Reconnect OAuth
             </IconButton>
             <IconButton
               icon={Rocket}
@@ -79,6 +93,29 @@ export default function AnalyticsProvisioningCard({ store }) {
           </div>
         }
       />
+
+      {missingEnvironment.length || environmentWarnings.length ? (
+        <div
+          style={{
+            border: missingEnvironment.length ? "1px solid #fecaca" : "1px solid #fed7aa",
+            background: missingEnvironment.length ? "#fff1f2" : "#fff7ed",
+            borderRadius: 10,
+            padding: 12,
+            marginBottom: 10,
+            color: missingEnvironment.length ? "#991b1b" : "#9a3412",
+            fontSize: 13,
+            lineHeight: 1.5,
+          }}
+        >
+          <strong>Marketing omgeving</strong>
+          {missingEnvironment.length ? (
+            <div>Ontbreekt: {missingEnvironment.join(", ")}</div>
+          ) : null}
+          {environmentWarnings.length ? (
+            <div>{environmentWarnings.join(" ")}</div>
+          ) : null}
+        </div>
+      ) : null}
 
       <div
         style={{

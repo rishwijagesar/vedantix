@@ -50,6 +50,7 @@ export function generateAnalyticsReportPdf(customer, analyticsStatus) {
   const generatedAt = new Date();
   const googleAnalytics = analyticsStatus?.googleAnalytics || {};
   const searchConsole = analyticsStatus?.searchConsole || {};
+  const googleAds = analyticsStatus?.googleAds || {};
   const clarity = analyticsStatus?.clarity || {};
   const envVars = analyticsStatus?.trackingEnvironment || {};
 
@@ -93,6 +94,21 @@ export function generateAnalyticsReportPdf(customer, analyticsStatus) {
   y = addRow(doc, y, "Geverifieerd", formatBoolean(searchConsole.verified));
   y = addRow(doc, y, "DNS record", searchConsole.verificationRecordName);
   y = addRow(doc, y, "Foutmelding", searchConsole.errorMessage);
+
+  y = addPageIfNeeded(doc, y + 4);
+  y = addSectionTitle(doc, "Google Ads", y);
+  y = addRow(doc, y, "Status", googleAds.status);
+  y = addRow(doc, y, "Customer ID", googleAds.customerId);
+  y = addRow(doc, y, "Conversion ID", googleAds.conversionId);
+  y = addRow(
+    doc,
+    y,
+    "Conversies",
+    (googleAds.conversions || [])
+      .map((item) => `${item.event}: ${item.conversionLabel || item.conversionActionId || item.status}`)
+      .join("\n")
+  );
+  y = addRow(doc, y, "Foutmelding", googleAds.errorMessage);
 
   y = addPageIfNeeded(doc, y + 4);
   y = addSectionTitle(doc, "Microsoft Clarity", y);

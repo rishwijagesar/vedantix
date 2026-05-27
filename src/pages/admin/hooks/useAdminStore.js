@@ -421,6 +421,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   const [isUpdatingWorkflow, setIsUpdatingWorkflow] = useState(false);
   const [isUpdatingBilling, setIsUpdatingBilling] = useState(false);
   const [isProvisioningAnalytics, setIsProvisioningAnalytics] = useState(false);
+  const [isReconnectingGoogleAnalytics, setIsReconnectingGoogleAnalytics] = useState(false);
   const [isDownloadingAnalytics, setIsDownloadingAnalytics] = useState(false);
   const [isLoadingAnalyticsStatus, setIsLoadingAnalyticsStatus] = useState(false);
   const [isProvisioningMail, setIsProvisioningMail] = useState(false);
@@ -457,8 +458,10 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   const [deploymentOperations, setDeploymentOperations] = useState([]);
   const [deploymentAuditEvents, setDeploymentAuditEvents] = useState([]);
   const [analyticsStatus, setAnalyticsStatus] = useState(null);
+  const [marketingEnvironmentStatus, setMarketingEnvironmentStatus] = useState(null);
 
   const pollingRef = useRef(null);
+  const analyticsPollingRef = useRef(null);
 
   useEffect(() => {
     saveJson(STORAGE_KEYS.settings, settings);
@@ -651,7 +654,53 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     }
 
     void loadCustomerAnalyticsStatus(selectedCustomer, { silent: true });
+    void loadMarketingEnvironmentStatus({ silent: true });
   }, [selectedCustomer?.id, selectedCustomer?.deployment?.deploymentId]);
+
+  useEffect(() => {
+    const activeStatuses = new Set(["PENDING", "RUNNING", "RETRYING"]);
+    const shouldPoll =
+      selectedCustomer?.id &&
+      analyticsStatus &&
+      (activeStatuses.has(analyticsStatus.provisioningStatus) ||
+        activeStatuses.has(analyticsStatus.googleAnalytics?.status) ||
+        activeStatuses.has(analyticsStatus.searchConsole?.status) ||
+        activeStatuses.has(analyticsStatus.googleAds?.status) ||
+        activeStatuses.has(analyticsStatus.clarity?.status));
+
+    if (!shouldPoll) {
+      if (analyticsPollingRef.current) {
+        window.clearInterval(analyticsPollingRef.current);
+        analyticsPollingRef.current = null;
+      }
+      return;
+    }
+
+    if (!analyticsPollingRef.current) {
+      analyticsPollingRef.current = window.setInterval(() => {
+        void loadCustomerAnalyticsStatus(selectedCustomer, { silent: true });
+      }, 6000);
+    }
+
+    return () => {
+      if (analyticsPollingRef.current) {
+        window.clearInterval(analyticsPollingRef.current);
+        analyticsPollingRef.current = null;
+      }
+    };
+  }, [
+    selectedCustomer?.id,
+    analyticsStatus?.provisioningStatus,
+    analyticsStatus?.googleAnalytics?.status,
+    analyticsStatus?.searchConsole?.status,
+    analyticsStatus?.googleAds?.status,
+    analyticsStatus?.clarity?.status,
+    settings.baseUrl,
+    settings.apiKey,
+    settings.tenantId,
+    settings.actorId,
+    settings.source,
+  ]);
 
   const financeExpenses = useMemo(() => {
     return expenses.filter((item) => isWithinFilter(item.date, financeFilter));
@@ -1670,6 +1719,38 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     }
   }
 
+  async function loadMarketingEnvironmentStatus(options = {}) {
+    try {
+      const result = await apiRequest(
+        settings,
+        "GET",
+        "/api/analytics/environment/status"
+      );
+
+      if (!result.ok) {
+        if (!options.silent) {
+          throw new Error(
+            getRequestErrorMessage(result, "Marketing omgeving controleren is mislukt.")
+          );
+        }
+        return null;
+      }
+
+      const status = result?.data?.data || result?.data || {};
+      setMarketingEnvironmentStatus(status);
+      return status;
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Marketing omgeving controleren is mislukt.";
+      if (!options.silent) {
+        notifyError(message);
+      }
+      return null;
+    }
+  }
+
   async function provisionCustomerAnalytics(customer) {
     if (!customer?.id || !customer?.domain) {
       notifyInfo("Klant of domeinnaam ontbreekt.");
@@ -1763,6 +1844,48 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       return null;
     } finally {
       setIsProvisioningAnalytics(false);
+    }
+  }
+
+  async function reconnectGoogleAnalytics(customer) {
+    if (!customer?.id || !customer?.domain) {
+      notifyInfo("Klant of domeinnaam ontbreekt.");
+      return null;
+    }
+
+    setIsReconnectingGoogleAnalytics(true);
+
+    try {
+      const result = await apiRequest(
+        settings,
+        "POST",
+        `/api/analytics/google-analytics/${customer.id}/reconnect`,
+        {
+          customerId: customer.id,
+          deploymentId: customer.deployment?.deploymentId,
+          domain: customer.domain,
+          displayName: customer.companyName || customer.domain,
+        }
+      );
+
+      if (!result.ok) {
+        throw new Error(
+          getRequestErrorMessage(result, "Google Analytics opnieuw koppelen is mislukt.")
+        );
+      }
+
+      await loadCustomerAnalyticsStatus(customer, { silent: true });
+      notifySuccess("Google Analytics is opnieuw gekoppeld.");
+      return result?.data?.data || result?.data || {};
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Google Analytics opnieuw koppelen is mislukt.";
+      notifyError(message);
+      return null;
+    } finally {
+      setIsReconnectingGoogleAnalytics(false);
     }
   }
 
@@ -2741,6 +2864,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     isUpdatingWorkflow,
     isUpdatingBilling,
     isProvisioningAnalytics,
+    isReconnectingGoogleAnalytics,
     isDownloadingAnalytics,
     isLoadingAnalyticsStatus,
     isProvisioningMail,
@@ -2790,6 +2914,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     selectedCustomerStats,
     selectedCustomerTrendData,
     analyticsStatus,
+    marketingEnvironmentStatus,
     pricingVatSummary,
     calcMonthlyRevenue,
     calcSetupRevenue,
@@ -2810,8 +2935,10 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     openBase44Editor,
     openBase44Preview,
     loadCustomerAnalyticsStatus,
+    loadMarketingEnvironmentStatus,
     provisionCustomerAnalytics,
     retryCustomerAnalytics,
+    reconnectGoogleAnalytics,
     downloadCustomerAnalyticsPdf,
     provisionInfoMailbox,
     takeCustomerOffline,
