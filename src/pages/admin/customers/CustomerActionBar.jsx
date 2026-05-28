@@ -73,16 +73,56 @@ function ActionButton({ icon: Icon, children, disabled = false, ...props }) {
         display: "inline-flex",
         alignItems: "center",
         justifyContent: "center",
-        gap: 7,
-        flex: "0 0 auto",
-        minHeight: 34,
+        gap: 6,
+        flex: "0 1 auto",
+        minHeight: 32,
+        padding: "7px 10px",
+        fontSize: 12.5,
         whiteSpace: "nowrap",
+        maxWidth: "100%",
         ...(props.style || {}),
       }}
     >
       {Icon ? <Icon size={15} strokeWidth={2.4} /> : null}
       <span>{children}</span>
     </Button>
+  );
+}
+
+function ActionGroup({ title, children }) {
+  return (
+    <div
+      style={{
+        minWidth: 0,
+        border: "1px solid #e2e8f0",
+        borderRadius: 10,
+        background: "#f8fafc",
+        padding: 8,
+      }}
+    >
+      <div
+        style={{
+          color: "#64748b",
+          fontSize: 10,
+          fontWeight: 900,
+          letterSpacing: "0.06em",
+          textTransform: "uppercase",
+          marginBottom: 7,
+        }}
+      >
+        {title}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 7,
+          alignItems: "center",
+        }}
+      >
+        {children}
+      </div>
+    </div>
   );
 }
 
@@ -124,9 +164,10 @@ export default function CustomerActionBar({ store }) {
     >
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
+          display: "grid",
+          gridTemplateColumns: "minmax(150px, 0.32fr) minmax(0, 1fr)",
           gap: 12,
+          alignItems: "start",
         }}
       >
         <div style={{ minWidth: 0 }}>
@@ -155,119 +196,126 @@ export default function CustomerActionBar({ store }) {
 
         <div
           style={{
-            display: "flex",
+            minWidth: 0,
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
             gap: 8,
-            flexWrap: "nowrap",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            overflowX: "auto",
-            paddingBottom: 2,
           }}
         >
-          <ActionButton
-            icon={Eye}
-            onClick={() => store.openBase44Preview(customer)}
-            disabled={!previewEnabled}
-          >
-            Open Preview
-          </ActionButton>
+          <ActionGroup title="Website">
+            <ActionButton
+              icon={Eye}
+              onClick={() => store.openBase44Preview(customer)}
+              disabled={!previewEnabled}
+            >
+              Open Preview
+            </ActionButton>
 
-          <ActionButton
-            icon={Rocket}
-            tone="success"
-            onClick={() => store.deployCustomer(customer)}
-            disabled={isWorkflowBusy || !publishEnabled}
-          >
-            {publishLabel}
-          </ActionButton>
+            <ActionButton
+              icon={Rocket}
+              tone="success"
+              onClick={() => store.deployCustomer(customer)}
+              disabled={isWorkflowBusy || !publishEnabled}
+            >
+              {publishLabel}
+            </ActionButton>
 
-          <ActionButton
-            icon={ExternalLink}
-            tone={live ? "soft" : "default"}
-            onClick={() => openLiveWebsite(customer)}
-            disabled={!websiteEnabled}
-          >
-            Open website
-          </ActionButton>
+            <ActionButton
+              icon={ExternalLink}
+              tone={live ? "soft" : "default"}
+              onClick={() => openLiveWebsite(customer)}
+              disabled={!websiteEnabled}
+            >
+              Open website
+            </ActionButton>
 
-          <ActionButton
-            icon={BarChart3}
-            tone="soft"
-            onClick={() => store.provisionCustomerAnalytics(customer)}
-            disabled={analyticsLocked || !analyticsEnabled}
-          >
-            {store.isProvisioningAnalytics
-              ? "Analytics bezig"
-              : store.analyticsActionCooldownSeconds
-                ? `Analytics (${store.analyticsActionCooldownSeconds}s)`
-                : "Analytics koppelen"}
-          </ActionButton>
+            <ActionButton
+              icon={PowerOff}
+              tone="danger"
+              onClick={() => store.takeCustomerOffline(customer)}
+              disabled={store.isTakingCustomerOffline || !offlineEnabled}
+            >
+              Website offline
+            </ActionButton>
+          </ActionGroup>
 
-          <ActionButton
-            icon={Download}
-            tone="soft"
-            onClick={() => store.downloadCustomerAnalyticsPdf(customer)}
-            disabled={store.isDownloadingAnalytics || !customer?.id}
-          >
-            Analytics PDF
-          </ActionButton>
+          <ActionGroup title="Marketing">
+            <ActionButton
+              icon={BarChart3}
+              tone="soft"
+              onClick={() => store.provisionCustomerAnalytics(customer)}
+              disabled={analyticsLocked || !analyticsEnabled}
+            >
+              {store.isProvisioningAnalytics
+                ? "Analytics bezig"
+                : store.analyticsActionCooldownSeconds
+                  ? `Analytics (${store.analyticsActionCooldownSeconds}s)`
+                  : "Analytics koppelen"}
+            </ActionButton>
 
-          <ActionButton
-            icon={MailPlus}
-            tone={mailReady ? "soft" : "default"}
-            onClick={() => store.provisionInfoMailbox(customer)}
-            disabled={store.isProvisioningMail || !customer.domain}
-          >
-            {mailReady ? "Mail gekoppeld" : "Maak mail account aan"}
-          </ActionButton>
+            <ActionButton
+              icon={Download}
+              tone="soft"
+              onClick={() => store.downloadCustomerAnalyticsPdf(customer)}
+              disabled={store.isDownloadingAnalytics || !customer?.id}
+            >
+              Analytics PDF
+            </ActionButton>
+          </ActionGroup>
 
-          <ActionButton
-            icon={FileText}
-            tone="soft"
-            onClick={() => sendOffer(customer)}
-            disabled={!offerEnabled}
-          >
-            Verstuur offerte
-          </ActionButton>
+          <ActionGroup title="Klant">
+            <ActionButton
+              icon={MailPlus}
+              tone={mailReady ? "soft" : "default"}
+              onClick={() => store.provisionInfoMailbox(customer)}
+              disabled={store.isProvisioningMail || !customer.domain}
+            >
+              {mailReady ? "Mail gekoppeld" : "Maak mail account aan"}
+            </ActionButton>
 
-          <ActionButton
-            icon={CreditCard}
-            tone={stripeCustomerId ? "soft" : "primary"}
-            onClick={() =>
-              stripeCustomerId
-                ? store.openBillingPortal(customer)
-                : store.createStripeCustomer(customer)
-            }
-            disabled={isBillingBusy}
-          >
-            {stripeCustomerId ? "Open Stripe" : "Koppelen aan Stripe"}
-          </ActionButton>
+            <ActionButton
+              icon={FileText}
+              tone="soft"
+              onClick={() => sendOffer(customer)}
+              disabled={!offerEnabled}
+            >
+              Verstuur offerte
+            </ActionButton>
+          </ActionGroup>
 
-          <ActionButton
-            icon={ReceiptText}
-            tone="success"
-            onClick={() => store.sendFirstMonthInvoice(customer)}
-            disabled={isBillingBusy || !invoiceEnabled}
-          >
-            Factuur eerste maand
-          </ActionButton>
+          <ActionGroup title="Billing">
+            <ActionButton
+              icon={CreditCard}
+              tone={stripeCustomerId ? "soft" : "primary"}
+              onClick={() =>
+                stripeCustomerId
+                  ? store.openBillingPortal(customer)
+                  : store.createStripeCustomer(customer)
+              }
+              disabled={isBillingBusy}
+            >
+              {stripeCustomerId ? "Open Stripe" : "Koppelen aan Stripe"}
+            </ActionButton>
 
-          <ActionButton
-            icon={PowerOff}
-            tone="danger"
-            onClick={() => store.takeCustomerOffline(customer)}
-            disabled={store.isTakingCustomerOffline || !offlineEnabled}
-          >
-            Website offline
-          </ActionButton>
+            <ActionButton
+              icon={ReceiptText}
+              tone="success"
+              onClick={() => store.sendFirstMonthInvoice(customer)}
+              disabled={isBillingBusy || !invoiceEnabled}
+            >
+              Factuur eerste maand
+            </ActionButton>
+          </ActionGroup>
 
-          <ActionButton
-            icon={Trash2}
-            tone="danger"
-            onClick={() => store.requestDeleteCustomer(customer)}
-          >
-            Verwijderen
-          </ActionButton>
+          <ActionGroup title="Beheer">
+            <ActionButton
+              icon={Trash2}
+              tone="danger"
+              onClick={() => store.requestDeleteCustomer(customer)}
+            >
+              Verwijderen
+            </ActionButton>
+          </ActionGroup>
         </div>
       </div>
     </Card>
