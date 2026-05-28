@@ -37,6 +37,11 @@ export default function AnalyticsProvisioningCard({ store }) {
   const missingEnvironment = environmentStatus.missing || [];
   const environmentWarnings = environmentStatus.warnings || [];
   const canProvision = Boolean(customer?.id && customer?.domain && customer?.deployment?.deploymentId);
+  const cooldownSeconds = store.analyticsActionCooldownSeconds || 0;
+  const actionLocked =
+    cooldownSeconds > 0 ||
+    store.isProvisioningAnalytics ||
+    store.isReconnectingGoogleAnalytics;
 
   if (!customer) return null;
 
@@ -62,25 +67,25 @@ export default function AnalyticsProvisioningCard({ store }) {
               icon={KeyRound}
               tone="soft"
               onClick={() => store.reconnectGoogleAnalytics(customer)}
-              disabled={!canProvision || store.isReconnectingGoogleAnalytics}
+              disabled={!canProvision || actionLocked}
             >
-              Reconnect OAuth
+              {store.isReconnectingGoogleAnalytics ? "Reconnect..." : "Reconnect OAuth"}
             </IconButton>
             <IconButton
               icon={Rocket}
               tone="primary"
               onClick={() => store.provisionCustomerAnalytics(customer)}
-              disabled={!canProvision || store.isProvisioningAnalytics}
+              disabled={!canProvision || actionLocked}
             >
-              Provision marketing stack
+              {store.isProvisioningAnalytics ? "Provisioning..." : "Provision marketing stack"}
             </IconButton>
             <IconButton
               icon={BarChart3}
               tone="soft"
               onClick={() => store.retryCustomerAnalytics(customer)}
-              disabled={!canProvision || store.isProvisioningAnalytics}
+              disabled={!canProvision || actionLocked}
             >
-              Retry
+              {cooldownSeconds > 0 ? `Retry (${cooldownSeconds}s)` : "Retry"}
             </IconButton>
             <IconButton
               icon={Download}
@@ -114,6 +119,23 @@ export default function AnalyticsProvisioningCard({ store }) {
           {environmentWarnings.length ? (
             <div>{environmentWarnings.join(" ")}</div>
           ) : null}
+        </div>
+      ) : null}
+
+      {store.analyticsPollingStopped ? (
+        <div
+          style={{
+            border: "1px solid #bfdbfe",
+            background: "#eff6ff",
+            color: "#1d4ed8",
+            borderRadius: 10,
+            padding: 12,
+            marginBottom: 10,
+            fontSize: 13,
+            lineHeight: 1.5,
+          }}
+        >
+          Automatisch verversen is gestopt om eindeloos pollen te voorkomen. Gebruik Ververs om de actuele status opnieuw op te halen.
         </div>
       ) : null}
 

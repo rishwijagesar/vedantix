@@ -106,6 +106,8 @@ export default function CustomerActionBar({ store }) {
     : "Publiceren naar AWS";
   const websiteEnabled = canOpenLiveWebsite(customer);
   const analyticsEnabled = Boolean(customer?.id && customer?.domain && customer?.deployment?.deploymentId);
+  const analyticsLocked =
+    store.isProvisioningAnalytics || (store.analyticsActionCooldownSeconds || 0) > 0;
   const offerEnabled = canSendOffer(customer);
   const invoiceEnabled = canSendFirstInvoice(customer);
   const mailReady = hasCustomerMailDomain(customer);
@@ -192,9 +194,13 @@ export default function CustomerActionBar({ store }) {
             icon={BarChart3}
             tone="soft"
             onClick={() => store.provisionCustomerAnalytics(customer)}
-            disabled={store.isProvisioningAnalytics || !analyticsEnabled}
+            disabled={analyticsLocked || !analyticsEnabled}
           >
-            Analytics koppelen
+            {store.isProvisioningAnalytics
+              ? "Analytics bezig"
+              : store.analyticsActionCooldownSeconds
+                ? `Analytics (${store.analyticsActionCooldownSeconds}s)`
+                : "Analytics koppelen"}
           </ActionButton>
 
           <ActionButton

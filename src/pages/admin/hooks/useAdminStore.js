@@ -459,6 +459,9 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   const [deploymentAuditEvents, setDeploymentAuditEvents] = useState([]);
   const [analyticsStatus, setAnalyticsStatus] = useState(null);
   const [marketingEnvironmentStatus, setMarketingEnvironmentStatus] = useState(null);
+  const [analyticsActionCooldownUntil, setAnalyticsActionCooldownUntil] = useState(0);
+  const [analyticsPollingStartedAt, setAnalyticsPollingStartedAt] = useState(0);
+  const [clockNow, setClockNow] = useState(Date.now());
 
   const pollingRef = useRef(null);
   const analyticsPollingRef = useRef(null);
@@ -479,6 +482,15 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     saveJson(STORAGE_KEYS.requestLog, requestLog);
   }, [requestLog]);
 
+  useEffect(() => {
+    if (!analyticsActionCooldownUntil || analyticsActionCooldownUntil <= Date.now()) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => setClockNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [analyticsActionCooldownUntil]);
+
   function pushRequestLogEntries(entries) {
     const nextEntries = Array.isArray(entries)
       ? entries.filter(Boolean)
@@ -487,6 +499,16 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     if (nextEntries.length === 0) return;
 
     setRequestLog((prev) => [...nextEntries, ...prev].slice(0, 100));
+  }
+
+  function startAnalyticsCooldown(seconds = 8) {
+    const until = Date.now() + seconds * 1000;
+    setAnalyticsActionCooldownUntil(until);
+    setClockNow(Date.now());
+  }
+
+  function getAnalyticsCooldownSeconds() {
+    return Math.max(0, Math.ceil((analyticsActionCooldownUntil - clockNow) / 1000));
   }
 
   async function loadPricingFromBackend() {
@@ -673,6 +695,26 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
         window.clearInterval(analyticsPollingRef.current);
         analyticsPollingRef.current = null;
       }
+      setAnalyticsPollingStartedAt(0);
+      return;
+    }
+
+    if (analyticsPollingStartedAt === -1) {
+      return;
+    }
+
+    const startedAt = analyticsPollingStartedAt || Date.now();
+    if (!analyticsPollingStartedAt) {
+      setAnalyticsPollingStartedAt(startedAt);
+    }
+
+    if (Date.now() - startedAt > 10 * 60 * 1000) {
+      if (analyticsPollingRef.current) {
+        window.clearInterval(analyticsPollingRef.current);
+        analyticsPollingRef.current = null;
+      }
+      setAnalyticsPollingStartedAt(-1);
+      notifyError("Analytics polling is gestopt na 10 minuten. Ververs handmatig voor de nieuwste status.");
       return;
     }
 
@@ -695,6 +737,7 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     analyticsStatus?.searchConsole?.status,
     analyticsStatus?.googleAds?.status,
     analyticsStatus?.clarity?.status,
+    analyticsPollingStartedAt,
     settings.baseUrl,
     settings.apiKey,
     settings.tenantId,
@@ -1686,6 +1729,9 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       return null;
     }
 
+    if (!options.silent) {
+      setAnalyticsPollingStartedAt(0);
+    }
     setIsLoadingAnalyticsStatus(true);
 
     try {
@@ -1752,6 +1798,11 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   }
 
   async function provisionCustomerAnalytics(customer) {
+    if (getAnalyticsCooldownSeconds() > 0) {
+      notifyInfo(`Wacht nog ${getAnalyticsCooldownSeconds()} sec. voordat je opnieuw provisiont.`);
+      return null;
+    }
+
     if (!customer?.id || !customer?.domain) {
       notifyInfo("Klant of domeinnaam ontbreekt.");
       return null;
@@ -1762,6 +1813,8 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       return null;
     }
 
+    startAnalyticsCooldown();
+    setAnalyticsPollingStartedAt(0);
     setIsProvisioningAnalytics(true);
 
     try {
@@ -1812,11 +1865,18 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   }
 
   async function retryCustomerAnalytics(customer) {
+    if (getAnalyticsCooldownSeconds() > 0) {
+      notifyInfo(`Wacht nog ${getAnalyticsCooldownSeconds()} sec. voordat je opnieuw probeert.`);
+      return null;
+    }
+
     if (!customer?.id || !customer?.domain) {
       notifyInfo("Klant of domeinnaam ontbreekt.");
       return null;
     }
 
+    startAnalyticsCooldown();
+    setAnalyticsPollingStartedAt(0);
     setIsProvisioningAnalytics(true);
 
     try {
@@ -1848,11 +1908,18 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
   }
 
   async function reconnectGoogleAnalytics(customer) {
+    if (getAnalyticsCooldownSeconds() > 0) {
+      notifyInfo(`Wacht nog ${getAnalyticsCooldownSeconds()} sec. voordat je OAuth opnieuw koppelt.`);
+      return null;
+    }
+
     if (!customer?.id || !customer?.domain) {
       notifyInfo("Klant of domeinnaam ontbreekt.");
       return null;
     }
 
+    startAnalyticsCooldown();
+    setAnalyticsPollingStartedAt(0);
     setIsReconnectingGoogleAnalytics(true);
 
     try {
@@ -2915,6 +2982,8 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     selectedCustomerTrendData,
     analyticsStatus,
     marketingEnvironmentStatus,
+    analyticsActionCooldownSeconds: getAnalyticsCooldownSeconds(),
+    analyticsPollingStopped: analyticsPollingStartedAt === -1,
     pricingVatSummary,
     calcMonthlyRevenue,
     calcSetupRevenue,
