@@ -2,6 +2,14 @@ import React from "react";
 
 import TrackingStatusCard from "./TrackingStatusCard";
 
+/**
+ * @param {{ googleAds?: {
+ *   status?: string,
+ *   customerId?: string,
+ *   conversionId?: string,
+ *   conversions?: unknown[]
+ * } }} props
+ */
 export default function GoogleAdsStatusCard({ googleAds = {} }) {
   const conversions = googleAds.conversions || [];
 
