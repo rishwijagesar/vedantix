@@ -26,6 +26,10 @@ import { updateCustomer, deleteCustomer } from "../../../api/customers.api";
 import { deleteFinanceCustomer } from "../../../api/finance.api";
 import { generateAnalyticsReportPdf } from "../analytics/generateAnalyticsReportPdf";
 import {
+  ADMIN_AUTH_EXPIRED_EVENT,
+  readAdminSessionToken,
+} from "../auth/adminAuth";
+import {
   notifyError,
   notifyInfo,
   notifySuccess,
@@ -37,27 +41,32 @@ import {
 
 let activeAdminAuthToken = "";
 const ADMIN_AUTH_STORAGE_KEY = "vedantix_admin_auth_v1";
-const ADMIN_AUTH_EXPIRED_EVENT = "vedantix-admin-auth-expired";
+
+function getAdminAuthToken(settings = {}) {
+  return (
+    settings.adminAuthToken ||
+    activeAdminAuthToken ||
+    readAdminSessionToken() ||
+    ""
+  );
+}
 
 function buildHeaders(settings, method) {
   const headers = {
     "Content-Type": "application/json",
-    "X-Api-Key": settings.apiKey || "",
     "X-Tenant-Id": settings.tenantId || "default",
     "X-Actor-Id": settings.actorId || "admin-dashboard",
     "X-Source": settings.source || "ADMIN_PANEL",
   };
 
-  try {
-    const raw = localStorage.getItem("vedantix_admin_auth_v1");
-    const session = raw ? JSON.parse(raw) : null;
-    const token = settings.adminAuthToken || activeAdminAuthToken || session?.token || "";
+  const token = getAdminAuthToken(settings);
 
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-  } catch {
-    // ignore auth storage read errors
+  if (settings.apiKey) {
+    headers["X-Api-Key"] = settings.apiKey;
+  }
+
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
   }
 
   if (settings.autoIdempotency && method !== "GET") {
@@ -71,11 +80,29 @@ function buildHeaders(settings, method) {
 
 async function apiRequest(settings, method, path, body) {
   const url = `${String(settings.baseUrl || "").replace(/\/$/, "")}${path}`;
+  const headers = buildHeaders(settings, method);
+
+  if (!headers.Authorization && !headers["X-Api-Key"]) {
+    expireAdminSession();
+    return {
+      ok: false,
+      status: 401,
+      data: {
+        error: {
+          code: "ADMIN_SESSION_MISSING",
+          message: "Admin sessie ontbreekt of is verlopen. Log opnieuw in.",
+        },
+      },
+      url,
+      method,
+    };
+  }
 
   try {
     const response = await fetch(url, {
       method,
-      headers: buildHeaders(settings, method),
+      credentials: "include",
+      headers,
       body: method === "GET" ? undefined : JSON.stringify(body || {}),
     });
 
