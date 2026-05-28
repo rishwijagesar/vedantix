@@ -63,9 +63,8 @@ export function AdminAuthProvider({ children }) {
     async function verifyStoredSession() {
       try {
         const response = await fetch(`${API_BASE}/api/admin/auth/verify`, {
-          method: "POST",
+          method: "GET",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${session.token}`,
             "X-Tenant-Id": "default",
             "X-Actor-Id": "admin-session-verify",
