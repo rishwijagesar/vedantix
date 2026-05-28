@@ -64,6 +64,7 @@ export function AdminAuthProvider({ children }) {
       try {
         const response = await fetch(`${API_BASE}/api/admin/auth/verify`, {
           method: "GET",
+          credentials: "include",
           headers: {
             Authorization: `Bearer ${session.token}`,
             "X-Tenant-Id": "default",
@@ -93,6 +94,7 @@ export function AdminAuthProvider({ children }) {
   async function login({ email, password }) {
     const response = await fetch(`${API_BASE}/api/admin/auth/login`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
         "X-Tenant-Id": "default",
@@ -137,6 +139,18 @@ export function AdminAuthProvider({ children }) {
   }
 
   function logout() {
+    fetch(`${API_BASE}/api/admin/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Tenant-Id": "default",
+        "X-Actor-Id": session?.user?.id || "admin-logout",
+        "X-Source": "ADMIN_PANEL",
+        ...(session?.token ? { Authorization: `Bearer ${session.token}` } : {}),
+      },
+    }).catch(() => {});
+
     setSession(null);
   }
 

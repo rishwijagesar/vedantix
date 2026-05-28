@@ -82,22 +82,6 @@ async function apiRequest(settings, method, path, body) {
   const url = `${String(settings.baseUrl || "").replace(/\/$/, "")}${path}`;
   const headers = buildHeaders(settings, method);
 
-  if (!headers.Authorization && !headers["X-Api-Key"]) {
-    expireAdminSession();
-    return {
-      ok: false,
-      status: 401,
-      data: {
-        error: {
-          code: "ADMIN_SESSION_MISSING",
-          message: "Admin sessie ontbreekt of is verlopen. Log opnieuw in.",
-        },
-      },
-      url,
-      method,
-    };
-  }
-
   try {
     const response = await fetch(url, {
       method,
