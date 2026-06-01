@@ -117,7 +117,12 @@ export function AdminAuthProvider({ children }) {
     }
 
     if (!response.ok) {
-      throw new Error(json?.error || json?.message || "Inloggen mislukt");
+      throw new Error(
+        json?.error?.message ||
+          json?.message ||
+          json?.error ||
+          "Inloggen mislukt"
+      );
     }
 
     const token = json?.data?.token || "";
