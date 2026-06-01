@@ -505,7 +505,7 @@ export default function FAQ() {
         <footer className="faq-footer">
           <p style={{ margin: 0 }}>
             © 2026 <strong>Vedantix</strong> — <Link to="/">Home</Link> •{" "}
-            <Link to="/voorwaarden">Algemene voorwaarden</Link> •{" "}
+            <Link to="/terms">Algemene voorwaarden</Link> •{" "}
             <Link to="/privacy">Privacybeleid</Link>
           </p>
         </footer>

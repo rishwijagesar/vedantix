@@ -18,6 +18,7 @@ const Home = lazy(() => import("./pages/Home"));
 const Planning = lazy(() => import("./pages/Planning"));
 const Prijzen = lazy(() => import("./pages/Prijzen"));
 const Privacy = lazy(() => import("./pages/Privacy"));
+const DataDeletion = lazy(() => import("./pages/DataDeletion"));
 const Proces = lazy(() => import("./pages/Proces"));
 const Starters = lazy(() => import("./pages/Starters"));
 const Templates = lazy(() => import("./pages/Templates"));
@@ -57,12 +58,14 @@ function AppRoutes() {
         <Route path="/prijzen" element={<Prijzen />} />
         <Route path="/pakketvergelijking" element={<PricingDetails />} />
         <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Voorwaarden />} />
+        <Route path="/data-deletion" element={<DataDeletion />} />
         <Route path="/proces" element={<Proces />} />
         <Route path="/starters" element={<Starters />} />
         <Route path="/templates" element={<Templates />} />
         <Route path="/vedantixhome" element={<VedantixHome />} />
         <Route path="/voorwie" element={<VoorWie />} />
-        <Route path="/voorwaarden" element={<Voorwaarden />} />
+        <Route path="/voorwaarden" element={<Navigate to="/terms" replace />} />
         <Route path="/faq" element={<FAQ />} />
 
         <Route path="/website-kapper" element={<WebsiteKapper />} />
@@ -113,7 +116,9 @@ function AppRoutes() {
         <Route path="/Templates" element={<Navigate to="/templates" replace />} />
         <Route path="/VedantixHome" element={<Navigate to="/vedantixhome" replace />} />
         <Route path="/VoorWie" element={<Navigate to="/voorwie" replace />} />
-        <Route path="/Voorwaarden" element={<Navigate to="/voorwaarden" replace />} />
+        <Route path="/Voorwaarden" element={<Navigate to="/terms" replace />} />
+        <Route path="/Terms" element={<Navigate to="/terms" replace />} />
+        <Route path="/DataDeletion" element={<Navigate to="/data-deletion" replace />} />
         <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
         <Route path="/CRM" element={<Navigate to="/admin" replace />} />
         <Route path="/ClientPortal" element={<Navigate to="/klantenportaal" replace />} />

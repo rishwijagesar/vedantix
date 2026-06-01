@@ -755,7 +755,7 @@ export default function Prijzen() {
             </Link>{" "}
             |{" "}
             <Link
-              to="/voorwaarden"
+              to="/terms"
               style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}
             >
               Algemene voorwaarden

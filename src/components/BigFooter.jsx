@@ -466,7 +466,8 @@ export default function BigFooter() {
 
             <div className="big-footer__bottom-links">
               <Link to="/privacy">Privacy</Link>
-              <Link to="/voorwaarden">Voorwaarden</Link>
+              <Link to="/terms">Voorwaarden</Link>
+              <Link to="/data-deletion">Gegevensverwijdering</Link>
               <Link to="/faq">FAQ</Link>
               <Link to="/prijzen">Prijzen</Link>
             </div>

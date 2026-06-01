@@ -457,7 +457,7 @@ export default function VedantixHome() {
         <p>© 2026 <strong>Vedantix</strong> — Professionele websites voor elk bedrijf.</p>
         <div className="flinks">
           <a href="/Privacy">Privacybeleid</a>
-          <a href="/Voorwaarden">Algemene voorwaarden</a>
+          <a href="/terms">Algemene voorwaarden</a>
           <a href="/Proces">Hoe het werkt</a>
           <a href="/Planning">Afspraak plannen</a>
           <a href="/Prijzen">Prijzen vergelijken</a>
