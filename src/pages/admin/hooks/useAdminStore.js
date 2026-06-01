@@ -698,7 +698,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
       (activeStatuses.has(analyticsStatus.provisioningStatus) ||
         activeStatuses.has(analyticsStatus.googleAnalytics?.status) ||
         activeStatuses.has(analyticsStatus.searchConsole?.status) ||
-        activeStatuses.has(analyticsStatus.googleAds?.status) ||
         activeStatuses.has(analyticsStatus.clarity?.status));
 
     if (!shouldPoll) {
@@ -746,7 +745,6 @@ export function useAdminStore({ adminAuthToken = "" } = {}) {
     analyticsStatus?.provisioningStatus,
     analyticsStatus?.googleAnalytics?.status,
     analyticsStatus?.searchConsole?.status,
-    analyticsStatus?.googleAds?.status,
     analyticsStatus?.clarity?.status,
     analyticsPollingStartedAt,
     settings.baseUrl,

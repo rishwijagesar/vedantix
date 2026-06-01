@@ -2,7 +2,6 @@ import React from "react";
 import { BarChart3, Download, KeyRound, RefreshCw, Rocket } from "lucide-react";
 
 import { Button, Card, SectionTitle } from "../../components/AdminUI";
-import GoogleAdsStatusCard from "./GoogleAdsStatusCard";
 import ProvisioningErrorCard from "./ProvisioningErrorCard";
 import ProvisioningTimeline from "./ProvisioningTimeline";
 import SearchConsoleStatusCard from "./SearchConsoleStatusCard";
@@ -31,7 +30,6 @@ export default function AnalyticsProvisioningCard({ store }) {
   const status = store.analyticsStatus || customer?.analytics || {};
   const googleAnalytics = status.googleAnalytics || {};
   const searchConsole = status.searchConsole || {};
-  const googleAds = status.googleAds || {};
   const clarity = status.clarity || {};
   const environmentStatus = store.marketingEnvironmentStatus || {};
   const missingEnvironment = environmentStatus.missing || [];
@@ -49,7 +47,7 @@ export default function AnalyticsProvisioningCard({ store }) {
     <Card style={{ marginBottom: 12 }}>
       <SectionTitle
         title="Marketing tracking"
-        subtitle="Google Analytics, Search Console, Google Ads en tracking-injectie."
+        subtitle="Google Analytics, Search Console, Clarity en tracking-injectie."
         action={
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <IconButton
@@ -153,7 +151,6 @@ export default function AnalyticsProvisioningCard({ store }) {
           <div>Stream: <strong>{googleAnalytics.dataStreamId || "—"}</strong></div>
         </TrackingStatusCard>
         <SearchConsoleStatusCard searchConsole={searchConsole} />
-        <GoogleAdsStatusCard googleAds={googleAds} />
         <TrackingStatusCard title="Clarity" status={clarity.status}>
           <div>Project ID: <strong>{clarity.projectId || "—"}</strong></div>
           <div>{clarity.errorMessage || "Optioneel onderdeel van de tracking stack."}</div>
