@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import MetaPixel from "./components/MetaPixel";
 import AdminLayout from "./pages/admin/AdminLayout";
 import CustomerDetailPage from "./pages/admin/pages/CustomerDetailPage";
 import CustomersPage from "./pages/admin/pages/CustomersPage";
@@ -52,6 +53,7 @@ function AdminApp({ children }) {
 function AppRoutes() {
   return (
     <Suspense fallback={null}>
+      <MetaPixel />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/planning" element={<Planning />} />
