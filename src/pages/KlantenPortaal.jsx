@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { base44 } from "@/api/base44Client";
+import { base44, redirectToBase44Login } from "@/api/base44Client";
 import PortalOverzicht from "../components/portal/PortalOverzicht";
 import PortalAbonnement from "../components/portal/PortalAbonnement";
 import PortalFacturen from "../components/portal/PortalFacturen";
@@ -19,7 +19,7 @@ export default function KlantenPortaal() {
   useEffect(() => {
     base44.auth.me()
       .then(async u => {
-        if (!u) { base44.auth.redirectToLogin(window.location.href); return; }
+        if (!u) { redirectToBase44Login(window.location.href); return; }
         if (u.role === "admin") { window.location.href = "/admin"; return; }
         setUser(u);
         const profiles = await CustomerProfile.filter({ user_id: u.id });
@@ -27,7 +27,7 @@ export default function KlantenPortaal() {
         setAuthChecked(true);
       })
       .catch(() => {
-        base44.auth.redirectToLogin(window.location.href);
+        redirectToBase44Login(window.location.href);
       });
   }, []);
 

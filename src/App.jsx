@@ -29,6 +29,7 @@ const Voorwaarden = lazy(() => import("./pages/Voorwaarden"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const PricingDetails = lazy(() => import("./pages/PricingDetails.jsx"));
 const CustomerPreviewPage = lazy(() => import("./pages/CustomerPreviewPage.jsx"));
+const Base44LoginRedirect = lazy(() => import("./pages/Base44LoginRedirect.jsx"));
 
 const WebsiteKapper = lazy(() => import("./pages/WebsiteKapper"));
 const WebsiteSalon = lazy(() => import("./pages/WebsiteSalon"));
@@ -82,6 +83,7 @@ function AppRoutes() {
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
 
+        <Route path="/login" element={<Base44LoginRedirect />} />
         <Route path="/admin/login" element={<AdminLoginPage />} />
 
         <Route element={<AdminProtectedRoute />}>
