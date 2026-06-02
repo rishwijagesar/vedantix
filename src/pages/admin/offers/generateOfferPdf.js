@@ -105,7 +105,7 @@ export function generateOfferPdf(customer) {
   // Footer
   doc.setFontSize(9);
   doc.setTextColor(100);
-  doc.text('KvK: 42056482', 20, 280);
+  doc.text('KvK: 76804593', 20, 280);
   doc.text('BTW: NL005461438B38', 70, 280);
   doc.text('IBAN: NL59 INGB 0000 0000 00', 130, 280);
 
