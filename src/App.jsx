@@ -105,6 +105,8 @@ function AppRoutes() {
             </AdminApp>
           }
         />
+        <Route path="/klantenportaal/login" element={<Navigate to="/klantenportaal" replace />} />
+        <Route path="/clientportal/login" element={<Navigate to="/klantenportaal" replace />} />
 
         <Route path="/contact" element={<Navigate to="/#cta" replace />} />
 
