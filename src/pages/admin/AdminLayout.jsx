@@ -23,6 +23,7 @@ export default function AdminLayout() {
   const navItems = [
     { label: "Dashboard", path: "/admin" },
     { label: "Klanten", path: "/admin/customers" },
+    { label: "Migraties", path: "/admin/migrations" },
     { label: "Financiën", path: "/admin/finance" },
     { label: "Meta Marketing", path: "/admin/meta" },
     { label: "Products", path: "/admin/products" },

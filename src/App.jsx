@@ -8,6 +8,7 @@ import CustomersPage from "./pages/admin/pages/CustomersPage";
 import DashboardPage from "./pages/admin/pages/DashboardPage";
 import FinancePage from "./pages/admin/pages/FinancePage";
 import MetaMarketingPage from "./pages/admin/pages/MetaMarketingPage";
+import MigrationsPage from "./pages/admin/pages/MigrationsPage";
 import PricingPage from "./pages/admin/pages/PricingPage";
 import ProductsPage from "./pages/admin/pages/ProductsPage";
 import SettingsPage from "./pages/admin/pages/SettingsPage";
@@ -93,6 +94,9 @@ function AppRoutes() {
             <Route path="customers/:id" element={<CustomerDetailPage store={undefined} />} />
             <Route path="finance" element={<FinancePage store={undefined} />} />
             <Route path="meta" element={<MetaMarketingPage />} />
+            <Route path="migrations" element={<MigrationsPage />} />
+            <Route path="migrations/new" element={<MigrationsPage />} />
+            <Route path="migrations/:migrationId" element={<MigrationsPage />} />
             <Route path="products" element={<ProductsPage store={undefined} />} />
             <Route path="pricing" element={<PricingPage store={undefined} />} />
             <Route path="settings" element={<SettingsPage store={undefined} />} />
