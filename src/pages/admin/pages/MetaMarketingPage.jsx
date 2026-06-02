@@ -29,6 +29,9 @@ const money = (value) =>
 
 const number = (value) => new Intl.NumberFormat("nl-NL").format(Number(value || 0));
 
+const META_OAUTH_REDIRECT_URI =
+  import.meta.env.VITE_META_REDIRECT_URI || "https://vedantix.nl/admin/meta";
+
 const defaultCampaign = {
   name: "",
   objective: "OUTCOME_LEADS",
@@ -209,7 +212,7 @@ export default function MetaMarketingPage() {
       try {
         await metaMarketingApi.completeOAuth({
           code,
-          redirectUri: `${window.location.origin}/admin/meta`,
+          redirectUri: META_OAUTH_REDIRECT_URI,
         });
         window.history.replaceState({}, "", "/admin/meta");
         notifySuccess("Meta OAuth is gekoppeld.");
@@ -223,7 +226,7 @@ export default function MetaMarketingPage() {
 
   async function connectMeta() {
     try {
-      const result = await metaMarketingApi.getOAuthUrl(`${window.location.origin}/admin/meta`);
+      const result = await metaMarketingApi.getOAuthUrl(META_OAUTH_REDIRECT_URI);
       window.location.href = result.url;
     } catch (error) {
       notifyError(error.message || "Meta OAuth URL ophalen is mislukt.");
