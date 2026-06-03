@@ -524,6 +524,7 @@ export const blogPosts = [
 export const basePages = [
   { path: "/", priority: "1.0" },
   { path: "/prijzen", priority: "0.8" },
+  { path: "/groeimodel", priority: "0.8" },
   { path: "/proces", priority: "0.8" },
   { path: "/faq", priority: "0.7" },
   { path: "/contact", priority: "0.7" },

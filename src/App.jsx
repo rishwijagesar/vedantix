@@ -21,6 +21,7 @@ const Planning = lazy(() => import("./pages/Planning"));
 const Prijzen = lazy(() => import("./pages/Prijzen"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const DataDeletion = lazy(() => import("./pages/DataDeletion"));
+const Groeimodel = lazy(() => import("./pages/Groeimodel"));
 const Proces = lazy(() => import("./pages/Proces"));
 const Starters = lazy(() => import("./pages/Starters"));
 const Templates = lazy(() => import("./pages/Templates"));
@@ -65,6 +66,7 @@ function AppRoutes() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Voorwaarden />} />
         <Route path="/data-deletion" element={<DataDeletion />} />
+        <Route path="/groeimodel" element={<Groeimodel />} />
         <Route path="/proces" element={<Proces />} />
         <Route path="/starters" element={<Starters />} />
         <Route path="/templates" element={<Templates />} />
@@ -121,6 +123,7 @@ function AppRoutes() {
         <Route path="/Planning" element={<Navigate to="/planning" replace />} />
         <Route path="/Prijzen" element={<Navigate to="/prijzen" replace />} />
         <Route path="/Privacy" element={<Navigate to="/privacy" replace />} />
+        <Route path="/Groeimodel" element={<Navigate to="/groeimodel" replace />} />
         <Route path="/Proces" element={<Navigate to="/proces" replace />} />
         <Route path="/Starters" element={<Navigate to="/starters" replace />} />
         <Route path="/Templates" element={<Navigate to="/templates" replace />} />

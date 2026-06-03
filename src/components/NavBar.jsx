@@ -52,6 +52,7 @@ export default function NavBar() {
             <a href={isHomePage ? "#how" : "/#how"} className="site-nav-link">
               Hoe het werkt
             </a>
+            <Link to="/groeimodel" className="site-nav-link">Groei Model</Link>
             <Link to="/contact" className="site-nav-link">Contact</Link>
             <Link to="/blog" className="site-nav-link">Blog</Link>
             <Link to="/faq" className="site-nav-link">FAQ</Link>

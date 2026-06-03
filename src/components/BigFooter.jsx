@@ -412,6 +412,7 @@ export default function BigFooter() {
               <ul className="big-footer__links">
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/prijzen">Prijzen</Link></li>
+                <li><Link to="/groeimodel">Het Vedantix Groei Model</Link></li>
                 <li><Link to="/proces">Proces</Link></li>
                 <li><Link to="/voorwie">Voor wie</Link></li>
                 <li><Link to="/faq">FAQ</Link></li>
