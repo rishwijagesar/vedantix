@@ -1,10 +1,10 @@
 import "../styles/home-hero.css";
 
 const HERO_CHECKS = [
-  "Sterke eerste versie binnen 48 uur",
-  "Gebouwd voor afspraken, aanvragen en WhatsApp",
-  "Hosting, onderhoud en support inbegrepen",
-  "Betaling na oplevering — niet tevreden, niet betalen",
+  "Eerste versie binnen 48 uur",
+  "Hosting inbegrepen",
+  "Gebouwd voor meer aanvragen",
+  "Niet tevreden? Niet betalen",
 ];
 
 const MOCKUP_SERVICES = [
@@ -30,15 +30,9 @@ export default function HomeHero() {
             </h1>
 
             <p className="hero-sub">
-              Meer afspraken, aanvragen en contactmomenten — zonder technisch gedoe. Wij bouwen een
-              website die{" "}
-              <strong>professioneel overkomt, direct duidelijk maakt wat je doet</strong> en
-              bezoekers sneller richting WhatsApp, bellen of een aanvraag stuurt.
+              Wij bouwen snelle websites voor lokale ondernemers die meer afspraken,
+              offerteaanvragen en WhatsApp-contact willen.
             </p>
-
-            <div className="hero-microcopy">
-              Ook geschikt als je nog geen bestaande website, reviews of uitgebreide content hebt.
-            </div>
 
             <div className="hero-checks">
               {HERO_CHECKS.map((item) => (
@@ -50,21 +44,12 @@ export default function HomeHero() {
 
             <div className="hero-ctas">
               <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
+                href="https://wa.me/31626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
                 target="_blank"
                 rel="noreferrer"
                 className="hero-btn-primary"
               >
                 Plan gratis kennismaking →
-              </a>
-
-              <a
-                href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20website%20scan."
-                target="_blank"
-                rel="noreferrer"
-                className="hero-btn-wa"
-              >
-                Ontvang gratis website scan
               </a>
 
               <a href="#demo" className="hero-btn-ghost">
@@ -74,27 +59,6 @@ export default function HomeHero() {
 
             <div className="hero-cta-note">
               Betaling na oplevering · duidelijke afspraken · geen risico
-            </div>
-
-            <div className="hero-social-proof">
-              <div className="hero-sp-item">
-                <div className="hero-sp-stat">Sterkere eerste indruk</div>
-                <div className="hero-sp-text">Professioneler overkomen vanaf het eerste bezoek</div>
-              </div>
-
-              <div className="hero-divider" />
-
-              <div className="hero-sp-item">
-                <div className="hero-sp-stat">Meer actie</div>
-                <div className="hero-sp-text">Gebouwd voor bellen, WhatsApp en aanvragen</div>
-              </div>
-
-              <div className="hero-divider" />
-
-              <div className="hero-sp-item">
-                <div className="hero-sp-stat">Minder gedoe</div>
-                <div className="hero-sp-text">Hosting, onderhoud en support onder één partij</div>
-              </div>
             </div>
           </div>
 
@@ -145,9 +109,28 @@ export default function HomeHero() {
         </div>
       </section>
 
+      <section className="hero-trust-section" aria-label="Waarom ondernemers kiezen voor Vedantix">
+        <div className="hero-trust-container">
+          <div className="hero-trust-item">
+            <div className="hero-trust-stat">Sterkere eerste indruk</div>
+            <div className="hero-trust-text">Professioneler overkomen vanaf het eerste bezoek</div>
+          </div>
+
+          <div className="hero-trust-item">
+            <div className="hero-trust-stat">Meer actie</div>
+            <div className="hero-trust-text">Gebouwd voor bellen, WhatsApp en aanvragen</div>
+          </div>
+
+          <div className="hero-trust-item">
+            <div className="hero-trust-stat">Minder gedoe</div>
+            <div className="hero-trust-text">Hosting, onderhoud en support onder één partij</div>
+          </div>
+        </div>
+      </section>
+
       <div className="hero-sticky-cta">
         <a
-          href="https://wa.me/310626219989"
+          href="https://wa.me/31626219989"
           target="_blank"
           rel="noreferrer"
           className="hero-btn-wa"

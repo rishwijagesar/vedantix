@@ -642,7 +642,7 @@ export default function Home() {
                     <li>Reactie binnen 24 uur</li>
                   </ul>
                   <a
-                    href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20website%20scan."
+                    href="https://wa.me/31626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20website%20scan."
                     target="_blank"
                     rel="noreferrer"
                     className="btn-wa"
@@ -717,7 +717,7 @@ export default function Home() {
 
               <div className="cta-actions">
                 <a
-                  href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
+                  href="https://wa.me/31626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
                   target="_blank"
                   rel="noreferrer"
                   className="btn-dark"
@@ -726,7 +726,7 @@ export default function Home() {
                 </a>
 
                 <a
-                  href="https://wa.me/310626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag%20over%20een%20website."
+                  href="https://wa.me/31626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag%20over%20een%20website."
                   target="_blank"
                   rel="noreferrer"
                   className="btn-wa"
