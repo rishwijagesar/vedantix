@@ -415,6 +415,7 @@ export default function BigFooter() {
                 <li><Link to="/proces">Proces</Link></li>
                 <li><Link to="/voorwie">Voor wie</Link></li>
                 <li><Link to="/faq">FAQ</Link></li>
+                <li><Link to="/contact">Contact</Link></li>
                 <li><Link to="/blog">Blog</Link></li>
               </ul>
             </div>
@@ -468,6 +469,7 @@ export default function BigFooter() {
               <Link to="/privacy">Privacy</Link>
               <Link to="/terms">Voorwaarden</Link>
               <Link to="/data-deletion">Gegevensverwijdering</Link>
+              <Link to="/contact">Contact</Link>
               <Link to="/faq">FAQ</Link>
               <Link to="/prijzen">Prijzen</Link>
             </div>

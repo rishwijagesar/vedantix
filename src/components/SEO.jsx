@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 
 export default function SEO({
@@ -6,6 +7,27 @@ export default function SEO({
   canonical,
   schemas = []
 }) {
+  useEffect(() => {
+    const fallbackSelectors = [
+      'meta[name="description"]:not([data-rh])',
+      'meta[name="robots"]:not([data-rh])',
+      'link[rel="canonical"]:not([data-rh])',
+      'meta[property="og:title"]:not([data-rh])',
+      'meta[property="og:description"]:not([data-rh])',
+      'meta[property="og:type"]:not([data-rh])',
+      'meta[property="og:url"]:not([data-rh])',
+      'meta[property="og:image"]:not([data-rh])',
+      'meta[name="twitter:card"]:not([data-rh])',
+      'meta[name="twitter:title"]:not([data-rh])',
+      'meta[name="twitter:description"]:not([data-rh])',
+      'meta[name="twitter:image"]:not([data-rh])',
+    ];
+
+    document.querySelectorAll(fallbackSelectors.join(",")).forEach((element) => {
+      element.remove();
+    });
+  }, [title, description, canonical]);
+
   return (
     <Helmet>
       <title>{title}</title>

@@ -526,6 +526,7 @@ export const basePages = [
   { path: "/prijzen", priority: "0.8" },
   { path: "/proces", priority: "0.8" },
   { path: "/faq", priority: "0.7" },
+  { path: "/contact", priority: "0.7" },
   { path: "/privacy", priority: "0.4" },
   { path: "/terms", priority: "0.4" },
   { path: "/data-deletion", priority: "0.4" },

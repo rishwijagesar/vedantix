@@ -28,6 +28,7 @@ const VedantixHome = lazy(() => import("./pages/VedantixHome"));
 const VoorWie = lazy(() => import("./pages/VoorWie"));
 const Voorwaarden = lazy(() => import("./pages/Voorwaarden"));
 const FAQ = lazy(() => import("./pages/FAQ"));
+const Contact = lazy(() => import("./pages/Contact"));
 const PricingDetails = lazy(() => import("./pages/PricingDetails.jsx"));
 const CustomerPreviewPage = lazy(() => import("./pages/CustomerPreviewPage.jsx"));
 const Base44LoginRedirect = lazy(() => import("./pages/Base44LoginRedirect.jsx"));
@@ -71,6 +72,7 @@ function AppRoutes() {
         <Route path="/voorwie" element={<VoorWie />} />
         <Route path="/voorwaarden" element={<Navigate to="/terms" replace />} />
         <Route path="/faq" element={<FAQ />} />
+        <Route path="/contact" element={<Contact />} />
 
         <Route path="/website-kapper" element={<WebsiteKapper />} />
         <Route path="/website-salon" element={<WebsiteSalon />} />
@@ -114,8 +116,6 @@ function AppRoutes() {
         <Route path="/klantenportaal/login" element={<Navigate to="/klantenportaal" replace />} />
         <Route path="/clientportal/login" element={<Navigate to="/klantenportaal" replace />} />
 
-        <Route path="/contact" element={<Navigate to="/#cta" replace />} />
-
         <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="/Home" element={<Navigate to="/" replace />} />
         <Route path="/Planning" element={<Navigate to="/planning" replace />} />
@@ -130,6 +130,7 @@ function AppRoutes() {
         <Route path="/Terms" element={<Navigate to="/terms" replace />} />
         <Route path="/DataDeletion" element={<Navigate to="/data-deletion" replace />} />
         <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
+        <Route path="/Contact" element={<Navigate to="/contact" replace />} />
         <Route path="/CRM" element={<Navigate to="/admin" replace />} />
         <Route path="/ClientPortal" element={<Navigate to="/klantenportaal" replace />} />
 
