@@ -15,7 +15,6 @@ import {
 } from "lucide-react";
 import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
-import BigFooter from "../components/BigFooter";
 import { fetchPricingSummary } from "../api/pricing.api";
 import { CONTACT } from "../constants/contact";
 import { createBreadcrumbSchema } from "../utils/schema";
@@ -652,7 +651,6 @@ export default function Prijzen() {
           </section>
         </main>
 
-        <BigFooter />
       </div>
     </>
   );

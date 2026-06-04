@@ -317,28 +317,6 @@ const FAQ_STYLES = `
     color: #0a1628;
   }
 
-  .faq-footer {
-    margin-top: 48px;
-    padding: 26px 20px 34px;
-    text-align: center;
-    background: #0a1628;
-    color: rgba(255,255,255,0.6);
-    font-size: 0.86rem;
-  }
-
-  .faq-footer a {
-    color: rgba(255,255,255,0.78);
-    transition: color 0.2s ease;
-  }
-
-  .faq-footer a:hover {
-    color: #ffffff;
-  }
-
-  .faq-footer strong {
-    color: #ffffff;
-  }
-
   @media (max-width: 768px) {
     .faq-hero {
       padding: 96px 0 42px;
@@ -502,13 +480,6 @@ export default function FAQ() {
           </div>
         </main>
 
-        <footer className="faq-footer">
-          <p style={{ margin: 0 }}>
-            © 2026 <strong>Vedantix</strong> — <Link to="/">Home</Link> •{" "}
-            <Link to="/terms">Algemene voorwaarden</Link> •{" "}
-            <Link to="/privacy">Privacybeleid</Link>
-          </p>
-        </footer>
       </div>
     </>
   );

@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
-import BigFooter from "../components/BigFooter";
 import { CONTACT } from "../constants/contact";
 import { createBreadcrumbSchema } from "../utils/schema";
 
@@ -875,7 +874,6 @@ export default function Contact() {
           </section>
         </main>
 
-        <BigFooter />
       </div>
     </>
   );

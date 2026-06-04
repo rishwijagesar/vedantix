@@ -212,9 +212,6 @@ const PAGE_STYLES = `
   .modal-page-list{display:flex;flex-direction:column;gap:6px}
   .modal-action-row{margin-top:24px;display:flex;gap:12px;flex-wrap:wrap}
 
-  .templates-footer{background:#0a1628;color:rgba(255,255,255,.45);padding:28px 5%;text-align:center;font-size:.83rem}
-  .templates-footer-link{color:rgba(255,255,255,.45);text-decoration:none}
-
   .wa-fab{position:fixed;bottom:28px;right:28px;z-index:9999;font-family:'Inter',sans-serif}
   .wa-toggle{width:60px;height:60px;border-radius:50%;background:#25d366;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(37,211,102,.5);display:flex;align-items:center;justify-content:center;transition:transform .2s;position:relative}
   .wa-toggle:hover{transform:scale(1.08)}
@@ -879,19 +876,6 @@ export default function Templates() {
           setSelectedPkg={setSelectedPkg}
           onClose={() => setActiveTemplate(null)}
         />
-
-        <footer className="templates-footer">
-          <p>
-            © 2026 <strong style={{ color: "#fff" }}>Vedantix</strong> —{" "}
-            <Link to="/home" className="templates-footer-link">
-              Home
-            </Link>{" "}
-            &nbsp;|&nbsp;{" "}
-            <Link to="/starters" className="templates-footer-link">
-              Offerte aanvragen
-            </Link>
-          </p>
-        </footer>
 
         <WAWidget />
       </div>

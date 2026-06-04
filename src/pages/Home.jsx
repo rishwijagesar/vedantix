@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
-import BigFooter from "../components/BigFooter";
 import HomeHero from "./HomeHero";
 import ClientCasesSection from "../components/home/ClientCasesSection";
 import { CONTACT } from "../constants/contact";
@@ -442,7 +441,6 @@ export default function Home() {
           </section>
         </main>
 
-        <BigFooter />
       </div>
     </>
   );

@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
-import BigFooter from "../components/BigFooter";
 import { createBreadcrumbSchema } from "../utils/schema";
 
 const PAGE_STYLES = `
@@ -815,7 +814,6 @@ export default function VoorWie() {
           </section>
         </main>
 
-        <BigFooter />
       </div>
     </>
   );

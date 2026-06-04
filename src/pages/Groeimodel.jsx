@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
-import BigFooter from "../components/BigFooter";
 import { createBreadcrumbSchema, createServiceSchema } from "../utils/schema";
 import "../styles/groeimodel.css";
 
@@ -314,7 +313,6 @@ export default function Groeimodel() {
           </section>
         </main>
 
-        <BigFooter />
       </div>
     </>
   );

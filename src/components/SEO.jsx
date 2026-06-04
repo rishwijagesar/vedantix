@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 
 export default function SEO({
   title,
@@ -8,6 +7,8 @@ export default function SEO({
   schemas = []
 }) {
   useEffect(() => {
+    const head = document.head;
+    const managedSelector = "[data-vedantix-seo='true']";
     const fallbackSelectors = [
       'meta[name="description"]:not([data-rh])',
       'meta[name="robots"]:not([data-rh])',
@@ -23,34 +24,53 @@ export default function SEO({
       'meta[name="twitter:image"]:not([data-rh])',
     ];
 
-    document.querySelectorAll(fallbackSelectors.join(",")).forEach((element) => {
-      element.remove();
+    document
+      .querySelectorAll([...fallbackSelectors, managedSelector].join(","))
+      .forEach((element) => {
+        element.remove();
+      });
+
+    document.title = title;
+
+    const appendElement = (tagName, attributes, textContent) => {
+      const element = document.createElement(tagName);
+      element.setAttribute("data-vedantix-seo", "true");
+
+      Object.entries(attributes).forEach(([name, value]) => {
+        if (value) {
+          element.setAttribute(name, value);
+        }
+      });
+
+      if (textContent) {
+        element.textContent = textContent;
+      }
+
+      head.appendChild(element);
+      return element;
+    };
+
+    appendElement("meta", { name: "description", content: description });
+    appendElement("meta", { name: "robots", content: "index, follow" });
+    appendElement("link", { rel: "canonical", href: canonical });
+    appendElement("meta", { property: "og:title", content: title });
+    appendElement("meta", { property: "og:description", content: description });
+    appendElement("meta", { property: "og:type", content: "website" });
+    appendElement("meta", { property: "og:url", content: canonical });
+    appendElement("meta", { property: "og:image", content: "https://vedantix.nl/preview.png" });
+    appendElement("meta", { name: "twitter:card", content: "summary_large_image" });
+    appendElement("meta", { name: "twitter:title", content: title });
+    appendElement("meta", { name: "twitter:description", content: description });
+    appendElement("meta", { name: "twitter:image", content: "https://vedantix.nl/preview.png" });
+
+    schemas.forEach((schema) => {
+      appendElement(
+        "script",
+        { type: "application/ld+json" },
+        JSON.stringify(schema),
+      );
     });
-  }, [title, description, canonical]);
+  }, [title, description, canonical, schemas]);
 
-  return (
-    <Helmet>
-      <title>{title}</title>
-      <meta name="description" content={description} />
-      <meta name="robots" content="index, follow" />
-      <link rel="canonical" href={canonical} />
-
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content={canonical} />
-      <meta property="og:image" content="https://vedantix.nl/preview.png" />
-
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content="https://vedantix.nl/preview.png" />
-
-      {schemas.map((schema, index) => (
-        <script key={index} type="application/ld+json">
-          {JSON.stringify(schema)}
-        </script>
-      ))}
-    </Helmet>
-  );
+  return null;
 }

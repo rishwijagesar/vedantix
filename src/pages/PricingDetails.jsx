@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
-import BigFooter from "../components/BigFooter";
 import "../styles/pricing-details.css";
 import { fetchPackages } from "../api/pricing.api";
 
@@ -280,7 +279,6 @@ export default function PricingDetails() {
           </section>
         </main>
 
-        <BigFooter />
       </div>
     </>
   );

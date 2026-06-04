@@ -263,11 +263,6 @@ export default function VedantixHome() {
         .crow{display:flex;align-items:center;gap:12px;margin-bottom:13px}
         .cic{width:38px;height:38px;background:#f7f9fc;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
         .crow span{font-size:0.9rem;font-weight:500}
-        footer{background:#0a1628;color:rgba(255,255,255,0.45);padding:36px 5%;text-align:center;font-size:0.83rem}
-        footer strong{color:#fff}
-        footer a{color:rgba(255,255,255,0.45);text-decoration:none}
-        footer a:hover{color:#00c2ff}
-        .flinks{display:flex;justify-content:center;gap:24px;margin-top:12px;flex-wrap:wrap}
         @media(max-width:768px){
           .hero h1{font-size:2.2rem;letter-spacing:-0.5px}
           .hero p{font-size:0.97rem}
@@ -451,19 +446,6 @@ export default function VedantixHome() {
           <ContactForm />
         </div>
       </section>
-
-      {/* FOOTER */}
-      <footer>
-        <p>© 2026 <strong>Vedantix</strong> — Professionele websites voor elk bedrijf.</p>
-        <div className="flinks">
-          <a href="/Privacy">Privacybeleid</a>
-          <a href="/terms">Algemene voorwaarden</a>
-          <a href="/Proces">Hoe het werkt</a>
-          <a href="/Planning">Afspraak plannen</a>
-          <a href="/Prijzen">Prijzen vergelijken</a>
-          <a href="/Templates">Templates</a>
-        </div>
-      </footer>
     </div>
   );
 }

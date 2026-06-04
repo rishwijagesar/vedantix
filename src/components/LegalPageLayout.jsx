@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import BigFooter from "./BigFooter";
 import NavBar from "./NavBar";
 import SEO from "./SEO";
 
@@ -308,7 +307,6 @@ export default function LegalPageLayout({
           </div>
         </main>
 
-        <BigFooter />
       </div>
     </>
   );

@@ -1,7 +1,8 @@
 import React, { Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MetaPixel from "./components/MetaPixel";
+import BigFooter from "./components/BigFooter";
 import AdminLayout from "./pages/admin/AdminLayout";
 import CustomerDetailPage from "./pages/admin/pages/CustomerDetailPage";
 import CustomersPage from "./pages/admin/pages/CustomersPage";
@@ -54,39 +55,51 @@ function AdminApp({ children }) {
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 
+function PublicLayout() {
+  return (
+    <>
+      <Outlet />
+      <BigFooter />
+    </>
+  );
+}
+
 function AppRoutes() {
   return (
     <Suspense fallback={null}>
       <MetaPixel />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/planning" element={<Planning />} />
-        <Route path="/prijzen" element={<Prijzen />} />
-        <Route path="/pakketvergelijking" element={<PricingDetails />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/terms" element={<Voorwaarden />} />
-        <Route path="/data-deletion" element={<DataDeletion />} />
-        <Route path="/groeimodel" element={<Groeimodel />} />
-        <Route path="/proces" element={<Proces />} />
-        <Route path="/starters" element={<Starters />} />
-        <Route path="/templates" element={<Templates />} />
-        <Route path="/vedantixhome" element={<VedantixHome />} />
-        <Route path="/voorwie" element={<VoorWie />} />
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/planning" element={<Planning />} />
+          <Route path="/prijzen" element={<Prijzen />} />
+          <Route path="/pakketvergelijking" element={<PricingDetails />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Voorwaarden />} />
+          <Route path="/data-deletion" element={<DataDeletion />} />
+          <Route path="/groeimodel" element={<Groeimodel />} />
+          <Route path="/proces" element={<Proces />} />
+          <Route path="/starters" element={<Starters />} />
+          <Route path="/templates" element={<Templates />} />
+          <Route path="/vedantixhome" element={<VedantixHome />} />
+          <Route path="/voorwie" element={<VoorWie />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/contact" element={<Contact />} />
+
+          <Route path="/website-kapper" element={<WebsiteKapper />} />
+          <Route path="/website-salon" element={<WebsiteSalon />} />
+          <Route path="/website-klusbedrijf" element={<WebsiteKlusbedrijf />} />
+          <Route path="/website-restaurant" element={<WebsiteRestaurant />} />
+          <Route path="/website-fotograaf" element={<WebsiteFotograaf />} />
+          <Route path="/website-schoonmaakbedrijf" element={<WebsiteSchoonmaakbedrijf />} />
+          <Route path="/website-zzp" element={<WebsiteZZP />} />
+
+          <Route path="/website/:niche/:stad" element={<SeoCityPage />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+        </Route>
+
         <Route path="/voorwaarden" element={<Navigate to="/terms" replace />} />
-        <Route path="/faq" element={<FAQ />} />
-        <Route path="/contact" element={<Contact />} />
-
-        <Route path="/website-kapper" element={<WebsiteKapper />} />
-        <Route path="/website-salon" element={<WebsiteSalon />} />
-        <Route path="/website-klusbedrijf" element={<WebsiteKlusbedrijf />} />
-        <Route path="/website-restaurant" element={<WebsiteRestaurant />} />
-        <Route path="/website-fotograaf" element={<WebsiteFotograaf />} />
-        <Route path="/website-schoonmaakbedrijf" element={<WebsiteSchoonmaakbedrijf />} />
-        <Route path="/website-zzp" element={<WebsiteZZP />} />
-
-        <Route path="/website/:niche/:stad" element={<SeoCityPage />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/blog/:slug" element={<BlogPost />} />
 
         <Route path="/login" element={<Base44LoginRedirect />} />
         <Route path="/admin/login" element={<AdminLoginPage />} />
