@@ -1,0 +1,54 @@
+{
+  "name": "FinancieelItem",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "inkomst",
+        "uitgave"
+      ],
+      "description": "Type: inkomst of uitgave"
+    },
+    "omschrijving": {
+      "type": "string",
+      "description": "Omschrijving van het item"
+    },
+    "bedrag": {
+      "type": "number",
+      "description": "Bedrag in euro"
+    },
+    "datum": {
+      "type": "string",
+      "format": "date",
+      "description": "Datum van het item"
+    },
+    "herhaling": {
+      "type": "string",
+      "enum": [
+        "eenmalig",
+        "dagelijks",
+        "wekelijks",
+        "maandelijks",
+        "kwartaal",
+        "halfjaar",
+        "jaarlijks"
+      ],
+      "default": "eenmalig",
+      "description": "Herhaalfrequentie"
+    },
+    "categorie": {
+      "type": "string",
+      "description": "Categorie (bijv. hosting, software, loon)"
+    },
+    "notities": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "omschrijving",
+    "bedrag",
+    "datum"
+  ]
+}

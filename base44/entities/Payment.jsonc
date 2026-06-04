@@ -1,0 +1,65 @@
+{
+  "name": "Payment",
+  "type": "object",
+  "properties": {
+    "customer_id": {
+      "type": "string"
+    },
+    "factuurnummer": {
+      "type": "string"
+    },
+    "beschrijving": {
+      "type": "string"
+    },
+    "bedrag": {
+      "type": "number"
+    },
+    "btw_bedrag": {
+      "type": "number",
+      "default": 0
+    },
+    "totaal_bedrag": {
+      "type": "number"
+    },
+    "factuurdatum": {
+      "type": "string",
+      "format": "date"
+    },
+    "vervaldatum": {
+      "type": "string",
+      "format": "date"
+    },
+    "betaaldatum": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "openstaand",
+        "betaald",
+        "verlopen",
+        "geannuleerd",
+        "gedeeltelijk_betaald"
+      ],
+      "default": "openstaand"
+    },
+    "opmerkingen": {
+      "type": "string"
+    },
+    "pdf_url": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optionele omschrijving"
+    }
+  },
+  "required": [
+    "customer_id",
+    "factuurnummer",
+    "bedrag",
+    "factuurdatum"
+  ]
+}

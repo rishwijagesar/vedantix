@@ -1,0 +1,135 @@
+{
+  "name": "CustomerProfile",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string",
+      "description": "Gekoppeld user ID"
+    },
+    "bedrijfsnaam": {
+      "type": "string"
+    },
+    "voornaam": {
+      "type": "string"
+    },
+    "achternaam": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "telefoon": {
+      "type": "string"
+    },
+    "adres": {
+      "type": "string"
+    },
+    "postcode": {
+      "type": "string"
+    },
+    "plaats": {
+      "type": "string"
+    },
+    "land": {
+      "type": "string",
+      "default": "Nederland"
+    },
+    "kvk_nummer": {
+      "type": "string"
+    },
+    "btw_nummer": {
+      "type": "string"
+    },
+    "iban": {
+      "type": "string"
+    },
+    "domeinnaam": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "nieuw",
+        "intake",
+        "in_opbouw",
+        "wachten_op_klant",
+        "live",
+        "onderhoud",
+        "opgezegd",
+        "gearchiveerd"
+      ],
+      "default": "nieuw"
+    },
+    "website_status": {
+      "type": "string",
+      "enum": [
+        "offline",
+        "in_aanbouw",
+        "online",
+        "probleem"
+      ],
+      "default": "offline"
+    },
+    "project_status": {
+      "type": "string",
+      "enum": [
+        "nieuw",
+        "in_progress",
+        "afgerond",
+        "on_hold"
+      ],
+      "default": "nieuw"
+    },
+    "startdatum": {
+      "type": "string",
+      "format": "date"
+    },
+    "contract_status": {
+      "type": "string",
+      "enum": [
+        "geen",
+        "verzonden",
+        "getekend",
+        "verlopen"
+      ],
+      "default": "geen"
+    },
+    "opzeg_status": {
+      "type": "string",
+      "enum": [
+        "actief",
+        "opzegging_aangevraagd",
+        "opgezegd"
+      ],
+      "default": "actief"
+    },
+    "opzeg_datum": {
+      "type": "string",
+      "format": "date"
+    },
+    "interne_notities": {
+      "type": "string"
+    },
+    "totaal_betaald": {
+      "type": "number",
+      "default": 0
+    },
+    "openstaand_bedrag": {
+      "type": "number",
+      "default": 0
+    },
+    "is_archived": {
+      "type": "boolean",
+      "default": false
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optionele omschrijving"
+    }
+  },
+  "required": [
+    "bedrijfsnaam",
+    "email"
+  ]
+}

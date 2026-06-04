@@ -1,0 +1,32 @@
+{
+  "name": "Availability",
+  "type": "object",
+  "properties": {
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Datum van beschikbaarheid"
+    },
+    "time_slots": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Beschikbare tijdslots"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Of de beschikbaarheid actief is"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optionele omschrijving"
+    }
+  },
+  "required": [
+    "date",
+    "time_slots"
+  ]
+}

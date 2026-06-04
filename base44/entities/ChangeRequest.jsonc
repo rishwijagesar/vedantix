@@ -1,0 +1,46 @@
+{
+  "name": "ChangeRequest",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ID van de klant"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Naam van de klant"
+    },
+    "description": {
+      "type": "string",
+      "description": "Omschrijving van de wijziging"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "done"
+      ],
+      "default": "pending",
+      "description": "Status van het verzoek"
+    },
+    "is_billable": {
+      "type": "boolean",
+      "default": false,
+      "description": "Of de wijziging betaald is"
+    },
+    "cost": {
+      "type": "number",
+      "default": 0,
+      "description": "Kosten van de wijziging"
+    },
+    "change_number": {
+      "type": "number",
+      "description": "Wijzigingsnummer"
+    }
+  },
+  "required": [
+    "client_id",
+    "description"
+  ]
+}

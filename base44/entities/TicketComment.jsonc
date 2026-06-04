@@ -1,0 +1,31 @@
+{
+  "name": "TicketComment",
+  "type": "object",
+  "properties": {
+    "ticket_id": {
+      "type": "string"
+    },
+    "auteur": {
+      "type": "string"
+    },
+    "rol": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "klant"
+      ],
+      "default": "admin"
+    },
+    "bericht": {
+      "type": "string"
+    },
+    "is_intern": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "ticket_id",
+    "bericht"
+  ]
+}

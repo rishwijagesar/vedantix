@@ -1,0 +1,55 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "customer_id": {
+      "type": "string"
+    },
+    "naam": {
+      "type": "string"
+    },
+    "maandbedrag": {
+      "type": "number",
+      "default": 0
+    },
+    "setup_kosten": {
+      "type": "number",
+      "default": 0
+    },
+    "startdatum": {
+      "type": "string",
+      "format": "date"
+    },
+    "volgende_factuurdatum": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "actief",
+        "gepauzeerd",
+        "opgezegd",
+        "verlopen"
+      ],
+      "default": "actief"
+    },
+    "opzeg_datum": {
+      "type": "string",
+      "format": "date"
+    },
+    "notities": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optionele omschrijving"
+    }
+  },
+  "required": [
+    "customer_id",
+    "naam",
+    "maandbedrag"
+  ]
+}

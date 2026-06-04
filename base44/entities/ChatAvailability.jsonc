@@ -1,0 +1,33 @@
+{
+  "name": "ChatAvailability",
+  "type": "object",
+  "properties": {
+    "day_of_week": {
+      "type": "number",
+      "description": "Dag van de week (0=Zondag, 1=Maandag, ... 6=Zaterdag)"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Starttijd bijv. 09:00"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "Eindtijd bijv. 17:00"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Of deze dag actief is"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optionele omschrijving"
+    }
+  },
+  "required": [
+    "day_of_week",
+    "start_time",
+    "end_time"
+  ]
+}

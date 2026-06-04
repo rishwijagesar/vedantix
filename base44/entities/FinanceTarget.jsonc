@@ -1,0 +1,51 @@
+{
+  "name": "FinanceTarget",
+  "type": "object",
+  "properties": {
+    "period": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "quarterly",
+        "yearly"
+      ],
+      "description": "Periode van het doel"
+    },
+    "year": {
+      "type": "number",
+      "description": "Jaar"
+    },
+    "quarter": {
+      "type": "number",
+      "description": "Kwartaal (1-4, alleen voor quarterly)"
+    },
+    "month": {
+      "type": "number",
+      "description": "Maand (1-12, alleen voor monthly)"
+    },
+    "revenue_target": {
+      "type": "number",
+      "default": 0,
+      "description": "Omzetdoelstelling in euro"
+    },
+    "profit_target": {
+      "type": "number",
+      "default": 0,
+      "description": "Winstdoelstelling in euro"
+    },
+    "clients_target": {
+      "type": "number",
+      "default": 0,
+      "description": "Doelstelling nieuwe klanten"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optionele omschrijving"
+    }
+  },
+  "required": [
+    "period",
+    "year"
+  ]
+}

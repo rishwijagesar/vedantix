@@ -1,0 +1,42 @@
+{
+  "name": "Document",
+  "type": "object",
+  "properties": {
+    "customer_id": {
+      "type": "string"
+    },
+    "naam": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "contract",
+        "factuur",
+        "offerte",
+        "overig"
+      ],
+      "default": "overig"
+    },
+    "bestand_url": {
+      "type": "string"
+    },
+    "notities": {
+      "type": "string"
+    },
+    "is_zichtbaar_voor_klant": {
+      "type": "boolean",
+      "default": true
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optionele omschrijving"
+    }
+  },
+  "required": [
+    "customer_id",
+    "naam",
+    "bestand_url"
+  ]
+}

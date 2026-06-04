@@ -1,0 +1,36 @@
+{
+  "name": "ChatMessage",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Unieke sessie ID van de bezoeker"
+    },
+    "visitor_name": {
+      "type": "string",
+      "description": "Naam van de bezoeker"
+    },
+    "message": {
+      "type": "string",
+      "description": "Inhoud van het bericht"
+    },
+    "from": {
+      "type": "string",
+      "enum": [
+        "visitor",
+        "admin"
+      ],
+      "description": "Afzender"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false,
+      "description": "Of het bericht gelezen is"
+    }
+  },
+  "required": [
+    "session_id",
+    "message",
+    "from"
+  ]
+}

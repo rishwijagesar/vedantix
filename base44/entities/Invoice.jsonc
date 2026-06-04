@@ -1,0 +1,79 @@
+{
+  "name": "Invoice",
+  "type": "object",
+  "properties": {
+    "invoice_number": {
+      "type": "string",
+      "description": "Factuurnummer bijv. VDX-2026-001"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "ID van de klant"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Naam van de klant"
+    },
+    "client_email": {
+      "type": "string",
+      "description": "E-mail van de klant"
+    },
+    "change_request_id": {
+      "type": "string",
+      "description": "ID van het wijzigingsverzoek"
+    },
+    "description": {
+      "type": "string",
+      "description": "Omschrijving van de wijziging"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Bedrag excl. BTW"
+    },
+    "vat_rate": {
+      "type": "number",
+      "default": 21,
+      "description": "BTW percentage"
+    },
+    "vat_amount": {
+      "type": "number",
+      "description": "BTW bedrag"
+    },
+    "total_amount": {
+      "type": "number",
+      "description": "Totaal incl. BTW"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "concept",
+        "verzonden",
+        "betaald",
+        "geannuleerd"
+      ],
+      "default": "concept",
+      "description": "Status van de factuur"
+    },
+    "issue_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Factuurdatum"
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Vervaldatum (standaard 14 dagen)"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Opmerkingen"
+    }
+  },
+  "required": [
+    "invoice_number",
+    "client_id",
+    "amount",
+    "status",
+    "issue_date"
+  ]
+}

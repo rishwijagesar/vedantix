@@ -1,0 +1,49 @@
+{
+  "name": "EmailLog",
+  "type": "object",
+  "properties": {
+    "client_id": {
+      "type": "string",
+      "description": "ID van de klant"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Naam van de klant"
+    },
+    "client_email": {
+      "type": "string",
+      "description": "E-mailadres van de klant"
+    },
+    "template_name": {
+      "type": "string",
+      "description": "Naam van het gebruikte template"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Onderwerp van de e-mail"
+    },
+    "body": {
+      "type": "string",
+      "description": "Inhoud van de e-mail"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Tijdstip van verzending"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "failed"
+      ],
+      "default": "sent",
+      "description": "Status van de verzending"
+    }
+  },
+  "required": [
+    "client_id",
+    "subject",
+    "body"
+  ]
+}

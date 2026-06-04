@@ -1,0 +1,51 @@
+{
+  "name": "Appointment",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Naam van de klant"
+    },
+    "email": {
+      "type": "string",
+      "description": "E-mailadres"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Telefoonnummer"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Datum van afspraak"
+    },
+    "time": {
+      "type": "string",
+      "description": "Tijd van afspraak"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled"
+      ],
+      "default": "pending",
+      "description": "Status van de afspraak"
+    },
+    "package_interest": {
+      "type": "string",
+      "description": "Pakket interesse"
+    },
+    "message": {
+      "type": "string",
+      "description": "Bericht van de klant"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "date",
+    "time"
+  ]
+}

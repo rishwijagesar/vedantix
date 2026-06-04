@@ -1,0 +1,96 @@
+{
+  "name": "Client",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Naam van de klant"
+    },
+    "email": {
+      "type": "string",
+      "description": "E-mailadres"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Telefoonnummer"
+    },
+    "company": {
+      "type": "string",
+      "description": "Bedrijfsnaam"
+    },
+    "package": {
+      "type": "string",
+      "enum": [
+        "starter",
+        "business",
+        "premium"
+      ],
+      "default": "business",
+      "description": "Pakket type"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Domeinnaam"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Notities"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "lead",
+        "ordered",
+        "in_progress",
+        "delivered",
+        "active"
+      ],
+      "default": "lead",
+      "description": "Klant status"
+    },
+    "site_status": {
+      "type": "string",
+      "enum": [
+        "offline",
+        "building",
+        "online",
+        "issue"
+      ],
+      "default": "building",
+      "description": "Site status"
+    },
+    "site_url": {
+      "type": "string",
+      "description": "URL van de website"
+    },
+    "order_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Besteldatum"
+    },
+    "free_changes_total": {
+      "type": "number",
+      "default": 0,
+      "description": "Totaal gratis wijzigingen"
+    },
+    "free_changes_used": {
+      "type": "number",
+      "default": 0,
+      "description": "Gebruikte gratis wijzigingen"
+    },
+    "storage_limit_mb": {
+      "type": "number",
+      "default": 500,
+      "description": "Opslag limiet in MB"
+    },
+    "storage_used_mb": {
+      "type": "number",
+      "default": 0,
+      "description": "Gebruikte opslag in MB"
+    }
+  },
+  "required": [
+    "name",
+    "email"
+  ]
+}

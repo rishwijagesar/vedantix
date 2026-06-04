@@ -1,0 +1,66 @@
+{
+  "name": "Ticket",
+  "type": "object",
+  "properties": {
+    "customer_id": {
+      "type": "string"
+    },
+    "klant_naam": {
+      "type": "string"
+    },
+    "titel": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "wijzigingsverzoek",
+        "support",
+        "vraag",
+        "opzegging",
+        "overig"
+      ],
+      "default": "support"
+    },
+    "beschrijving": {
+      "type": "string"
+    },
+    "prioriteit": {
+      "type": "string",
+      "enum": [
+        "laag",
+        "normaal",
+        "hoog",
+        "spoed"
+      ],
+      "default": "normaal"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "nieuw",
+        "in_behandeling",
+        "wachten_op_klant",
+        "in_uitvoering",
+        "afgerond",
+        "gesloten"
+      ],
+      "default": "nieuw"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "interne_notities": {
+      "type": "string"
+    },
+    "bijlage_url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "customer_id",
+    "titel",
+    "beschrijving"
+  ]
+}

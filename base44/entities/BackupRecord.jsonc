@@ -1,0 +1,35 @@
+{
+  "name": "BackupRecord",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "auto"
+      ],
+      "default": "manual",
+      "description": "Handmatig of automatisch"
+    },
+    "entity_count": {
+      "type": "number",
+      "description": "Aantal entiteiten in de backup"
+    },
+    "record_count": {
+      "type": "number",
+      "description": "Totaal aantal records"
+    },
+    "data": {
+      "type": "object",
+      "description": "Volledige backup data"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Optionele omschrijving"
+    }
+  },
+  "required": [
+    "type"
+  ]
+}

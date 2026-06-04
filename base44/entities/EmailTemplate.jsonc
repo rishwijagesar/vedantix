@@ -1,0 +1,42 @@
+{
+  "name": "EmailTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Naam van het template"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Onderwerp van de e-mail"
+    },
+    "body": {
+      "type": "string",
+      "description": "Inhoud van de e-mail"
+    },
+    "trigger": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "order_received",
+        "status_change",
+        "change_request",
+        "delivery"
+      ],
+      "default": "manual",
+      "description": "Wanneer het template wordt getriggerd"
+    },
+    "variables": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Beschikbare variabelen"
+    }
+  },
+  "required": [
+    "name",
+    "subject",
+    "body"
+  ]
+}

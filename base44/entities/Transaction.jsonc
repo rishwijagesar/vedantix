@@ -1,0 +1,65 @@
+{
+  "name": "Transaction",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "income",
+        "expense"
+      ],
+      "description": "Type: inkomst of uitgave"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "website_sale",
+        "change_request",
+        "hosting_renewal",
+        "other_income",
+        "software",
+        "marketing",
+        "tax",
+        "office",
+        "other_expense"
+      ],
+      "description": "Categorie"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Bedrag in euro"
+    },
+    "description": {
+      "type": "string",
+      "description": "Omschrijving"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Datum van transactie"
+    },
+    "client_id": {
+      "type": "string",
+      "description": "Gekoppelde klant (optioneel)"
+    },
+    "client_name": {
+      "type": "string",
+      "description": "Naam van de klant"
+    },
+    "is_tax_deductible": {
+      "type": "boolean",
+      "default": false,
+      "description": "Aftrekbaar voor belasting"
+    },
+    "invoice_number": {
+      "type": "string",
+      "description": "Factuurnummer"
+    }
+  },
+  "required": [
+    "type",
+    "amount",
+    "date",
+    "category"
+  ]
+}
