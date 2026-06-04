@@ -14,7 +14,7 @@ import {
 import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
 import { CONTACT } from "../constants/contact";
-import { createBreadcrumbSchema } from "../utils/schema";
+import { createBreadcrumbSchema, createFAQSchema } from "../utils/schema";
 
 const HELP_OPTIONS = [
   "Nieuwe website",
@@ -67,6 +67,21 @@ const FAQS = [
     question: "Helpen jullie ook met SEO?",
     answer:
       "Ja. We letten op technische SEO, lokale vindbaarheid, paginastructuur, teksten, metadata en duidelijke call-to-actions.",
+  },
+  {
+    question: "Wat doet Vedantix precies?",
+    answer:
+      "Vedantix helpt lokale ondernemers met websites, SEO, content, hosting, onderhoud en online zichtbaarheid zodat hun bedrijf meer vertrouwen en meer aanvragen kan krijgen.",
+  },
+  {
+    question: "Waarom is een professionele website belangrijk?",
+    answer:
+      "Een professionele website maakt direct duidelijk wat je doet, voor wie je werkt en waarom klanten contact met je kunnen opnemen. Dat vergroot vertrouwen en verlaagt de drempel voor aanvragen.",
+  },
+  {
+    question: "Kan Vedantix helpen om beter gevonden te worden in Google?",
+    answer:
+      "Ja. Vedantix verbetert lokale vindbaarheid met duidelijke structuur, relevante content, metadata, snelheid en pagina’s die aansluiten op zoekvragen van klanten.",
   },
   {
     question: "Hoe snel kan mijn website online staan?",
@@ -557,18 +572,7 @@ export default function Contact() {
     return `${CONTACT.WHATSAPP_URL}?text=${text}`;
   }, []);
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQS.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
-    })),
-  };
+  const faqSchema = createFAQSchema(FAQS);
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://vedantix.nl/" },
@@ -609,7 +613,6 @@ export default function Contact() {
 
     setSubmitting(true);
 
-    // TODO: Replace this mailto fallback with a POST to a public contact API when that endpoint exists.
     window.setTimeout(() => {
       const subject = encodeURIComponent(`Contactaanvraag Vedantix - ${form.helpType}`);
       const body = encodeURIComponent(

@@ -23,6 +23,7 @@ import SEO from "../components/SEO";
 import HomeHero from "./HomeHero";
 import ClientCasesSection from "../components/home/ClientCasesSection";
 import { CONTACT } from "../constants/contact";
+import { createBreadcrumbSchema, createFAQSchema } from "../utils/schema";
 import "../styles/home.css";
 import "../styles/home-hero.css";
 
@@ -122,6 +123,24 @@ const DIFFERENCES = [
   },
 ];
 
+const AI_READINESS_CARDS = [
+  {
+    title: "Beter zichtbaar in Google",
+    text: "Wij optimaliseren jouw website voor zoekmachines zodat potentiële klanten je makkelijker kunnen vinden.",
+    icon: Search,
+  },
+  {
+    title: "Klaar voor AI-zoekmachines",
+    text: "Wij structureren content zodat AI-systemen jouw bedrijf beter begrijpen.",
+    icon: Sparkles,
+  },
+  {
+    title: "Meer lokale zichtbaarheid",
+    text: "Word beter gevonden door klanten in jouw regio.",
+    icon: Target,
+  },
+];
+
 const SCAN_ITEMS = [
   "Vindbaarheid",
   "SEO",
@@ -145,6 +164,29 @@ const CTA_META = [
   "Voor lokale ondernemers",
   "Focus op groei",
   "Eén aanspreekpunt",
+];
+
+const HOMEPAGE_FAQS = [
+  {
+    question: "Wat doet Vedantix?",
+    answer:
+      "Vedantix helpt lokale ondernemers groeien met websites, SEO, content, online zichtbaarheid, hosting en onderhoud. Het doel is meer vertrouwen, meer aanvragen en minder technische zorgen.",
+  },
+  {
+    question: "Hoe helpt Vedantix ondernemers beter gevonden te worden in Google?",
+    answer:
+      "Vedantix bouwt websites met een duidelijke paginastructuur, lokale zoekwoorden, snelle techniek, goede metadata en content die aansluit op vragen van potentiële klanten.",
+  },
+  {
+    question: "Waarom is een professionele website belangrijk?",
+    answer:
+      "Een professionele website wekt vertrouwen, maakt duidelijk wat je aanbiedt en verlaagt de drempel om contact op te nemen via telefoon, WhatsApp of een offerteaanvraag.",
+  },
+  {
+    question: "Waarom kiezen ondernemers voor Vedantix?",
+    answer:
+      "Ondernemers kiezen voor Vedantix omdat website, hosting, onderhoud, SEO en ondersteuning onder één dak worden geregeld met focus op zichtbaarheid en groei.",
+  },
 ];
 
 function SectionCta({ title, text, dark = false }) {
@@ -205,13 +247,19 @@ export default function Home() {
   const meetingUrl = `${CONTACT.WHATSAPP_URL}?text=${encodeURIComponent(
     "Hallo Vedantix, ik wil graag een kennismaking plannen over online groei."
   )}`;
+  const canonical = "https://vedantix.nl/";
+  const faqSchema = createFAQSchema(HOMEPAGE_FAQS);
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: canonical },
+  ]);
 
   return (
     <>
       <SEO
         title="Online groeien als lokale ondernemer | Vedantix"
         description="Vedantix helpt lokale ondernemers groeien met meer zichtbaarheid, meer vertrouwen, meer aanvragen en minder technische zorgen."
-        canonical="https://vedantix.nl/"
+        canonical={canonical}
+        schemas={[faqSchema, breadcrumbSchema]}
       />
 
       <div className="home-page">
@@ -368,6 +416,36 @@ export default function Home() {
             </div>
           </section>
 
+          <section className="section-shell alt" aria-labelledby="ai-readiness-title">
+            <div className="section-wrap">
+              <div className="section-header center">
+                <div className="section-label">AI-readiness</div>
+                <h2 className="section-h2" id="ai-readiness-title">
+                  Gevonden worden in Google én AI
+                </h2>
+                <p className="section-p">
+                  Steeds meer mensen zoeken niet alleen via Google, maar ook via
+                  AI-platformen zoals ChatGPT, Gemini en andere slimme assistenten.
+                </p>
+                <p className="section-p">
+                  Daarom bouwen wij websites die niet alleen zoekmachinevriendelijk zijn,
+                  maar ook begrijpelijk zijn voor moderne AI-systemen.
+                </p>
+              </div>
+
+              <div className="growth-difference-grid">
+                {AI_READINESS_CARDS.map((card) => (
+                  <IconCard key={card.title} {...card} />
+                ))}
+              </div>
+
+              <SectionCta
+                title="Toekomstbestendig voor AI"
+                text="De manier waarop mensen zoeken verandert. Wij zorgen ervoor dat jouw website voorbereid is op zowel traditionele zoekmachines als moderne AI-platformen."
+              />
+            </div>
+          </section>
+
           <ClientCasesSection />
 
           <section className="section-shell alt anchor-section" id="groei-scan">
@@ -402,6 +480,30 @@ export default function Home() {
                   </a>
                   <div className="lead-note">Concreet advies. Geen verplichtingen.</div>
                 </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="section-shell" aria-labelledby="home-faq-title">
+            <div className="section-wrap">
+              <div className="section-header center">
+                <div className="section-label">Direct antwoord</div>
+                <h2 className="section-h2" id="home-faq-title">
+                  Veelgestelde vragen over online groei
+                </h2>
+                <p className="section-p">
+                  Korte antwoorden op vragen die ondernemers vaak stellen voordat ze hun
+                  online zichtbaarheid willen verbeteren.
+                </p>
+              </div>
+
+              <div className="faq-grid">
+                {HOMEPAGE_FAQS.map((faq) => (
+                  <article className="faq-card" key={faq.question}>
+                    <h3>{faq.question}</h3>
+                    <p>{faq.answer}</p>
+                  </article>
+                ))}
               </div>
             </div>
           </section>

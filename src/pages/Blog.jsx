@@ -156,6 +156,26 @@ export default function Blog() {
     { name: "Home", url: "https://vedantix.nl/" },
     { name: "Blog", url: canonical },
   ]);
+  const blogCollectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Vedantix blog",
+    description:
+      "Praktische artikelen over websites, lokale SEO, online zichtbaarheid en groei voor lokale ondernemers.",
+    url: canonical,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: blogPosts.map((post, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `https://vedantix.nl/blog/${post.slug}`,
+        name: post.title,
+      })),
+    },
+    about: {
+      "@id": "https://vedantix.nl/#organization",
+    },
+  };
 
   return (
     <>
@@ -163,7 +183,7 @@ export default function Blog() {
         title="Blog over websites, lokale SEO en meer klanten | Vedantix"
         description="Praktische blogs over websites, lokale SEO en online groei voor kappers, salons, restaurants, fotografen, klusbedrijven en andere lokale ondernemers."
         canonical={canonical}
-        schemas={[breadcrumbSchema]}
+        schemas={[breadcrumbSchema, blogCollectionSchema]}
       />
 
       <style>{BLOG_STYLES}</style>

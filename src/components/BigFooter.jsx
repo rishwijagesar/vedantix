@@ -68,6 +68,15 @@ const FOOTER_STYLES = `
     text-align: left;
   }
 
+  .big-footer__brand-heading {
+    margin: 0 0 10px;
+    color: rgba(255,255,255,0.9);
+    font-size: 1rem;
+    font-weight: 850;
+    line-height: 1.45;
+    text-align: left;
+  }
+
   .big-footer__brand-text {
     font-size: 0.92rem;
     line-height: 1.8;
@@ -371,9 +380,12 @@ export default function BigFooter() {
           <div className="big-footer__grid">
             <div className="big-footer__brand">
               <div className="big-footer__brand-name">Vedantix</div>
+              <h2 className="big-footer__brand-heading">
+                Online zichtbaarheid voor lokale ondernemers
+              </h2>
               <p className="big-footer__brand-text">
-                Websites voor lokale ondernemers, inclusief hosting, onderhoud en
-                doorlopende ondersteuning.
+                Vedantix helpt lokale ondernemers groeien met websites, SEO, content,
+                online zichtbaarheid en moderne AI-vriendelijke weboplossingen.
               </p>
 
               <div className="big-footer__socials">
@@ -412,9 +424,9 @@ export default function BigFooter() {
               <ul className="big-footer__links">
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/prijzen">Prijzen</Link></li>
+                <li><Link to="/voorwie">Voor Wie</Link></li>
                 <li><Link to="/groeimodel">Waarom Vedantix</Link></li>
                 <li><Link to="/proces">Proces</Link></li>
-                <li><Link to="/voorwie">Voor wie</Link></li>
                 <li><Link to="/faq">FAQ</Link></li>
                 <li><Link to="/contact">Contact</Link></li>
                 <li><Link to="/blog">Blog</Link></li>

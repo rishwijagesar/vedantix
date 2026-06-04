@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
-import { createBreadcrumbSchema } from "../utils/schema";
+import { createBreadcrumbSchema, createFAQSchema } from "../utils/schema";
 
 const PROCESS_STYLES = `
   .proces-page {
@@ -368,7 +368,8 @@ const PROCESS_STYLES = `
   }
 
   .proces-time-grid,
-  .proces-expect-grid {
+  .proces-expect-grid,
+  .proces-faq-grid {
     display: grid;
     gap: 16px;
   }
@@ -376,6 +377,29 @@ const PROCESS_STYLES = `
   .proces-time-card,
   .proces-expect-card {
     padding: 24px;
+  }
+
+  .proces-faq-card {
+    padding: 22px;
+    border: 1px solid #dbe4f0;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, .055);
+  }
+
+  .proces-faq-card h3 {
+    margin: 0 0 10px;
+    color: #0f172a;
+    font-size: 1.02rem;
+    line-height: 1.3;
+    font-weight: 950;
+  }
+
+  .proces-faq-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: .92rem;
+    line-height: 1.7;
   }
 
   .proces-time-card.highlight {
@@ -478,7 +502,8 @@ const PROCESS_STYLES = `
     }
 
     .proces-time-grid,
-    .proces-expect-grid {
+    .proces-expect-grid,
+    .proces-faq-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -626,6 +651,29 @@ const visualSteps = [
   { title: "Groei", text: "blijvend verbeteren", icon: TrendingUp },
 ];
 
+const PROCESS_FAQS = [
+  {
+    question: "Hoe verloopt het traject bij Vedantix?",
+    answer:
+      "Vedantix start met een kennismaking, maakt daarna een plan, ontwikkelt de website, begeleidt de lancering en blijft ondersteunen met onderhoud en optimalisatie.",
+  },
+  {
+    question: "Moet ik zelf technische kennis hebben?",
+    answer:
+      "Nee. Vedantix regelt techniek, hosting, livegang, onderhoud en ondersteuning. Jij levert vooral bedrijfsinformatie aan en geeft feedback op de inhoud.",
+  },
+  {
+    question: "Hoe helpt het proces bij betere vindbaarheid?",
+    answer:
+      "Tijdens strategie en ontwikkeling kijkt Vedantix naar structuur, lokale zoekvragen, gebruiksvriendelijkheid en content. Daardoor krijgt je website een betere basis voor Google en moderne AI-systemen.",
+  },
+  {
+    question: "Wat gebeurt er na livegang?",
+    answer:
+      "Na livegang blijft Vedantix beschikbaar voor onderhoud, verbeteringen, advies, content en online zichtbaarheid zodat de website met je bedrijf kan meegroeien.",
+  },
+];
+
 function CheckList({ items }) {
   return (
     <ul className="proces-list">
@@ -658,6 +706,7 @@ export default function Proces() {
     { name: "Home", url: "https://vedantix.nl/" },
     { name: "Proces", url: canonical },
   ]);
+  const faqSchema = createFAQSchema(PROCESS_FAQS);
 
   return (
     <>
@@ -665,7 +714,7 @@ export default function Proces() {
         title="Ons Proces | Van idee naar online groei | Vedantix"
         description="Ontdek hoe Vedantix ondernemers stap voor stap helpt naar meer online zichtbaarheid, vertrouwen en groei."
         canonical={canonical}
-        schemas={[breadcrumbSchema]}
+        schemas={[breadcrumbSchema, faqSchema]}
       />
 
       <style>{PROCESS_STYLES}</style>
@@ -799,6 +848,29 @@ export default function Proces() {
                     </span>
                     <h3>{title}</h3>
                     <p>{text}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="proces-section proces-section-muted" aria-labelledby="proces-ai-title">
+            <div className="proces-shell">
+              <div className="proces-section-heading center">
+                <p className="proces-label">AI-readiness</p>
+                <h2 id="proces-ai-title">Toekomstbestendig voor AI</h2>
+                <p>De manier waarop mensen zoeken verandert.</p>
+                <p>
+                  Wij zorgen ervoor dat jouw website voorbereid is op zowel traditionele
+                  zoekmachines als moderne AI-platformen.
+                </p>
+              </div>
+
+              <div className="proces-faq-grid">
+                {PROCESS_FAQS.map((faq) => (
+                  <article className="proces-faq-card" key={faq.question}>
+                    <h3>{faq.question}</h3>
+                    <p>{faq.answer}</p>
                   </article>
                 ))}
               </div>

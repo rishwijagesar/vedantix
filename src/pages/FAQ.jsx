@@ -2,14 +2,14 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
-import { createBreadcrumbSchema } from "../utils/schema";
+import { createBreadcrumbSchema, createFAQSchema } from "../utils/schema";
 
 const FAQS = [
   {
     id: 1,
     question: "Wat kost een website bij Vedantix?",
     answer:
-      "De kosten hangen af van het gekozen pakket en de gewenste functionaliteiten. Vedantix werkt met een maandabonnement van €99 tot €249 per maand en een eenmalige opstartprijs van €399 tot €1000. In het abonnement zijn hosting, domein, SSL, updates en onderhoud inbegrepen.",
+      "De kosten hangen af van het gekozen pakket en de gewenste functionaliteiten. Vedantix werkt met abonnementen vanaf €99 tot €249 per maand en een eenmalige setupprijs per pakket. In het abonnement zijn hosting, SSL, updates, onderhoud en ondersteuning inbegrepen.",
   },
   {
     id: 2,
@@ -52,6 +52,24 @@ const FAQS = [
     question: "Helpt Vedantix ook met meer klanten krijgen?",
     answer:
       "Vedantix bouwt websites die gericht zijn op duidelijkheid, vertrouwen en conversie. Denk aan een professionele uitstraling, goede mobiele weergave, snelle laadtijd, contactmogelijkheden en een logische opbouw. Dat helpt om bezoekers sneller om te zetten in aanvragen of afspraken.",
+  },
+  {
+    id: 11,
+    question: "Hoe word ik beter gevonden in Google?",
+    answer:
+      "Je wordt beter gevonden door een duidelijke websitestructuur, lokale zoekwoorden, snelle laadtijd, sterke content, goede metadata en pagina’s die antwoord geven op vragen van klanten. Vedantix neemt deze onderdelen mee in de website en optimalisatie.",
+  },
+  {
+    id: 12,
+    question: "Wat doet Vedantix?",
+    answer:
+      "Vedantix helpt lokale ondernemers groeien met websites, SEO, content, online zichtbaarheid, hosting en onderhoud. Het doel is meer vertrouwen, meer aanvragen en minder technische zorgen.",
+  },
+  {
+    id: 13,
+    question: "Zijn Vedantix websites voorbereid op AI-zoekmachines?",
+    answer:
+      "Vedantix bouwt websites met duidelijke contentstructuur, FAQ’s, lokale context en gestructureerde data. Daardoor kunnen zoekmachines en moderne AI-systemen beter begrijpen wat je bedrijf doet.",
   },
   {
     id: 9,
@@ -355,18 +373,7 @@ export default function FAQ() {
 
   const canonical = "https://vedantix.nl/faq";
 
-  const faqSchema = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQS.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
-    })),
-  };
+  const faqSchema = createFAQSchema(FAQS);
 
   const breadcrumbSchema = createBreadcrumbSchema([
     { name: "Home", url: "https://vedantix.nl/" },

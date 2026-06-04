@@ -17,7 +17,7 @@ import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
 import { fetchPricingSummary } from "../api/pricing.api";
 import { CONTACT } from "../constants/contact";
-import { createBreadcrumbSchema } from "../utils/schema";
+import { createBreadcrumbSchema, createFAQSchema } from "../utils/schema";
 import "../styles/prijzen.css";
 
 const FALLBACK_PACKAGES = [
@@ -112,6 +112,7 @@ const PACKAGE_OUTCOME_COPY = {
       "Meer vertrouwen bij potentiële klanten",
       "Betere eerste indruk",
       "Geen technische zorgen",
+      "Klaar voor moderne zoekmachines",
     ],
     result:
       "Je bedrijf staat professioneel online en maakt direct een betere indruk op potentiële klanten.",
@@ -128,6 +129,7 @@ const PACKAGE_OUTCOME_COPY = {
       "Meer WhatsApp gesprekken",
       "Sterkere positie tegenover lokale concurrenten",
       "Meer kansen op nieuwe klanten",
+      "AI-vriendelijke contentstructuur",
     ],
     result:
       "Je website wordt een actief marketingkanaal in plaats van alleen een online visitekaartje.",
@@ -145,6 +147,7 @@ const PACKAGE_OUTCOME_COPY = {
       "Meer kwalitatieve aanvragen",
       "Continue verbetering van prestaties",
       "Een website die meegroeit met jouw bedrijf",
+      "Geoptimaliseerd voor toekomstige AI-platformen",
     ],
     result:
       "Een complete online groeistrategie die blijft bijdragen aan de ontwikkeling van je bedrijf.",
@@ -329,6 +332,29 @@ const BUSINESS_BENEFITS = [
   },
 ];
 
+const PRICE_FAQS = [
+  {
+    question: "Wat kost een website bij Vedantix?",
+    answer:
+      "Vedantix werkt met transparante abonnementen voor lokale ondernemers. Je betaalt een maandbedrag voor hosting, onderhoud en ondersteuning, plus een eenmalige setupprijs voor de bouw en inrichting.",
+  },
+  {
+    question: "Waarom kiest Vedantix voor abonnementen?",
+    answer:
+      "Een website heeft na oplevering onderhoud, optimalisatie en ondersteuning nodig. Met een abonnement blijft je website veilig, snel en beter voorbereid op veranderende zoekmachines.",
+  },
+  {
+    question: "Welk pakket past het beste bij mijn bedrijf?",
+    answer:
+      "Starter past bij ondernemers die professioneel zichtbaar willen worden. Growth past bij ondernemers die meer aanvragen willen. Pro past bij ondernemers die doorlopend willen groeien met meer content, optimalisatie en maatwerk.",
+  },
+  {
+    question: "Zijn de pakketten geschikt voor Google en AI-zoekmachines?",
+    answer:
+      "Ja. Vedantix bouwt websites met duidelijke structuur, metadata, FAQ-content en lokale context zodat zoekmachines en moderne AI-systemen je bedrijf beter kunnen begrijpen.",
+  },
+];
+
 function currency(value) {
   return new Intl.NumberFormat("nl-NL", {
     style: "currency",
@@ -416,6 +442,7 @@ export default function Prijzen() {
     { name: "Home", url: "https://vedantix.nl/" },
     { name: "Prijzen", url: canonical },
   ]);
+  const faqSchema = createFAQSchema(PRICE_FAQS);
 
   return (
     <>
@@ -423,7 +450,7 @@ export default function Prijzen() {
         title="Transparante prijzen voor ondernemers | Vedantix"
         description="Vergelijk de Vedantix abonnementen voor lokale ondernemers. Kies het pakket dat past bij jouw bedrijf, zonder technische zorgen of verborgen kosten."
         canonical={canonical}
-        schemas={[breadcrumbSchema]}
+        schemas={[breadcrumbSchema, faqSchema]}
       />
 
       <div className="prices-page">
@@ -597,6 +624,59 @@ export default function Prijzen() {
                     </article>
                   );
                 })}
+              </div>
+            </div>
+          </section>
+
+          <section className="prices-section prices-section-muted" aria-labelledby="prices-ai-title">
+            <div className="prices-wrap">
+              <div className="prices-subscription-block">
+                <div>
+                  <div className="prices-eyebrow light">AI-readiness</div>
+                  <h2 id="prices-ai-title">Toekomstbestendig voor AI</h2>
+                  <p>De manier waarop mensen zoeken verandert.</p>
+                  <p>
+                    Wij zorgen ervoor dat jouw website voorbereid is op zowel traditionele
+                    zoekmachines als moderne AI-platformen.
+                  </p>
+                </div>
+
+                <div className="prices-reason-list">
+                  <div className="prices-reason-item">
+                    <CheckCircle2 size={18} aria-hidden="true" />
+                    <span>Duidelijke contentstructuur voor zoekmachines en AI-systemen.</span>
+                  </div>
+                  <div className="prices-reason-item">
+                    <CheckCircle2 size={18} aria-hidden="true" />
+                    <span>FAQ’s en pagina-opbouw die concrete ondernemersvragen beantwoorden.</span>
+                  </div>
+                  <div className="prices-reason-item">
+                    <CheckCircle2 size={18} aria-hidden="true" />
+                    <span>Lokale context zodat klanten in jouw regio je beter kunnen vinden.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="prices-section" aria-labelledby="prices-faq-title">
+            <div className="prices-wrap">
+              <div className="prices-section-header center">
+                <div className="prices-eyebrow light">Direct antwoord</div>
+                <h2 id="prices-faq-title">Veelgestelde vragen over prijzen</h2>
+                <p>
+                  Antwoorden die helpen om snel te bepalen welk pakket past bij jouw bedrijf.
+                </p>
+              </div>
+
+              <div className="prices-benefit-grid">
+                {PRICE_FAQS.map((faq) => (
+                  <article className="prices-benefit-card" key={faq.question}>
+                    <span><HelpCircle size={21} aria-hidden="true" /></span>
+                    <h3>{faq.question}</h3>
+                    <p>{faq.answer}</p>
+                  </article>
+                ))}
               </div>
             </div>
           </section>

@@ -524,6 +524,7 @@ export const blogPosts = [
 export const basePages = [
   { path: "/", priority: "1.0" },
   { path: "/prijzen", priority: "0.8" },
+  { path: "/pakketvergelijking", priority: "0.6" },
   { path: "/groeimodel", priority: "0.8" },
   { path: "/proces", priority: "0.8" },
   { path: "/faq", priority: "0.7" },
@@ -534,6 +535,7 @@ export const basePages = [
   { path: "/planning", priority: "0.6" },
   { path: "/starters", priority: "0.6" },
   { path: "/templates", priority: "0.6" },
+  { path: "/vedantixhome", priority: "0.3" },
   { path: "/voorwie", priority: "0.6" },
 ];
 
@@ -544,6 +546,7 @@ export const nichePages = [
   { path: "/website-restaurant", priority: "0.9", niche: "restaurant" },
   { path: "/website-fotograaf", priority: "0.9", niche: "fotograaf" },
   { path: "/website-schoonmaakbedrijf", priority: "0.9", niche: "schoonmaakbedrijf" },
+  { path: "/website-zzp", priority: "0.9", niche: "zzp" },
 ];
 
 export const locationPages = Object.keys(niches).flatMap((nicheKey) =>

@@ -21,7 +21,7 @@ import {
 } from "lucide-react";
 import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
-import { createBreadcrumbSchema } from "../utils/schema";
+import { createBreadcrumbSchema, createFAQSchema } from "../utils/schema";
 
 const PAGE_STYLES = `
   .voorwie-page {
@@ -271,7 +271,8 @@ const PAGE_STYLES = `
   .voorwie-card-grid,
   .voorwie-category-grid,
   .voorwie-benefit-grid,
-  .voorwie-match-grid {
+  .voorwie-match-grid,
+  .voorwie-faq-grid {
     display: grid;
     gap: 16px;
   }
@@ -280,6 +281,7 @@ const PAGE_STYLES = `
   .voorwie-category-card,
   .voorwie-benefit-card,
   .voorwie-match-card,
+  .voorwie-faq-card,
   .voorwie-closing-card {
     border: 1px solid #dbe4f0;
     border-radius: 8px;
@@ -290,7 +292,8 @@ const PAGE_STYLES = `
   .voorwie-card,
   .voorwie-category-card,
   .voorwie-benefit-card,
-  .voorwie-match-card {
+  .voorwie-match-card,
+  .voorwie-faq-card {
     padding: 24px;
   }
 
@@ -308,7 +311,8 @@ const PAGE_STYLES = `
   .voorwie-card h3,
   .voorwie-category-card h3,
   .voorwie-benefit-card h3,
-  .voorwie-match-card h3 {
+  .voorwie-match-card h3,
+  .voorwie-faq-card h3 {
     margin: 0 0 9px;
     color: #0f172a;
     font-size: 1.14rem;
@@ -318,7 +322,8 @@ const PAGE_STYLES = `
 
   .voorwie-card p,
   .voorwie-category-card p,
-  .voorwie-benefit-card p {
+  .voorwie-benefit-card p,
+  .voorwie-faq-card p {
     margin: 0;
     color: #64748b;
     font-size: .95rem;
@@ -429,7 +434,8 @@ const PAGE_STYLES = `
     }
 
     .voorwie-category-grid,
-    .voorwie-match-grid {
+    .voorwie-match-grid,
+    .voorwie-faq-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -592,6 +598,29 @@ const goodMatch = [
   "Je wilt een website die meegroeit met je bedrijf.",
 ];
 
+const VOORWIE_FAQS = [
+  {
+    question: "Voor wie is Vedantix bedoeld?",
+    answer:
+      "Vedantix is bedoeld voor lokale ondernemers die professioneler zichtbaar willen worden, beter gevonden willen worden en meer aanvragen uit hun online aanwezigheid willen halen.",
+  },
+  {
+    question: "Waarom is Vedantix geschikt voor lokale ondernemers?",
+    answer:
+      "Vedantix combineert website, lokale vindbaarheid, content, hosting en onderhoud onder één dak. Daardoor krijgen ondernemers één aanspreekpunt en minder technische zorgen.",
+  },
+  {
+    question: "Helpt Vedantix ook als ik al een website heb?",
+    answer:
+      "Ja. Als je bestaande website weinig oplevert, kijkt Vedantix naar uitstraling, structuur, vindbaarheid, snelheid, call-to-actions en vertrouwen.",
+  },
+  {
+    question: "Hoe bereidt Vedantix websites voor op AI-zoekmachines?",
+    answer:
+      "Vedantix gebruikt duidelijke pagina-opbouw, concrete antwoorden, lokale context en gestructureerde data zodat zoekmachines en AI-systemen je bedrijf beter kunnen interpreteren.",
+  },
+];
+
 function IconCard({ title, text, icon: Icon, className = "" }) {
   return (
     <article className={`voorwie-card ${className}`}>
@@ -626,6 +655,7 @@ export default function VoorWie() {
     { name: "Home", url: "https://vedantix.nl/" },
     { name: "Voor wie", url: canonical },
   ]);
+  const faqSchema = createFAQSchema(VOORWIE_FAQS);
 
   return (
     <>
@@ -633,7 +663,7 @@ export default function VoorWie() {
         title="Voor wie is Vedantix? | Websites voor ondernemers die willen groeien"
         description="Ontdek of Vedantix bij jouw bedrijf past. Voor ondernemers die meer zichtbaarheid, meer vertrouwen en meer aanvragen uit hun online aanwezigheid willen halen."
         canonical={canonical}
-        schemas={[breadcrumbSchema]}
+        schemas={[breadcrumbSchema, faqSchema]}
       />
 
       <style>{PAGE_STYLES}</style>
@@ -777,6 +807,29 @@ export default function VoorWie() {
                   <h3>Goede match</h3>
                   <MatchList items={goodMatch} type="good" />
                 </article>
+              </div>
+            </div>
+          </section>
+
+          <section className="voorwie-section" aria-labelledby="voorwie-ai-title">
+            <div className="voorwie-shell">
+              <div className="voorwie-section-heading center">
+                <p className="voorwie-label">AI-readiness</p>
+                <h2 id="voorwie-ai-title">Toekomstbestendig voor AI</h2>
+                <p>De manier waarop mensen zoeken verandert.</p>
+                <p>
+                  Wij zorgen ervoor dat jouw website voorbereid is op zowel traditionele
+                  zoekmachines als moderne AI-platformen.
+                </p>
+              </div>
+
+              <div className="voorwie-faq-grid">
+                {VOORWIE_FAQS.map((faq) => (
+                  <article className="voorwie-faq-card" key={faq.question}>
+                    <h3>{faq.question}</h3>
+                    <p>{faq.answer}</p>
+                  </article>
+                ))}
               </div>
             </div>
           </section>

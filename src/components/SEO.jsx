@@ -1,10 +1,16 @@
 import { useEffect } from "react";
+import {
+  createLocalBusinessSchema,
+  createOrganizationSchema,
+  createWebSiteSchema,
+} from "../utils/schema";
 
 export default function SEO({
   title,
   description,
   canonical,
-  schemas = []
+  schemas = [],
+  includeBaseSchemas = true,
 }) {
   useEffect(() => {
     const head = document.head;
@@ -22,6 +28,7 @@ export default function SEO({
       'meta[name="twitter:title"]:not([data-rh])',
       'meta[name="twitter:description"]:not([data-rh])',
       'meta[name="twitter:image"]:not([data-rh])',
+      'script[type="application/ld+json"]:not([data-vedantix-seo])',
     ];
 
     document
@@ -63,14 +70,22 @@ export default function SEO({
     appendElement("meta", { name: "twitter:description", content: description });
     appendElement("meta", { name: "twitter:image", content: "https://vedantix.nl/preview.png" });
 
-    schemas.forEach((schema) => {
+    const baseSchemas = includeBaseSchemas
+      ? [
+          createOrganizationSchema(),
+          createLocalBusinessSchema(),
+          createWebSiteSchema(),
+        ]
+      : [];
+
+    [...baseSchemas, ...schemas].forEach((schema) => {
       appendElement(
         "script",
         { type: "application/ld+json" },
         JSON.stringify(schema),
       );
     });
-  }, [title, description, canonical, schemas]);
+  }, [title, description, canonical, schemas, includeBaseSchemas]);
 
   return null;
 }
