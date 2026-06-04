@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
+import JotformReviewWidget from "../components/JotformReviewWidget";
 import HomeHero from "./HomeHero";
 import ClientCasesSection from "../components/home/ClientCasesSection";
 import { CONTACT } from "../constants/contact";
@@ -267,6 +268,14 @@ export default function Home() {
 
         <main>
           <HomeHero />
+
+          <section className="home-review-strip" aria-label="Reviews van Vedantix">
+            <div className="home-review-wrap">
+              <div className="home-review-widget">
+                <JotformReviewWidget />
+              </div>
+            </div>
+          </section>
 
           <section className="section-shell">
             <div className="section-wrap">
