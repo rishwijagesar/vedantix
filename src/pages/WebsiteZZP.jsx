@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
@@ -112,6 +113,18 @@ const PAGE_STYLES = `
     border: 1px solid rgba(255,255,255,0.25);
   }
 
+  .zzp-review-widget {
+    margin-top: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .zzp-review-widget > div {
+    min-height: 120px;
+  }
+
   .zzp-highlight-box {
     margin-top: 20px;
     padding: 16px;
@@ -221,6 +234,34 @@ const PAGE_STYLES = `
   }
 `;
 
+const JOTFORM_WIDGET_ID = "JFWebsiteWidget-019e92edd9f87a41aae99010d53be8d25324";
+const JOTFORM_SCRIPT_ID = "jotform-review-widget-019e92edd9f87a41aae99010d53be8d25324";
+const JOTFORM_SCRIPT_SRC =
+  "https://www.jotform.com/website-widgets/embed/019e92edd9f87a41aae99010d53be8d25324";
+
+function JotformReviewWidget() {
+  useEffect(() => {
+    const existingScript = document.getElementById(JOTFORM_SCRIPT_ID);
+    existingScript?.remove();
+
+    const script = document.createElement("script");
+    script.id = JOTFORM_SCRIPT_ID;
+    script.src = JOTFORM_SCRIPT_SRC;
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      script.remove();
+      const container = document.getElementById(JOTFORM_WIDGET_ID);
+      if (container) {
+        container.innerHTML = "";
+      }
+    };
+  }, []);
+
+  return <div id={JOTFORM_WIDGET_ID} />;
+}
+
 export default function WebsiteZZP() {
   const canonical = "https://vedantix.nl/website-zzp";
 
@@ -270,13 +311,17 @@ export default function WebsiteZZP() {
               </p>
 
               <div className="zzp-cta-row">
-                <a href="https://wa.me/310626219989" target="_blank" rel="noreferrer" className="zzp-btn zzp-btn-primary">
+                <a href="https://wa.me/31626219989" target="_blank" rel="noreferrer" className="zzp-btn zzp-btn-primary">
                   Plan gratis kennismaking
                 </a>
 
                 <a href="/" className="zzp-btn zzp-btn-secondary">
                   Terug naar home
                 </a>
+              </div>
+
+              <div className="zzp-review-widget" aria-label="Reviews van Vedantix">
+                <JotformReviewWidget />
               </div>
             </div>
           </section>
@@ -363,7 +408,7 @@ export default function WebsiteZZP() {
             </div>
 
             <a
-              href="https://wa.me/310626219989"
+              href="https://wa.me/31626219989"
               target="_blank"
               rel="noreferrer"
               className="zzp-bottom-cta-link"
