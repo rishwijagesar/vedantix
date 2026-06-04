@@ -1,347 +1,622 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  AlertTriangle,
+  ArrowRight,
+  BriefcaseBusiness,
+  CheckCircle2,
+  Clock3,
+  Eye,
+  HeartPulse,
+  LifeBuoy,
+  LineChart,
+  MessageCircle,
+  Search,
+  ShieldCheck,
+  Smartphone,
+  Sparkles,
+  TrendingUp,
+  Utensils,
+  Wrench,
+  XCircle,
+} from "lucide-react";
 import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
+import BigFooter from "../components/BigFooter";
 import { createBreadcrumbSchema } from "../utils/schema";
 
-const BRANCHES = [
-  {
-    icon: "✂️",
-    title: "Kapper & Barbershop",
-    desc: "Van klassieke kapper tot moderne barbershop — een strakke website trekt nieuwe klanten en laat jouw werk zien.",
-    usecases: [
-      "Online afspraken boeken",
-      "Fotogalerij van jouw werk",
-      "Prijslijst per behandeling",
-      "Google Maps & openingstijden",
-      "Reviews tonen",
-    ],
-  },
-  {
-    icon: "🍽️",
-    title: "Restaurant & Café",
-    desc: "Laat gasten je menu ontdekken, een tafel reserveren en jouw sfeer proeven — nog vóór ze binnenstappen.",
-    usecases: [
-      "Digitaal menu met foto's",
-      "Reserveringssysteem",
-      "Bezorg- & afhaalinformatie",
-      "Evenementen & acties",
-      "Instagram koppeling",
-    ],
-  },
-  {
-    icon: "📸",
-    title: "Fotograaf & Videograaf",
-    desc: "Jouw portfolio is je visitekaartje. Wij bouwen een site die jouw werk laat spreken.",
-    usecases: [
-      "Portfolio galerij met lightbox",
-      "Pakketten & tarieven",
-      "Online boekingsformulier",
-      "Blog & behind the scenes",
-      "Social media integratie",
-    ],
-  },
-  {
-    icon: "🔨",
-    title: "Klusbedrijf & Vakman",
-    desc: "Laat klanten zien wat je kan. Van loodgieter tot schilder — een professionele site wekt vertrouwen.",
-    usecases: [
-      "Projecten & referenties",
-      "Offerteformulier",
-      "Werkgebied kaart",
-      "Certificaten & diploma's",
-      "Klantreviews",
-    ],
-  },
-  {
-    icon: "💆",
-    title: "Schoonheidssalon & Spa",
-    desc: "Een verzorgde website past bij een verzorgde zaak. Laat jouw behandelingen en sfeer zien.",
-    usecases: [
-      "Online afsprakensysteem",
-      "Behandelingen & prijzen",
-      "Cadeaubon aanvragen",
-      "Voor/na foto's",
-      "Team & specialisten",
-    ],
-  },
-  {
-    icon: "🏋️",
-    title: "Fitness coach & Personal trainer",
-    desc: "Motiveer potentiële klanten met resultaten, schema's en pakketten — direct via jouw site.",
-    usecases: [
-      "Lesrooster & groepslessen",
-      "Pakketten & lidmaatschappen",
-      "Gratis proefles aanmelden",
-      "Blog / voedingstips",
-      "Video demonstraties",
-    ],
-  },
-  {
-    icon: "🏪",
-    title: "Winkel & Retail",
-    desc: "Online zichtbaar zijn is voor een fysieke winkel net zo belangrijk als een mooie etalage.",
-    usecases: [
-      "Productoverzicht of webshop",
-      "Openingstijden & locatie",
-      "Acties & aanbiedingen",
-      "WhatsApp bestelknop",
-      "Loyaliteitsprogramma info",
-    ],
-  },
-  {
-    icon: "🏗️",
-    title: "Aannemer & Bouwbedrijf",
-    desc: "Grote projecten vragen om een professionele uitstraling. Wij zetten jouw portfolio op de kaart.",
-    usecases: [
-      "Projecten portfolio",
-      "Offerteformulier",
-      "Certificaten & keurmerken",
-      "Voor/na foto's slider",
-      "Werkgebied & regio",
-    ],
-  },
-  {
-    icon: "🚀",
-    title: "Starter & ZZP'er",
-    desc: "Net begonnen of al even actief als zzp'er — een eigen website maakt je geloofwaardig en vindbaar.",
-    usecases: [
-      "Diensten overzicht",
-      "Over mij pagina",
-      "Contactformulier",
-      "LinkedIn & social links",
-      "Referenties & reviews",
-    ],
-  },
-  {
-    icon: "🎵",
-    title: "Muzikant & Artiest",
-    desc: "Jouw muziek verdient een eigen podium online. Laat fans en boekingsbureaus jou vinden.",
-    usecases: [
-      "Muziekplayer & tracks",
-      "Agenda & optredens",
-      "Booking aanvragen",
-      "EPK (Elektronisch Perskaartje)",
-      "YouTube & Spotify embeds",
-    ],
-  },
-  {
-    icon: "🎨",
-    title: "Schilder & Decorateur",
-    desc: "Kleur en vakmanschap — laat het zien op een site die net zo verzorgd is als jouw werk.",
-    usecases: [
-      "Portfolio & projectfoto's",
-      "Offerteformulier",
-      "Werkgebied informatie",
-      "Reviews & testimonials",
-      "Certificaten",
-    ],
-  },
-  {
-    icon: "🏘️",
-    title: "Andere branches",
-    desc: "Werkt jouw bedrijf niet in de bovenstaande lijst? Geen probleem — wij bouwen voor elke branche.",
-    usecases: [
-      "Maatwerk op aanvraag",
-      "Flexibele pagina-indeling",
-      "Elke gewenste functionaliteit",
-      "Persoonlijk adviesgesprek",
-    ],
-  },
-];
-
 const PAGE_STYLES = `
-  *{box-sizing:border-box;margin:0;padding:0}
-
-  .voorwie-page{
-    font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-    color:#1a1a2e;
-    min-height:100vh;
-    background:#f7f9fc;
+  .voorwie-page {
+    min-height: 100vh;
+    background: #f4f7fb;
+    color: #0f172a;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 
-  .branch-card{
-    background:#fff;
-    border-radius:18px;
-    padding:32px 28px;
-    box-shadow:0 2px 12px rgba(0,0,0,.06);
-    transition:transform .2s,box-shadow .2s,border-color .2s;
-    border:1px solid #e8eef5;
+  .voorwie-page a {
+    text-decoration: none;
   }
 
-  .branch-card:hover{
-    transform:translateY(-4px);
-    box-shadow:0 8px 28px rgba(0,0,0,.1);
-    border-color:#bfdbfe;
+  .voorwie-shell {
+    width: min(1160px, calc(100% - 32px));
+    margin: 0 auto;
   }
 
-  .use-tag{
-    background:#eff6ff;
-    color:#1e40af;
-    padding:4px 12px;
-    border-radius:100px;
-    font-size:.78rem;
-    font-weight:600;
-    display:inline-block;
-    margin:3px 3px 3px 0;
+  .voorwie-hero {
+    padding: 118px 0 76px;
+    background:
+      radial-gradient(circle at 82% 20%, rgba(96, 165, 250, .21), transparent 34%),
+      radial-gradient(circle at 12% 74%, rgba(34, 197, 94, .13), transparent 30%),
+      linear-gradient(150deg, #061023 0%, #0c1a33 55%, #0d2746 100%);
+    color: #fff;
   }
 
-  .wa-fab{position:fixed;bottom:28px;right:28px;z-index:9999;font-family:'Inter',sans-serif}
-  .wa-toggle{width:60px;height:60px;border-radius:50%;background:#25d366;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(37,211,102,.5);display:flex;align-items:center;justify-content:center;transition:transform .2s;position:relative}
-  .wa-toggle:hover{transform:scale(1.08)}
-  .wa-badge{position:absolute;top:-3px;right:-3px;background:#ef4444;color:#fff;width:20px;height:20px;border-radius:50%;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;border:2px solid #fff}
-  .wa-popup{position:absolute;bottom:74px;right:0;width:320px;background:#fff;border-radius:18px;box-shadow:0 12px 48px rgba(0,0,0,.18);overflow:hidden;animation:waPop .22s cubic-bezier(.34,1.56,.64,1)}
-  @keyframes waPop{from{opacity:0;transform:scale(.88) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
-  .wa-head{background:linear-gradient(135deg,#075e54,#128c7e);padding:16px 18px;display:flex;align-items:center;gap:12px}
-  .wa-avatar{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:#fff;flex-shrink:0}
-  .wa-info{flex:1}
-  .wa-name{color:#fff;font-weight:700;font-size:.95rem}
-  .wa-status{color:rgba(255,255,255,.7);font-size:.73rem;margin-top:1px;display:flex;align-items:center;gap:4px}
-  .wa-dot{width:7px;height:7px;background:#4ade80;border-radius:50%;display:inline-block}
-  .wa-close{background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:1.1rem;padding:4px;line-height:1}
-  .wa-close:hover{color:#fff}
-  .wa-body{background:#e5ddd5;padding:14px 14px 8px;min-height:140px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
-  .wa-msg-agent{background:#fff;border-radius:0 10px 10px 10px;padding:9px 13px;font-size:.84rem;color:#1a1a2e;line-height:1.5;max-width:85%;box-shadow:0 1px 2px rgba(0,0,0,.08)}
-  .wa-msg-user{background:#dcf8c6;border-radius:10px 0 10px 10px;padding:9px 13px;font-size:.84rem;color:#1a1a2e;line-height:1.5;max-width:85%;align-self:flex-end;box-shadow:0 1px 2px rgba(0,0,0,.08)}
-  .wa-footer{padding:10px 12px;background:#f0f0f0;border-top:1px solid #e0e0e0}
-  .wa-input-row{display:flex;align-items:center;gap:8px;background:#fff;border-radius:24px;padding:6px 6px 6px 14px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-  .wa-input{border:none;outline:none;flex:1;font-size:.85rem;background:transparent;color:#1a1a2e;font-family:inherit}
-  .wa-send{width:36px;height:36px;border-radius:50%;background:#25d366;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
-  .wa-send:hover{background:#1da851}
-  .wa-wa-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#25d366;color:#fff;border-radius:10px;padding:10px;text-decoration:none;font-weight:700;font-size:.85rem;margin-top:8px;transition:background .15s}
-  .wa-wa-btn:hover{background:#1da851}
-
-  .hero-wrap{background:linear-gradient(135deg,#0a1628,#0d2146);padding:70px 5% 60px}
-  .hero-inner{max-width:800px;margin:0 auto;text-align:center}
-  .hero-back-link{color:rgba(255,255,255,.55);text-decoration:none;font-size:.88rem;display:inline-block;margin-bottom:28px}
-  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,194,255,.1);border:1px solid rgba(0,194,255,.3);color:#00c2ff;padding:6px 18px;border-radius:100px;font-size:.82rem;font-weight:700;margin-bottom:22px}
-  .hero-title{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:18px;letter-spacing:-1px}
-  .hero-title span{color:#00c2ff}
-  .hero-text{color:rgba(255,255,255,.65);font-size:1.05rem;max-width:560px;margin:0 auto}
-
-  .branches-wrap{max-width:1100px;margin:0 auto;padding:60px 5%}
-  .sector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
-
-  .cta-box{background:#0a1628;border-radius:20px;padding:48px 40px;margin-top:60px;text-align:center}
-  .cta-title{color:#fff;font-weight:900;font-size:clamp(1.6rem,3vw,2.2rem);margin-bottom:14px;letter-spacing:-.5px}
-  .cta-text{color:rgba(255,255,255,.6);margin-bottom:32px;font-size:1rem}
-  .cta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-
-  .page-footer{background:#0a1628;color:rgba(255,255,255,.45);padding:28px 5%;text-align:center;font-size:.83rem}
-  .page-footer a{color:rgba(255,255,255,.45);text-decoration:none}
-  .page-footer strong{color:#fff}
-
-  @media(max-width:420px){.wa-popup{width:calc(100vw - 40px);right:-14px}}
-  @media(max-width:768px){
-    .sector-grid{grid-template-columns:1fr}
-    .hero-wrap{padding:50px 5% 40px}
-    .hero-title{font-size:2rem}
+  .voorwie-hero-grid {
+    display: grid;
+    gap: 32px;
+    align-items: center;
   }
-  @media(max-width:480px){
-    .hero-title{font-size:1.7rem}
-    .cta-btns{flex-direction:column;align-items:center}
-    .cta-btns a{width:100%;max-width:280px;text-align:center;box-sizing:border-box}
+
+  .voorwie-kicker,
+  .voorwie-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: fit-content;
+    max-width: 100%;
+    color: #2563eb;
+    font-size: .72rem;
+    font-weight: 950;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .voorwie-kicker {
+    margin-bottom: 18px;
+    padding: 8px 13px;
+    border: 1px solid rgba(255, 255, 255, .13);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .07);
+    color: rgba(255, 255, 255, .88);
+  }
+
+  .voorwie-hero h1 {
+    max-width: 780px;
+    margin: 0;
+    color: #fff;
+    font-size: clamp(2.55rem, 10vw, 5rem);
+    font-weight: 950;
+    line-height: .98;
+    letter-spacing: 0;
+  }
+
+  .voorwie-hero-text {
+    display: grid;
+    gap: 10px;
+    max-width: 660px;
+    margin: 22px 0 0;
+  }
+
+  .voorwie-hero-text p,
+  .voorwie-section-heading p,
+  .voorwie-closing-copy p {
+    margin: 0;
+    color: #64748b;
+    font-size: .98rem;
+    line-height: 1.7;
+  }
+
+  .voorwie-hero-text p {
+    color: rgba(255, 255, 255, .76);
+    font-size: clamp(1rem, 2.4vw, 1.14rem);
+  }
+
+  .voorwie-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .voorwie-btn {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 13px 20px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-size: .93rem;
+    font-weight: 950;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+
+  .voorwie-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .voorwie-btn-primary {
+    background: #fff;
+    color: #0f172a;
+    box-shadow: 0 18px 42px rgba(0, 0, 0, .2);
+  }
+
+  .voorwie-btn-secondary {
+    border-color: rgba(255, 255, 255, .16);
+    background: rgba(255, 255, 255, .07);
+    color: #fff;
+  }
+
+  .voorwie-section .voorwie-btn-primary,
+  .voorwie-closing .voorwie-btn-primary {
+    background: #0f172a;
+    color: #fff;
+  }
+
+  .voorwie-section .voorwie-btn-secondary,
+  .voorwie-closing .voorwie-btn-secondary {
+    border-color: #bfdbfe;
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+
+  .voorwie-hero-visual {
+    position: relative;
+    min-height: 340px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, .13);
+    border-radius: 8px;
+    background: linear-gradient(165deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .06));
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .24);
+  }
+
+  .voorwie-visual-core {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    display: grid;
+    width: 150px;
+    height: 150px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 999px;
+    background: linear-gradient(135deg, #2563eb, #22c55e);
+    color: #fff;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 22px 60px rgba(37, 99, 235, .3);
+  }
+
+  .voorwie-visual-core strong {
+    display: block;
+    font-size: 1.08rem;
+    font-weight: 950;
+    letter-spacing: 0;
+  }
+
+  .voorwie-orbit {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, .13);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .08);
+    color: rgba(255, 255, 255, .9);
+    font-size: .8rem;
+    font-weight: 850;
+  }
+
+  .voorwie-orbit svg {
+    color: #93c5fd;
+  }
+
+  .voorwie-orbit:nth-child(2) { top: 34px; left: 30px; }
+  .voorwie-orbit:nth-child(3) { top: 64px; right: 26px; }
+  .voorwie-orbit:nth-child(4) { right: 40px; bottom: 52px; }
+  .voorwie-orbit:nth-child(5) { bottom: 42px; left: 34px; }
+
+  .voorwie-section {
+    padding: 76px 0;
+    background: #fff;
+  }
+
+  .voorwie-section-muted {
+    background: #f4f7fb;
+  }
+
+  .voorwie-section-dark {
+    background: #071225;
+    color: #fff;
+  }
+
+  .voorwie-section-heading {
+    max-width: 760px;
+    margin-bottom: 28px;
+  }
+
+  .voorwie-section-heading.center {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
+
+  .voorwie-section-heading h2,
+  .voorwie-closing h2 {
+    margin: 8px 0 0;
+    color: #0f172a;
+    font-size: clamp(1.9rem, 7vw, 3.2rem);
+    font-weight: 950;
+    line-height: 1.05;
+    letter-spacing: 0;
+  }
+
+  .voorwie-section-heading p {
+    max-width: 680px;
+    margin-top: 12px;
+  }
+
+  .voorwie-section-heading.center p {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .voorwie-section-dark .voorwie-section-heading h2,
+  .voorwie-section-dark .voorwie-label {
+    color: #fff;
+  }
+
+  .voorwie-section-dark .voorwie-section-heading p {
+    color: rgba(255, 255, 255, .72);
+  }
+
+  .voorwie-card-grid,
+  .voorwie-category-grid,
+  .voorwie-benefit-grid,
+  .voorwie-match-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .voorwie-card,
+  .voorwie-category-card,
+  .voorwie-benefit-card,
+  .voorwie-match-card,
+  .voorwie-closing-card {
+    border: 1px solid #dbe4f0;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 18px 45px rgba(15, 23, 42, .065);
+  }
+
+  .voorwie-card,
+  .voorwie-category-card,
+  .voorwie-benefit-card,
+  .voorwie-match-card {
+    padding: 24px;
+  }
+
+  .voorwie-icon {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    place-items: center;
+    margin-bottom: 18px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #2563eb;
+  }
+
+  .voorwie-card h3,
+  .voorwie-category-card h3,
+  .voorwie-benefit-card h3,
+  .voorwie-match-card h3 {
+    margin: 0 0 9px;
+    color: #0f172a;
+    font-size: 1.14rem;
+    font-weight: 950;
+    letter-spacing: 0;
+  }
+
+  .voorwie-card p,
+  .voorwie-category-card p,
+  .voorwie-benefit-card p {
+    margin: 0;
+    color: #64748b;
+    font-size: .95rem;
+    line-height: 1.7;
+  }
+
+  .voorwie-category-list,
+  .voorwie-match-list {
+    display: grid;
+    gap: 9px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .voorwie-category-list li,
+  .voorwie-match-list li {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    color: #334155;
+    font-size: .94rem;
+    font-weight: 760;
+    line-height: 1.45;
+  }
+
+  .voorwie-category-result {
+    margin-top: 18px;
+    padding: 13px;
+    border-radius: 8px;
+    background: #ecfdf5;
+    color: #047857;
+    font-size: .88rem;
+    font-weight: 850;
+    line-height: 1.5;
+  }
+
+  .voorwie-category-card svg,
+  .voorwie-match-list svg {
+    flex: 0 0 auto;
+    margin-top: 1px;
+    color: #16a34a;
+  }
+
+  .voorwie-match-card.bad {
+    border-color: rgba(220, 38, 38, .24);
+  }
+
+  .voorwie-match-card.good {
+    border-color: rgba(34, 197, 94, .32);
+  }
+
+  .voorwie-match-card.bad .voorwie-match-list svg {
+    color: #dc2626;
+  }
+
+  .voorwie-closing {
+    padding: 78px 0;
+    background: #f4f7fb;
+  }
+
+  .voorwie-closing-card {
+    display: grid;
+    gap: 24px;
+    padding: 30px;
+  }
+
+  .voorwie-closing-copy {
+    display: grid;
+    gap: 12px;
+  }
+
+  .voorwie-closing .voorwie-actions {
+    margin-top: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .voorwie-card,
+    .voorwie-category-card,
+    .voorwie-benefit-card,
+    .voorwie-match-card,
+    .voorwie-closing-card,
+    .voorwie-hero-visual {
+      animation: voorwie-reveal .6s ease both;
+    }
+  }
+
+  @keyframes voorwie-reveal {
+    from {
+      opacity: .2;
+      transform: translateY(14px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (min-width: 760px) {
+    .voorwie-hero-grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, .7fr);
+    }
+
+    .voorwie-card-grid,
+    .voorwie-benefit-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .voorwie-category-grid,
+    .voorwie-match-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .voorwie-closing-card {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+    }
+  }
+
+  @media (min-width: 1040px) {
+    .voorwie-card-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .voorwie-benefit-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .voorwie-benefit-card {
+      padding: 22px;
+    }
+
+    .voorwie-benefit-card .voorwie-icon {
+      width: 52px;
+      height: 52px;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .voorwie-hero {
+      padding: 104px 0 58px;
+    }
+
+    .voorwie-actions,
+    .voorwie-closing .voorwie-actions {
+      flex-direction: column;
+    }
+
+    .voorwie-btn {
+      width: 100%;
+    }
+
+    .voorwie-hero-visual {
+      min-height: 430px;
+    }
+
+    .voorwie-orbit {
+      right: auto !important;
+      left: 18px !important;
+      width: calc(100% - 36px);
+    }
+
+    .voorwie-orbit:nth-child(2) { top: 28px; }
+    .voorwie-orbit:nth-child(3) { top: 88px; }
+    .voorwie-orbit:nth-child(4) { bottom: 88px; }
+    .voorwie-orbit:nth-child(5) { bottom: 28px; }
   }
 `;
 
-function WAWidget() {
-  const [open, setOpen] = useState(false);
-  const [inputVal, setInputVal] = useState("");
-  const [messages, setMessages] = useState([
-    {
-      from: "agent",
-      text: "👋 Hoi! Welkom bij Vedantix. Heb je een vraag of wil je een offerte? Ik help je graag!",
-    },
-  ]);
+const challenges = [
+  {
+    title: "Mijn website levert weinig op",
+    text: "Je website staat online, maar levert nauwelijks aanvragen of contactmomenten op. Wij helpen je om bezoekers om te zetten in klanten.",
+    icon: AlertTriangle,
+  },
+  {
+    title: "Ik ben afhankelijk van social media",
+    text: "Wanneer je stopt met posten, stopt ook je zichtbaarheid. Een sterke website blijft dag en nacht voor je werken.",
+    icon: Smartphone,
+  },
+  {
+    title: "Mijn concurrent staat hoger in Google",
+    text: "Potentiële klanten zoeken naar jouw diensten, maar vinden eerst je concurrent. Wij helpen je om beter zichtbaar te worden.",
+    icon: Search,
+  },
+  {
+    title: "Ik wil professioneler overkomen",
+    text: "Een sterke eerste indruk zorgt voor meer vertrouwen en meer kansen op nieuwe klanten.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Ik heb geen tijd voor techniek",
+    text: "Hosting, onderhoud, updates en e-mail kosten tijd die je liever in je bedrijf stopt.",
+    icon: Clock3,
+  },
+  {
+    title: "Ik wil groeien",
+    text: "Je zoekt niet alleen een website, maar een partner die meedenkt over online zichtbaarheid en groei.",
+    icon: LineChart,
+  },
+];
 
-  const url = "https://wa.me/310626219989";
+const categories = [
+  {
+    title: "Gezondheid & Coaching",
+    examples: ["Personal trainers", "Coaches", "Masseurs", "Fysiotherapeuten"],
+    result: "Meer afspraken en meer zichtbaarheid in jouw regio.",
+    icon: HeartPulse,
+  },
+  {
+    title: "Bouw & Techniek",
+    examples: ["Schilders", "Installateurs", "Dakdekkers", "Hoveniers"],
+    result: "Meer offerteaanvragen via jouw website.",
+    icon: Wrench,
+  },
+  {
+    title: "Horeca & Gastvrijheid",
+    examples: ["Restaurants", "Lunchrooms", "Cafés"],
+    result: "Meer reserveringen en een sterkere online aanwezigheid.",
+    icon: Utensils,
+  },
+  {
+    title: "Zakelijke Dienstverlening",
+    examples: ["Consultants", "Boekhouders", "Adviseurs"],
+    result: "Meer vertrouwen en kwalitatieve leads.",
+    icon: BriefcaseBusiness,
+  },
+];
 
-  const sendMessage = () => {
-    const trimmed = inputVal.trim();
-    if (!trimmed) return;
+const benefits = [
+  {
+    title: "Meer zichtbaarheid",
+    text: "Word beter gevonden door potentiële klanten die actief zoeken naar jouw diensten.",
+    icon: Eye,
+  },
+  {
+    title: "Meer vertrouwen",
+    text: "Een professionele uitstraling zorgt ervoor dat bezoekers sneller contact opnemen.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Meer aanvragen",
+    text: "Meer kansen op telefoontjes, WhatsApp-berichten en offerteaanvragen.",
+    icon: MessageCircle,
+  },
+  {
+    title: "Meer tijd",
+    text: "Wij regelen techniek, hosting en onderhoud zodat jij kunt ondernemen.",
+    icon: Clock3,
+  },
+  {
+    title: "Minder zorgen",
+    text: "Alles onder één dak. Eén aanspreekpunt voor jouw online aanwezigheid.",
+    icon: LifeBuoy,
+  },
+];
 
-    setMessages((prev) => [...prev, { from: "user", text: trimmed }]);
-    setInputVal("");
+const notMatch = [
+  "Je zoekt alleen de goedkoopste website.",
+  "Je wilt geen tijd investeren in je online aanwezigheid.",
+  "Je ziet een website alleen als visitekaartje.",
+  "Je wilt geen groei realiseren via online kanalen.",
+];
 
-    window.setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          from: "agent",
-          text: "Bedankt voor je bericht! 🙏 Klik hieronder om verder te chatten op WhatsApp.",
-        },
-      ]);
-    }, 800);
-  };
+const goodMatch = [
+  "Je wilt beter gevonden worden.",
+  "Je wilt professioneler overkomen.",
+  "Je wilt meer uit je website halen.",
+  "Je zoekt een partij die met je meedenkt.",
+  "Je wilt een website die meegroeit met je bedrijf.",
+];
 
-  const waLink = `${url}?text=${encodeURIComponent(
-    inputVal || messages.filter((m) => m.from === "user").map((m) => m.text).join(" ") || "Hallo Vedantix!"
-  )}`;
+function IconCard({ title, text, icon: Icon, className = "" }) {
+  return (
+    <article className={`voorwie-card ${className}`}>
+      <span className="voorwie-icon">
+        <Icon size={30} aria-hidden="true" />
+      </span>
+      <h3>{title}</h3>
+      <p>{text}</p>
+    </article>
+  );
+}
+
+function MatchList({ items, type }) {
+  const Icon = type === "bad" ? XCircle : CheckCircle2;
 
   return (
-    <div className="wa-fab">
-      {open && (
-        <div className="wa-popup">
-          <div className="wa-head">
-            <div className="wa-avatar">V</div>
-            <div className="wa-info">
-              <div className="wa-name">Vedantix Support</div>
-              <div className="wa-status">
-                <span className="wa-dot" /> Online
-              </div>
-            </div>
-            <button className="wa-close" onClick={() => setOpen(false)} aria-label="Sluiten">
-              ✕
-            </button>
-          </div>
-
-          <div className="wa-body">
-            {messages.map((m, i) => (
-              <div key={`${m.from}-${i}`} className={m.from === "agent" ? "wa-msg-agent" : "wa-msg-user"}>
-                {m.text}
-              </div>
-            ))}
-          </div>
-
-          <div className="wa-footer">
-            <div className="wa-input-row">
-              <input
-                className="wa-input"
-                placeholder="Typ een bericht..."
-                value={inputVal}
-                onChange={(e) => setInputVal(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-              />
-              <button className="wa-send" onClick={sendMessage} aria-label="Versturen">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff">
-                  <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-                </svg>
-              </button>
-            </div>
-
-            <a href={waLink} target="_blank" rel="noreferrer" className="wa-wa-btn">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff">
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
-              Doorgaan op WhatsApp
-            </a>
-          </div>
-        </div>
-      )}
-
-      <button className="wa-toggle" onClick={() => setOpen((p) => !p)} aria-label="WhatsApp chat">
-        {!open && <div className="wa-badge">1</div>}
-        {open ? (
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="#fff">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-          </svg>
-        ) : (
-          <svg viewBox="0 0 24 24" width="28" height="28" fill="#fff">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-          </svg>
-        )}
-      </button>
-    </div>
+    <ul className="voorwie-match-list">
+      {items.map((item) => (
+        <li key={item}>
+          <Icon size={18} aria-hidden="true" />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -353,23 +628,11 @@ export default function VoorWie() {
     { name: "Voor wie", url: canonical },
   ]);
 
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-
-    let vp = document.querySelector('meta[name="viewport"]');
-    if (!vp) {
-      vp = document.createElement("meta");
-      vp.setAttribute("name", "viewport");
-      vp.setAttribute("content", "width=device-width, initial-scale=1.0");
-      document.head.appendChild(vp);
-    }
-  }, []);
-
   return (
     <>
       <SEO
-        title="Voor wie | Websites voor elke branche | Vedantix"
-        description="Vedantix bouwt websites voor kappers, restaurants, fotografen, klusbedrijven, salons, coaches, winkels en andere ondernemers."
+        title="Voor wie is Vedantix? | Websites voor ondernemers die willen groeien"
+        description="Ontdek of Vedantix bij jouw bedrijf past. Voor ondernemers die meer zichtbaarheid, meer vertrouwen en meer aanvragen uit hun online aanwezigheid willen halen."
         canonical={canonical}
         schemas={[breadcrumbSchema]}
       />
@@ -380,118 +643,179 @@ export default function VoorWie() {
         <NavBar />
 
         <main>
-          <section className="hero-wrap">
-            <div className="hero-inner">
-              <Link to="/home" className="hero-back-link">
-                ← Terug naar Vedantix
-              </Link>
+          <section className="voorwie-hero">
+            <div className="voorwie-shell voorwie-hero-grid">
+              <div>
+                <div className="voorwie-kicker">
+                  <Sparkles size={16} aria-hidden="true" />
+                  Voor ondernemers die willen groeien
+                </div>
+                <h1>Voor ondernemers die online willen groeien</h1>
+                <div className="voorwie-hero-text">
+                  <p>Je website moet meer doen dan alleen bestaan.</p>
+                  <p>
+                    Hij moet vertrouwen wekken, beter gevonden worden en bijdragen aan de groei
+                    van jouw bedrijf.
+                  </p>
+                  <p>Daar helpen wij bij.</p>
+                </div>
+                <div className="voorwie-actions" aria-label="Belangrijkste acties">
+                  <Link className="voorwie-btn voorwie-btn-primary" to="/prijzen">
+                    Bekijk onze pakketten <ArrowRight size={18} aria-hidden="true" />
+                  </Link>
+                  <Link className="voorwie-btn voorwie-btn-secondary" to="/planning">
+                    Plan een kennismaking
+                  </Link>
+                </div>
+              </div>
 
-              <div className="hero-badge">🏢 Voor wie</div>
-
-              <h1 className="hero-title">
-                Een website voor
-                <br />
-                <span>elk type bedrijf</span>
-              </h1>
-
-              <p className="hero-text">
-                Of je nu kapper bent, restaurant uitbaat of net begint als zzp&apos;er — wij bouwen de website die bij jou past.
-              </p>
+              <aside className="voorwie-hero-visual" aria-label="Groei, zichtbaarheid en online succes">
+                <div className="voorwie-visual-core">
+                  <strong>Vedantix</strong>
+                </div>
+                <div className="voorwie-orbit">
+                  <Search size={18} aria-hidden="true" />
+                  Zichtbaarheid
+                </div>
+                <div className="voorwie-orbit">
+                  <ShieldCheck size={18} aria-hidden="true" />
+                  Vertrouwen
+                </div>
+                <div className="voorwie-orbit">
+                  <MessageCircle size={18} aria-hidden="true" />
+                  Aanvragen
+                </div>
+                <div className="voorwie-orbit">
+                  <TrendingUp size={18} aria-hidden="true" />
+                  Groei
+                </div>
+              </aside>
             </div>
           </section>
 
-          <section className="branches-wrap">
-            <div className="sector-grid">
-              {BRANCHES.map((branch) => (
-                <div key={branch.title} className="branch-card">
-                  <div style={{ fontSize: "2.2rem", marginBottom: 14 }}>{branch.icon}</div>
-                  <h3 style={{ fontSize: "1.1rem", fontWeight: 800, marginBottom: 10, color: "#0a1628" }}>
-                    {branch.title}
-                  </h3>
-                  <p style={{ color: "#6b7280", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: 16 }}>
-                    {branch.desc}
-                  </p>
-                  <div style={{ marginBottom: 20 }}>
-                    {branch.usecases.map((usecase) => (
-                      <span key={usecase} className="use-tag">
-                        ✓ {usecase}
-                      </span>
-                    ))}
+          <section className="voorwie-section" aria-labelledby="situaties-title">
+            <div className="voorwie-shell">
+              <div className="voorwie-section-heading center">
+                <p className="voorwie-label">Herkenbare situaties</p>
+                <h2 id="situaties-title">Herken jij jezelf hierin?</h2>
+                <p>Veel ondernemers lopen tegen dezelfde uitdagingen aan.</p>
+              </div>
+
+              <div className="voorwie-card-grid">
+                {challenges.map((item) => (
+                  <IconCard key={item.title} {...item} />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="voorwie-section voorwie-section-muted" aria-labelledby="ondernemers-title">
+            <div className="voorwie-shell">
+              <div className="voorwie-section-heading">
+                <p className="voorwie-label">Lokale ondernemers</p>
+                <h2 id="ondernemers-title">Voor welke ondernemers werken wij?</h2>
+                <p>Wij werken vooral met lokale ondernemers en dienstverleners.</p>
+              </div>
+
+              <div className="voorwie-category-grid">
+                {categories.map(({ title, examples, result, icon: Icon }) => (
+                  <article className="voorwie-category-card" key={title}>
+                    <span className="voorwie-icon">
+                      <Icon size={30} aria-hidden="true" />
+                    </span>
+                    <h3>{title}</h3>
+                    <ul className="voorwie-category-list">
+                      {examples.map((example) => (
+                        <li key={example}>
+                          <CheckCircle2 size={17} aria-hidden="true" />
+                          <span>{example}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="voorwie-category-result">{result}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="voorwie-section" aria-labelledby="waarde-title">
+            <div className="voorwie-shell">
+              <div className="voorwie-section-heading center">
+                <p className="voorwie-label">Ondernemerswaarde</p>
+                <h2 id="waarde-title">Wat levert Vedantix jou op?</h2>
+              </div>
+
+              <div className="voorwie-benefit-grid">
+                {benefits.map(({ title, text, icon: Icon }) => (
+                  <article className="voorwie-benefit-card" key={title}>
+                    <span className="voorwie-icon">
+                      <Icon size={28} aria-hidden="true" />
+                    </span>
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          <section className="voorwie-section voorwie-section-muted" aria-labelledby="match-title">
+            <div className="voorwie-shell">
+              <div className="voorwie-section-heading">
+                <p className="voorwie-label">Eerlijke verwachtingen</p>
+                <h2 id="match-title">Wanneer past Vedantix niet bij je?</h2>
+                <p>Wij geloven in eerlijke verwachtingen.</p>
+              </div>
+
+              <div className="voorwie-match-grid">
+                <article className="voorwie-match-card bad">
+                  <h3>Waarschijnlijk geen goede match</h3>
+                  <MatchList items={notMatch} type="bad" />
+                </article>
+
+                <article className="voorwie-match-card good">
+                  <h3>Goede match</h3>
+                  <MatchList items={goodMatch} type="good" />
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section className="voorwie-closing" aria-labelledby="closing-title">
+            <div className="voorwie-shell">
+              <div className="voorwie-closing-card">
+                <div>
+                  <p className="voorwie-label">Waar het echt om gaat</p>
+                  <h2 id="closing-title">Je hebt geen website nodig. Je hebt klanten nodig.</h2>
+                  <div className="voorwie-closing-copy">
+                    <p>Een website is slechts een middel.</p>
+                    <p>
+                      Het echte doel is meer zichtbaarheid, meer vertrouwen en meer kansen op
+                      nieuwe klanten.
+                    </p>
+                    <p>Daarom kijken wij verder dan design alleen.</p>
+                    <p>
+                      Wij combineren websites, SEO, content, gebruiksvriendelijkheid en online
+                      zichtbaarheid tot één complete oplossing.
+                    </p>
                   </div>
-                  <Link
-                    to="/starters"
-                    style={{
-                      display: "inline-block",
-                      background: "#1a73e8",
-                      color: "#fff",
-                      padding: "10px 20px",
-                      borderRadius: 9,
-                      fontWeight: 700,
-                      fontSize: "0.88rem",
-                      textDecoration: "none",
-                      transition: "background 0.2s",
-                    }}
-                  >
-                    Website aanvragen →
+                </div>
+
+                <div className="voorwie-actions" aria-label="Volgende stap">
+                  <Link className="voorwie-btn voorwie-btn-primary" to="/prijzen">
+                    Bekijk onze pakketten <ArrowRight size={18} aria-hidden="true" />
+                  </Link>
+                  <Link className="voorwie-btn voorwie-btn-secondary" to="/contact">
+                    Vraag een gratis online groeiscan aan
                   </Link>
                 </div>
-              ))}
-            </div>
-
-            <div className="cta-box">
-              <h2 className="cta-title">Klaar om te beginnen?</h2>
-              <p className="cta-text">
-                Vraag een gratis offerte aan of plan een kennismakingsgesprek in — geheel vrijblijvend.
-              </p>
-              <div className="cta-btns">
-                <Link
-                  to="/starters"
-                  style={{
-                    background: "#1a73e8",
-                    color: "#fff",
-                    padding: "14px 32px",
-                    borderRadius: 10,
-                    fontWeight: 700,
-                    textDecoration: "none",
-                    fontSize: "0.95rem",
-                  }}
-                >
-                  🚀 Configureer jouw website
-                </Link>
-                <Link
-                  to="/planning"
-                  style={{
-                    background: "transparent",
-                    color: "#fff",
-                    padding: "14px 32px",
-                    borderRadius: 10,
-                    fontWeight: 600,
-                    textDecoration: "none",
-                    border: "2px solid rgba(255,255,255,0.3)",
-                    fontSize: "0.95rem",
-                  }}
-                >
-                  📅 Plan een gesprek
-                </Link>
               </div>
             </div>
           </section>
         </main>
 
-        <footer className="page-footer">
-          <p>
-            © 2026 <strong>Vedantix</strong> —{" "}
-            <Link to="/" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>
-              Home
-            </Link>{" "}
-            &nbsp;|&nbsp;{" "}
-            <Link to="/prijzen" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "none" }}>
-              Prijzen vergelijken
-            </Link>
-          </p>
-        </footer>
-
-        <WAWidget />
+        <BigFooter />
       </div>
     </>
   );
