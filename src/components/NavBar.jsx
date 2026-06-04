@@ -46,9 +46,7 @@ export default function NavBar() {
 
         <nav className="site-nav">
           <div className="site-nav-links">
-            <a href={isHomePage ? "#pricing" : "/#pricing"} className="site-nav-link">
-              Prijzen
-            </a>
+            <Link to="/prijzen" className="site-nav-link">Prijzen</Link>
             <a href={isHomePage ? "#how" : "/#how"} className="site-nav-link">
               Hoe het werkt
             </a>

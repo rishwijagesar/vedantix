@@ -1,16 +1,16 @@
 import "../styles/home-hero.css";
 
 const HERO_CHECKS = [
-  "Eerste versie binnen 48 uur",
-  "Hosting inbegrepen",
-  "Gebouwd voor meer aanvragen",
-  "Niet tevreden? Niet betalen",
+  "Meer klanten",
+  "Meer zichtbaarheid",
+  "Meer vertrouwen",
+  "Alles onder één dak",
 ];
 
-const MOCKUP_SERVICES = [
-  ["✂️", "Knippen", "vanaf €18"],
-  ["🧔", "Baardverzorging", "vanaf €12"],
-  ["💈", "Fade & Styling", "vanaf €22"],
+const GROWTH_METRICS = [
+  ["Zichtbaarheid", "+38%"],
+  ["Aanvragen", "+21%"],
+  ["Mobiele acties", "+34%"],
 ];
 
 export default function HomeHero() {
@@ -19,46 +19,45 @@ export default function HomeHero() {
       <section className="hero">
         <div className="hero-container">
           <div className="hero-content">
-            <div className="hero-eyebrow">Voor lokale ondernemers die meer klanten willen</div>
+            <div className="hero-eyebrow">Online groei voor lokale ondernemers</div>
 
             <h1>
-              Een website die
+              Meer klanten.
               <br />
-              <span>vertrouwen wekt</span>
+              <span>Meer zichtbaarheid.</span>
               <br />
-              en meer aanvragen oplevert
+              Minder gedoe.
             </h1>
 
             <p className="hero-sub">
-              Wij bouwen snelle websites voor lokale ondernemers die meer afspraken,
-              offerteaanvragen en WhatsApp-contact willen.
+              Wij helpen lokale ondernemers groeien met websites die vertrouwen wekken, beter
+              gevonden worden in Google en meer aanvragen opleveren.
             </p>
 
-            <div className="hero-checks">
-              {HERO_CHECKS.map((item) => (
-                <div key={item} className="hero-check">
-                  {item}
-                </div>
-              ))}
-            </div>
+            <p className="hero-sub hero-sub-strong">
+              Niet alleen een website. Een complete online groeistrategie.
+            </p>
 
             <div className="hero-ctas">
               <a
-                href="https://wa.me/31626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
-                target="_blank"
-                rel="noreferrer"
+                href="#groei-scan"
                 className="hero-btn-primary"
               >
-                Plan gratis kennismaking →
+                Gratis Online Groei Scan →
               </a>
 
-              <a href="#demo" className="hero-btn-ghost">
-                Bekijk voorbeelden →
+              <a
+                href="https://wa.me/31626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20kennismaking%20plannen%20over%20online%20groei."
+                target="_blank"
+                rel="noreferrer"
+                className="hero-btn-ghost"
+              >
+                Plan een Kennismaking →
               </a>
             </div>
 
             <div className="hero-cta-note">
-              Betaling na oplevering · duidelijke afspraken · geen risico
+              Vrijblijvend advies · focus op groei · geen technische rompslomp
             </div>
           </div>
 
@@ -69,41 +68,40 @@ export default function HomeHero() {
                 <div className="mockup-dot" style={{ background: "#febc2e" }} />
                 <div className="mockup-dot" style={{ background: "#28c840" }} />
                 <div className="mockup-url">
-                  <span>barbershop-amsterdam.nl</span>
+                  <span>vedantix-groeiplan.nl</span>
                 </div>
               </div>
 
               <div className="mockup-header">
-                <div className="mockup-label">Demo concept voor kapper / barber</div>
-                <div className="mockup-title">Barbershop Amsterdam</div>
+                <div className="mockup-label">Online Groei Dashboard</div>
+                <div className="mockup-title">Lokale zichtbaarheid stijgt</div>
                 <div className="mockup-sub">
-                  Duidelijk. Snel. Gericht op afspraak of WhatsApp.
+                  Website, SEO, reviews en aanvragen werken samen.
                 </div>
 
                 <div className="mockup-meta">
-                  <span>⭐ Professionele eerste indruk</span>
-                  <span>📱 Mobielvriendelijk</span>
+                  <span>🔎 Beter gevonden</span>
+                  <span>💬 Meer contactmomenten</span>
                 </div>
               </div>
 
               <div className="mockup-services">
-                {MOCKUP_SERVICES.map(([icon, name, price]) => (
+                {GROWTH_METRICS.map(([name, value]) => (
                   <div key={name} className="mockup-item">
-                    <span>{icon}</span>
                     <span>{name}</span>
-                    <span>{price}</span>
+                    <span>{value}</span>
                   </div>
                 ))}
               </div>
 
               <div className="mockup-actions">
-                <div className="mockup-action mockup-action-primary">📅 Afspraak maken</div>
-                <div className="mockup-action mockup-action-wa">💬 WhatsApp</div>
+                <div className="mockup-action mockup-action-primary">Groei Scan</div>
+                <div className="mockup-action mockup-action-wa">Nieuwe aanvraag</div>
               </div>
             </div>
 
             <p className="mockup-note">
-              Demo mockup • bedoeld om richting en stijl te laten zien
+              Groei-indicatie • bedoeld om kansen zichtbaar te maken
             </p>
           </div>
         </div>
@@ -111,20 +109,11 @@ export default function HomeHero() {
 
       <section className="hero-trust-section" aria-label="Waarom ondernemers kiezen voor Vedantix">
         <div className="hero-trust-container">
-          <div className="hero-trust-item">
-            <div className="hero-trust-stat">Sterkere eerste indruk</div>
-            <div className="hero-trust-text">Professioneler overkomen vanaf het eerste bezoek</div>
-          </div>
-
-          <div className="hero-trust-item">
-            <div className="hero-trust-stat">Meer actie</div>
-            <div className="hero-trust-text">Gebouwd voor bellen, WhatsApp en aanvragen</div>
-          </div>
-
-          <div className="hero-trust-item">
-            <div className="hero-trust-stat">Minder gedoe</div>
-            <div className="hero-trust-text">Hosting, onderhoud en support onder één partij</div>
-          </div>
+          {HERO_CHECKS.map((item) => (
+            <div className="hero-trust-item" key={item}>
+              <div className="hero-trust-stat">✓ {item}</div>
+            </div>
+          ))}
         </div>
       </section>
 

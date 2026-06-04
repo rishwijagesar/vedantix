@@ -9,21 +9,10 @@ const CLIENT_CASES = [
     branch: "Horeca / dienstverlening",
     status: "Live",
     summary:
-      "Professionele website met duidelijke structuur, sterke mobiele weergave en een uitstraling die direct meer vertrouwen geeft.",
+      "Een sterkere online basis met duidelijke structuur, mobiele zichtbaarheid en een uitstraling die sneller vertrouwen geeft.",
     outcome:
-      "Sterkere eerste indruk, duidelijkere opbouw en een betere basis voor aanvragen en online zichtbaarheid.",
+      "Meer vertrouwen, duidelijkere contactmomenten en een betere basis voor aanvragen en online zichtbaarheid.",
   },
-  // Voeg later hier meer klanten toe
-  // {
-  //   name: "Nieuwe klant",
-  //   logo: "/logos/nieuwe-klant.svg",
-  //   website: "https://www.nieuweklant.nl/",
-  //   domainLabel: "nieuweklant.nl",
-  //   branch: "Kapper / salon",
-  //   status: "Live",
-  //   summary: "Korte omschrijving van het project.",
-  //   outcome: "Concreet resultaat of voordeel van het project.",
-  // },
 ];
 
 export default function ClientCasesSection() {
@@ -75,9 +64,9 @@ export default function ClientCasesSection() {
         <div style={styles.headerRow}>
           <div style={styles.headerContent}>
             <div style={styles.eyebrow}>KLANTCASES</div>
-            <h2 style={styles.title}>Websites die al voor echte bedrijven werken</h2>
+            <h2 style={styles.title}>Online groei die al voor echte bedrijven werkt</h2>
             <p style={styles.subtitle}>
-              Geen loze beloftes, maar voorbeelden van websites die al live staan en bijdragen aan een sterkere eerste indruk,
+              Geen loze beloftes, maar voorbeelden van ondernemers die hun online basis sterker maken voor meer vertrouwen,
               meer duidelijkheid en een betere basis voor aanvragen.
             </p>
           </div>

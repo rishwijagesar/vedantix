@@ -1,276 +1,217 @@
-import { useMemo, useState } from "react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Clock,
+  FileText,
+  Globe2,
+  LifeBuoy,
+  Mail,
+  MessageCircle,
+  Network,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Target,
+  TrendingUp,
+  Users,
+  Wrench,
+  Zap,
+} from "lucide-react";
 import NavBar from "../components/NavBar";
 import SEO from "../components/SEO";
 import BigFooter from "../components/BigFooter";
 import HomeHero from "./HomeHero";
-import HomePricing from "./HomePricing";
-import HomeDemoSection from "./HomeDemoSection";
-import HomeFounderSection from "./HomeFounderSection";
 import ClientCasesSection from "../components/home/ClientCasesSection";
+import { CONTACT } from "../constants/contact";
 import "../styles/home.css";
 import "../styles/home-hero.css";
 
-const FITS = [
-  "Kappers",
-  "Restaurants",
-  "Klusbedrijven",
-  "Schoonheidssalons",
-  "Fotografen",
-  "ZZP'ers",
-];
-
-const PROMISES = [
-  [
-    "48u",
-    "Snel eerste concept",
-    "Geen lang traject of maanden wachten. Je hebt snel iets sterks om op te reageren en mee verder te bouwen.",
-  ],
-  [
-    "€",
-    "Duidelijke maandprijs",
-    "Geen vaag gedoe met losse technische kosten. Je weet vooraf waar je aan toe bent.",
-  ],
-  [
-    "✓",
-    "Doorlopende ondersteuning",
-    "Na livegang stopt het niet. Onderhoud, kleine updates en hulp blijven gewoon geregeld.",
-  ],
-];
-
-const PROBLEMS = [
-  [
-    "🔍",
-    "Je website overtuigt niet snel genoeg",
-    "Bezoekers beslissen in seconden. Is je site onduidelijk of verouderd, dan haken ze af voordat ze bellen of appen.",
-  ],
-  [
-    "📱",
-    "Mobiel laat vaak kansen liggen",
-    "Veel lokale klanten bekijken je website op hun telefoon. Als dat niet strak en duidelijk werkt, verlies je directe actie.",
-  ],
-  [
-    "📞",
-    "Te weinig sturing naar contact",
-    "Zonder sterke call-to-actions verdwijnen bezoekers zonder reservering, aanvraag of WhatsApp-bericht.",
-  ],
-  [
-    "🧩",
-    "Na oplevering begint vaak het gedoe",
-    "Veel ondernemers willen geen losse partijen, technische vragen of een website die daarna stilstaat.",
-  ],
-];
-
-const PROOF_POINTS = [
-  [
-    "01",
-    "Gebouwd voor lokale bedrijven",
-    "De focus ligt op vertrouwen, contact en aanvragen. Niet op overbodige complexiteit.",
-  ],
-  [
-    "02",
-    "Van bezoeker naar actie",
-    "Elke sectie stuurt op duidelijkheid: bellen, WhatsApp, offerte, reservering of intake.",
-  ],
-  [
-    "03",
-    "Geen losse oplevering",
-    "Je krijgt niet alleen een website, maar ook onderhoud, ondersteuning en ruimte om door te groeien.",
-  ],
-];
-
-const NICHE_OPTIONS = [
+const BENEFITS = [
   {
-    key: "kappers",
-    icon: "✂️",
-    name: "Kappers",
-    problem: "Je wilt meer afspraken en een website die direct vertrouwen geeft.",
-    bestFit: "Growth past vaak het best",
-    href: "/website-kapper",
-    title: "Meer afspraken, minder afhaken",
-    text: "Voor kappers moet een website niet alleen mooi zijn, maar vooral snel vertrouwen opwekken en direct naar contact of afspraak leiden.",
-    points: [
-      "Duidelijke CTA’s voor bellen, WhatsApp of afspraak aanvragen",
-      "Sterke eerste indruk die past bij je salon en doelgroep",
-      "Ruimte voor behandelingen, tarieven, reviews en sfeer",
-    ],
+    title: "Meer klanten",
+    text: "Word gevonden door mensen die actief zoeken naar jouw diensten.",
+    icon: Users,
   },
   {
-    key: "restaurants",
-    icon: "🍽️",
-    name: "Restaurants",
-    problem: "Je wilt meer reserveringen en minder afhankelijk zijn van externe platforms.",
-    bestFit: "Growth of Pro past vaak het best",
-    href: "/website-restaurant",
-    title: "Meer reserveringen via je eigen website",
-    text: "Een restaurantwebsite moet sfeer neerzetten, maar vooral direct helpen bij reserveren, bellen en oriënteren.",
-    points: [
-      "Sterke menukaart-, sfeer- en contactsecties",
-      "Duidelijke focus op reserveren en directe omzet",
-      "Later uitbreidbaar met reserveringsflow of extra pagina’s",
-    ],
+    title: "Meer vertrouwen",
+    text: "Een professionele uitstraling die bezoekers omzet in klanten.",
+    icon: ShieldCheck,
   },
   {
-    key: "klusbedrijven",
-    icon: "🔨",
-    name: "Klusbedrijven",
-    problem: "Je wilt meer offerte-aanvragen en professioneler overkomen.",
-    bestFit: "Growth past vaak het best",
-    href: "/website-klusbedrijf",
-    title: "Meer offerte-aanvragen uit je regio",
-    text: "Voor klusbedrijven moet meteen duidelijk zijn wat je doet, waar je werkt en waarom iemand jou moet kiezen.",
-    points: [
-      "Sterke dienstenpagina’s en lokale zichtbaarheid",
-      "Focus op offerte, bellen en snelle leadopvolging",
-      "Meer vertrouwen bij nieuwe klanten",
-    ],
+    title: "Meer aanvragen",
+    text: "Meer telefoontjes, WhatsApp-berichten en offerteaanvragen.",
+    icon: MessageCircle,
   },
   {
-    key: "schoonheidssalons",
-    icon: "💅",
-    name: "Schoonheidssalons",
-    problem: "Je wilt meer boekingen met een rustige, luxe uitstraling.",
-    bestFit: "Growth past vaak het best",
-    href: "/website-salon",
-    title: "Meer boekingen met een rustige, professionele uitstraling",
-    text: "Voor salons moet je website kwaliteit uitstralen en soepel naar boeking of contact sturen.",
-    points: [
-      "Duidelijke behandelingen en contactopties",
-      "Sterke mobiele ervaring voor snelle beslissers",
-      "Minder chaos via losse DM’s en berichten",
-    ],
-  },
-  {
-    key: "fotografen",
-    icon: "📸",
-    name: "Fotografen",
-    problem: "Je wilt portfolio en vertrouwen combineren met meer boekingen.",
-    bestFit: "Growth past vaak het best",
-    href: "/website-fotograaf",
-    title: "Portfolio dat ook echt aanvragen oplevert",
-    text: "Voor fotografen moet een website niet alleen mooi tonen wat je maakt, maar ook overtuigen om contact op te nemen.",
-    points: [
-      "Portfolio-opbouw met duidelijke CTA’s",
-      "Professionelere indruk dan alleen social media",
-      "Meer aanvragen voor shoots, events of opdrachten",
-    ],
-  },
-  {
-    key: "zzpers",
-    icon: "🧑‍💼",
-    name: "ZZP'ers",
-    problem: "Je wilt professioneler overkomen en makkelijker klanten aantrekken.",
-    bestFit: "Starter of Growth past vaak het best",
-    href: "/website-zzp",
-    title: "Een sterke eerste indruk zonder technisch gedoe",
-    text: "Als zzp’er is je website vaak je eerste serieuze contactmoment. Die moet meteen duidelijk maken wat je doet en wat iemand kan verwachten.",
-    points: [
-      "Snelle professionele uitstraling",
-      "Meer focus op leads, bellen of intake aanvragen",
-      "Makkelijk later uit te breiden als je groeit",
-    ],
+    title: "Meer tijd",
+    text: "Geen gedoe met techniek, updates of hosting.",
+    icon: Clock,
   },
 ];
 
-const COMPARE_OLD = [
-  "Zelf tools, hosting en aanpassingen uitzoeken",
-  "Tijd kwijt aan design, tekst en techniek",
-  "Geen duidelijke opbouw richting contact of aanvraag",
-  "Bij problemen zelf zoeken wie iets oplost",
-  "Vaak goedkoop gestart, later alsnog duur en rommelig",
+const WEBSITE_ONLY = [
+  "Mooie homepage",
+  "Online visitekaartje",
+  "Weinig bezoekers",
+  "Geen SEO strategie",
+  "Geen groei",
 ];
 
-const COMPARE_NEW = [
-  "Alles rondom je website geregeld vanuit één partij",
-  "Gebouwd met focus op vertrouwen, contact en conversie",
-  "Onderhoud en kleine updates blijven doorlopen",
-  "Snelle communicatie zonder anoniem ticketsysteem",
-  "Makkelijk op te schalen zodra je bedrijf groeit",
+const GROWTH_MODEL = [
+  "Professionele website",
+  "SEO geoptimaliseerd",
+  "Google vindbaarheid",
+  "Content strategie",
+  "Reviews",
+  "Autoriteit",
+  "Meer aanvragen",
 ];
 
-const OUTCOMES = [
-  [
-    "✔",
-    "Meer vertrouwen",
-    "Een website die professioneler overkomt en sneller serieus genomen wordt.",
-  ],
-  ["⚡", "Meer actie", "Meer kans op bellen, appen, reserveren of een aanvraag."],
-  [
-    "🛡️",
-    "Meer rust",
-    "Onderhoud, kleine wijzigingen en doorlopende ondersteuning blijven geregeld.",
-  ],
+const ROADMAP = [
+  { title: "Website", icon: Globe2 },
+  { title: "Vindbaarheid", icon: Search },
+  { title: "Content", icon: FileText },
+  { title: "Reviews", icon: Star },
+  { title: "Vertrouwen", icon: ShieldCheck },
+  { title: "Aanvragen", icon: MessageCircle },
+  { title: "Groei", icon: TrendingUp },
 ];
 
-const STEPS = [
-  [
-    "1",
-    "Korte kennismaking",
-    "We bespreken je bedrijf, doelgroep en wat je website praktisch moet opleveren.",
-  ],
-  [
-    "2",
-    "Concept en opbouw",
-    "Je krijgt een sterke eerste richting die past bij jouw branche en uitstraling.",
-  ],
-  [
-    "3",
-    "Aanscherpen en live zetten",
-    "We verwerken feedback, maken het scherp en zetten alles netjes live.",
-  ],
-  [
-    "4",
-    "Doorlopend verbeteren",
-    "Na livegang blijven we beschikbaar voor onderhoud, updates en vervolgstappen.",
-  ],
+const ECOSYSTEM = [
+  { label: "Website", icon: Globe2 },
+  { label: "Hosting", icon: Zap },
+  { label: "Zakelijke E-mail", icon: Mail },
+  { label: "SEO", icon: Search },
+  { label: "Google Optimalisatie", icon: Target },
+  { label: "Reviews", icon: Star },
+  { label: "Content", icon: FileText },
+  { label: "Onderhoud", icon: Wrench },
+  { label: "Support", icon: LifeBuoy },
 ];
 
-const TRUST_ITEMS = [
-  "Gebouwd voor lokale ondernemers",
-  "Duidelijke maandprijs",
-  "Persoonlijk contact",
-  "Onderhoud inbegrepen",
-  "Snel opschaalbaar",
+const DIFFERENCES = [
+  {
+    title: "Focus op groei",
+    text: "We kijken eerst naar wat jouw bedrijf nodig heeft om meer zichtbaar, betrouwbaarder en makkelijker benaderbaar te worden.",
+    icon: TrendingUp,
+  },
+  {
+    title: "Focus op lokale ondernemers",
+    text: "De aanpak is gemaakt voor ondernemers die in hun regio meer klanten willen aantrekken.",
+    icon: Users,
+  },
+  {
+    title: "SEO vanaf dag één",
+    text: "Vindbaarheid wordt niet later geplakt, maar vanaf de basis meegenomen als groeimiddel.",
+    icon: Search,
+  },
+  {
+    title: "Geen standaard templates",
+    text: "Je krijgt een uitstraling die past bij jouw bedrijf, doelgroep en vertrouwen dat je wilt opbouwen.",
+    icon: Sparkles,
+  },
+  {
+    title: "Persoonlijke samenwerking",
+    text: "Je werkt met één aanspreekpunt dat meedenkt over zichtbaarheid, aanvragen en groei.",
+    icon: MessageCircle,
+  },
+  {
+    title: "Doorlopende ondersteuning",
+    text: "Ook na livegang blijven onderhoud, verbeteringen en nieuwe groeikansen in beeld.",
+    icon: LifeBuoy,
+  },
 ];
 
-const FAQS = [
-  [
-    "Hoe snel kan mijn website live zijn?",
-    "In veel gevallen staat de eerste sterke versie binnen 48 uur klaar. Daarna scherpen we die samen aan en zetten we hem live zodra de richting goed staat.",
-  ],
-  [
-    "Moet ik zelf teksten en beelden aanleveren?",
-    "Dat helpt, maar het hoeft niet perfect te zijn. We kunnen ook meedenken over structuur, richting en wat er vooral wél op moet staan om sneller te overtuigen.",
-  ],
-  [
-    "Is dit geschikt als ik later meer wil?",
-    "Ja. De opzet is juist bedoeld om later makkelijker uit te breiden met extra pagina’s, formulieren, reserveringen of andere functionaliteit.",
-  ],
-  [
-    "Waarom werken jullie met een maandmodel?",
-    "Omdat veel ondernemers vooral rust willen. Niet alleen een site die gebouwd wordt, maar ook iemand die hem blijft onderhouden en kleine dingen snel oppakt.",
-  ],
+const SCAN_ITEMS = [
+  "Vindbaarheid",
+  "SEO",
+  "Snelheid",
+  "Mobiele gebruikservaring",
+  "Reviews",
+  "Conversie",
+  "Call-to-actions",
+];
+
+const TRANSLATIONS = [
+  ["SEO", "Meer zichtbaarheid"],
+  ["Hosting", "Minder zorgen"],
+  ["PageSpeed", "Minder afhakers"],
+  ["Onderhoud", "Meer tijd"],
+  ["Responsive website", "Meer klanten via mobiel"],
 ];
 
 const CTA_META = [
-  "Vrijblijvende kennismaking",
-  "Heldere maandprijs",
-  "Onderhoud inbegrepen",
-  "Snel contact via WhatsApp",
+  "Vrijblijvend",
+  "Voor lokale ondernemers",
+  "Focus op groei",
+  "Eén aanspreekpunt",
 ];
 
-export default function Home() {
-  const [selectedNiche, setSelectedNiche] = useState(NICHE_OPTIONS[0].key);
+function SectionCta({ title, text, dark = false }) {
+  const scanUrl = `${CONTACT.WHATSAPP_URL}?text=${encodeURIComponent(
+    "Hallo Vedantix, ik wil graag een gratis Online Groei Scan aanvragen."
+  )}`;
 
-  const activeNiche = useMemo(
-    () => NICHE_OPTIONS.find((item) => item.key === selectedNiche) || NICHE_OPTIONS[0],
-    [selectedNiche]
+  return (
+    <div className={`mini-cta ${dark ? "dark" : ""}`}>
+      <div>
+        <h3>{title}</h3>
+        <p>{text}</p>
+      </div>
+      <div className="mini-cta-actions">
+        <a href="#groei-scan" className="btn-lead">
+          Gratis Online Groei Scan <ArrowRight size={17} aria-hidden="true" />
+        </a>
+        <a href={scanUrl} target="_blank" rel="noreferrer" className="btn-outline">
+          WhatsApp direct
+        </a>
+      </div>
+    </div>
   );
+}
+
+function IconCard({ title, text, icon: Icon }) {
+  return (
+    <article className="growth-card">
+      <div className="growth-card-icon">
+        <Icon size={24} aria-hidden="true" />
+      </div>
+      <h3>{title}</h3>
+      <p>{text}</p>
+    </article>
+  );
+}
+
+function CompareList({ title, items, variant }) {
+  return (
+    <article className={`growth-compare-col ${variant}`}>
+      <h3>{title}</h3>
+      <ul>
+        {items.map((item) => (
+          <li key={item}>
+            <CheckCircle2 size={18} aria-hidden="true" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </article>
+  );
+}
+
+export default function Home() {
+  const scanUrl = `${CONTACT.WHATSAPP_URL}?text=${encodeURIComponent(
+    "Hallo Vedantix, ik wil graag een gratis Online Groei Scan aanvragen."
+  )}`;
+  const meetingUrl = `${CONTACT.WHATSAPP_URL}?text=${encodeURIComponent(
+    "Hallo Vedantix, ik wil graag een kennismaking plannen over online groei."
+  )}`;
 
   return (
     <>
       <SEO
-        title="Website laten maken voor lokale ondernemers | Vedantix"
-        description="Binnen 48 uur een professionele website voor kappers, restaurants, klusbedrijven, salons, fotografen en zzp’ers. Gericht op meer aanvragen, minder gedoe en doorlopende ondersteuning."
+        title="Online groeien als lokale ondernemer | Vedantix"
+        description="Vedantix helpt lokale ondernemers groeien met meer zichtbaarheid, meer vertrouwen, meer aanvragen en minder technische zorgen."
         canonical="https://vedantix.nl/"
       />
 
@@ -280,36 +221,148 @@ export default function Home() {
         <main>
           <HomeHero />
 
-          <div className="micro-proof">
-            <div className="micro-proof-inner">
-              <span className="micro-proof-label">Geschikt voor</span>
-              {FITS.map((item) => (
-                <span key={item} className="micro-proof-pill">
-                  {item}
-                </span>
-              ))}
+          <section className="section-shell">
+            <div className="section-wrap">
+              <div className="section-header center">
+                <div className="section-label">Wat levert Vedantix jou op?</div>
+                <h2 className="section-h2">Meer resultaat uit je online aanwezigheid</h2>
+                <p className="section-p">
+                  Vedantix helpt lokale ondernemers groeien door meer zichtbaarheid, meer
+                  vertrouwen, meer aanvragen en minder technische zorgen.
+                </p>
+              </div>
+
+              <div className="growth-benefit-grid">
+                {BENEFITS.map((benefit) => (
+                  <IconCard key={benefit.title} {...benefit} />
+                ))}
+              </div>
+
+              <SectionCta
+                title="Benieuwd waar jouw grootste online groeikans ligt?"
+                text="Laat je website, vindbaarheid en aanvraagflow vrijblijvend bekijken."
+              />
             </div>
-          </div>
+          </section>
+
+          <section className="section-shell alt">
+            <div className="section-wrap">
+              <div className="section-header">
+                <div className="section-label">Waarom websites vaak stilvallen</div>
+                <h2 className="section-h2">Waarom veel websites geen klanten opleveren</h2>
+                <p className="section-p">
+                  Een website is slechts één onderdeel van online succes. Groei ontstaat pas als
+                  zichtbaarheid, vertrouwen en duidelijke contactmomenten samenwerken.
+                </p>
+              </div>
+
+              <div className="growth-compare-grid">
+                <CompareList title="Alleen een website" items={WEBSITE_ONLY} variant="old" />
+                <CompareList title="Het Vedantix Groei Model" items={GROWTH_MODEL} variant="new" />
+              </div>
+
+              <SectionCta
+                title="Maak van je website geen visitekaartje, maar een groeikanaal."
+                text="We laten zien welke onderdelen ontbreken om meer aanvragen te krijgen."
+              />
+            </div>
+          </section>
+
+          <section className="section-shell anchor-section" id="how">
+            <div className="section-wrap">
+              <div className="section-header center">
+                <div className="section-label">Het Vedantix Groei Model</div>
+                <h2 className="section-h2">Van zichtbaar worden naar aanvragen krijgen</h2>
+                <p className="section-p">
+                  Een website alleen zorgt zelden voor nieuwe klanten.
+                </p>
+                <p className="section-p">
+                  Online groei ontstaat wanneer techniek, content, snelheid, reviews en vertrouwen
+                  samenwerken.
+                </p>
+                <p className="section-p">
+                  Daarom bouwen wij niet alleen websites.
+                </p>
+                <p className="section-p">
+                  Wij bouwen complete online groeiplatformen.
+                </p>
+              </div>
+
+              <div className="growth-roadmap" aria-label="Het Vedantix Groei Model roadmap">
+                {ROADMAP.map(({ title, icon: Icon }, index) => (
+                  <div className="growth-roadmap-step" key={title}>
+                    <div className="growth-roadmap-icon">
+                      <Icon size={22} aria-hidden="true" />
+                    </div>
+                    <span>{title}</span>
+                    {index < ROADMAP.length - 1 ? <div className="growth-roadmap-arrow">↓</div> : null}
+                  </div>
+                ))}
+              </div>
+
+              <SectionCta
+                title="Wil je weten welke stap jouw bedrijf nu mist?"
+                text="De Online Groei Scan maakt snel duidelijk waar aanvragen blijven liggen."
+              />
+            </div>
+          </section>
+
+          <section className="section-shell alt">
+            <div className="section-wrap growth-ecosystem-wrap">
+              <div className="section-header center">
+                <div className="section-label">Alles onder één dak</div>
+                <h2 className="section-h2">Eén partij. Eén aanspreekpunt. Minder rompslomp.</h2>
+                <p className="section-p">
+                  Geen losse leveranciers. Geen technische rompslomp. Alles wat je online nodig
+                  hebt komt samen in één groeiplatform.
+                </p>
+              </div>
+
+              <div className="growth-ecosystem">
+                <div className="growth-ecosystem-center">
+                  <Network size={34} aria-hidden="true" />
+                  <strong>Vedantix</strong>
+                </div>
+                <div className="growth-ecosystem-items">
+                  {ECOSYSTEM.map(({ label, icon: Icon }) => (
+                    <div className="growth-ecosystem-item" key={label}>
+                      <Icon size={21} aria-hidden="true" />
+                      <span>{label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <SectionCta
+                title="Meer overzicht, minder losse lijntjes."
+                text="Laat je online basis controleren en ontdek wat slimmer onder één dak kan."
+              />
+            </div>
+          </section>
 
           <section className="section-shell">
             <div className="section-wrap">
               <div className="section-header center">
-                <div className="section-label">Waarom dit werkt</div>
-                <h2 className="section-h2">
-                  Een website die niet alleen mooi oogt, maar ook iets oplevert
-                </h2>
+                <div className="section-label">Wat maakt Vedantix anders?</div>
+                <h2 className="section-h2">Geen standaard webdesigner, maar groeipartner</h2>
                 <p className="section-p">
-                  Snelle oplevering, duidelijke prijzen en ondersteuning na livegang. Zodat je
-                  website niet stilvalt na de eerste versie.
+                  We vertalen techniek naar ondernemersvoordeel: zichtbaarheid, vertrouwen,
+                  aanvragen en rust.
                 </p>
               </div>
 
-              <div className="promise-grid">
-                {PROMISES.map(([icon, title, text]) => (
-                  <div key={title} className="promise-card">
-                    <div className="promise-icon">{icon}</div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
+              <div className="growth-difference-grid">
+                {DIFFERENCES.map((difference) => (
+                  <IconCard key={difference.title} {...difference} />
+                ))}
+              </div>
+
+              <div className="translation-strip" aria-label="Techniek vertaald naar voordeel">
+                {TRANSLATIONS.map(([technical, benefit]) => (
+                  <div className="translation-item" key={technical}>
+                    <span>{technical}</span>
+                    <ArrowRight size={16} aria-hidden="true" />
+                    <strong>{benefit}</strong>
                   </div>
                 ))}
               </div>
@@ -318,424 +371,57 @@ export default function Home() {
 
           <ClientCasesSection />
 
-          <section className="section-shell">
+          <section className="section-shell alt anchor-section" id="groei-scan">
             <div className="section-wrap">
-              <div className="section-header">
-                <div className="section-label">Het probleem</div>
-                <h2 className="section-h2">
-                  Veel websites van lokale ondernemers laten onnodig klanten liggen
-                </h2>
-                <p className="section-p">
-                  Niet omdat het bedrijf niet goed is, maar omdat de website te weinig vertrouwen
-                  geeft, te weinig richting biedt en daarna vaak stil blijft staan.
-                </p>
-              </div>
-
-              <div className="problem-grid">
-                {PROBLEMS.map(([icon, title, text]) => (
-                  <div key={title} className="problem-card">
-                    <div className="problem-icon">{icon}</div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="section-shell alt">
-            <div className="section-wrap">
-              <div className="section-header center">
-                <div className="section-label">Waarom Vedantix</div>
-                <h2 className="section-h2">
-                  Geen technische rompslomp, maar een website die beter verkoopt
-                </h2>
-                <p className="section-p">
-                  Vedantix is voor ondernemers die geen zin hebben in losse tools, lange trajecten
-                  of vage communicatie. Je krijgt snelheid, duidelijkheid en doorlopende
-                  ondersteuning.
-                </p>
-              </div>
-
-              <div className="proof-grid">
-                {PROOF_POINTS.map(([icon, title, text]) => (
-                  <div key={title} className="proof-card">
-                    <div className="proof-icon">{icon}</div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="section-shell alt anchor-section" id="voor-wie">
-            <div className="section-wrap">
-              <div className="section-header center">
-                <div className="section-label">Voor wie dit past</div>
-                <h2 className="section-h2">Kies jouw branche en zie waar de meeste winst zit</h2>
-                <p className="section-p">
-                  Niet elke ondernemer heeft dezelfde website nodig. Kies je branche en zie direct
-                  welke richting meestal het beste aansluit.
-                </p>
-              </div>
-
-              <div className="industry-grid">
-                {NICHE_OPTIONS.map((item) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    className={`industry-card ${selectedNiche === item.key ? "active" : ""}`}
-                    onClick={() => setSelectedNiche(item.key)}
-                  >
-                    <div className="industry-head">
-                      <div className="industry-name">{item.name}</div>
-                      <div className="industry-icon">{item.icon}</div>
-                    </div>
-
-                    <p className="industry-problem">{item.problem}</p>
-                    <span className="industry-tag">{item.bestFit}</span>
-                  </button>
-                ))}
-              </div>
-
-              <div className="industry-highlight">
-                <div className="industry-main">
-                  <div className="section-label" style={{ marginBottom: 10 }}>
-                    Voor {activeNiche.name.toLowerCase()}
-                  </div>
-                  <h3>{activeNiche.title}</h3>
-                  <p>{activeNiche.text}</p>
-
-                  <div className="bullet-list">
-                    {activeNiche.points.map((point) => (
-                      <div key={point} className="bullet-item">
-                        <span>{point}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="industry-side">
-                  <a href="#pricing" className="btn-lead">
-                    Bekijk passende pakketten →
-                  </a>
-                  <a href={activeNiche.href} className="btn-outline">
-                    Bekijk branchepagina →
-                  </a>
-                  <div className="industry-note">
-                    De branchepagina’s helpen bezoekers zichzelf sneller herkennen en ondersteunen
-                    ook je SEO-structuur.
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <HomeDemoSection />
-
-          <section className="section-shell">
-            <div className="section-wrap">
-              <div className="section-header center">
-                <div className="section-label">Vindbaarheid</div>
-                <h2 className="section-h2">Niet alleen mooi, maar ook beter vindbaar</h2>
-                <p className="section-p">
-                  Een goede website moet niet alleen professioneel ogen, maar ook helpen om beter
-                  gevonden te worden in Google en lokaal meer zichtbaar te zijn.
-                </p>
-              </div>
-
-              <div className="proof-grid">
-                <div className="proof-card">
-                  <div className="proof-icon">🔎</div>
-                  <h3>Slimme SEO-basis</h3>
-                  <p>
-                    We bouwen een duidelijke pagina-opbouw en inhoudsstructuur die helpt om beter
-                    gevonden te worden.
-                  </p>
-                </div>
-
-                <div className="proof-card">
-                  <div className="proof-icon">📍</div>
-                  <h3>Lokale vindbaarheid</h3>
-                  <p>
-                    Voor lokale ondernemers is plaats + dienst belangrijk. Daar richten we de
-                    website-opbouw slim op in.
-                  </p>
-                </div>
-
-                <div className="proof-card">
-                  <div className="proof-icon">📈</div>
-                  <h3>Klaar voor groei</h3>
-                  <p>
-                    De website blijft later makkelijk uitbreidbaar met extra pagina’s, FAQ’s,
-                    dienstenpagina’s of lokale landingspagina’s.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <HomePricing />
-
-          <section className="section-shell alt">
-            <div className="section-wrap">
-              <div className="section-header center">
-                <div className="section-label">De echte keuze</div>
-                <h2 className="section-h2">
-                  Zelf puzzelen of alles in één keer goed geregeld hebben
-                </h2>
-                <p className="section-p">
-                  De vergelijking is meestal niet met een goedkope builder. De echte vergelijking
-                  is of je alles zelf wilt uitzoeken of liever snel iets goeds neerzet met
-                  ondersteuning.
-                </p>
-              </div>
-
-              <div className="compare-grid">
-                <div className="compare-col old">
-                  <h3>Zelf doen of losse tools combineren</h3>
-                  {COMPARE_OLD.map((item) => (
-                    <div key={item} className="compare-item">
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="compare-col new">
-                  <h3>Vedantix</h3>
-                  {COMPARE_NEW.map((item) => (
-                    <div key={item} className="compare-item">
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="section-shell alt">
-            <div className="section-wrap">
-              <div className="section-header center">
-                <div className="section-label">Na livegang</div>
-                <h2 className="section-h2">Geen oplevering en klaar. Wij blijven betrokken.</h2>
-                <p className="section-p">
-                  Na livegang stopt het niet. We blijven actief met je meekijken, stellen
-                  verbeteringen voor en zorgen dat je website actueel en sterk blijft.
-                </p>
-              </div>
-
-              <div className="proof-grid">
-                <div className="proof-card">
-                  <div className="proof-icon">01</div>
-                  <h3>Periodiek contact</h3>
-                  <p>
-                    We blijven regelmatig in gesprek om te kijken wat beter kan, wat je doelgroep
-                    nodig heeft en welke nieuwe wensen er zijn.
-                  </p>
-                </div>
-
-                <div className="proof-card">
-                  <div className="proof-icon">02</div>
-                  <h3>Continue optimalisatie</h3>
-                  <p>
-                    Een website hoeft niet stil te staan na oplevering. We blijven kijken naar
-                    duidelijkheid, conversie en verbeterkansen.
-                  </p>
-                </div>
-
-                <div className="proof-card">
-                  <div className="proof-icon">03</div>
-                  <h3>Warme samenwerking</h3>
-                  <p>
-                    We willen geen losse transactie, maar een relatie waarin we betrokken blijven
-                    en waarin klanten je later ook makkelijker aanbevelen.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="section-shell anchor-section" id="how">
-            <div className="section-wrap">
-              <div className="section-header center">
-                <div className="section-label">Werkwijze</div>
-                <h2 className="section-h2">
-                  Van eerste bericht naar live website in 4 heldere stappen
-                </h2>
-                <p className="section-p">
-                  Geen vaag proces. Je weet vooraf hoe we werken, wat je kunt verwachten en hoe
-                  snel we kunnen schakelen.
-                </p>
-              </div>
-
-              <div className="steps-wrap">
-                {STEPS.map(([number, title, text]) => (
-                  <div key={number} className="step-card">
-                    <div className="step-no">{number}</div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="section-shell alt">
-            <div className="section-wrap">
-              <div className="section-header">
-                <div className="section-label">Wat dit oplevert</div>
-                <h2 className="section-h2">Meer vertrouwen, meer actie en minder gedoe</h2>
-                <p className="section-p">
-                  Een goede website moet niet alleen netjes ogen. Hij moet iemand overtuigen om
-                  contact op te nemen, te reserveren of een aanvraag te sturen.
-                </p>
-              </div>
-
-              <div className="outcome-grid">
-                {OUTCOMES.map(([icon, title, text]) => (
-                  <div key={title} className="outcome-card">
-                    <div className="outcome-icon">{icon}</div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <HomeFounderSection />
-
-          <div className="trust-strip">
-            <div className="trust-strip-inner">
-              {TRUST_ITEMS.map((item) => (
-                <div key={item} className="trust-chip">
-                  <span style={{ color: "#22c55e" }}>✓</span>
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <section className="section-shell">
-            <div className="section-wrap">
-              <div className="lead-box">
+              <div className="lead-box growth-scan-box">
                 <div>
                   <div className="lead-badge">Gratis · vrijblijvend</div>
-                  <div className="lead-title">Ontvang een eerlijke scan van je huidige website</div>
+                  <div className="lead-title">Gratis Online Groei Scan</div>
                   <p className="lead-text">
-                    We laten concreet zien waar winst zit in duidelijkheid, uitstraling, mobiele
-                    gebruikservaring en call-to-actions. Geen vaag advies, maar punten waar je
-                    echt iets aan hebt.
+                    Ontdek waarom jouw concurrent hoger staat in Google.
+                  </p>
+                  <p className="lead-text">
+                    We bekijken waar jouw bedrijf online zichtbaarheid, vertrouwen en aanvragen
+                    laat liggen.
                   </p>
                 </div>
 
                 <div className="lead-side">
-                  <h3>Wat je terugkrijgt</h3>
-                  <p>
-                    Een korte, duidelijke beoordeling met verbeterpunten waar je direct mee verder
-                    kunt.
-                  </p>
+                  <h3>Wij analyseren:</h3>
                   <ul>
-                    <li>Heldere feedback op je eerste indruk</li>
-                    <li>Verbeterpunten voor mobiel en CTA’s</li>
-                    <li>Reactie binnen 24 uur</li>
+                    {SCAN_ITEMS.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
                   </ul>
                   <a
-                    href="https://wa.me/31626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20website%20scan."
+                    href={scanUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="btn-wa"
                   >
-                    Vraag gratis website scan aan →
+                    Vraag gratis Online Groei Scan aan →
                   </a>
-                  <div className="lead-note">Helemaal vrijblijvend. Geen verplichtingen.</div>
+                  <div className="lead-note">Concreet advies. Geen verplichtingen.</div>
                 </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="section-shell alt">
-            <div className="section-wrap">
-              <div className="urgency-wrap">
-                <div className="urgency-box">
-                  <div className="urgency-badge">Beperkte capaciteit</div>
-                  <h3>We werken bewust met een beperkt aantal trajecten tegelijk</h3>
-                  <div className="spots">
-                    {[1, 2, 3, 4, 5].map((item) => (
-                      <div key={item} className={`spot ${item <= 3 ? "full" : "open"}`} />
-                    ))}
-                  </div>
-                  <p>
-                    Zo blijft er ruimte voor snelle communicatie, kwaliteit in de uitwerking en
-                    aandacht na livegang. Dat werkt beter dan zoveel mogelijk projecten tegelijk
-                    aannemen.
-                  </p>
-                </div>
-
-                <div className="guarantee-card">
-                  <h3>Geen druk, wel duidelijkheid</h3>
-                  <p>
-                    Eerst bespreken we wat bij jouw bedrijf past. Daarna beslis jij rustig of je
-                    verder wilt. Het doel is een website die echt bijdraagt aan je bedrijf, niet
-                    een snelle verkoop om het verkopen.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="section-shell">
-            <div className="section-wrap">
-              <div className="section-header center">
-                <div className="section-label">Veelgestelde vragen</div>
-                <h2 className="section-h2">Praktische vragen, direct beantwoord</h2>
-                <p className="section-p">
-                  Juist bij een eerste websiteproject wil je vooraf weten hoe snel het gaat, wat
-                  je zelf moet doen en hoe flexibel het later nog is.
-                </p>
-              </div>
-
-              <div className="faq-grid">
-                {FAQS.map(([question, answer]) => (
-                  <div key={question} className="faq-card">
-                    <h3>{question}</h3>
-                    <p>{answer}</p>
-                  </div>
-                ))}
               </div>
             </div>
           </section>
 
           <section id="cta" className="cta-section anchor-section">
             <div className="cta-inner">
-              <h2>Klaar voor een website die wél vertrouwen wekt en actie uitlokt?</h2>
+              <h2>Klaar om online meer klanten aan te trekken?</h2>
               <p>
-                Plan een vrijblijvende kennismaking en ontdek welke richting, stijl en opbouw het
-                beste past bij jouw bedrijf.
+                Plan een vrijblijvende kennismaking en ontdek waar jouw bedrijf online sneller kan
+                groeien.
               </p>
 
               <div className="cta-actions">
-                <a
-                  href="https://wa.me/31626219989?text=Hallo%20Vedantix%2C%20ik%20wil%20graag%20een%20gratis%20kennismaking%20voor%20mijn%20website."
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-dark"
-                >
-                  Plan gratis kennismaking →
+                <a href={scanUrl} target="_blank" rel="noreferrer" className="btn-dark">
+                  Gratis Online Groei Scan →
                 </a>
 
-                <a
-                  href="https://wa.me/31626219989?text=Hallo%20Vedantix%2C%20ik%20heb%20een%20vraag%20over%20een%20website."
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-wa"
-                >
-                  Stel je vraag via WhatsApp
-                </a>
-
-                <a href="#voor-wie" className="btn-ghost">
-                  Bekijk wat bij jou past →
+                <a href={meetingUrl} target="_blank" rel="noreferrer" className="btn-wa">
+                  Plan een Kennismaking
                 </a>
               </div>
 
