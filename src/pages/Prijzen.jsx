@@ -101,6 +101,70 @@ const PACKAGE_VALUE_COPY = {
   },
 };
 
+const PACKAGE_OUTCOME_COPY = {
+  STARTER: {
+    badge: "Voor starters en lokale ondernemers",
+    title: "Professioneel zichtbaar worden",
+    intro:
+      "Ideaal voor ondernemers die online serieus genomen willen worden en een professionele eerste indruk willen maken.",
+    benefits: [
+      "Professionele uitstraling",
+      "Klanten kunnen je online vinden",
+      "Meer vertrouwen bij potentiële klanten",
+      "Betere eerste indruk",
+      "Geen technische zorgen",
+    ],
+    result:
+      "Je bedrijf staat professioneel online en maakt direct een betere indruk op potentiële klanten.",
+  },
+  GROWTH: {
+    badge: "Voor ondernemers die willen groeien",
+    title: "Meer kansen op nieuwe klanten",
+    intro:
+      "Voor ondernemers die hun website actief willen inzetten om meer aanvragen en contactmomenten te genereren.",
+    benefits: [
+      "Meer zichtbaarheid in Google",
+      "Meer bezoekers op je website",
+      "Meer contactaanvragen",
+      "Meer WhatsApp gesprekken",
+      "Sterkere positie tegenover lokale concurrenten",
+      "Meer kansen op nieuwe klanten",
+    ],
+    result:
+      "Je website wordt een actief marketingkanaal in plaats van alleen een online visitekaartje.",
+  },
+  PRO: {
+    badge: "Voor ondernemers die willen vooroplopen",
+    title: "Online groeien met een langetermijnstrategie",
+    intro:
+      "Voor ondernemers die online willen investeren in zichtbaarheid, autoriteit en continue groei.",
+    benefits: [
+      "Maximale online zichtbaarheid",
+      "Doorlopende optimalisatie",
+      "Sterkere marktpositie",
+      "Meer autoriteit binnen jouw branche",
+      "Meer kwalitatieve aanvragen",
+      "Continue verbetering van prestaties",
+      "Een website die meegroeit met jouw bedrijf",
+    ],
+    result:
+      "Een complete online groeistrategie die blijft bijdragen aan de ontwikkeling van je bedrijf.",
+  },
+  CUSTOM: {
+    badge: "Voor ondernemers met maatwerkwensen",
+    title: "Een groeiaanpak op maat",
+    intro:
+      "Voor bedrijven met afwijkende wensen, specifieke processen of extra functionaliteit.",
+    benefits: [
+      "Oplossing afgestemd op jouw bedrijf",
+      "Ruimte voor specifieke workflows",
+      "Techniek die aansluit op je groeiplannen",
+    ],
+    result:
+      "Je krijgt een online oplossing die past bij hoe jouw bedrijf echt werkt.",
+  },
+};
+
 const VALUE_ROWS = [
   {
     key: "website",
@@ -237,10 +301,33 @@ const VALUE_ROWS = [
 ];
 
 const SUBSCRIPTION_REASONS = [
-  "Zoekmachines veranderen voortdurend.",
-  "Je aanbod, team en diensten groeien mee.",
-  "Bezoekers verwachten snelheid, vertrouwen en actuele informatie.",
-  "Je wilt wijzigingen kunnen doen zonder opnieuw een project te starten.",
+  "Onderhoud blijft geregeld zonder losse technische taken.",
+  "Optimalisatie loopt mee met zoekmachines en concurrenten.",
+  "Veiligheid, hosting en updates blijven onder controle.",
+  "Je website blijft waarde toevoegen terwijl je bedrijf groeit.",
+];
+
+const BUSINESS_BENEFITS = [
+  {
+    title: "Meer vertrouwen",
+    text: "Een professionele online uitstraling die klanten vertrouwen geeft.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Meer zichtbaarheid",
+    text: "Beter gevonden worden door potentiële klanten in jouw regio.",
+    icon: Search,
+  },
+  {
+    title: "Meer aanvragen",
+    text: "Meer kansen op telefoontjes, WhatsApp-berichten en offerteaanvragen.",
+    icon: MessageCircle,
+  },
+  {
+    title: "Minder zorgen",
+    text: "Wij regelen techniek, onderhoud en hosting zodat jij kunt ondernemen.",
+    icon: Wrench,
+  },
 ];
 
 function currency(value) {
@@ -274,6 +361,10 @@ function codeOf(pkg) {
 function valueFor(row, pkg) {
   const code = codeOf(pkg);
   return row.values[code] || row.values.CUSTOM || "Op maat";
+}
+
+function outcomeFor(pkg) {
+  return PACKAGE_OUTCOME_COPY[codeOf(pkg)] || PACKAGE_OUTCOME_COPY.CUSTOM;
 }
 
 function shouldLoadRemotePricing() {
@@ -392,6 +483,7 @@ export default function Prijzen() {
                         "Hosting en ondersteuning via Vedantix",
                         "Duidelijke afspraken zonder verborgen kosten",
                       ];
+                  const outcome = outcomeFor(pkg);
 
                   return (
                     <article
@@ -414,6 +506,25 @@ export default function Prijzen() {
                           <li key={bullet}>{bullet}</li>
                         ))}
                       </ul>
+
+                      <section className="prices-package-outcome" aria-label={`Wat levert ${pkg.label} jou op?`}>
+                        <div className={`prices-outcome-badge ${copy.tone}`}>{outcome.badge}</div>
+                        <h3>Wat levert dit pakket jou op?</h3>
+                        <h4>{outcome.title}</h4>
+                        <p>{outcome.intro}</p>
+                        <div className="prices-outcome-list">
+                          {outcome.benefits.map((benefit) => (
+                            <span key={benefit}>
+                              <CheckCircle2 size={15} aria-hidden="true" />
+                              {benefit}
+                            </span>
+                          ))}
+                        </div>
+                        <div className="prices-result-box">
+                          {outcome.result}
+                        </div>
+                      </section>
+
                       <a className="prices-card-cta" href={whatsappFor(pkg)} target="_blank" rel="noreferrer">
                         {pkg.cta || `Bespreek ${pkg.label}`} <ArrowRight size={16} aria-hidden="true" />
                       </a>
@@ -427,6 +538,67 @@ export default function Prijzen() {
                   Live pricing kon niet geladen worden. De standaard abonnementsprijzen worden getoond.
                 </div>
               ) : null}
+            </div>
+          </section>
+
+          <section className="prices-section prices-section-muted">
+            <div className="prices-wrap">
+              <div className="prices-subscription-block">
+                <div>
+                  <div className="prices-eyebrow light">Waarom een abonnement?</div>
+                  <h2>Waarom kiezen ondernemers voor een abonnement?</h2>
+                  <p>Een website is nooit echt af.</p>
+                  <p>
+                    Zoekmachines veranderen voortdurend, concurrenten blijven zich ontwikkelen en
+                    jouw bedrijf groeit mee.
+                  </p>
+                  <p>
+                    Daarom leveren wij niet alleen een website op, maar zorgen wij ook voor
+                    onderhoud, optimalisatie, veiligheid en online zichtbaarheid.
+                  </p>
+                  <p>
+                    Zo blijft jouw website waarde toevoegen aan je bedrijf.
+                  </p>
+                  <Link className="prices-btn primary" to="/planning">
+                    Plan een kennismaking <ArrowRight size={17} aria-hidden="true" />
+                  </Link>
+                </div>
+
+                <div className="prices-reason-list">
+                  {SUBSCRIPTION_REASONS.map((reason) => (
+                    <div key={reason} className="prices-reason-item">
+                      <CheckCircle2 size={18} aria-hidden="true" />
+                      <span>{reason}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="prices-section">
+            <div className="prices-wrap">
+              <div className="prices-section-header center">
+                <div className="prices-eyebrow light">Ondernemersvoordelen</div>
+                <h2>Wat levert Vedantix jou op?</h2>
+                <p>
+                  De techniek is de basis. De echte waarde zit in vertrouwen, zichtbaarheid,
+                  aanvragen en rust.
+                </p>
+              </div>
+
+              <div className="prices-benefit-grid">
+                {BUSINESS_BENEFITS.map((benefit) => {
+                  const Icon = benefit.icon;
+                  return (
+                    <article className="prices-benefit-card" key={benefit.title}>
+                      <span><Icon size={21} aria-hidden="true" /></span>
+                      <h3>{benefit.title}</h3>
+                      <p>{benefit.text}</p>
+                    </article>
+                  );
+                })}
+              </div>
             </div>
           </section>
 
@@ -475,39 +647,6 @@ export default function Prijzen() {
                     })}
                   </tbody>
                 </table>
-              </div>
-            </div>
-          </section>
-
-          <section className="prices-section prices-section-muted">
-            <div className="prices-wrap">
-              <div className="prices-subscription-block">
-                <div>
-                  <div className="prices-eyebrow light">Waarom een abonnement?</div>
-                  <h2>Waarom kiezen ondernemers voor een abonnement?</h2>
-                  <p>
-                    Een website is nooit echt af.
-                  </p>
-                  <p>
-                    Zoekmachines veranderen voortdurend en je bedrijf groeit mee.
-                  </p>
-                  <p>
-                    Daarom helpen wij niet alleen met de ontwikkeling van je website, maar ook met
-                    onderhoud, optimalisatie en online zichtbaarheid.
-                  </p>
-                  <Link className="prices-btn primary" to="/planning">
-                    Plan een kennismaking <ArrowRight size={17} aria-hidden="true" />
-                  </Link>
-                </div>
-
-                <div className="prices-reason-list">
-                  {SUBSCRIPTION_REASONS.map((reason) => (
-                    <div key={reason} className="prices-reason-item">
-                      <CheckCircle2 size={18} aria-hidden="true" />
-                      <span>{reason}</span>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           </section>

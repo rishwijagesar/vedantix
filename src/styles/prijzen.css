@@ -355,6 +355,105 @@
   font-weight:950;
 }
 
+.prices-package-outcome{
+  margin:2px 0 22px;
+  padding:18px;
+  border-radius:18px;
+  border:1px solid #dbeafe;
+  background:linear-gradient(180deg,#f8fbff,#fff);
+}
+
+.prices-outcome-badge{
+  display:inline-flex;
+  width:max-content;
+  max-width:100%;
+  margin-bottom:12px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:.65rem;
+  font-weight:950;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+}
+
+.prices-outcome-badge.starter{
+  background:#eff6ff;
+  color:#1d4ed8;
+}
+
+.prices-outcome-badge.growth{
+  background:#ecfdf5;
+  color:#047857;
+}
+
+.prices-outcome-badge.pro{
+  background:#fff7ed;
+  color:#7c2d12;
+}
+
+.prices-outcome-badge.custom{
+  background:#eef2ff;
+  color:#4338ca;
+}
+
+.prices-package-outcome h3{
+  margin:0 0 7px;
+  color:#0f172a;
+  font-size:.78rem;
+  font-weight:950;
+  letter-spacing:.9px;
+  text-transform:uppercase;
+}
+
+.prices-package-outcome h4{
+  margin:0 0 10px;
+  color:#111827;
+  font-size:1.05rem;
+  line-height:1.25;
+  font-weight:950;
+  letter-spacing:0;
+}
+
+.prices-package-outcome p{
+  min-height:0;
+  margin:0 0 14px;
+  color:#64748b;
+  font-size:.84rem;
+  line-height:1.55;
+}
+
+.prices-outcome-list{
+  display:grid;
+  gap:8px;
+}
+
+.prices-outcome-list span{
+  display:flex;
+  gap:8px;
+  align-items:flex-start;
+  color:#334155;
+  font-size:.82rem;
+  font-weight:800;
+  line-height:1.4;
+}
+
+.prices-outcome-list svg{
+  flex-shrink:0;
+  margin-top:1px;
+  color:#059669;
+}
+
+.prices-result-box{
+  margin-top:14px;
+  padding:13px 14px;
+  border-radius:14px;
+  background:#0f172a;
+  color:#fff;
+  font-size:.82rem;
+  font-weight:850;
+  line-height:1.5;
+}
+
 .prices-card-cta{
   display:inline-flex;
   align-items:center;
@@ -400,6 +499,12 @@
 .prices-section-header{
   max-width:790px;
   margin-bottom:30px;
+}
+
+.prices-section-header.center{
+  margin-right:auto;
+  margin-left:auto;
+  text-align:center;
 }
 
 .prices-section-header h2,
@@ -539,6 +644,47 @@
   color:#059669;
 }
 
+.prices-benefit-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+}
+
+.prices-benefit-card{
+  padding:22px;
+  border:1px solid #dbe4f0;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 16px 40px rgba(15,23,42,.055);
+}
+
+.prices-benefit-card > span{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:42px;
+  height:42px;
+  margin-bottom:16px;
+  border-radius:14px;
+  background:#eff6ff;
+  color:#2563eb;
+}
+
+.prices-benefit-card h3{
+  margin:0 0 8px;
+  color:#0f172a;
+  font-size:1.05rem;
+  font-weight:950;
+  letter-spacing:0;
+}
+
+.prices-benefit-card p{
+  margin:0;
+  color:#64748b;
+  font-size:.9rem;
+  line-height:1.65;
+}
+
 @media (max-width: 1040px){
   .prices-hero-grid,
   .prices-subscription-block{
@@ -546,6 +692,10 @@
   }
 
   .prices-package-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .prices-benefit-grid{
     grid-template-columns:repeat(2,minmax(0,1fr));
   }
 
@@ -587,6 +737,10 @@
   }
 
   .prices-package-grid{
+    grid-template-columns:1fr;
+  }
+
+  .prices-benefit-grid{
     grid-template-columns:1fr;
   }
 
