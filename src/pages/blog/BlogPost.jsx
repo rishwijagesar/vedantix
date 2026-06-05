@@ -22,7 +22,7 @@ export default function BlogPost() {
 
   const articleSchema = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: post.title,
     description: post.seo?.description || post.intro,
     url: canonical,

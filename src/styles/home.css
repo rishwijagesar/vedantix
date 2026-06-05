@@ -938,22 +938,22 @@ body{margin:0;padding:0}
   margin-top:10px;
 }
 
-.growth-scan-box{
+.growth-audit-box{
   background:linear-gradient(135deg,#eff6ff,#ffffff);
   border-color:#bfdbfe;
 }
 
-.growth-scan-box .lead-badge{
+.growth-audit-box .lead-badge{
   color:#1d4ed8;
   background:#dbeafe;
   border-color:#bfdbfe;
 }
 
-.growth-scan-box .lead-title{
+.growth-audit-box .lead-title{
   max-width:620px;
 }
 
-.growth-scan-box .lead-side{
+.growth-audit-box .lead-side{
   background:linear-gradient(145deg,#071225,#0d2a5a);
 }
 

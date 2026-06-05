@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import SEO from "../components/SEO";
 import NavBar from "../components/NavBar";
-import { createBreadcrumbSchema, createServiceSchema } from "../utils/schema";
+import { createBreadcrumbSchema, createFAQSchema, createServiceSchema } from "../utils/schema";
 import "../styles/groeimodel.css";
 
 const canonical = "https://vedantix.nl/groeimodel";
@@ -116,6 +116,29 @@ const ecosystemItems = [
   { label: "Support", icon: LifeBuoy },
 ];
 
+const groeimodelFaqs = [
+  {
+    question: "Waarom is alleen een website niet genoeg?",
+    answer:
+      "Een website zorgt pas voor groei wanneer uitstraling, vindbaarheid, content, reviews, snelheid en duidelijke contactmomenten samenwerken.",
+  },
+  {
+    question: "Voor wie is Vedantix bedoeld?",
+    answer:
+      "Vedantix is bedoeld voor lokale ondernemers die professioneel zichtbaar willen zijn, meer vertrouwen willen opbouwen en meer aanvragen uit hun online aanwezigheid willen halen.",
+  },
+  {
+    question: "Wat doet Vedantix na oplevering?",
+    answer:
+      "Vedantix blijft helpen met hosting, onderhoud, optimalisatie, vindbaarheid, content en verbeteringen zodat je website waarde blijft toevoegen.",
+  },
+  {
+    question: "Helpt Vedantix ook met Google en AI-vindbaarheid?",
+    answer:
+      "Ja. Vedantix maakt websites en content begrijpelijker voor Google, lokale zoekopdrachten en moderne AI-platformen zoals ChatGPT en Gemini.",
+  },
+];
+
 const serviceSchema = createServiceSchema({
   name: "Waarom ondernemers voor Vedantix kiezen",
   slug: "groeimodel",
@@ -129,6 +152,8 @@ const breadcrumbSchema = createBreadcrumbSchema([
   { name: "Home", url: "https://vedantix.nl/" },
   { name: "Waarom ondernemers voor Vedantix kiezen", url: canonical },
 ]);
+
+const faqSchema = createFAQSchema(groeimodelFaqs);
 
 function ComparisonList({ items, type }) {
   const Icon = type === "bad" ? XCircle : CheckCircle2;
@@ -152,7 +177,7 @@ export default function Groeimodel() {
         title="Waarom ondernemers voor Vedantix kiezen"
         description="Vedantix helpt lokale ondernemers met meer zichtbaarheid, vertrouwen, aanvragen en minder gedoe dan een standaard webdesigner."
         canonical={canonical}
-        schemas={[serviceSchema, breadcrumbSchema]}
+        schemas={[serviceSchema, faqSchema, breadcrumbSchema]}
       />
 
       <div className="groei-page">
@@ -295,6 +320,22 @@ export default function Groeimodel() {
 
           <section className="groei-final-section" aria-labelledby="final-title">
             <div className="groei-shell">
+              <div className="groei-faq-block" aria-labelledby="groei-faq-title">
+                <div className="groei-section-heading center">
+                  <p className="groei-label">Veelgestelde vragen</p>
+                  <h2 id="groei-faq-title">Waarom kiezen ondernemers voor Vedantix?</h2>
+                </div>
+
+                <div className="groei-faq-grid">
+                  {groeimodelFaqs.map((faq) => (
+                    <article className="groei-faq-card" key={faq.question}>
+                      <h3>{faq.question}</h3>
+                      <p>{faq.answer}</p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+
               <div className="groei-final-card">
                 <p className="groei-label">Voor ondernemers die willen groeien</p>
                 <h2 id="final-title">Voor ondernemers die willen groeien</h2>

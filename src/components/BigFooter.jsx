@@ -406,8 +406,8 @@ export default function BigFooter() {
                 Online zichtbaarheid voor lokale ondernemers
               </h2>
               <p className="big-footer__brand-text">
-                Vedantix helpt lokale ondernemers groeien met professionele websites,
-                SEO, AI-vriendelijke content, hosting, onderhoud en online zichtbaarheid.
+                Vedantix helpt lokale ondernemers groeien met websites, SEO,
+                AI-vriendelijke content, online zichtbaarheid en onderhoud.
               </p>
 
               <ul className="big-footer__links" aria-label="Vedantix diensten">
@@ -457,6 +457,7 @@ export default function BigFooter() {
                 <li><Link to="/proces">Proces</Link></li>
                 <li><Link to="/groeimodel">Waarom Vedantix</Link></li>
                 <li><Link to="/resultaten">Resultaten</Link></li>
+                <li><Link to="/online-groei-audit">Online Groei Audit</Link></li>
                 <li><Link to="/faq">FAQ</Link></li>
                 <li><Link to="/contact">Contact</Link></li>
                 <li><Link to="/blog">Blog</Link></li>
@@ -514,9 +515,9 @@ export default function BigFooter() {
                 </div>
               </div>
 
-              <a className="big-footer__cta" href="/#groei-scan">
-                Gratis Online Groei Scan
-              </a>
+              <Link className="big-footer__cta" to="/online-groei-audit">
+                Gratis Online Groei Audit
+              </Link>
             </div>
           </div>
 
@@ -533,6 +534,7 @@ export default function BigFooter() {
               <Link to="/faq">FAQ</Link>
               <Link to="/prijzen">Prijzen</Link>
               <Link to="/resultaten">Resultaten</Link>
+              <Link to="/online-groei-audit">Online Groei Audit</Link>
             </div>
           </div>
         </div>

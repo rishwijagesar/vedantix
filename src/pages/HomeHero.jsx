@@ -40,10 +40,10 @@ export default function HomeHero() {
 
             <div className="hero-ctas">
               <a
-                href="#groei-scan"
+                href="/online-groei-audit"
                 className="hero-btn-primary"
               >
-                Gratis Online Groei Scan →
+                Gratis Online Groei Audit →
               </a>
 
               <a
@@ -95,7 +95,7 @@ export default function HomeHero() {
               </div>
 
               <div className="mockup-actions">
-                <div className="mockup-action mockup-action-primary">Groei Scan</div>
+                <div className="mockup-action mockup-action-primary">Groei Audit</div>
                 <div className="mockup-action mockup-action-wa">Nieuwe aanvraag</div>
               </div>
             </div>

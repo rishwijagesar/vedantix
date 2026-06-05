@@ -9,7 +9,7 @@ export const vedantixEntity = {
   email: "info@vedantix.nl",
   telephone: "+31626219989",
   description:
-    "Vedantix helpt lokale ondernemers groeien met professionele websites, SEO, AI-vriendelijke content, hosting, onderhoud en online zichtbaarheid.",
+    "Vedantix helpt lokale ondernemers groeien met websites, SEO, AI-vriendelijke content, online zichtbaarheid en onderhoud.",
 };
 
 export function createOrganizationSchema() {

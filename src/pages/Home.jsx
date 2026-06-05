@@ -149,19 +149,24 @@ const DIFFERENCES = [
 
 const AI_READINESS_CARDS = [
   {
-    title: "Beter zichtbaar in Google",
-    text: "Wij optimaliseren jouw website voor zoekmachines zodat potentiële klanten je makkelijker kunnen vinden.",
+    title: "SEO",
+    text: "Beter gevonden worden in Google.",
     icon: Search,
   },
   {
-    title: "Klaar voor AI-zoekmachines",
-    text: "Wij structureren content zodat AI-systemen jouw bedrijf beter begrijpen.",
+    title: "AI-vriendelijke websites",
+    text: "Klaar voor ChatGPT, Gemini en andere AI-platformen.",
     icon: Sparkles,
   },
   {
-    title: "Meer lokale zichtbaarheid",
-    text: "Word beter gevonden door klanten in jouw regio.",
+    title: "Google Business",
+    text: "Meer lokale zichtbaarheid.",
     icon: Target,
+  },
+  {
+    title: "Conversie",
+    text: "Meer kansen op aanvragen.",
+    icon: TrendingUp,
   },
 ];
 
@@ -214,10 +219,6 @@ const HOMEPAGE_FAQS = [
 ];
 
 function SectionCta({ title, text, dark = false }) {
-  const scanUrl = `${CONTACT.WHATSAPP_URL}?text=${encodeURIComponent(
-    "Hallo Vedantix, ik wil graag een gratis Online Groei Scan aanvragen."
-  )}`;
-
   return (
     <div className={`mini-cta ${dark ? "dark" : ""}`}>
       <div>
@@ -225,11 +226,11 @@ function SectionCta({ title, text, dark = false }) {
         <p>{text}</p>
       </div>
       <div className="mini-cta-actions">
-        <a href="#groei-scan" className="btn-lead">
-          Gratis Online Groei Scan <ArrowRight size={17} aria-hidden="true" />
+        <a href="/online-groei-audit" className="btn-lead">
+          Gratis Online Groei Audit <ArrowRight size={17} aria-hidden="true" />
         </a>
-        <a href={scanUrl} target="_blank" rel="noreferrer" className="btn-outline">
-          WhatsApp direct
+        <a href={CONTACT.WHATSAPP_URL} target="_blank" rel="noreferrer" className="btn-outline">
+          Plan een kennismaking
         </a>
       </div>
     </div>
@@ -265,9 +266,6 @@ function CompareList({ title, items, variant }) {
 }
 
 export default function Home() {
-  const scanUrl = `${CONTACT.WHATSAPP_URL}?text=${encodeURIComponent(
-    "Hallo Vedantix, ik wil graag een gratis Online Groei Scan aanvragen."
-  )}`;
   const meetingUrl = `${CONTACT.WHATSAPP_URL}?text=${encodeURIComponent(
     "Hallo Vedantix, ik wil graag een kennismaking plannen over online groei."
   )}`;
@@ -319,7 +317,7 @@ export default function Home() {
 
               <SectionCta
                 title="Wil je weten of jouw website echt werkt?"
-                text="Vraag een gratis online groeiscan aan en ontdek waar je meer vertrouwen, zichtbaarheid en aanvragen kunt winnen."
+                text="Vraag een gratis Online Groei Audit aan en ontdek waar je meer vertrouwen, zichtbaarheid en aanvragen kunt winnen."
               />
             </div>
           </section>
@@ -405,7 +403,7 @@ export default function Home() {
 
               <SectionCta
                 title="Wil je weten welke stap jouw bedrijf nu mist?"
-                text="De Online Groei Scan maakt snel duidelijk waar aanvragen blijven liggen."
+                text="De Online Groei Audit maakt snel duidelijk waar aanvragen blijven liggen."
               />
             </div>
           </section>
@@ -480,12 +478,11 @@ export default function Home() {
                   Gevonden worden in Google én AI
                 </h2>
                 <p className="section-p">
-                  Steeds meer mensen zoeken niet alleen via Google, maar ook via
-                  AI-platformen zoals ChatGPT, Gemini en andere slimme assistenten.
+                  Steeds meer mensen zoeken via Google, ChatGPT, Gemini en andere AI-platformen.
                 </p>
                 <p className="section-p">
-                  Daarom bouwen wij websites die niet alleen zoekmachinevriendelijk zijn,
-                  maar ook begrijpelijk zijn voor moderne AI-systemen.
+                  Wij zorgen ervoor dat jouw website niet alleen mooi is, maar ook begrijpelijk
+                  is voor moderne zoekmachines en AI-systemen.
                 </p>
               </div>
 
@@ -496,20 +493,20 @@ export default function Home() {
               </div>
 
               <SectionCta
-                title="Toekomstbestendig voor AI"
-                text="De manier waarop mensen zoeken verandert. Wij zorgen ervoor dat jouw website voorbereid is op zowel traditionele zoekmachines als moderne AI-platformen."
+                title="Vraag een gratis Online Groei Audit aan"
+                text="Ontdek hoe jouw website scoort op SEO, AI-zichtbaarheid, Google Business en conversie."
               />
             </div>
           </section>
 
           <ClientCasesSection />
 
-          <section className="section-shell alt anchor-section" id="groei-scan">
+          <section className="section-shell alt anchor-section" id="online-groei-audit">
             <div className="section-wrap">
-              <div className="lead-box growth-scan-box">
+              <div className="lead-box growth-audit-box">
                 <div>
                   <div className="lead-badge">Gratis · vrijblijvend</div>
-                  <div className="lead-title">Gratis Online Groei Scan</div>
+                  <div className="lead-title">Gratis Online Groei Audit</div>
                   <p className="lead-text">
                     Ontdek waarom jouw concurrent hoger staat in Google.
                   </p>
@@ -527,12 +524,10 @@ export default function Home() {
                     ))}
                   </ul>
                   <a
-                    href={scanUrl}
-                    target="_blank"
-                    rel="noreferrer"
+                    href="/online-groei-audit"
                     className="btn-wa"
                   >
-                    Vraag gratis Online Groei Scan aan →
+                    Vraag gratis Online Groei Audit aan →
                   </a>
                   <div className="lead-note">Concreet advies. Geen verplichtingen.</div>
                 </div>
@@ -573,8 +568,8 @@ export default function Home() {
               </p>
 
               <div className="cta-actions">
-                <a href={scanUrl} target="_blank" rel="noreferrer" className="btn-dark">
-                  Gratis Online Groei Scan →
+                <a href="/online-groei-audit" className="btn-dark">
+                  Gratis Online Groei Audit →
                 </a>
 
                 <a href={meetingUrl} target="_blank" rel="noreferrer" className="btn-wa">

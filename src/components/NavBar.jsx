@@ -52,14 +52,15 @@ export default function NavBar() {
             </a>
             <Link to="/groeimodel" className="site-nav-link">Waarom Vedantix</Link>
             <Link to="/resultaten" className="site-nav-link">Resultaten</Link>
+            <Link to="/online-groei-audit" className="site-nav-link">Audit</Link>
             <Link to="/contact" className="site-nav-link">Contact</Link>
             <Link to="/blog" className="site-nav-link">Blog</Link>
             <Link to="/faq" className="site-nav-link">FAQ</Link>
           </div>
 
-          <a href={isHomePage ? "#cta" : "/#cta"} className="site-nav-cta">
-            Start je website →
-          </a>
+          <Link to="/online-groei-audit" className="site-nav-cta">
+            Gratis Audit →
+          </Link>
         </nav>
       </div>
     </header>

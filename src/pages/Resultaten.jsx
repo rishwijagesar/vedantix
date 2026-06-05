@@ -334,7 +334,7 @@ const FAQS = [
   {
     question: "Kan ik eerst laten analyseren waar kansen liggen?",
     answer:
-      "Ja. Met de gratis Online Groei Scan bekijkt Vedantix vindbaarheid, snelheid, mobiele ervaring, reviews, conversie en call-to-actions.",
+      "Ja. Met de gratis Online Groei Audit bekijkt Vedantix vindbaarheid, snelheid, mobiele ervaring, reviews, conversie en call-to-actions.",
   },
   {
     question: "Werkt Vedantix voor lokale ondernemers?",
@@ -385,8 +385,8 @@ export default function Resultaten() {
                 vertrouwen opbouwen en kansen creëren op nieuwe klanten.
               </p>
               <div className="results-actions">
-                <a href="/#groei-scan" className="results-primary">
-                  Vraag een gratis online groeiscan aan
+                <a href="/online-groei-audit" className="results-primary">
+                  Vraag een gratis Online Groei Audit aan
                   <ArrowRight size={17} aria-hidden="true" />
                 </a>
                 <Link to="/prijzen" className="results-secondary">
@@ -476,8 +476,8 @@ export default function Resultaten() {
                 naar aanvraag.
               </p>
               <div className="results-actions" style={{ marginTop: 22 }}>
-                <a href="/#groei-scan" className="results-primary">
-                  Vraag jouw groeiscan aan
+                <a href="/online-groei-audit" className="results-primary">
+                  Vraag jouw audit aan
                 </a>
                 <Link to="/website/personal-trainer" className="results-secondary">
                   Bekijk branchevoorbeeld
@@ -505,11 +505,11 @@ export default function Resultaten() {
             <BarChart3 size={34} aria-hidden="true" />
             <h2>Ontdek waar jouw website groei laat liggen</h2>
             <p>
-              De gratis Online Groei Scan laat zien hoe je website scoort op vindbaarheid,
+              De gratis Online Groei Audit laat zien hoe je website scoort op vindbaarheid,
               vertrouwen, snelheid, mobiel gebruik en contactmomenten.
             </p>
-            <a href="/#groei-scan" className="results-primary">
-              Vraag een gratis online groeiscan aan
+            <a href="/online-groei-audit" className="results-primary">
+              Vraag een gratis Online Groei Audit aan
               <ArrowRight size={17} aria-hidden="true" />
             </a>
           </section>

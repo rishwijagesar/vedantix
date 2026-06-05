@@ -858,8 +858,8 @@ export default function VoorWie() {
                   <Link className="voorwie-btn voorwie-btn-primary" to="/prijzen">
                     Bekijk onze pakketten <ArrowRight size={18} aria-hidden="true" />
                   </Link>
-                  <Link className="voorwie-btn voorwie-btn-secondary" to="/contact">
-                    Vraag een gratis online groeiscan aan
+                  <Link className="voorwie-btn voorwie-btn-secondary" to="/online-groei-audit">
+                    Vraag een gratis Online Groei Audit aan
                   </Link>
                 </div>
               </div>

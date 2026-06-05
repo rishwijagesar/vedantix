@@ -646,11 +646,11 @@ export const blogPosts = [
       },
     ],
     internalLinks: [
-      { label: "Vraag een gratis Online Groei Scan aan", path: "/#groei-scan" },
+      { label: "Vraag een gratis Online Groei Audit aan", path: "/online-groei-audit" },
       { label: "Bekijk waarom ondernemers voor Vedantix kiezen", path: "/groeimodel" },
     ],
-    ctaLink: "/#groei-scan",
-    ctaLabel: "Vraag een gratis Online Groei Scan aan →",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Vraag een gratis Online Groei Audit aan →",
     seoTitle: "Waarom jouw website geen klanten oplevert | Vedantix",
     seoDescription:
       "Veel websites zien er goed uit maar leveren geen aanvragen op. Lees hoe vertrouwen, lokale vindbaarheid en duidelijke CTA's zorgen voor meer klanten.",
@@ -696,7 +696,7 @@ export const blogPosts = [
       { label: "Bekijk SEO en groei-aanpak", path: "/groeimodel" },
       { label: "Bekijk branches waarvoor Vedantix bouwt", path: "/voorwie" },
     ],
-    ctaLink: "/#groei-scan",
+    ctaLink: "/online-groei-audit",
     ctaLabel: "Laat je lokale vindbaarheid analyseren →",
     seoTitle: "Beter gevonden worden in Google als lokale ondernemer | Vedantix",
     seoDescription:
@@ -743,11 +743,105 @@ export const blogPosts = [
       { label: "Lees hoe Vedantix online groei benadert", path: "/groeimodel" },
       { label: "Plan een kennismaking", path: "/contact" },
     ],
-    ctaLink: "/contact",
-    ctaLabel: "Bespreek AI-vriendelijke content →",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Check je AI-zichtbaarheid met de audit →",
     seoTitle: "Wat is een AI-vriendelijke website? | Vedantix",
     seoDescription:
       "Een AI-vriendelijke website helpt zoekmachines en AI-assistenten je bedrijf beter begrijpen. Ontdek hoe structuur, FAQ's en content helpen.",
+  }),
+
+  createBlogPost({
+    slug: "wat-is-geo",
+    title: "Wat is GEO?",
+    niche: "geo",
+    intro:
+      "GEO staat voor Generative Engine Optimization: je website zo duidelijk maken dat AI-platformen jouw bedrijf beter kunnen begrijpen, samenvatten en aanbevelen.",
+    excerpt: "GEO uitgelegd voor lokale ondernemers die gevonden willen worden in AI-antwoorden.",
+    sections: [
+      {
+        title: "GEO draait om begrijpelijke context",
+        text:
+          "AI-platformen zoeken naar duidelijke informatie over wie je bent, wat je doet, waar je actief bent en waarom je betrouwbaar bent. Hoe helderder die context, hoe beter je vindbaar wordt in nieuwe zoekervaringen.",
+      },
+      {
+        title: "Het verschilt van klassieke SEO",
+        text:
+          "SEO richt zich vooral op zoekmachines en rankings. GEO kijkt ook naar hoe AI-systemen antwoorden samenstellen en welke bronnen ze betrouwbaar genoeg vinden om te gebruiken.",
+      },
+      {
+        title: "Lokale ondernemers profiteren van duidelijke entiteiten",
+        text:
+          "Diensten, regio’s, reviews, cases, FAQ’s en contactinformatie maken je bedrijf concreter. Dat helpt bezoekers, Google én AI-systemen.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is GEO belangrijk voor kleine ondernemers?",
+        answer:
+          "Ja. Steeds meer mensen gebruiken AI-platformen om bedrijven, diensten en oplossingen te vergelijken. Duidelijke content vergroot je kans om meegenomen te worden.",
+      },
+      {
+        question: "Hoe helpt Vedantix met GEO?",
+        answer:
+          "Vedantix verbetert contentstructuur, FAQ’s, entiteiten, interne links en structured data zodat je website beter te begrijpen is.",
+      },
+    ],
+    internalLinks: [
+      { label: "Doe de Online Groei Audit", path: "/online-groei-audit" },
+      { label: "Lees over AI-vriendelijke websites", path: "/blog/wat-is-een-ai-vriendelijke-website" },
+    ],
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Check je GEO-kansen met de audit →",
+    seoTitle: "Wat is GEO? | Vedantix",
+    seoDescription:
+      "GEO betekent Generative Engine Optimization. Lees hoe lokale ondernemers beter zichtbaar worden in AI-antwoorden met duidelijke content en structuur.",
+  }),
+
+  createBlogPost({
+    slug: "wat-is-aeo",
+    title: "Wat is AEO?",
+    niche: "aeo",
+    intro:
+      "AEO staat voor Answer Engine Optimization: je website zo inrichten dat vragen van klanten direct en duidelijk worden beantwoord.",
+    excerpt: "AEO uitgelegd: waarom vraag-antwoordcontent belangrijk is voor Google en AI.",
+    sections: [
+      {
+        title: "AEO begint met klantvragen",
+        text:
+          "Veel klanten zoeken met vragen: wat kost het, hoe werkt het, wie kan mij helpen en waar moet ik op letten? AEO zorgt dat je website die vragen direct beantwoordt.",
+      },
+      {
+        title: "FAQ’s versterken vertrouwen",
+        text:
+          "Goede FAQ’s nemen twijfel weg en helpen bezoekers sneller beslissen. Tegelijk geven ze zoekmachines duidelijke signalen over je expertise.",
+      },
+      {
+        title: "Antwoorden moeten kort en concreet zijn",
+        text:
+          "AEO werkt het beste met heldere koppen, korte antwoorden, logische interne links en structured data zoals FAQPage schema.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is AEO hetzelfde als FAQ toevoegen?",
+        answer:
+          "FAQ’s zijn een belangrijk onderdeel, maar AEO gaat breder: het gaat om duidelijke antwoorden, structuur, context en het wegnemen van twijfel.",
+      },
+      {
+        question: "Waarom is AEO goed voor conversie?",
+        answer:
+          "Bezoekers die snel antwoord krijgen, bouwen sneller vertrouwen op en nemen eerder contact op.",
+      },
+    ],
+    internalLinks: [
+      { label: "Doe de Online Groei Audit", path: "/online-groei-audit" },
+      { label: "Lees waarom websites geen klanten opleveren", path: "/blog/waarom-je-website-geen-klanten-oplevert" },
+    ],
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Check je AEO met de audit →",
+    seoTitle: "Wat is AEO? | Vedantix",
+    seoDescription:
+      "AEO staat voor Answer Engine Optimization. Ontdek hoe duidelijke antwoorden, FAQ's en schema je vindbaarheid en conversie verbeteren.",
   }),
 
   createBlogPost({
@@ -790,7 +884,7 @@ export const blogPosts = [
       { label: "Bekijk wat Vedantix oplevert", path: "/resultaten" },
       { label: "Bekijk pakketten", path: "/prijzen" },
     ],
-    ctaLink: "/#groei-scan",
+    ctaLink: "/online-groei-audit",
     ctaLabel: "Ontdek waar je online kansen mist →",
     seoTitle: "Waarom social media alleen niet genoeg is | Vedantix",
     seoDescription:
@@ -837,8 +931,8 @@ export const blogPosts = [
       { label: "Bekijk alle pakketten en prijzen", path: "/prijzen" },
       { label: "Plan een kennismaking", path: "/contact" },
     ],
-    ctaLink: "/prijzen",
-    ctaLabel: "Bekijk transparante prijzen →",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Check je websitewaarde met de audit →",
     seoTitle: "Wat kost een website laten maken? | Vedantix",
     seoDescription:
       "Wat kost een website laten maken en waar betaal je eigenlijk voor? Lees hoe prijs, beheer, SEO en groei samenhangen.",
@@ -882,9 +976,9 @@ export const blogPosts = [
     ],
     internalLinks: [
       { label: "Bekijk resultaten en verbeterpunten", path: "/resultaten" },
-      { label: "Vraag een Online Groei Scan aan", path: "/#groei-scan" },
+      { label: "Vraag een Online Groei Audit aan", path: "/online-groei-audit" },
     ],
-    ctaLink: "/#groei-scan",
+    ctaLink: "/online-groei-audit",
     ctaLabel: "Laat je reviews en zichtbaarheid bekijken →",
     seoTitle: "Waarom reviews belangrijk zijn voor lokale vindbaarheid | Vedantix",
     seoDescription:
@@ -892,12 +986,106 @@ export const blogPosts = [
   }),
 
   createBlogPost({
-    slug: "hoe-werkt-een-gratis-online-groeiscan",
-    title: "Hoe werkt een gratis Online Groei Scan?",
-    niche: "scan",
+    slug: "waarom-google-reviews-belangrijk-zijn",
+    title: "Waarom Google Reviews belangrijk zijn",
+    niche: "reviews",
     intro:
-      "De Online Groei Scan laat zien waar je website, vindbaarheid en contactmomenten kansen laten liggen.",
-    excerpt: "Wat Vedantix bekijkt tijdens een gratis Online Groei Scan.",
+      "Google Reviews helpen lokale ondernemers vertrouwen opbouwen, beter opvallen in zoekresultaten en meer contactmomenten creëren.",
+    excerpt: "Waarom Google Reviews belangrijk zijn voor vertrouwen, lokale vindbaarheid en conversie.",
+    sections: [
+      {
+        title: "Reviews beïnvloeden de eerste indruk",
+        text:
+          "Voordat iemand contact opneemt, kijkt die vaak naar ervaringen van anderen. Goede reviews verminderen twijfel en maken kiezen makkelijker.",
+      },
+      {
+        title: "Google Reviews versterken lokale zichtbaarheid",
+        text:
+          "Een actief Google Bedrijfsprofiel met reviews, diensten, foto’s en recente informatie kan helpen om lokaal beter zichtbaar te zijn.",
+      },
+      {
+        title: "Reviews moeten terugkomen op je website",
+        text:
+          "Zet reviews dicht bij belangrijke CTA’s. Zo versterken ze niet alleen je reputatie, maar ook je conversie.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Hoe vraag ik klanten om Google Reviews?",
+        answer:
+          "Vraag kort na een positieve ervaring om een review en maak het makkelijk met een directe reviewlink.",
+      },
+      {
+        question: "Moet ik reageren op reviews?",
+        answer:
+          "Ja. Reageren laat zien dat je actief en betrokken bent. Dat versterkt vertrouwen bij nieuwe bezoekers.",
+      },
+    ],
+    internalLinks: [
+      { label: "Doe de Online Groei Audit", path: "/online-groei-audit" },
+      { label: "Bekijk resultaten", path: "/resultaten" },
+    ],
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Analyseer je reviews en vindbaarheid →",
+    seoTitle: "Waarom Google Reviews belangrijk zijn | Vedantix",
+    seoDescription:
+      "Google Reviews helpen lokale ondernemers met vertrouwen, lokale vindbaarheid en meer aanvragen. Lees hoe je reviews beter benut.",
+  }),
+
+  createBlogPost({
+    slug: "hoe-word-je-lokaal-beter-gevonden",
+    title: "Hoe word je lokaal beter gevonden?",
+    niche: "local",
+    intro:
+      "Lokaal beter gevonden worden vraagt om duidelijke diensten, sterke locatie-informatie, Google Business, reviews en content die aansluit op zoekvragen in jouw regio.",
+    excerpt: "Een praktische uitleg over lokale vindbaarheid voor ondernemers.",
+    sections: [
+      {
+        title: "Maak je dienstgebied duidelijk",
+        text:
+          "Laat zien in welke steden of regio’s je actief bent. Combineer dit met concrete diensten en klantvragen.",
+      },
+      {
+        title: "Optimaliseer je Google Bedrijfsprofiel",
+        text:
+          "Controleer categorieën, diensten, foto’s, openingstijden, contactgegevens en reviews. Dit profiel is vaak de eerste indruk in Google.",
+      },
+      {
+        title: "Gebruik lokale content zonder te overdrijven",
+        text:
+          "Unieke lokale pagina’s werken beter dan gekopieerde teksten. Vertel per regio wat relevant is voor klanten.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Wat is lokale vindbaarheid?",
+        answer:
+          "Lokale vindbaarheid betekent dat potentiële klanten je bedrijf vinden wanneer ze zoeken naar een dienst in hun regio.",
+      },
+      {
+        question: "Kan Vedantix lokale pagina’s maken?",
+        answer:
+          "Ja. Vedantix maakt lokale SEO-content voor branches en steden met unieke teksten, FAQ’s en duidelijke CTA’s.",
+      },
+    ],
+    internalLinks: [
+      { label: "Doe de Online Groei Audit", path: "/online-groei-audit" },
+      { label: "Bekijk branchepagina’s", path: "/voorwie" },
+    ],
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Check je lokale vindbaarheid →",
+    seoTitle: "Hoe word je lokaal beter gevonden? | Vedantix",
+    seoDescription:
+      "Leer hoe lokale ondernemers beter gevonden worden met Google Business, reviews, lokale SEO, duidelijke diensten en sterke content.",
+  }),
+
+  createBlogPost({
+    slug: "hoe-werkt-een-gratis-online-groei-audit",
+    title: "Hoe werkt een gratis Online Groei Audit?",
+    niche: "audit",
+    intro:
+      "De Online Groei Audit laat zien waar je website, vindbaarheid en contactmomenten kansen laten liggen.",
+    excerpt: "Wat Vedantix bekijkt tijdens een gratis Online Groei Audit.",
     sections: [
       {
         title: "We bekijken je online basis",
@@ -907,7 +1095,7 @@ export const blogPosts = [
       {
         title: "We vergelijken met klantgedrag",
         text:
-          "De scan kijkt niet alleen technisch, maar vooral commercieel: begrijpt een bezoeker snel wat je doet en waarom die contact moet opnemen?",
+          "De audit kijkt niet alleen technisch, maar vooral commercieel: begrijpt een bezoeker snel wat je doet en waarom die contact moet opnemen?",
       },
       {
         title: "Je krijgt concrete verbeterpunten",
@@ -917,25 +1105,25 @@ export const blogPosts = [
     ],
     faqs: [
       {
-        question: "Is de Online Groei Scan echt vrijblijvend?",
+        question: "Is de Online Groei Audit echt vrijblijvend?",
         answer:
-          "Ja. De scan is bedoeld om inzicht te geven in online kansen. Je zit nergens aan vast.",
+          "Ja. De audit is bedoeld om inzicht te geven in online kansen. Je zit nergens aan vast.",
       },
       {
-        question: "Wat analyseert Vedantix tijdens de scan?",
+        question: "Wat analyseert Vedantix tijdens de audit?",
         answer:
           "Vedantix bekijkt vindbaarheid, SEO, snelheid, mobiele ervaring, reviews, conversie en call-to-actions.",
       },
     ],
     internalLinks: [
-      { label: "Start de gratis Online Groei Scan", path: "/#groei-scan" },
+      { label: "Start de gratis Online Groei Audit", path: "/online-groei-audit" },
       { label: "Bekijk de werkwijze", path: "/proces" },
     ],
-    ctaLink: "/#groei-scan",
-    ctaLabel: "Vraag je gratis scan aan →",
-    seoTitle: "Hoe werkt een gratis Online Groei Scan? | Vedantix",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Vraag je gratis audit aan →",
+    seoTitle: "Hoe werkt een gratis Online Groei Audit? | Vedantix",
     seoDescription:
-      "Ontdek hoe Vedantix je website, SEO, snelheid, reviews en contactmomenten analyseert tijdens een gratis Online Groei Scan.",
+      "Ontdek hoe Vedantix je website, SEO, snelheid, reviews en contactmomenten analyseert tijdens een gratis Online Groei Audit.",
   }),
 
   createBlogPost({
@@ -978,8 +1166,8 @@ export const blogPosts = [
       { label: "Bekijk pakketten", path: "/prijzen" },
       { label: "Bekijk waarom Vedantix anders is", path: "/groeimodel" },
     ],
-    ctaLink: "/contact",
-    ctaLabel: "Plan een kennismaking →",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Doe de gratis Online Groei Audit →",
     seoTitle: "Website laten maken: waar moet je op letten? | Vedantix",
     seoDescription:
       "Een website laten maken? Let op vindbaarheid, vertrouwen, onderhoud en conversie. Lees waar lokale ondernemers op moeten letten.",
@@ -1008,8 +1196,8 @@ export const blogPosts = [
           "Verbind je blogartikelen met je SEO-pagina’s en dienstenpagina’s. Dat helpt Google om je website beter te begrijpen en verhoogt tegelijk de kans op conversie.",
       },
     ],
-    ctaLink: "/website-kapper",
-    ctaLabel: "Bekijk onze kapper website-oplossing →",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Doe de gratis Online Groei Audit →",
   }),
 
   createBlogPost({
@@ -1035,8 +1223,8 @@ export const blogPosts = [
           "Gebruik pagina’s per stad of regio om beter te ranken in Google en meer bezoekers uit jouw omgeving aan te trekken.",
       },
     ],
-    ctaLink: "/website-salon",
-    ctaLabel: "Bekijk onze salon website-oplossing →",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Doe de gratis Online Groei Audit →",
   }),
 
   createBlogPost({
@@ -1062,8 +1250,8 @@ export const blogPosts = [
           "Door per stad of regio pagina’s te maken, vergroot je jouw vindbaarheid in Google en trek je gerichter klanten aan.",
       },
     ],
-    ctaLink: "/website-klusbedrijf",
-    ctaLabel: "Bekijk onze klusbedrijf website-oplossing →",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Doe de gratis Online Groei Audit →",
   }),
 
   createBlogPost({
@@ -1089,8 +1277,8 @@ export const blogPosts = [
           "Gebruik stadspagina’s, lokale zoekwoorden en goede metadata om beter zichtbaar te zijn wanneer mensen restaurants in de buurt zoeken.",
       },
     ],
-    ctaLink: "/website-restaurant",
-    ctaLabel: "Bekijk onze restaurant website-oplossing →",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Doe de gratis Online Groei Audit →",
   }),
 
   createBlogPost({
@@ -1116,8 +1304,8 @@ export const blogPosts = [
           "Door lokaal beter vindbaar te zijn, vergroot je de kans op nieuwe opdrachten in jouw regio.",
       },
     ],
-    ctaLink: "/website-fotograaf",
-    ctaLabel: "Bekijk onze fotograaf website-oplossing →",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Doe de gratis Online Groei Audit →",
   }),
 
   createBlogPost({
@@ -1143,8 +1331,8 @@ export const blogPosts = [
           "Met pagina’s per stad of regio vergroot je jouw zichtbaarheid in Google en trek je meer relevante bezoekers aan.",
       },
     ],
-    ctaLink: "/website-schoonmaakbedrijf",
-    ctaLabel: "Bekijk onze schoonmaak website-oplossing →",
+    ctaLink: "/online-groei-audit",
+    ctaLabel: "Doe de gratis Online Groei Audit →",
   }),
 ];
 
@@ -1153,6 +1341,7 @@ export const basePages = [
   { path: "/prijzen", priority: "0.8" },
   { path: "/pakketvergelijking", priority: "0.6" },
   { path: "/resultaten", priority: "0.8" },
+  { path: "/online-groei-audit", priority: "0.9" },
   { path: "/groeimodel", priority: "0.8" },
   { path: "/proces", priority: "0.8" },
   { path: "/faq", priority: "0.7" },

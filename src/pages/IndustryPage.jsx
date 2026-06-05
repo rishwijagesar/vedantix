@@ -468,8 +468,8 @@ export default function IndustryPage() {
               <h1 id="industry-title">{title}</h1>
               <p className="industry-lead">{description}</p>
               <div className="industry-actions">
-                <a href="/#groei-scan" className="industry-primary">
-                  Gratis Online Groei Scan
+                <a href="/online-groei-audit" className="industry-primary">
+                  Gratis Online Groei Audit
                   <ArrowRight size={17} aria-hidden="true" />
                 </a>
                 <Link to="/contact" className="industry-secondary">
@@ -622,8 +622,8 @@ export default function IndustryPage() {
               Laat Vedantix vrijblijvend kijken naar vindbaarheid, vertrouwen, snelheid,
               reviews en call-to-actions.
             </p>
-            <a href="/#groei-scan" className="industry-primary">
-              Vraag een gratis Online Groei Scan aan
+            <a href="/online-groei-audit" className="industry-primary">
+              Vraag een gratis Online Groei Audit aan
               <ArrowRight size={17} aria-hidden="true" />
             </a>
           </section>
