@@ -333,6 +333,249 @@ export const niches = {
   }),
 };
 
+export const localSeoCities = [
+  { slug: "den-bosch", name: "Den Bosch" },
+  { slug: "eindhoven", name: "Eindhoven" },
+  { slug: "tilburg", name: "Tilburg" },
+  { slug: "breda", name: "Breda" },
+  { slug: "nijmegen", name: "Nijmegen" },
+];
+
+const createIndustryFaqs = (singular, plural) => [
+  {
+    question: `Waarom heeft een ${singular} een professionele website nodig?`,
+    answer: `Een professionele website helpt ${plural} om beter gevonden te worden, sneller vertrouwen op te bouwen en meer contactmomenten te creëren met mensen die actief zoeken naar hun dienst.`,
+  },
+  {
+    question: `Helpt Vedantix ${plural} ook met lokale vindbaarheid?`,
+    answer: `Ja. Vedantix kijkt niet alleen naar design, maar ook naar lokale zoekwoorden, duidelijke paginaopbouw, snelheid, reviews en contactmogelijkheden die bijdragen aan meer zichtbaarheid in Google.`,
+  },
+  {
+    question: "Kan ik ook WhatsApp, offerteaanvragen of afspraken laten opnemen?",
+    answer: "Ja. De website wordt ingericht op laagdrempelig contact, zoals WhatsApp, klikbare telefoonnummers, aanvraagformulieren en duidelijke call-to-actions.",
+  },
+  {
+    question: "Is de website ook geschikt voor AI-zoekmachines?",
+    answer: "Vedantix structureert content duidelijk, zodat zoekmachines en AI-systemen beter begrijpen wat je doet, voor wie je werkt en waarom klanten voor jouw bedrijf kiezen.",
+  },
+];
+
+const createIndustryPage = ({
+  key,
+  singular,
+  plural,
+  badge,
+  customerNeed,
+  proof,
+  services,
+}) => ({
+  key,
+  singular,
+  plural,
+  label: plural,
+  path: `/website/${key}`,
+  metaTitle: `Website laten maken voor ${plural} | Vedantix`,
+  metaDescription: `Professionele website voor ${plural} die vertrouwen opbouwt, beter gevonden wordt in Google en meer aanvragen oplevert. Ontdek Vedantix.`,
+  badge,
+  heroTitle: `Website laten maken voor ${plural}`,
+  heroText: `Vedantix helpt ${plural} professioneel zichtbaar te worden met een website die vertrouwen wekt, lokaal beter gevonden wordt en bezoekers aanzet tot contact.`,
+  cityHeroTitle: (city) => `Website laten maken voor ${plural} in ${city}`,
+  cityMetaTitle: (city) => `Website laten maken voor ${plural} in ${city} | Vedantix`,
+  cityMetaDescription: (city) =>
+    `Professionele website voor ${plural} in ${city}. Meer vertrouwen, meer lokale zichtbaarheid en meer aanvragen met Vedantix.`,
+  cityHeroText: (city) =>
+    `Ben je actief als ${singular} in ${city}? Dan helpt Vedantix je online professioneler zichtbaar te worden, beter gevonden te worden en meer contactmomenten uit je website te halen.`,
+  customerNeed,
+  proof,
+  services,
+  outcomes: [
+    "Meer vertrouwen bij nieuwe bezoekers",
+    "Betere lokale vindbaarheid in Google",
+    "Meer telefoontjes, WhatsApp-berichten en aanvragen",
+    "Minder technische zorgen door beheer onder één dak",
+  ],
+  faqs: createIndustryFaqs(singular, plural),
+});
+
+export const industries = {
+  "personal-trainer": createIndustryPage({
+    key: "personal-trainer",
+    singular: "personal trainer",
+    plural: "personal trainers",
+    badge: "Training, intake en proefles gericht op meer aanvragen",
+    customerNeed:
+      "Mensen kiezen een trainer op vertrouwen, resultaat en klik. Je website moet direct laten zien wie je helpt, welke doelen je begeleidt en hoe makkelijk iemand een eerste stap zet.",
+    proof:
+      "Met heldere pakketten, duidelijke resultaten en laagdrempelig contact wordt je website een plek waar twijfelende bezoekers sneller een intake of proefles aanvragen.",
+    services: ["Intake CTA", "WhatsApp contact", "Resultaatgerichte content", "Lokale SEO"],
+  }),
+  fysiotherapeut: createIndustryPage({
+    key: "fysiotherapeut",
+    singular: "fysiotherapeut",
+    plural: "fysiotherapeuten",
+    badge: "Vindbaar voor klachten, behandelingen en praktijklocatie",
+    customerNeed:
+      "Patiënten zoeken vaak met een concrete klacht. Je website moet vertrouwen geven, behandelingen helder uitleggen en snel laten zien hoe iemand een afspraak maakt.",
+    proof:
+      "Een goede structuur per behandeling helpt bezoekers sneller herkennen dat ze bij jou goed zitten en helpt Google je praktijk beter te begrijpen.",
+    services: ["Behandelpagina's", "Afspraak CTA", "Google Maps", "FAQ content"],
+  }),
+  coach: createIndustryPage({
+    key: "coach",
+    singular: "coach",
+    plural: "coaches",
+    badge: "Persoonlijke begeleiding zichtbaar en betrouwbaar maken",
+    customerNeed:
+      "Coaching vraagt om vertrouwen. Bezoekers willen voelen of jouw aanpak bij hen past voordat ze contact opnemen.",
+    proof:
+      "Met duidelijke positionering, rustige copy en sterke contactmomenten wordt je website een uitnodiging voor een eerste gesprek.",
+    services: ["Positionering", "Kennismakingsgesprek CTA", "Vertrouwenscopy", "Lokale vindbaarheid"],
+  }),
+  masseur: createIndustryPage({
+    key: "masseur",
+    singular: "masseur",
+    plural: "masseurs",
+    badge: "Behandelingen, ontspanning en herstel duidelijk presenteren",
+    customerNeed:
+      "Klanten zoeken vaak op klacht, behandeling of locatie. Je website moet snel duidelijk maken welke massages je aanbiedt en waarom iemand bij jou moet boeken.",
+    proof:
+      "Door behandelingen, prijzen, reviews en afspraakmogelijkheden overzichtelijk te presenteren, verlaag je de drempel om direct contact op te nemen.",
+    services: ["Behandeloverzicht", "BoekingsCTA", "Reviews", "Mobiele snelheid"],
+  }),
+  schoonheidssalon: createIndustryPage({
+    key: "schoonheidssalon",
+    singular: "schoonheidssalon",
+    plural: "schoonheidssalons",
+    badge: "Luxe uitstraling combineren met meer boekingen",
+    customerNeed:
+      "Nieuwe klanten vergelijken uitstraling, behandelingen en betrouwbaarheid. Je website moet direct verzorgd, professioneel en makkelijk te gebruiken aanvoelen.",
+    proof:
+      "Een sterke salonwebsite laat sfeer, behandelingen en contactmogelijkheden samenkomen, zodat bezoekers sneller boeken.",
+    services: ["Behandelpagina's", "Online boeken", "Sfeerbeelden", "Lokale SEO"],
+  }),
+  kapper: createIndustryPage({
+    key: "kapper",
+    singular: "kapper",
+    plural: "kappers",
+    badge: "Meer afspraken via lokale zichtbaarheid",
+    customerNeed:
+      "Mensen zoeken kappers vaak lokaal en mobiel. Je website moet direct stijl, prijzen, locatie en afspraakmogelijkheden tonen.",
+    proof:
+      "Door een verzorgde uitstraling en snelle contactopties wordt je salon betrouwbaarder en makkelijker te kiezen.",
+    services: ["Afspraakknop", "WhatsApp", "Google Maps", "Salon SEO"],
+  }),
+  restaurant: createIndustryPage({
+    key: "restaurant",
+    singular: "restaurant",
+    plural: "restaurants",
+    badge: "Sfeer, menu en reserveren zonder frictie",
+    customerNeed:
+      "Gasten willen snel menu, sfeer, openingstijden en reserveringsmogelijkheden zien. Zeker mobiel moet alles direct duidelijk zijn.",
+    proof:
+      "Een restaurantwebsite die sfeer en praktische informatie combineert, helpt bezoekers sneller reserveren.",
+    services: ["Menu structuur", "ReserveringsCTA", "Openingstijden", "Lokale vindbaarheid"],
+  }),
+  installateur: createIndustryPage({
+    key: "installateur",
+    singular: "installateur",
+    plural: "installateurs",
+    badge: "Meer offerteaanvragen voor betrouwbaar vakwerk",
+    customerNeed:
+      "Klanten zoeken zekerheid voordat ze een installateur benaderen. Je website moet vakmanschap, bereikbaarheid en betrouwbaarheid direct uitstralen.",
+    proof:
+      "Heldere diensten, projectvoorbeelden en offerteaanvragen maken het makkelijker om gekozen te worden boven lokale concurrenten.",
+    services: ["Offerteformulier", "Dienstenpagina's", "Projectbewijs", "Regio SEO"],
+  }),
+  schilder: createIndustryPage({
+    key: "schilder",
+    singular: "schilder",
+    plural: "schilders",
+    badge: "Projecten zichtbaar maken en aanvragen verhogen",
+    customerNeed:
+      "Bij schilderwerk willen klanten voorbeelden, duidelijkheid en vertrouwen. Je website moet laten zien dat je netjes werkt en makkelijk bereikbaar bent.",
+    proof:
+      "Met foto’s, duidelijke diensten en een laagdrempelig offerteformulier vergroot je de kans op nieuwe opdrachten.",
+    services: ["Projectfoto's", "Offerte CTA", "Reviews", "Lokale zoekwoorden"],
+  }),
+  hovenier: createIndustryPage({
+    key: "hovenier",
+    singular: "hovenier",
+    plural: "hoveniers",
+    badge: "Tuinprojecten vertalen naar meer aanvragen",
+    customerNeed:
+      "Mensen willen inspiratie, vertrouwen en een duidelijk beeld van jouw werk. Je website moet projecten tonen en contact eenvoudig maken.",
+    proof:
+      "Een sterke hovenierwebsite laat vakmanschap en resultaat zien, waardoor bezoekers sneller een tuinadvies of offerte aanvragen.",
+    services: ["Projectshowcase", "Offerteformulier", "Seizoenscontent", "Regio SEO"],
+  }),
+  boekhouder: createIndustryPage({
+    key: "boekhouder",
+    singular: "boekhouder",
+    plural: "boekhouders",
+    badge: "Vertrouwen, duidelijkheid en lokale vindbaarheid",
+    customerNeed:
+      "Ondernemers zoeken een boekhouder die betrouwbaar, duidelijk en bereikbaar is. Je website moet rust geven en direct laten zien voor wie je werkt.",
+    proof:
+      "Met duidelijke diensten, tarieven of pakketten en sterke contactmomenten wordt je website een bron van kwalitatieve aanvragen.",
+    services: ["Dienstpagina's", "KennismakingsCTA", "FAQ", "Lokale SEO"],
+  }),
+  consultant: createIndustryPage({
+    key: "consultant",
+    singular: "consultant",
+    plural: "consultants",
+    badge: "Expertise overtuigend positioneren",
+    customerNeed:
+      "Consultants verkopen vertrouwen, expertise en resultaat. Je website moet snel duidelijk maken welk probleem je oplost en waarom jij de juiste keuze bent.",
+    proof:
+      "Door je propositie, bewijs en contactroute helder te maken, wordt je website een sterk kanaal voor kennismakingsgesprekken.",
+    services: ["Positionering", "Case structuur", "Lead CTA", "AI-vriendelijke content"],
+  }),
+  salon: createIndustryPage({
+    key: "salon",
+    singular: "salon",
+    plural: "salons",
+    badge: "Verzorgde uitstraling en meer boekingen",
+    customerNeed:
+      "Salons worden gekozen op uitstraling, vertrouwen en gemak. Je website moet direct laten zien welke behandelingen je aanbiedt en hoe iemand eenvoudig boekt.",
+    proof:
+      "Met duidelijke behandelingen, sfeer, reviews en boekingsmomenten wordt je website een plek waar bezoekers sneller klant worden.",
+    services: ["Behandelpagina's", "BoekingsCTA", "Reviews", "Lokale SEO"],
+  }),
+  klusbedrijf: createIndustryPage({
+    key: "klusbedrijf",
+    singular: "klusbedrijf",
+    plural: "klusbedrijven",
+    badge: "Meer offerteaanvragen voor lokale vakbedrijven",
+    customerNeed:
+      "Klanten zoeken betrouwbare vakmensen en vergelijken snel. Je website moet diensten, bereikbaarheid en bewijs van goed werk direct duidelijk maken.",
+    proof:
+      "Met projectvoorbeelden, heldere diensten en een offerteformulier wordt je website een praktisch kanaal voor nieuwe aanvragen.",
+    services: ["Offerteformulier", "Projectbewijs", "Regio SEO", "WhatsApp contact"],
+  }),
+  fotograaf: createIndustryPage({
+    key: "fotograaf",
+    singular: "fotograaf",
+    plural: "fotografen",
+    badge: "Portfolio, stijl en boekingen overtuigend presenteren",
+    customerNeed:
+      "Fotografen worden gekozen op stijl en vertrouwen. Je website moet je beste werk direct tonen en bezoekers makkelijk naar een aanvraag leiden.",
+    proof:
+      "Een sterk portfolio, duidelijke pakketten en contactmomenten helpen bezoekers sneller beslissen of jouw stijl bij hun opdracht past.",
+    services: ["Portfolio", "Lead CTA", "Mobiele snelheid", "Lokale vindbaarheid"],
+  }),
+  schoonmaakbedrijf: createIndustryPage({
+    key: "schoonmaakbedrijf",
+    singular: "schoonmaakbedrijf",
+    plural: "schoonmaakbedrijven",
+    badge: "Betrouwbaarheid en aanvragen voor schoonmaakdiensten",
+    customerNeed:
+      "Voor schoonmaakbedrijven is vertrouwen doorslaggevend. Je website moet duidelijk maken wat je doet, voor wie je werkt en hoe iemand een offerte aanvraagt.",
+    proof:
+      "Met heldere diensten, regio-informatie en bewijs van betrouwbaarheid wordt je website sterker voor bedrijven en particulieren die vergelijken.",
+    services: ["Dienstenstructuur", "Offerte CTA", "Reviews", "Lokale SEO"],
+  }),
+};
+
 const createBlogPost = ({
   slug,
   title,
@@ -341,6 +584,11 @@ const createBlogPost = ({
   sections,
   ctaLink,
   ctaLabel,
+  excerpt = undefined,
+  faqs = [],
+  internalLinks = [],
+  seoTitle = undefined,
+  seoDescription = undefined,
   priority = "0.7",
 }) => ({
   slug,
@@ -350,14 +598,393 @@ const createBlogPost = ({
   sections,
   ctaLink,
   ctaLabel,
+  excerpt,
+  faqs,
+  internalLinks,
   priority,
   seo: {
-    title: `${title} | Vedantix`,
-    description: intro,
+    title: seoTitle || `${title} | Vedantix`,
+    description: seoDescription || intro,
   },
 });
 
 export const blogPosts = [
+  createBlogPost({
+    slug: "waarom-je-website-geen-klanten-oplevert",
+    title: "Waarom jouw website geen klanten oplevert",
+    niche: "groei",
+    intro:
+      "Een website levert pas klanten op wanneer bezoekers snel begrijpen wat je doet, waarom ze je kunnen vertrouwen en welke volgende stap logisch is.",
+    excerpt: "Ontdek waarom veel websites wel bestaan, maar geen aanvragen binnenhalen.",
+    sections: [
+      {
+        title: "Een mooie website is niet automatisch een goede website",
+        text:
+          "Veel websites zien er netjes uit, maar missen duidelijke keuzes. Bezoekers zien niet direct voor wie de dienst is, welk probleem wordt opgelost of waarom ze contact moeten opnemen.",
+      },
+      {
+        title: "Vertrouwen moet direct zichtbaar zijn",
+        text:
+          "Lokale ondernemers winnen vaker klanten wanneer reviews, voorbeelden, heldere diensten en contactopties direct zichtbaar zijn. Zonder vertrouwen blijven bezoekers vergelijken.",
+      },
+      {
+        title: "Conversie vraagt om duidelijke contactmomenten",
+        text:
+          "Een telefoonnummer, WhatsApp-knop, offerteaanvraag of kennismakingsgesprek moet logisch en laagdrempelig zijn. Zo wordt de website een groeikanaal in plaats van alleen een visitekaartje.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Waarom krijg ik weinig aanvragen via mijn website?",
+        answer:
+          "Vaak ontbreekt een duidelijke propositie, lokale vindbaarheid, bewijs of een laagdrempelige call-to-action. Bezoekers haken dan af voordat ze contact opnemen.",
+      },
+      {
+        question: "Hoe maakt Vedantix een website meer gericht op klanten?",
+        answer:
+          "Vedantix kijkt naar vindbaarheid, vertrouwen, snelheid, content, reviews en contactmomenten. Die onderdelen bepalen samen of bezoekers actie ondernemen.",
+      },
+    ],
+    internalLinks: [
+      { label: "Vraag een gratis Online Groei Scan aan", path: "/#groei-scan" },
+      { label: "Bekijk waarom ondernemers voor Vedantix kiezen", path: "/groeimodel" },
+    ],
+    ctaLink: "/#groei-scan",
+    ctaLabel: "Vraag een gratis Online Groei Scan aan →",
+    seoTitle: "Waarom jouw website geen klanten oplevert | Vedantix",
+    seoDescription:
+      "Veel websites zien er goed uit maar leveren geen aanvragen op. Lees hoe vertrouwen, lokale vindbaarheid en duidelijke CTA's zorgen voor meer klanten.",
+  }),
+
+  createBlogPost({
+    slug: "beter-gevonden-in-google-lokale-ondernemer",
+    title: "Hoe word je beter gevonden in Google als lokale ondernemer?",
+    niche: "seo",
+    intro:
+      "Lokale vindbaarheid begint met duidelijke diensten, sterke locatie-informatie en content die aansluit op wat klanten echt zoeken.",
+    excerpt: "Praktische uitleg over lokale SEO voor ondernemers die meer aanvragen willen.",
+    sections: [
+      {
+        title: "Begin met de zoekintentie van je klant",
+        text:
+          "Mensen zoeken vaak op dienst plus regio. Denk aan kapper in Den Bosch, personal trainer Eindhoven of schilder Breda. Je website moet deze vragen helder beantwoorden.",
+      },
+      {
+        title: "Maak diensten en regio’s duidelijk vindbaar",
+        text:
+          "Een goede paginastructuur helpt Google begrijpen waar je bedrijf over gaat. Combineer dienstpagina’s, lokale signalen, reviews en duidelijke contactopties.",
+      },
+      {
+        title: "Zorg dat bezoekers vertrouwen krijgen",
+        text:
+          "Vindbaarheid is pas waardevol als bezoekers contact opnemen. Daarom moeten reviews, voorbeelden, prijzen of werkwijze overzichtelijk aanwezig zijn.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Hoe snel word ik beter gevonden in Google?",
+        answer:
+          "Dat verschilt per markt en concurrentie. Een sterke technische basis, goede content en lokale signalen vergroten de kans op betere zichtbaarheid.",
+      },
+      {
+        question: "Helpt Vedantix ook met lokale SEO?",
+        answer:
+          "Ja. Vedantix richt websites in op lokale vindbaarheid, duidelijke content, metadata, interne links en conversie.",
+      },
+    ],
+    internalLinks: [
+      { label: "Bekijk SEO en groei-aanpak", path: "/groeimodel" },
+      { label: "Bekijk branches waarvoor Vedantix bouwt", path: "/voorwie" },
+    ],
+    ctaLink: "/#groei-scan",
+    ctaLabel: "Laat je lokale vindbaarheid analyseren →",
+    seoTitle: "Beter gevonden worden in Google als lokale ondernemer | Vedantix",
+    seoDescription:
+      "Leer hoe lokale ondernemers beter gevonden worden in Google met duidelijke diensten, lokale SEO, reviews en een website die vertrouwen opbouwt.",
+  }),
+
+  createBlogPost({
+    slug: "wat-is-een-ai-vriendelijke-website",
+    title: "Wat is een AI-vriendelijke website?",
+    niche: "ai",
+    intro:
+      "Een AI-vriendelijke website is duidelijk opgebouwd, inhoudelijk sterk en goed te begrijpen voor zoekmachines en moderne AI-assistenten.",
+    excerpt: "Waarom duidelijke structuur en content belangrijker worden door AI-zoekmachines.",
+    sections: [
+      {
+        title: "AI-systemen moeten je bedrijf kunnen begrijpen",
+        text:
+          "AI-assistenten kijken naar duidelijke informatie: wie je helpt, welke diensten je levert, waar je actief bent en waarom je betrouwbaar bent.",
+      },
+      {
+        title: "Structuur maakt content sterker",
+        text:
+          "Heldere koppen, FAQ’s, interne links en structured data helpen zoekmachines en AI-platformen om je website beter te interpreteren.",
+      },
+      {
+        title: "AI-vriendelijkheid begint bij de klantvraag",
+        text:
+          "Content moet vragen beantwoorden die potentiële klanten echt stellen. Daarmee word je beter vindbaar en overtuig je bezoekers sneller.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is een AI-vriendelijke website hetzelfde als SEO?",
+        answer:
+          "Niet helemaal. SEO blijft belangrijk, maar AI-vriendelijke content legt extra nadruk op duidelijke context, vragen, antwoorden en gestructureerde informatie.",
+      },
+      {
+        question: "Kan Vedantix mijn bestaande website AI-vriendelijker maken?",
+        answer:
+          "Ja. Vedantix kan structuur, content, FAQ’s, metadata en interne links verbeteren zodat je website beter te begrijpen is.",
+      },
+    ],
+    internalLinks: [
+      { label: "Lees hoe Vedantix online groei benadert", path: "/groeimodel" },
+      { label: "Plan een kennismaking", path: "/contact" },
+    ],
+    ctaLink: "/contact",
+    ctaLabel: "Bespreek AI-vriendelijke content →",
+    seoTitle: "Wat is een AI-vriendelijke website? | Vedantix",
+    seoDescription:
+      "Een AI-vriendelijke website helpt zoekmachines en AI-assistenten je bedrijf beter begrijpen. Ontdek hoe structuur, FAQ's en content helpen.",
+  }),
+
+  createBlogPost({
+    slug: "waarom-social-media-alleen-niet-genoeg-is",
+    title: "Waarom social media alleen niet genoeg is",
+    niche: "groei",
+    intro:
+      "Social media kan aandacht opleveren, maar zonder sterke website mis je vertrouwen, vindbaarheid en een vaste plek waar bezoekers klant kunnen worden.",
+    excerpt: "Waarom ondernemers naast social media ook een sterke website nodig hebben.",
+    sections: [
+      {
+        title: "Social media is vluchtig",
+        text:
+          "Posts verdwijnen snel uit beeld. Een website blijft vindbaar, bundelt je diensten en geeft klanten altijd een plek om informatie en contactmogelijkheden te vinden.",
+      },
+      {
+        title: "Je website bouwt vertrouwen op",
+        text:
+          "Een professionele website laat zien dat je bedrijf serieus is. Reviews, cases, diensten en contactgegevens versterken het vertrouwen dat social media vaak niet volledig kan bieden.",
+      },
+      {
+        title: "De beste aanpak combineert beide",
+        text:
+          "Social media kan verkeer brengen, maar je website moet dat verkeer omzetten in afspraken, offerteaanvragen of WhatsApp-gesprekken.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Heb ik nog een website nodig als ik actief ben op Instagram?",
+        answer:
+          "Ja. Social media is waardevol, maar een website geeft controle, vindbaarheid in Google en een professionele basis voor aanvragen.",
+      },
+      {
+        question: "Kan mijn website samenwerken met social media?",
+        answer:
+          "Ja. Vedantix kan social proof, WhatsApp, contactformulieren en campagnes slim laten aansluiten op je website.",
+      },
+    ],
+    internalLinks: [
+      { label: "Bekijk wat Vedantix oplevert", path: "/resultaten" },
+      { label: "Bekijk pakketten", path: "/prijzen" },
+    ],
+    ctaLink: "/#groei-scan",
+    ctaLabel: "Ontdek waar je online kansen mist →",
+    seoTitle: "Waarom social media alleen niet genoeg is | Vedantix",
+    seoDescription:
+      "Social media helpt met aandacht, maar een professionele website zorgt voor vertrouwen, Google-vindbaarheid en meer contactaanvragen.",
+  }),
+
+  createBlogPost({
+    slug: "wat-kost-een-website-laten-maken",
+    title: "Wat kost een website laten maken?",
+    niche: "pricing",
+    intro:
+      "De kosten van een website hangen af van doelen, beheer, vindbaarheid, content en ondersteuning. Vergelijk daarom niet alleen prijs, maar vooral waarde.",
+    excerpt: "Uitleg over prijs, waarde en abonnementskeuzes voor ondernemers.",
+    sections: [
+      {
+        title: "Een website is meer dan een eenmalige oplevering",
+        text:
+          "Een website heeft hosting, onderhoud, updates en optimalisatie nodig. Daarom kijken veel ondernemers naar een abonnement dat zorgen wegneemt.",
+      },
+      {
+        title: "Goedkoop kan duur worden als groei ontbreekt",
+        text:
+          "Een goedkope website zonder strategie kan weinig opleveren. Belangrijker is of de website vertrouwen opbouwt, vindbaar is en aanvragen stimuleert.",
+      },
+      {
+        title: "Kies een pakket dat past bij je fase",
+        text:
+          "Starters hebben vaak een professionele basis nodig. Groeiende ondernemers hebben meer zichtbaarheid en optimalisatie nodig. Premium past bij doorlopende groei.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Waarom werkt Vedantix met pakketten?",
+        answer:
+          "Pakketten maken duidelijk wat inbegrepen is en zorgen dat hosting, onderhoud, zichtbaarheid en ondersteuning niet losse zorgen worden.",
+      },
+      {
+        question: "Wijzigt dit artikel de prijzen van Vedantix?",
+        answer:
+          "Nee. De actuele pakketten en prijzen staan altijd op de prijzenpagina.",
+      },
+    ],
+    internalLinks: [
+      { label: "Bekijk alle pakketten en prijzen", path: "/prijzen" },
+      { label: "Plan een kennismaking", path: "/contact" },
+    ],
+    ctaLink: "/prijzen",
+    ctaLabel: "Bekijk transparante prijzen →",
+    seoTitle: "Wat kost een website laten maken? | Vedantix",
+    seoDescription:
+      "Wat kost een website laten maken en waar betaal je eigenlijk voor? Lees hoe prijs, beheer, SEO en groei samenhangen.",
+  }),
+
+  createBlogPost({
+    slug: "waarom-reviews-belangrijk-zijn-voor-lokale-vindbaarheid",
+    title: "Waarom reviews belangrijk zijn voor lokale vindbaarheid",
+    niche: "seo",
+    intro:
+      "Reviews helpen potentiële klanten vertrouwen krijgen en geven zoekmachines extra signalen over je betrouwbaarheid en lokale relevantie.",
+    excerpt: "Zo versterken reviews je vertrouwen, Google-zichtbaarheid en conversie.",
+    sections: [
+      {
+        title: "Reviews maken kiezen makkelijker",
+        text:
+          "Nieuwe klanten vergelijken vaak meerdere bedrijven. Positieve reviews helpen om twijfel te verminderen en sneller vertrouwen op te bouwen.",
+      },
+      {
+        title: "Reviews ondersteunen lokale SEO",
+        text:
+          "Reviews, bedrijfsinformatie en lokale signalen kunnen bijdragen aan betere zichtbaarheid wanneer mensen zoeken naar diensten in hun regio.",
+      },
+      {
+        title: "Plaats reviews op logische plekken",
+        text:
+          "Reviews werken het beste wanneer ze dicht bij contactmomenten, diensten en CTA’s staan. Zo versterken ze niet alleen vindbaarheid, maar ook conversie.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Moet ik reviews op mijn website tonen?",
+        answer:
+          "Ja, als dat kan. Reviews op je website helpen bezoekers sneller vertrouwen krijgen en versterken je professionele uitstraling.",
+      },
+      {
+        question: "Helpt Vedantix met review-verwerking?",
+        answer:
+          "Vedantix kan reviews een duidelijke plek geven op je website en ze meenemen in de bredere online groeistrategie.",
+      },
+    ],
+    internalLinks: [
+      { label: "Bekijk resultaten en verbeterpunten", path: "/resultaten" },
+      { label: "Vraag een Online Groei Scan aan", path: "/#groei-scan" },
+    ],
+    ctaLink: "/#groei-scan",
+    ctaLabel: "Laat je reviews en zichtbaarheid bekijken →",
+    seoTitle: "Waarom reviews belangrijk zijn voor lokale vindbaarheid | Vedantix",
+    seoDescription:
+      "Reviews helpen lokale ondernemers aan meer vertrouwen, betere zichtbaarheid en meer aanvragen. Lees waarom ze belangrijk zijn.",
+  }),
+
+  createBlogPost({
+    slug: "hoe-werkt-een-gratis-online-groeiscan",
+    title: "Hoe werkt een gratis Online Groei Scan?",
+    niche: "scan",
+    intro:
+      "De Online Groei Scan laat zien waar je website, vindbaarheid en contactmomenten kansen laten liggen.",
+    excerpt: "Wat Vedantix bekijkt tijdens een gratis Online Groei Scan.",
+    sections: [
+      {
+        title: "We bekijken je online basis",
+        text:
+          "Denk aan snelheid, mobiele ervaring, duidelijke diensten, metadata, call-to-actions en de manier waarop vertrouwen wordt opgebouwd.",
+      },
+      {
+        title: "We vergelijken met klantgedrag",
+        text:
+          "De scan kijkt niet alleen technisch, maar vooral commercieel: begrijpt een bezoeker snel wat je doet en waarom die contact moet opnemen?",
+      },
+      {
+        title: "Je krijgt concrete verbeterpunten",
+        text:
+          "Het doel is duidelijkheid. Je ziet welke aanpassingen kunnen helpen voor meer zichtbaarheid, vertrouwen en aanvragen.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Is de Online Groei Scan echt vrijblijvend?",
+        answer:
+          "Ja. De scan is bedoeld om inzicht te geven in online kansen. Je zit nergens aan vast.",
+      },
+      {
+        question: "Wat analyseert Vedantix tijdens de scan?",
+        answer:
+          "Vedantix bekijkt vindbaarheid, SEO, snelheid, mobiele ervaring, reviews, conversie en call-to-actions.",
+      },
+    ],
+    internalLinks: [
+      { label: "Start de gratis Online Groei Scan", path: "/#groei-scan" },
+      { label: "Bekijk de werkwijze", path: "/proces" },
+    ],
+    ctaLink: "/#groei-scan",
+    ctaLabel: "Vraag je gratis scan aan →",
+    seoTitle: "Hoe werkt een gratis Online Groei Scan? | Vedantix",
+    seoDescription:
+      "Ontdek hoe Vedantix je website, SEO, snelheid, reviews en contactmomenten analyseert tijdens een gratis Online Groei Scan.",
+  }),
+
+  createBlogPost({
+    slug: "website-laten-maken-waar-moet-je-op-letten",
+    title: "Website laten maken: waar moet je op letten?",
+    niche: "website",
+    intro:
+      "Laat je een website maken, kijk dan verder dan design. De beste website helpt je bedrijf betrouwbaarder overkomen, beter gevonden worden en meer aanvragen krijgen.",
+    excerpt: "Waar ondernemers op moeten letten voordat ze een website laten maken.",
+    sections: [
+      {
+        title: "Begin bij het doel van je website",
+        text:
+          "Wil je meer afspraken, offerteaanvragen, telefoontjes of WhatsApp-gesprekken? Dat doel bepaalt structuur, content en call-to-actions.",
+      },
+      {
+        title: "Vraag naar beheer en onderhoud",
+        text:
+          "Een website is nooit echt af. Hosting, beveiliging, updates en verbeteringen bepalen of je online basis betrouwbaar blijft.",
+      },
+      {
+        title: "Let op vindbaarheid vanaf dag één",
+        text:
+          "SEO moet vanaf het begin worden meegenomen. Zo voorkom je dat je later opnieuw moet investeren in structuur, content en techniek.",
+      },
+    ],
+    faqs: [
+      {
+        question: "Wat is belangrijker: design of vindbaarheid?",
+        answer:
+          "Beide zijn belangrijk. Design bouwt vertrouwen op, maar vindbaarheid zorgt dat potentiële klanten je überhaupt vinden.",
+      },
+      {
+        question: "Kan Vedantix alles onder één dak regelen?",
+        answer:
+          "Ja. Vedantix combineert website, hosting, onderhoud, SEO, content en support voor lokale ondernemers.",
+      },
+    ],
+    internalLinks: [
+      { label: "Bekijk pakketten", path: "/prijzen" },
+      { label: "Bekijk waarom Vedantix anders is", path: "/groeimodel" },
+    ],
+    ctaLink: "/contact",
+    ctaLabel: "Plan een kennismaking →",
+    seoTitle: "Website laten maken: waar moet je op letten? | Vedantix",
+    seoDescription:
+      "Een website laten maken? Let op vindbaarheid, vertrouwen, onderhoud en conversie. Lees waar lokale ondernemers op moeten letten.",
+  }),
+
   createBlogPost({
     slug: "meer-klanten-kapper",
     title: "Meer klanten krijgen als kapper",
@@ -525,6 +1152,7 @@ export const basePages = [
   { path: "/", priority: "1.0" },
   { path: "/prijzen", priority: "0.8" },
   { path: "/pakketvergelijking", priority: "0.6" },
+  { path: "/resultaten", priority: "0.8" },
   { path: "/groeimodel", priority: "0.8" },
   { path: "/proces", priority: "0.8" },
   { path: "/faq", priority: "0.7" },
@@ -554,6 +1182,21 @@ export const locationPages = Object.keys(niches).flatMap((nicheKey) =>
     path: `/website/${nicheKey}/${city.slug}`,
     priority: "0.8",
     niche: nicheKey,
+    city: city.slug,
+  }))
+);
+
+export const industryPages = Object.values(industries).map((industry) => ({
+  path: industry.path,
+  priority: "0.85",
+  industry: industry.key,
+}));
+
+export const industryLocationPages = Object.values(industries).flatMap((industry) =>
+  localSeoCities.map((city) => ({
+    path: `/website/${industry.key}/${city.slug}`,
+    priority: "0.78",
+    industry: industry.key,
     city: city.slug,
   }))
 );

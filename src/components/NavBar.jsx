@@ -51,6 +51,7 @@ export default function NavBar() {
               Hoe het werkt
             </a>
             <Link to="/groeimodel" className="site-nav-link">Waarom Vedantix</Link>
+            <Link to="/resultaten" className="site-nav-link">Resultaten</Link>
             <Link to="/contact" className="site-nav-link">Contact</Link>
             <Link to="/blog" className="site-nav-link">Blog</Link>
             <Link to="/faq" className="site-nav-link">FAQ</Link>

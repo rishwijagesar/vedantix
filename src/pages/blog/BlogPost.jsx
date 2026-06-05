@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 import SEO from "../../components/SEO";
-import { createBreadcrumbSchema } from "../../utils/schema";
+import { createBreadcrumbSchema, createFAQSchema } from "../../utils/schema";
 import { blogPosts } from "../../data/seoData";
 
 export default function BlogPost() {
@@ -41,6 +41,7 @@ export default function BlogPost() {
       },
     },
   };
+  const faqSchema = post.faqs?.length ? createFAQSchema(post.faqs) : null;
 
   const relatedPosts = blogPosts
     .filter((item) => item.slug !== slug && item.niche === post.niche)
@@ -52,7 +53,7 @@ export default function BlogPost() {
         title={post.seo?.title || `${post.title} | Vedantix`}
         description={post.seo?.description || post.intro}
         canonical={canonical}
-        schemas={[breadcrumbSchema, articleSchema]}
+        schemas={[breadcrumbSchema, articleSchema, faqSchema].filter(Boolean)}
       />
 
       <div
@@ -101,6 +102,12 @@ export default function BlogPost() {
             gap: 14px;
           }
 
+          .blogpost-link-grid,
+          .blogpost-faq-grid {
+            display: grid;
+            gap: 14px;
+          }
+
           .blogpost-related-card {
             display: block;
             padding: 18px;
@@ -112,7 +119,24 @@ export default function BlogPost() {
             transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
           }
 
-          .blogpost-related-card:hover {
+          .blogpost-internal-link,
+          .blogpost-faq-card {
+            display: block;
+            padding: 18px;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            background: #fff;
+          }
+
+          .blogpost-internal-link {
+            color: #111827;
+            text-decoration: none;
+            font-weight: 800;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+          }
+
+          .blogpost-related-card:hover,
+          .blogpost-internal-link:hover {
             transform: translateY(-2px);
             border-color: #dbeafe;
             box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
@@ -264,28 +288,73 @@ export default function BlogPost() {
             </div>
           </article>
 
-          <section className="blogpost-related">
-            <h3 style={{ marginTop: 0, marginBottom: 16, fontSize: "1.35rem" }}>
-              Gerelateerde blogs
-            </h3>
+          {post.internalLinks?.length ? (
+            <section className="blogpost-related" aria-labelledby="blogpost-internal-title">
+              <h2
+                id="blogpost-internal-title"
+                style={{ marginTop: 0, marginBottom: 16, fontSize: "1.35rem" }}
+              >
+                Verder met online groei
+              </h2>
 
-            <div className="blogpost-related-grid">
-              {relatedPosts.map((item) => (
-                <Link
-                  key={item.slug}
-                  to={`/blog/${item.slug}`}
-                  className="blogpost-related-card"
-                >
-                  <strong style={{ display: "block", marginBottom: 6 }}>
-                    {item.title}
-                  </strong>
-                  <span style={{ color: "#6b7280", lineHeight: 1.6 }}>
-                    {item.excerpt ?? item.intro}
-                  </span>
-                </Link>
-              ))}
-            </div>
-          </section>
+              <div className="blogpost-link-grid">
+                {post.internalLinks.map((link) => (
+                  <Link className="blogpost-internal-link" to={link.path} key={link.path}>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {post.faqs?.length ? (
+            <section className="blogpost-related" aria-labelledby="blogpost-faq-title">
+              <h2
+                id="blogpost-faq-title"
+                style={{ marginTop: 0, marginBottom: 16, fontSize: "1.35rem" }}
+              >
+                Veelgestelde vragen
+              </h2>
+
+              <div className="blogpost-faq-grid">
+                {post.faqs.map((faq) => (
+                  <article className="blogpost-faq-card" key={faq.question}>
+                    <h3 style={{ marginTop: 0, marginBottom: 8, fontSize: "1rem" }}>
+                      {faq.question}
+                    </h3>
+                    <p style={{ color: "#6b7280", lineHeight: 1.7, margin: 0 }}>
+                      {faq.answer}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {relatedPosts.length ? (
+            <section className="blogpost-related">
+              <h3 style={{ marginTop: 0, marginBottom: 16, fontSize: "1.35rem" }}>
+                Gerelateerde blogs
+              </h3>
+
+              <div className="blogpost-related-grid">
+                {relatedPosts.map((item) => (
+                  <Link
+                    key={item.slug}
+                    to={`/blog/${item.slug}`}
+                    className="blogpost-related-card"
+                  >
+                    <strong style={{ display: "block", marginBottom: 6 }}>
+                      {item.title}
+                    </strong>
+                    <span style={{ color: "#6b7280", lineHeight: 1.6 }}>
+                      {item.excerpt ?? item.intro}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ) : null}
         </div>
       </div>
     </>

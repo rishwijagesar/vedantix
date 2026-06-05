@@ -5,6 +5,8 @@ import {
   nichePages,
   blogPosts,
   locationPages,
+  industryPages,
+  industryLocationPages,
 } from "../data/seoData.js";
 
 const DOMAIN = "https://vedantix.nl";
@@ -22,6 +24,7 @@ function escapeXml(value) {
 const rawUrls = [
   ...basePages,
   ...nichePages,
+  ...industryPages,
   { path: "/blog", priority: "0.8", changefreq: "weekly" },
   ...blogPosts.map((post) => ({
     path: `/blog/${post.slug}`,
@@ -31,6 +34,11 @@ const rawUrls = [
   ...locationPages.map((page) => ({
     path: page.path,
     priority: page.priority ?? "0.8",
+    changefreq: "weekly",
+  })),
+  ...industryLocationPages.map((page) => ({
+    path: page.path,
+    priority: page.priority ?? "0.78",
     changefreq: "weekly",
   })),
 ];

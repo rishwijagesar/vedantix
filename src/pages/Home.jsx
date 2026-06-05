@@ -51,6 +51,29 @@ const BENEFITS = [
   },
 ];
 
+const PROOF_CARDS = [
+  {
+    title: "Sneller vertrouwen opbouwen",
+    text: "Laat direct zien waarom bezoekers jouw bedrijf serieus kunnen nemen.",
+    icon: ShieldCheck,
+  },
+  {
+    title: "Beter gevonden worden in Google",
+    text: "Maak diensten, regio en klantvragen duidelijk voor zoekmachines.",
+    icon: Search,
+  },
+  {
+    title: "Meer contactmomenten creëren",
+    text: "Zet bezoekers sneller om naar telefoontjes, WhatsApp-berichten en aanvragen.",
+    icon: MessageCircle,
+  },
+  {
+    title: "Klaar voor moderne AI-zoekmachines",
+    text: "Structuur en FAQ-content helpen AI-systemen je bedrijf beter begrijpen.",
+    icon: Sparkles,
+  },
+];
+
 const WEBSITE_ONLY = [
   "Mooie homepage",
   "Online visitekaartje",
@@ -257,8 +280,8 @@ export default function Home() {
   return (
     <>
       <SEO
-        title="Online groeien als lokale ondernemer | Vedantix"
-        description="Vedantix helpt lokale ondernemers groeien met meer zichtbaarheid, meer vertrouwen, meer aanvragen en minder technische zorgen."
+        title="Vedantix | Websites die lokale ondernemers helpen groeien"
+        description="Vedantix helpt lokale ondernemers met professionele websites, SEO, AI-vriendelijke content en online zichtbaarheid voor meer vertrouwen, meer aanvragen en minder technische zorgen."
         canonical={canonical}
         schemas={[faqSchema, breadcrumbSchema]}
       />
@@ -274,6 +297,30 @@ export default function Home() {
               <div className="home-review-widget">
                 <JotformReviewWidget />
               </div>
+            </div>
+          </section>
+
+          <section className="section-shell">
+            <div className="section-wrap">
+              <div className="section-header center">
+                <div className="section-label">Bewijs dat jouw website werkt</div>
+                <h2 className="section-h2">Een website moet bezoekers overtuigen</h2>
+                <p className="section-p">
+                  Een website moet niet alleen mooi zijn. Hij moet bezoekers overtuigen,
+                  vertrouwen opbouwen en kansen creëren op nieuwe klanten.
+                </p>
+              </div>
+
+              <div className="growth-benefit-grid">
+                {PROOF_CARDS.map((proof) => (
+                  <IconCard key={proof.title} {...proof} />
+                ))}
+              </div>
+
+              <SectionCta
+                title="Wil je weten of jouw website echt werkt?"
+                text="Vraag een gratis online groeiscan aan en ontdek waar je meer vertrouwen, zichtbaarheid en aanvragen kunt winnen."
+              />
             </div>
           </section>
 

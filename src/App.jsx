@@ -34,6 +34,8 @@ const Contact = lazy(() => import("./pages/Contact"));
 const PricingDetails = lazy(() => import("./pages/PricingDetails.jsx"));
 const CustomerPreviewPage = lazy(() => import("./pages/CustomerPreviewPage.jsx"));
 const Base44LoginRedirect = lazy(() => import("./pages/Base44LoginRedirect.jsx"));
+const Resultaten = lazy(() => import("./pages/Resultaten.jsx"));
+const IndustryPage = lazy(() => import("./pages/IndustryPage.jsx"));
 
 const WebsiteKapper = lazy(() => import("./pages/WebsiteKapper"));
 const WebsiteSalon = lazy(() => import("./pages/WebsiteSalon"));
@@ -45,7 +47,6 @@ const WebsiteZZP = lazy(() => import("./pages/WebsiteZZP"));
 
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/blog/BlogPost"));
-const SeoCityPage = lazy(() => import("./pages/SeoCityPage"));
 
 const KlantenPortaal = lazy(() => import("./pages/KlantenPortaal.jsx"));
 
@@ -85,6 +86,7 @@ function AppRoutes() {
           <Route path="/voorwie" element={<VoorWie />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/resultaten" element={<Resultaten />} />
 
           <Route path="/website-kapper" element={<WebsiteKapper />} />
           <Route path="/website-salon" element={<WebsiteSalon />} />
@@ -94,7 +96,8 @@ function AppRoutes() {
           <Route path="/website-schoonmaakbedrijf" element={<WebsiteSchoonmaakbedrijf />} />
           <Route path="/website-zzp" element={<WebsiteZZP />} />
 
-          <Route path="/website/:niche/:stad" element={<SeoCityPage />} />
+          <Route path="/website/:branche" element={<IndustryPage />} />
+          <Route path="/website/:branche/:stad" element={<IndustryPage />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
         </Route>

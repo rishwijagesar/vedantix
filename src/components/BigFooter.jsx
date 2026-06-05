@@ -47,8 +47,8 @@ const FOOTER_STYLES = `
 
   .big-footer__grid {
     display: grid;
-    grid-template-columns: 1.15fr 0.9fr 1fr 1.05fr;
-    gap: 42px;
+    grid-template-columns: 1.1fr 0.82fr 0.9fr 0.9fr 1.08fr;
+    gap: 30px;
     align-items: start;
     padding-bottom: 34px;
     border-bottom: 1px solid rgba(255,255,255,0.07);
@@ -251,6 +251,28 @@ const FOOTER_STYLES = `
     font-weight: 600;
   }
 
+  .big-footer__cta {
+    margin-top: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 10px;
+    background: #f8fafc;
+    color: #0f172a;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 850;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .big-footer__cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 34px rgba(0,0,0,0.22);
+  }
+
   .big-footer__bottom {
     padding-top: 18px;
     display: flex;
@@ -384,9 +406,16 @@ export default function BigFooter() {
                 Online zichtbaarheid voor lokale ondernemers
               </h2>
               <p className="big-footer__brand-text">
-                Vedantix helpt lokale ondernemers groeien met websites, SEO, content,
-                online zichtbaarheid en moderne AI-vriendelijke weboplossingen.
+                Vedantix helpt lokale ondernemers groeien met professionele websites,
+                SEO, AI-vriendelijke content, hosting, onderhoud en online zichtbaarheid.
               </p>
+
+              <ul className="big-footer__links" aria-label="Vedantix diensten">
+                <li><Link to="/voorwie">Websites voor lokale ondernemers</Link></li>
+                <li><Link to="/groeimodel">SEO en online zichtbaarheid</Link></li>
+                <li><Link to="/blog/wat-is-een-ai-vriendelijke-website">AI-vriendelijke websites</Link></li>
+                <li><Link to="/prijzen">Hosting en onderhoud</Link></li>
+              </ul>
 
               <div className="big-footer__socials">
                 <a
@@ -420,13 +449,14 @@ export default function BigFooter() {
             </div>
 
             <div className="big-footer__col">
-              <div className="big-footer__col-title">Snelle links</div>
+              <div className="big-footer__col-title">Pagina's</div>
               <ul className="big-footer__links">
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/prijzen">Prijzen</Link></li>
                 <li><Link to="/voorwie">Voor Wie</Link></li>
-                <li><Link to="/groeimodel">Waarom Vedantix</Link></li>
                 <li><Link to="/proces">Proces</Link></li>
+                <li><Link to="/groeimodel">Waarom Vedantix</Link></li>
+                <li><Link to="/resultaten">Resultaten</Link></li>
                 <li><Link to="/faq">FAQ</Link></li>
                 <li><Link to="/contact">Contact</Link></li>
                 <li><Link to="/blog">Blog</Link></li>
@@ -434,13 +464,26 @@ export default function BigFooter() {
             </div>
 
             <div className="big-footer__col">
+              <div className="big-footer__col-title">Diensten</div>
+              <ul className="big-footer__links">
+                <li><Link to="/voorwie">Website laten maken</Link></li>
+                <li><Link to="/groeimodel">SEO optimalisatie</Link></li>
+                <li><Link to="/blog/beter-gevonden-in-google-lokale-ondernemer">Lokale vindbaarheid</Link></li>
+                <li><Link to="/prijzen">Website onderhoud</Link></li>
+                <li><Link to="/prijzen">Hosting</Link></li>
+                <li><Link to="/blog/wat-is-een-ai-vriendelijke-website">AI-vriendelijke websites</Link></li>
+              </ul>
+            </div>
+
+            <div className="big-footer__col">
               <div className="big-footer__col-title">Branches</div>
               <ul className="big-footer__links">
-                <li><Link to="/website-kapper">Website voor kappers</Link></li>
-                <li><Link to="/website-salon">Website voor salons</Link></li>
-                <li><Link to="/website-restaurant">Website voor restaurants</Link></li>
-                <li><Link to="/website-klusbedrijf">Website voor klusbedrijven</Link></li>
-                <li><Link to="/website-fotograaf">Website voor fotografen</Link></li>
+                <li><Link to="/website/personal-trainer">Website voor personal trainers</Link></li>
+                <li><Link to="/website/fysiotherapeut">Website voor fysiotherapeuten</Link></li>
+                <li><Link to="/website/coach">Website voor coaches</Link></li>
+                <li><Link to="/website/schoonheidssalon">Website voor salons</Link></li>
+                <li><Link to="/website/kapper">Website voor kappers</Link></li>
+                <li><Link to="/website/installateur">Website voor installateurs</Link></li>
               </ul>
             </div>
 
@@ -470,6 +513,10 @@ export default function BigFooter() {
                   <strong>BTW:</strong> NL005461438B38
                 </div>
               </div>
+
+              <a className="big-footer__cta" href="/#groei-scan">
+                Gratis Online Groei Scan
+              </a>
             </div>
           </div>
 
@@ -485,6 +532,7 @@ export default function BigFooter() {
               <Link to="/contact">Contact</Link>
               <Link to="/faq">FAQ</Link>
               <Link to="/prijzen">Prijzen</Link>
+              <Link to="/resultaten">Resultaten</Link>
             </div>
           </div>
         </div>
