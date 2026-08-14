@@ -20,8 +20,6 @@ export default function ClientPortal() {
     base44.auth.me().then(async u => {
       if (!u) { redirectToBase44Login(window.location.href); return; }
       setUser(u);
-      // Admin redirect to CRM
-      if (u.role === "admin") { window.location.href = "/CRM"; return; }
       // Find customer profile linked to this user
       const profiles = await CustomerProfile.filter({ user_id: u.id });
       if (profiles.length > 0) setKlant(profiles[0]);
