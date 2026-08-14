@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 
 const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID || "2100259704034137";
-const EXCLUDED_PREFIXES = ["/klantenportaal"];
+const EXCLUDED_PREFIXES = ["/admin", "/klantenportaal"];
 
 function isPublicMarketingRoute(pathname) {
   return !EXCLUDED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
