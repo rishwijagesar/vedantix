@@ -44,6 +44,7 @@ const rawUrls = [
 ];
 
 const excludedPaths = new Set([
+  "/admin",
   "/klantenportaal",
   "/home",
 ]);
