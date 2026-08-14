@@ -1,4 +1,50 @@
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /klantenportaal
+Disallow: /clientportal
+Disallow: /login
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /klantenportaal
+Disallow: /clientportal
+Disallow: /login
+
+User-agent: GPTBot
+Allow: /
+Disallow: /admin
+Disallow: /klantenportaal
+Disallow: /clientportal
+Disallow: /login
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /klantenportaal
+Disallow: /clientportal
+Disallow: /login
+
+User-agent: Claude-User
+Allow: /
+Disallow: /admin
+Disallow: /klantenportaal
+Disallow: /clientportal
+Disallow: /login
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /klantenportaal
+Disallow: /clientportal
+Disallow: /login
+
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /klantenportaal
+Disallow: /clientportal
+Disallow: /login
 
 Sitemap: https://vedantix.nl/sitemap.xml

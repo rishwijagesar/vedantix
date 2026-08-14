@@ -216,6 +216,16 @@ const HOMEPAGE_FAQS = [
     answer:
       "Ondernemers kiezen voor Vedantix omdat website, hosting, onderhoud, SEO en ondersteuning onder één dak worden geregeld met focus op zichtbaarheid en groei.",
   },
+  {
+    question: "Is Vedantix een bedrijf voor websites, webdesign, hosting en SEO?",
+    answer:
+      "Ja. Vedantix combineert webdesign, webontwikkeling, managed hosting, SSL, onderhoud, SEO, AEO, GEO en AI-vindbaarheid voor lokale ondernemers en zzp’ers.",
+  },
+  {
+    question: "Werkt Vedantix alleen in Den Bosch?",
+    answer:
+      "Nee. Vedantix is gevestigd in 's-Hertogenbosch en werkt voor lokale ondernemers in heel Nederland. De samenwerking kan grotendeels online verlopen.",
+  },
 ];
 
 function SectionCta({ title, text, dark = false }) {
@@ -491,6 +501,11 @@ export default function Home() {
                   <IconCard key={card.title} {...card} />
                 ))}
               </div>
+
+              <p className="section-p" style={{ margin: "24px auto 0", textAlign: "center" }}>
+                Lees hoe Vedantix werkt aan{" "}
+                <a href="/ai-vindbaarheid">SEO, AEO, GEO en AI-vindbaarheid</a>.
+              </p>
 
               <SectionCta
                 title="Vraag een gratis Online Groei Audit aan"

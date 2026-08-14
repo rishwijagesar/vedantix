@@ -413,7 +413,7 @@ export default function BigFooter() {
               <ul className="big-footer__links" aria-label="Vedantix diensten">
                 <li><Link to="/voorwie">Websites voor lokale ondernemers</Link></li>
                 <li><Link to="/groeimodel">SEO en online zichtbaarheid</Link></li>
-                <li><Link to="/blog/wat-is-een-ai-vriendelijke-website">AI-vriendelijke websites</Link></li>
+                <li><Link to="/ai-vindbaarheid">SEO, AEO, GEO en AI-vindbaarheid</Link></li>
                 <li><Link to="/prijzen">Hosting en onderhoud</Link></li>
               </ul>
 
@@ -458,6 +458,7 @@ export default function BigFooter() {
                 <li><Link to="/groeimodel">Waarom Vedantix</Link></li>
                 <li><Link to="/resultaten">Resultaten</Link></li>
                 <li><Link to="/online-groei-audit">Online Groei Audit</Link></li>
+                <li><Link to="/ai-vindbaarheid">AI-vindbaarheid</Link></li>
                 <li><Link to="/faq">FAQ</Link></li>
                 <li><Link to="/contact">Contact</Link></li>
                 <li><Link to="/blog">Blog</Link></li>
@@ -472,7 +473,7 @@ export default function BigFooter() {
                 <li><Link to="/blog/beter-gevonden-in-google-lokale-ondernemer">Lokale vindbaarheid</Link></li>
                 <li><Link to="/prijzen">Website onderhoud</Link></li>
                 <li><Link to="/prijzen">Hosting</Link></li>
-                <li><Link to="/blog/wat-is-een-ai-vriendelijke-website">AI-vriendelijke websites</Link></li>
+                <li><Link to="/ai-vindbaarheid">AEO, GEO en AI-vindbaarheid</Link></li>
               </ul>
             </div>
 
@@ -494,7 +495,13 @@ export default function BigFooter() {
               <ul className="big-footer__contact-list">
                 <li className="big-footer__contact-item">
                   <span className="big-footer__contact-icon"><IconLocation /></span>
-                  <a href="address:Netherlands">Nederland · Lokale ondernemers</a>
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=Neercanne+6%2C+5235+HB%2C+%27s-Hertogenbosch"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Neercanne 6 · 5235 HB 's-Hertogenbosch
+                  </a>
                 </li>
                 <li className="big-footer__contact-item">
                   <span className="big-footer__contact-icon"><IconPhone /></span>
