@@ -125,6 +125,8 @@ function AppRoutes() {
         <Route path="/Contact" element={<Navigate to="/contact" replace />} />
         <Route path="/ClientPortal" element={<Navigate to="/klantenportaal" replace />} />
 
+        <Route path="/admin/*" element={<Navigate to="/" replace />} />
+        <Route path="/CRM" element={<Navigate to="/" replace />} />
         <Route path="/:previewSlug" element={<CustomerPreviewPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
