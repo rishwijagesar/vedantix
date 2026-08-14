@@ -24,6 +24,17 @@ export async function fetchOnlineGrowthAudit(auditId) {
   });
 }
 
+export async function rerunOnlineGrowthAudit(auditId) {
+  return apiClient.post(
+    `/api/audit/${encodeURIComponent(auditId)}/rerun`,
+    {},
+    {
+      actorId: "online-growth-audit",
+      source: "PUBLIC_SITE",
+    },
+  );
+}
+
 export async function downloadOnlineGrowthAuditPdf(auditId) {
   const response = await fetch(
     `${API_BASE_URL}/api/audit/${encodeURIComponent(auditId)}/pdf`,

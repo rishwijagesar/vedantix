@@ -6,17 +6,21 @@ import {
   CheckCircle2,
   Clock3,
   Download,
+  ExternalLink,
   FileText,
+  Link2,
   Loader2,
   RefreshCw,
   Search,
   Sparkles,
   Target,
+  X,
   Zap,
 } from "lucide-react";
 import {
   downloadOnlineGrowthAuditPdf,
   fetchOnlineGrowthAudit,
+  rerunOnlineGrowthAudit,
   startOnlineGrowthAudit,
 } from "../api/onlineGrowthAudit.api";
 import NavBar from "../components/NavBar";
@@ -60,6 +64,39 @@ const CONFIDENCE_LABELS = {
   HIGH: "Hoog meetvertrouwen",
   MEDIUM: "Gemiddeld meetvertrouwen",
   LOW: "Beperkt meetvertrouwen",
+};
+
+const CONNECTION_GUIDES = {
+  analytics: {
+    title: "Google Analytics veilig koppelen",
+    intro:
+      "Voor event- en conversiedata moet de website-eigenaar via Google toestemming geven. De openbare audit krijgt nooit automatisch toegang tot een Analytics-account.",
+    steps: [
+      "Log in met het Google-account dat toegang heeft tot de juiste GA4-property.",
+      "Kies de property van de gecontroleerde website en geef alleen-lezen toestemming.",
+      "Vedantix controleert daarna conversie-events, consent en datakwaliteit.",
+    ],
+  },
+  backlink: {
+    title: "Een backlinkbron koppelen",
+    intro:
+      "Backlinks staan niet in de website zelf. Hiervoor is een externe backlinkdatabase en een server-side API-koppeling nodig.",
+    steps: [
+      "Kies een ondersteunde bron, zoals Semrush, Ahrefs of Majestic.",
+      "De API-sleutel wordt uitsluitend versleuteld aan de backend opgeslagen en nooit in de browser gezet.",
+      "Na de koppeling kan de auditor verwijzende domeinen, kwaliteit en verloren links meten.",
+    ],
+  },
+  googleBusiness: {
+    title: "Google Bedrijfsprofiel veilig koppelen",
+    intro:
+      "Google Bedrijfsprofieldata is beschermd. De eigenaar moet inloggen en Vedantix via Google OAuth expliciet alleen-lezen toegang geven.",
+    steps: [
+      "Log in met het Google-account dat het bedrijfsprofiel beheert.",
+      "Selecteer de juiste vestiging en verleen toestemming.",
+      "Vedantix kan daarna profielgegevens, openingstijden en reviews controleren.",
+    ],
+  },
 };
 
 const FEATURE_CARDS = [
@@ -148,6 +185,37 @@ function saveBlob(blob, filename) {
   window.setTimeout(() => URL.revokeObjectURL(url), 400);
 }
 
+function auditIdFromBrowser() {
+  try {
+    const sharedId = new URLSearchParams(window.location.search).get("audit");
+    return sharedId || window.localStorage.getItem("vedantix_online_growth_audit_id") || "";
+  } catch {
+    return "";
+  }
+}
+
+function rememberAuditId(auditId) {
+  try {
+    window.localStorage.setItem("vedantix_online_growth_audit_id", auditId);
+    const url = new URL(window.location.href);
+    url.searchParams.set("audit", auditId);
+    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+  } catch {
+    // The audit remains usable when browser storage or History API is unavailable.
+  }
+}
+
+function forgetAuditId() {
+  try {
+    window.localStorage.removeItem("vedantix_online_growth_audit_id");
+    const url = new URL(window.location.href);
+    url.searchParams.delete("audit");
+    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+  } catch {
+    // The page remains usable when browser storage or History API is unavailable.
+  }
+}
+
 function StatusBadge({ status }) {
   return (
     <span className={`audit-status-badge ${String(status || "PENDING").toLowerCase()}`}>
@@ -163,10 +231,14 @@ function StatusBadge({ status }) {
   );
 }
 
-function ScoreCard({ score }) {
+function ScoreCard({ score, auditedUrl, onConnect, onRerun, isRerunning }) {
   const tone = scoreTone(score.score);
   const failedChecks = score.evidenceItems?.filter((item) => item.status === "FAIL") || [];
   const passedChecks = score.evidenceItems?.filter((item) => item.status === "PASS") || [];
+  const connectionGuide = CONNECTION_GUIDES[score.key];
+  const pageSpeedUrl = auditedUrl
+    ? `https://pagespeed.web.dev/analysis?url=${encodeURIComponent(auditedUrl)}`
+    : "https://pagespeed.web.dev/";
   return (
     <article className={`audit-score-card ${tone}`}>
       <div>
@@ -180,6 +252,26 @@ function ScoreCard({ score }) {
       </div>
       <p>{score.summary}</p>
       {score.recommendations?.[0] ? <em>{score.recommendations[0]}</em> : null}
+      {score.key === "performance" && score.score === null ? (
+        <div className="audit-card-actions">
+          <a href={pageSpeedUrl} target="_blank" rel="noreferrer">
+            <ExternalLink size={15} aria-hidden="true" />
+            Open losse PageSpeed-test
+          </a>
+          <button type="button" onClick={onRerun} disabled={isRerunning}>
+            <RefreshCw size={15} aria-hidden="true" className={isRerunning ? "spin" : ""} />
+            Hele audit opnieuw uitvoeren
+          </button>
+        </div>
+      ) : null}
+      {connectionGuide ? (
+        <div className="audit-card-actions">
+          <button type="button" onClick={() => onConnect(score.key)}>
+            <Link2 size={15} aria-hidden="true" />
+            Bron koppelen
+          </button>
+        </div>
+      ) : null}
       {score.evidenceItems?.length ? (
         <details className="audit-evidence">
           <summary>Bekijk bewijs en controles</summary>
@@ -260,18 +352,14 @@ function CompetitorTable({ competitors }) {
 
 export default function OnlineGrowthAudit() {
   const [form, setForm] = useState(INITIAL_FORM);
-  const [auditId, setAuditId] = useState(() => {
-    try {
-      return window.localStorage.getItem("vedantix_online_growth_audit_id") || "";
-    } catch {
-      return "";
-    }
-  });
+  const [auditId, setAuditId] = useState(auditIdFromBrowser);
   const [audit, setAudit] = useState(null);
   const [error, setError] = useState("");
   const [isStarting, setIsStarting] = useState(false);
+  const [isRerunning, setIsRerunning] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [connectionKey, setConnectionKey] = useState("");
   const resultRef = useRef(null);
 
   const status = audit?.status || (auditId ? "PENDING" : null);
@@ -303,11 +391,7 @@ export default function OnlineGrowthAudit() {
       if (/niet gevonden/i.test(message)) {
         setAuditId("");
         setAudit(null);
-        try {
-          window.localStorage.removeItem("vedantix_online_growth_audit_id");
-        } catch {
-          // Ignore storage errors.
-        }
+        forgetAuditId();
       }
       return null;
     } finally {
@@ -358,12 +442,30 @@ export default function OnlineGrowthAudit() {
       });
       setAuditId(started.auditId);
       setAudit({ auditId: started.auditId, status: started.status });
-      window.localStorage.setItem("vedantix_online_growth_audit_id", started.auditId);
+      rememberAuditId(started.auditId);
       await refreshAudit(started.auditId, { silent: true });
     } catch (nextError) {
       setError(nextError instanceof Error ? nextError.message : "Audit starten is mislukt.");
     } finally {
       setIsStarting(false);
+    }
+  };
+
+  const handleRerun = async () => {
+    if (!auditId || isRerunning) return;
+    setIsRerunning(true);
+    setError("");
+    try {
+      const started = await rerunOnlineGrowthAudit(auditId);
+      setAuditId(started.auditId);
+      setAudit({ auditId: started.auditId, status: started.status });
+      rememberAuditId(started.auditId);
+      await refreshAudit(started.auditId, { silent: true });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (nextError) {
+      setError(nextError instanceof Error ? nextError.message : "Audit opnieuw uitvoeren is mislukt.");
+    } finally {
+      setIsRerunning(false);
     }
   };
 
@@ -382,15 +484,27 @@ export default function OnlineGrowthAudit() {
   };
 
   const clearAudit = () => {
+    const previousRequest = audit?.request;
     setAuditId("");
     setAudit(null);
     setError("");
-    try {
-      window.localStorage.removeItem("vedantix_online_growth_audit_id");
-    } catch {
-      // The page still works when storage is unavailable.
-    }
+    setForm({
+      ...INITIAL_FORM,
+      name: previousRequest?.name || form.name,
+      companyName: previousRequest?.companyName || form.companyName,
+      email: previousRequest?.email || form.email,
+    });
+    forgetAuditId();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  const connectionGuide = CONNECTION_GUIDES[connectionKey];
+  const connectionRequestUrl = useMemo(() => {
+    if (!connectionGuide) return whatsappUrl;
+    const website = audit?.request?.websiteUrl || results?.auditedUrl || form.websiteUrl;
+    const message = `Hallo Vedantix, ik wil ${connectionGuide.title.toLowerCase()} voor ${website || "mijn website"}. Audit ID: ${auditId || "nog niet beschikbaar"}.`;
+    return `${CONTACT.WHATSAPP_URL}?text=${encodeURIComponent(message)}`;
+  }, [audit?.request?.websiteUrl, auditId, connectionGuide, form.websiteUrl, results?.auditedUrl, whatsappUrl]);
 
   return (
     <>
@@ -514,13 +628,21 @@ export default function OnlineGrowthAudit() {
                   Audit ID: <strong>{auditId}</strong>
                 </p>
               </div>
-              <button type="button" onClick={() => refreshAudit()} disabled={isRefreshing}>
-                <RefreshCw size={16} aria-hidden="true" className={isRefreshing ? "spin" : ""} />
-                Status verversen
-              </button>
-              <button type="button" onClick={clearAudit} className="audit-secondary-button">
-                Nieuwe audit
-              </button>
+              <div className="audit-status-actions">
+                <button type="button" onClick={() => refreshAudit()} disabled={isRefreshing}>
+                  <RefreshCw size={16} aria-hidden="true" className={isRefreshing ? "spin" : ""} />
+                  Status verversen
+                </button>
+                {results ? (
+                  <button type="button" onClick={handleRerun} disabled={isRerunning}>
+                    <RefreshCw size={16} aria-hidden="true" className={isRerunning ? "spin" : ""} />
+                    Audit opnieuw uitvoeren
+                  </button>
+                ) : null}
+                <button type="button" onClick={clearAudit} className="audit-secondary-button">
+                  Andere website controleren
+                </button>
+              </div>
             </section>
           ) : null}
 
@@ -561,14 +683,23 @@ export default function OnlineGrowthAudit() {
                   </div>
                   <span>{results.executiveSummary}</span>
                 </div>
-                <button type="button" onClick={handleDownloadPdf} disabled={isDownloading}>
-                  {isDownloading ? (
-                    <Loader2 size={18} aria-hidden="true" className="spin" />
-                  ) : (
-                    <Download size={18} aria-hidden="true" />
-                  )}
-                  Download PDF
-                </button>
+                <div className="audit-result-actions">
+                  <button type="button" onClick={handleRerun} disabled={isRerunning}>
+                    <RefreshCw size={18} aria-hidden="true" className={isRerunning ? "spin" : ""} />
+                    Audit opnieuw uitvoeren
+                  </button>
+                  <button type="button" onClick={clearAudit} className="secondary">
+                    Andere website controleren
+                  </button>
+                  <button type="button" onClick={handleDownloadPdf} disabled={isDownloading}>
+                    {isDownloading ? (
+                      <Loader2 size={18} aria-hidden="true" className="spin" />
+                    ) : (
+                      <Download size={18} aria-hidden="true" />
+                    )}
+                    Download PDF
+                  </button>
+                </div>
               </div>
 
               <section className="audit-section-card" aria-labelledby="scores-title">
@@ -578,7 +709,14 @@ export default function OnlineGrowthAudit() {
                 </div>
                 <div className="audit-score-grid">
                   {results.scores?.map((score) => (
-                    <ScoreCard key={score.key} score={score} />
+                    <ScoreCard
+                      key={score.key}
+                      score={score}
+                      auditedUrl={results.finalUrl || results.auditedUrl}
+                      onConnect={setConnectionKey}
+                      onRerun={handleRerun}
+                      isRerunning={isRerunning}
+                    />
                   ))}
                 </div>
               </section>
@@ -657,6 +795,39 @@ export default function OnlineGrowthAudit() {
             </section>
           ) : null}
         </main>
+        {connectionGuide ? (
+          <div className="audit-dialog-backdrop" role="presentation" onMouseDown={() => setConnectionKey("")}>
+            <section
+              className="audit-dialog"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="audit-dialog-title"
+              onMouseDown={(event) => event.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="audit-dialog-close"
+                onClick={() => setConnectionKey("")}
+                aria-label="Venster sluiten"
+              >
+                <X size={20} aria-hidden="true" />
+              </button>
+              <div className="audit-dialog-icon"><Link2 size={22} aria-hidden="true" /></div>
+              <h2 id="audit-dialog-title">{connectionGuide.title}</h2>
+              <p>{connectionGuide.intro}</p>
+              <ol>
+                {connectionGuide.steps.map((step) => <li key={step}>{step}</li>)}
+              </ol>
+              <div className="audit-dialog-notice">
+                Dit is bewust geen directe openbare login: eerst moet worden vastgesteld dat de aanvrager eigenaar of beheerder van de website is.
+              </div>
+              <div className="audit-dialog-actions">
+                <a href={connectionRequestUrl}>Koppeling aanvragen via WhatsApp</a>
+                <button type="button" onClick={() => setConnectionKey("")}>Sluiten</button>
+              </div>
+            </section>
+          </div>
+        ) : null}
       </div>
     </>
   );
@@ -840,7 +1011,8 @@ const AUDIT_STYLES = `
 
 .audit-submit:disabled,
 .audit-status-panel button:disabled,
-.audit-result-hero button:disabled {
+.audit-result-hero button:disabled,
+.audit-card-actions button:disabled {
   cursor: not-allowed;
   opacity: .68;
 }
@@ -874,6 +1046,13 @@ const AUDIT_STYLES = `
   align-items: center;
   justify-content: space-between;
   padding: 18px;
+}
+
+.audit-status-actions,
+.audit-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
 }
 
 .audit-status-panel p {
@@ -1005,6 +1184,16 @@ const AUDIT_STYLES = `
   color: #0f172a;
 }
 
+.audit-result-hero button.secondary {
+  border-color: rgba(255, 255, 255, .34);
+  background: transparent;
+  color: #fff;
+}
+
+.audit-result-actions {
+  display: grid;
+}
+
 .audit-section-card {
   padding: 22px;
 }
@@ -1113,6 +1302,35 @@ const AUDIT_STYLES = `
   font-style: normal;
   font-weight: 850;
   line-height: 1.5;
+}
+
+.audit-card-actions {
+  display: grid !important;
+  gap: 8px !important;
+  margin-top: 14px;
+}
+
+.audit-card-actions a,
+.audit-card-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  padding: 8px 11px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background: #fff;
+  color: #1d4ed8;
+  font: inherit;
+  font-size: .76rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.audit-card-actions button {
+  border-color: #dbe4f0;
+  color: #334155;
 }
 
 .audit-evidence {
@@ -1278,6 +1496,112 @@ const AUDIT_STYLES = `
   color: #1d4ed8;
 }
 
+.audit-dialog-backdrop {
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(2, 6, 23, .72);
+  backdrop-filter: blur(5px);
+}
+
+.audit-dialog {
+  position: relative;
+  width: min(600px, 100%);
+  max-height: min(760px, calc(100vh - 36px));
+  overflow-y: auto;
+  padding: clamp(24px, 5vw, 36px);
+  border: 1px solid #dbe4f0;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 30px 90px rgba(2, 6, 23, .3);
+}
+
+.audit-dialog-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #fff;
+  color: #475569;
+  cursor: pointer;
+}
+
+.audit-dialog-icon {
+  display: grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.audit-dialog h2 {
+  margin: 18px 44px 8px 0;
+  font-size: clamp(1.45rem, 5vw, 2rem);
+  line-height: 1.08;
+}
+
+.audit-dialog > p,
+.audit-dialog li {
+  color: #475569;
+  line-height: 1.65;
+}
+
+.audit-dialog ol {
+  display: grid;
+  gap: 8px;
+  padding-left: 22px;
+}
+
+.audit-dialog-notice {
+  margin-top: 18px;
+  padding: 13px;
+  border: 1px solid #fde68a;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: .84rem;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+.audit-dialog-actions {
+  display: grid;
+  gap: 9px;
+  margin-top: 20px;
+}
+
+.audit-dialog-actions a,
+.audit-dialog-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 16px;
+  border: 1px solid #0f172a;
+  border-radius: 8px;
+  background: #0f172a;
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.audit-dialog-actions button {
+  border-color: #dbe4f0;
+  background: #fff;
+  color: #475569;
+}
+
 .spin {
   animation: audit-spin .9s linear infinite;
 }
@@ -1310,6 +1634,14 @@ const AUDIT_STYLES = `
 
   .audit-result-hero button {
     width: auto;
+  }
+
+  .audit-result-actions {
+    min-width: 250px;
+  }
+
+  .audit-dialog-actions {
+    grid-template-columns: 1fr auto;
   }
 }
 
