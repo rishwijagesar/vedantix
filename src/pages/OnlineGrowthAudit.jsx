@@ -50,21 +50,33 @@ const PRIORITY_LABELS = {
   OPTIMIZATION: "Optimalisatie",
 };
 
+const MODULE_STATUS_LABELS = {
+  COMPLETED: "Gemeten",
+  UNKNOWN: "Niet verifieerbaar",
+  FAILED: "Meting niet beschikbaar",
+};
+
+const CONFIDENCE_LABELS = {
+  HIGH: "Hoog meetvertrouwen",
+  MEDIUM: "Gemiddeld meetvertrouwen",
+  LOW: "Beperkt meetvertrouwen",
+};
+
 const FEATURE_CARDS = [
   {
     icon: Search,
     title: "SEO, GEO, AEO en AI",
-    text: "De backend analyseert vindbaarheid, vraag-antwoordstructuur, entities en AI-zichtbaarheid.",
+    text: "Meetbare crawl-, content-, entity- en vraag-antwoordsignalen met zichtbaar bewijs.",
   },
   {
     icon: Zap,
     title: "Performance en security",
-    text: "PageSpeed, headers, HTTPS, SPF en DMARC worden server-side gecontroleerd.",
+    text: "Google PageSpeed, headers, HTTPS, SPF en DMARC worden bij de bron gecontroleerd.",
   },
   {
     icon: Target,
     title: "Conversie en vertrouwen",
-    text: "CTA's, WhatsApp, reviews, contactroutes en trust-signalen worden meegenomen.",
+    text: "CTA's, contactroutes en on-site trust-signalen worden gecontroleerd; externe data wordt niet geschat.",
   },
 ];
 
@@ -77,12 +89,17 @@ const FAQS = [
   {
     question: "Waarom duurt de audit soms even?",
     answer:
-      "De backend crawlt de website en kan externe bronnen zoals PageSpeed, DNS en toekomstige marketing-integraties raadplegen. Daarom draait de audit asynchroon.",
+      "De backend rendert JavaScript-pagina’s, crawlt een gerichte steekproef en raadpleegt Google PageSpeed en DNS. Daarom draait de audit asynchroon.",
   },
   {
     question: "Kan ik het rapport downloaden?",
     answer:
       "Ja. Zodra de audit is afgerond genereert de backend een professioneel PDF-rapport dat je direct kunt downloaden.",
+  },
+  {
+    question: "Meet de audit ook backlinks, Google Reviews en mijn Bedrijfsprofiel?",
+    answer:
+      "Alleen wanneer daarvoor een betrouwbare externe databron is gekoppeld. Zonder zo’n bron toont Vedantix ‘niet verifieerbaar’ en verzint de auditor geen score.",
   },
 ];
 
@@ -109,7 +126,15 @@ function scoreTone(score) {
 }
 
 function scoreLabel(score) {
-  return score === null || score === undefined ? "UNKNOWN" : `${score}/100`;
+  return score === null || score === undefined ? "Niet gemeten" : `${score}/100`;
+}
+
+function confidenceLabel(confidence) {
+  return CONFIDENCE_LABELS[confidence] || "Meetvertrouwen onbekend";
+}
+
+function metricLabel(value) {
+  return value === null || value === undefined ? "Niet gemeten" : value;
 }
 
 function saveBlob(blob, filename) {
@@ -140,15 +165,35 @@ function StatusBadge({ status }) {
 
 function ScoreCard({ score }) {
   const tone = scoreTone(score.score);
+  const failedChecks = score.evidenceItems?.filter((item) => item.status === "FAIL") || [];
+  const passedChecks = score.evidenceItems?.filter((item) => item.status === "PASS") || [];
   return (
     <article className={`audit-score-card ${tone}`}>
       <div>
         <p>{score.label}</p>
         <strong>{scoreLabel(score.score)}</strong>
       </div>
-      <span>{score.status}</span>
+      <div className="audit-score-meta">
+        <span>{MODULE_STATUS_LABELS[score.status] || score.status}</span>
+        <span>{confidenceLabel(score.confidence)}</span>
+        {score.totalChecks ? <span>{score.measuredChecks}/{score.totalChecks} controles</span> : null}
+      </div>
       <p>{score.summary}</p>
       {score.recommendations?.[0] ? <em>{score.recommendations[0]}</em> : null}
+      {score.evidenceItems?.length ? (
+        <details className="audit-evidence">
+          <summary>Bekijk bewijs en controles</summary>
+          <ul>
+            {[...failedChecks, ...passedChecks].slice(0, 8).map((item) => (
+              <li key={item.check} className={item.status.toLowerCase()}>
+                <strong>{item.label}</strong>
+                <span>{item.observed}</span>
+                <small>Bron: {item.source}</small>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
     </article>
   );
 }
@@ -184,6 +229,7 @@ function CompetitorTable({ competitors }) {
           <thead>
             <tr>
               <th>Website</th>
+              <th>Status</th>
               <th>SEO</th>
               <th>Reviews</th>
               <th>FAQ</th>
@@ -196,12 +242,13 @@ function CompetitorTable({ competitors }) {
             {competitors.map((competitor) => (
               <tr key={competitor.url}>
                 <td>{competitor.url}</td>
+                <td>{competitor.status === "FAILED" ? "Mislukt" : competitor.status === "PARTIAL" ? "Deels gemeten" : "Gemeten"}</td>
                 <td>{scoreLabel(competitor.seoScore)}</td>
-                <td>{competitor.reviewSignals}</td>
-                <td>{competitor.faqCount}</td>
+                <td>{metricLabel(competitor.reviewSignals)}</td>
+                <td>{metricLabel(competitor.faqCount)}</td>
                 <td>{scoreLabel(competitor.speedScore)}</td>
-                <td>{competitor.googleBusinessSignals}</td>
-                <td>{competitor.conversionSignals}</td>
+                <td>{metricLabel(competitor.googleBusinessSignals)}</td>
+                <td>{metricLabel(competitor.conversionSignals)}</td>
               </tr>
             ))}
           </tbody>
@@ -251,7 +298,17 @@ export default function OnlineGrowthAudit() {
       setError("");
       return nextAudit;
     } catch (nextError) {
-      setError(nextError instanceof Error ? nextError.message : "Audit ophalen is mislukt.");
+      const message = nextError instanceof Error ? nextError.message : "Audit ophalen is mislukt.";
+      setError(message);
+      if (/niet gevonden/i.test(message)) {
+        setAuditId("");
+        setAudit(null);
+        try {
+          window.localStorage.removeItem("vedantix_online_growth_audit_id");
+        } catch {
+          // Ignore storage errors.
+        }
+      }
       return null;
     } finally {
       if (!options.silent) setIsRefreshing(false);
@@ -324,6 +381,17 @@ export default function OnlineGrowthAudit() {
     }
   };
 
+  const clearAudit = () => {
+    setAuditId("");
+    setAudit(null);
+    setError("");
+    try {
+      window.localStorage.removeItem("vedantix_online_growth_audit_id");
+    } catch {
+      // The page still works when storage is unavailable.
+    }
+  };
+
   return (
     <>
       <SEO
@@ -345,9 +413,9 @@ export default function OnlineGrowthAudit() {
               </div>
               <h1 id="audit-title">Ontdek waar jouw website groei laat liggen</h1>
               <p>
-                Vul je gegevens in. De Vedantix backend crawlt en analyseert je website
-                asynchroon op vindbaarheid, AI-zichtbaarheid, performance, security,
-                vertrouwen en conversie.
+                Vul je gegevens in. De auditor rendert ook JavaScript-websites en laat per
+                controle zien wat werkelijk is gevonden, welke bron is gebruikt en wat niet
+                betrouwbaar kon worden gemeten.
               </p>
               <div className="audit-feature-grid">
                 {FEATURE_CARDS.map(({ icon: Icon, title, text }) => (
@@ -433,7 +501,7 @@ export default function OnlineGrowthAudit() {
                 ) : (
                   <ArrowRight size={18} aria-hidden="true" />
                 )}
-                Start backend audit
+                Start gratis audit
               </button>
             </form>
           </section>
@@ -449,6 +517,9 @@ export default function OnlineGrowthAudit() {
               <button type="button" onClick={() => refreshAudit()} disabled={isRefreshing}>
                 <RefreshCw size={16} aria-hidden="true" className={isRefreshing ? "spin" : ""} />
                 Status verversen
+              </button>
+              <button type="button" onClick={clearAudit} className="audit-secondary-button">
+                Nieuwe audit
               </button>
             </section>
           ) : null}
@@ -482,6 +553,12 @@ export default function OnlineGrowthAudit() {
                 <div>
                   <p>Online Groei Score</p>
                   <strong>{scoreLabel(results.overallScore)}</strong>
+                  <div className="audit-result-meta">
+                    <span>{confidenceLabel(results.overallConfidence)}</span>
+                    <span>{results.measuredWeightPercent ?? "?"}% scoregewicht gemeten</span>
+                    <span>{results.pagesAnalyzed ?? "?"} pagina’s geanalyseerd</span>
+                    <span>Meetmodel v{results.auditVersion || "2"}</span>
+                  </div>
                   <span>{results.executiveSummary}</span>
                 </div>
                 <button type="button" onClick={handleDownloadPdf} disabled={isDownloading}>
@@ -549,13 +626,27 @@ export default function OnlineGrowthAudit() {
 
               <CompetitorTable competitors={results.competitors} />
 
+              {results.limitations?.length ? (
+                <section className="audit-section-card audit-limitations" aria-labelledby="limitations-title">
+                  <div className="audit-section-heading">
+                    <p>Transparantie</p>
+                    <h2 id="limitations-title">Wat deze audit wel en niet bewijst</h2>
+                  </div>
+                  <ul>
+                    {results.limitations.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
+
               <section className="audit-final-cta">
                 <div>
                   <FileText size={26} aria-hidden="true" />
                   <h2>Bespreek je belangrijkste groeikansen</h2>
                   <p>
-                    We vertalen het rapport naar concrete stappen voor meer zichtbaarheid,
-                    vertrouwen en aanvragen.
+                    We vertalen de gemeten signalen naar concrete experimenten voor
+                    zichtbaarheid, vertrouwen en conversie. Resultaten zijn nooit gegarandeerd.
                   </p>
                 </div>
                 <div>
@@ -592,7 +683,7 @@ const AUDIT_STYLES = `
 .audit-hero {
   display: grid;
   gap: 18px;
-  align-items: stretch;
+  align-items: start;
 }
 
 .audit-panel,
@@ -798,6 +889,12 @@ const AUDIT_STYLES = `
   color: #1d4ed8;
 }
 
+.audit-status-panel .audit-secondary-button {
+  border-color: #e2e8f0;
+  background: #fff;
+  color: #475569;
+}
+
 .audit-status-badge {
   display: inline-flex;
   align-items: center;
@@ -880,6 +977,25 @@ const AUDIT_STYLES = `
   max-width: 780px;
   color: rgba(255, 255, 255, .78);
   line-height: 1.7;
+}
+
+.audit-result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0 0 12px;
+}
+
+.audit-result-meta span {
+  width: auto;
+  padding: 5px 8px;
+  border: 1px solid rgba(255, 255, 255, .18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .08);
+  color: rgba(255, 255, 255, .88);
+  font-size: .72rem;
+  font-weight: 850;
+  line-height: 1.2;
 }
 
 .audit-result-hero button {
@@ -970,13 +1086,23 @@ const AUDIT_STYLES = `
   white-space: nowrap;
 }
 
-.audit-score-card > span {
+.audit-score-card .audit-score-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.audit-score-meta span {
   display: inline-flex;
-  margin: 9px 0;
-  color: #2563eb;
-  font-size: .7rem;
-  font-weight: 950;
-  letter-spacing: .08em;
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, .08);
+  color: #1d4ed8;
+  font-size: .66rem;
+  font-weight: 900;
+  letter-spacing: .025em;
 }
 
 .audit-score-card em {
@@ -987,6 +1113,60 @@ const AUDIT_STYLES = `
   font-style: normal;
   font-weight: 850;
   line-height: 1.5;
+}
+
+.audit-evidence {
+  margin-top: 12px;
+  border-top: 1px solid rgba(148, 163, 184, .35);
+  padding-top: 10px;
+}
+
+.audit-evidence summary {
+  color: #1d4ed8;
+  font-size: .78rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.audit-evidence ul {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.audit-evidence li {
+  display: grid;
+  gap: 2px;
+  padding-left: 10px;
+  border-left: 3px solid #16a34a;
+}
+
+.audit-evidence li.fail {
+  border-left-color: #ea580c;
+}
+
+.audit-evidence li strong,
+.audit-evidence li span,
+.audit-evidence li small {
+  color: #334155;
+  font-size: .75rem;
+  line-height: 1.4;
+}
+
+.audit-evidence li small {
+  color: #64748b;
+}
+
+.audit-limitations ul {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding-left: 20px;
+  color: #475569;
+  font-size: .88rem;
+  line-height: 1.55;
 }
 
 .audit-priority-card h3 {
