@@ -9,22 +9,3 @@ export async function fetchPackages() {
   return summary?.packages || [];
 }
 
-export async function updatePricingPackage({
-  code,
-  payload,
-  apiKey,
-}) {
-  return apiClient.put(`/api/pricing/packages/${code}`, payload, {
-    apiKey,
-  });
-}
-
-export async function updatePricingAddon({
-  code,
-  payload,
-  apiKey,
-}) {
-  return apiClient.put(`/api/pricing/addons/${code}`, payload, {
-    apiKey,
-  });
-}
