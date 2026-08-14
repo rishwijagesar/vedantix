@@ -1342,6 +1342,7 @@ export const basePages = [
   { path: "/pakketvergelijking", priority: "0.6" },
   { path: "/resultaten", priority: "0.8" },
   { path: "/online-groei-audit", priority: "0.9" },
+  { path: "/ai-vindbaarheid", priority: "0.9" },
   { path: "/groeimodel", priority: "0.8" },
   { path: "/proces", priority: "0.8" },
   { path: "/faq", priority: "0.7" },

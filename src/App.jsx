@@ -37,6 +37,7 @@ const Base44LoginRedirect = lazy(() => import("./pages/Base44LoginRedirect.jsx")
 const Resultaten = lazy(() => import("./pages/Resultaten.jsx"));
 const IndustryPage = lazy(() => import("./pages/IndustryPage.jsx"));
 const OnlineGrowthAudit = lazy(() => import("./pages/OnlineGrowthAudit.jsx"));
+const AiVindbaarheid = lazy(() => import("./pages/AiVindbaarheid.jsx"));
 
 const WebsiteKapper = lazy(() => import("./pages/WebsiteKapper"));
 const WebsiteSalon = lazy(() => import("./pages/WebsiteSalon"));
@@ -89,6 +90,7 @@ function AppRoutes() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/resultaten" element={<Resultaten />} />
           <Route path="/online-groei-audit" element={<OnlineGrowthAudit />} />
+          <Route path="/ai-vindbaarheid" element={<AiVindbaarheid />} />
 
           <Route path="/website-kapper" element={<WebsiteKapper />} />
           <Route path="/website-salon" element={<WebsiteSalon />} />
