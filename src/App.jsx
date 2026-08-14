@@ -3,20 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MetaPixel from "./components/MetaPixel";
 import BigFooter from "./components/BigFooter";
-import AdminLayout from "./pages/admin/AdminLayout";
-import CustomerDetailPage from "./pages/admin/pages/CustomerDetailPage";
-import CustomersPage from "./pages/admin/pages/CustomersPage";
-import DashboardPage from "./pages/admin/pages/DashboardPage";
-import FinancePage from "./pages/admin/pages/FinancePage";
-import MetaMarketingPage from "./pages/admin/pages/MetaMarketingPage";
-import MigrationsPage from "./pages/admin/pages/MigrationsPage";
-import PricingPage from "./pages/admin/pages/PricingPage";
-import ProductsPage from "./pages/admin/pages/ProductsPage";
-import SettingsPage from "./pages/admin/pages/SettingsPage";
-import { AdminAuthProvider } from "./pages/admin/auth/adminAuth";
-import AdminProtectedRoute from "./pages/admin/auth/AdminProtectedRoute";
-import AdminLoginPage from "./pages/admin/pages/AdminLoginPage";
-
 const Home = lazy(() => import("./pages/Home"));
 const Planning = lazy(() => import("./pages/Planning"));
 const Prijzen = lazy(() => import("./pages/Prijzen"));
@@ -54,7 +40,7 @@ const KlantenPortaal = lazy(() => import("./pages/KlantenPortaal.jsx"));
 
 const queryClient = new QueryClient();
 
-function AdminApp({ children }) {
+function PortalApp({ children }) {
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }
 
@@ -109,30 +95,13 @@ function AppRoutes() {
         <Route path="/voorwaarden" element={<Navigate to="/terms" replace />} />
 
         <Route path="/login" element={<Base44LoginRedirect />} />
-        <Route path="/admin/login" element={<AdminLoginPage />} />
-
-        <Route element={<AdminProtectedRoute />}>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<DashboardPage store={undefined} />} />
-            <Route path="customers" element={<CustomersPage store={undefined} />} />
-            <Route path="customers/:id" element={<CustomerDetailPage store={undefined} />} />
-            <Route path="finance" element={<FinancePage store={undefined} />} />
-            <Route path="meta" element={<MetaMarketingPage />} />
-            <Route path="migrations" element={<MigrationsPage />} />
-            <Route path="migrations/new" element={<MigrationsPage />} />
-            <Route path="migrations/:migrationId" element={<MigrationsPage />} />
-            <Route path="products" element={<ProductsPage store={undefined} />} />
-            <Route path="pricing" element={<PricingPage store={undefined} />} />
-            <Route path="settings" element={<SettingsPage store={undefined} />} />
-          </Route>
-        </Route>
 
         <Route
           path="/klantenportaal"
           element={
-            <AdminApp>
+            <PortalApp>
               <KlantenPortaal />
-            </AdminApp>
+            </PortalApp>
           }
         />
         <Route path="/klantenportaal/login" element={<Navigate to="/klantenportaal" replace />} />
@@ -154,7 +123,6 @@ function AppRoutes() {
         <Route path="/DataDeletion" element={<Navigate to="/data-deletion" replace />} />
         <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
         <Route path="/Contact" element={<Navigate to="/contact" replace />} />
-        <Route path="/CRM" element={<Navigate to="/admin" replace />} />
         <Route path="/ClientPortal" element={<Navigate to="/klantenportaal" replace />} />
 
         <Route path="/:previewSlug" element={<CustomerPreviewPage />} />
@@ -168,9 +136,7 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AdminAuthProvider>
-        <AppRoutes />
-      </AdminAuthProvider>
+      <AppRoutes />
     </BrowserRouter>
   );
 }
