@@ -650,10 +650,10 @@ export default function OnlineGrowthAudit() {
             <section className="audit-progress-card">
               <Clock3 size={28} aria-hidden="true" />
               <div>
-                <h2>De backend analyseert je website</h2>
+                <h2>Onze systemen zijn achter de schermen voor je bezig</h2>
                 <p>
-                  Je hoeft deze pagina niet open te houden. Met hetzelfde audit-id kan de status
-                  opnieuw worden opgehaald.
+                  Je website wordt stap voor stap geanalyseerd. Je hoeft deze pagina niet open te
+                  houden; als je later terugkomt, halen we de voortgang automatisch weer voor je op.
                 </p>
               </div>
             </section>
@@ -664,7 +664,7 @@ export default function OnlineGrowthAudit() {
               <AlertTriangle size={28} aria-hidden="true" />
               <div>
                 <h2>Audit mislukt</h2>
-                <p>{audit?.request?.errorMessage || "De backend kon deze audit niet afronden."}</p>
+                <p>{audit?.request?.errorMessage || "De analyse kon niet worden afgerond."}</p>
               </div>
             </section>
           ) : null}
