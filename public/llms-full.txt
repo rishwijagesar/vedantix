@@ -39,7 +39,7 @@ Source: https://vedantix.nl/voorwie
 
 ### Managed hosting and maintenance
 
-Vedantix website packages include managed hosting, SSL, technical maintenance, updates and support. Exact inclusions vary by package, so current details should be checked on the pricing page.
+Vedantix offers two service models. Managed website subscriptions include hosting, security, maintenance, updates and support. Customers who buy a website with a one-time payment can manage it themselves or add a prepaid Website Online period of one, three or five years.
 
 Source: https://vedantix.nl/prijzen
 
@@ -96,13 +96,23 @@ Industry pages: https://vedantix.nl/voorwie
 
 ## Pricing summary
 
-The public website currently presents three main packages:
+Vedantix offers Starter, Growth and Pro websites through two payment models.
 
-- Starter: from EUR 999 one-time setup and EUR 99 per month
-- Growth: from EUR 1,499 one-time setup and EUR 149 per month
-- Pro: from EUR 1,999 one-time setup and EUR 249 per month
+One-time website purchase:
 
-Packages differ in pages, content, business email addresses, SEO structure, functionality, support and room for custom development. Prices and conditions may change. The pricing page is authoritative: https://vedantix.nl/prijzen
+- Starter: EUR 1,295 one-time
+- Growth: EUR 1,995 one-time
+- Pro: from EUR 2,995 one-time
+
+Managed website subscription:
+
+- Starter: from EUR 999 for build and setup plus EUR 99 per month
+- Growth: from EUR 1,499 for build and setup plus EUR 149 per month
+- Pro: from EUR 1,999 for build and setup plus EUR 249 per month
+
+With a one-time website purchase, the customer manages the website after delivery and ongoing services are not automatically included. Website Online can be prepaid for one year at EUR 249, three years at EUR 599 or five years at EUR 899. Business email, Google visibility, AI visibility, visitor insights, online appointments, extra pages, copywriting and support can be purchased separately.
+
+Packages differ in pages, content, visibility, functionality, support and room for custom development. Prices and conditions may change. The pricing page is authoritative: https://vedantix.nl/prijzen
 
 ## Delivery and working method
 
@@ -145,7 +155,6 @@ No. Vedantix can improve technical access, content quality, relevance, consisten
 - AI visibility source page: https://vedantix.nl/ai-vindbaarheid
 - Industries and audiences: https://vedantix.nl/voorwie
 - Pricing: https://vedantix.nl/prijzen
-- Package comparison: https://vedantix.nl/pakketvergelijking
 - Process: https://vedantix.nl/proces
 - Results: https://vedantix.nl/resultaten
 - Online Growth Audit: https://vedantix.nl/online-groei-audit

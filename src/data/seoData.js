@@ -1339,7 +1339,6 @@ export const blogPosts = [
 export const basePages = [
   { path: "/", priority: "1.0" },
   { path: "/prijzen", priority: "0.8" },
-  { path: "/pakketvergelijking", priority: "0.6" },
   { path: "/resultaten", priority: "0.8" },
   { path: "/online-groei-audit", priority: "0.9" },
   { path: "/ai-vindbaarheid", priority: "0.9" },

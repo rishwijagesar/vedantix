@@ -9,7 +9,7 @@ const FAQS = [
     id: 1,
     question: "Wat kost een website bij Vedantix?",
     answer:
-      "De kosten hangen af van het gekozen pakket en de gewenste functionaliteiten. Vedantix werkt met abonnementen vanaf €99 tot €249 per maand en een eenmalige setupprijs per pakket. In het abonnement zijn hosting, SSL, updates, onderhoud en ondersteuning inbegrepen.",
+      "Je kunt een website eenmalig laten bouwen vanaf €1.295 of kiezen voor een beheerd abonnement vanaf €99 per maand plus de bouw en inrichting. Je kiest zelf welke vorm het beste bij jouw bedrijf past.",
   },
   {
     id: 2,
@@ -27,7 +27,7 @@ const FAQS = [
     id: 4,
     question: "Wat zit er in het maandabonnement?",
     answer:
-      "Het maandabonnement bevat hosting, domeinregistratie, SSL-certificaat, technisch onderhoud, updates en support. Bij bepaalde pakketten zijn ook een aantal kleine wijzigingen per maand inbegrepen.",
+      "Met het abonnement houden wij je website online, veilig en actueel. Je krijgt ook hulp bij vragen en, afhankelijk van het pakket, bij kleine wijzigingen en verbeteringen.",
   },
   {
     id: 5,
@@ -39,7 +39,7 @@ const FAQS = [
     id: 6,
     question: "Zit ik vast aan een lang contract?",
     answer:
-      "Nee. Vedantix werkt met een maandelijks opzegbaar abonnement met een opzegtermijn van 30 dagen. Zo blijf je flexibel en weet je waar je aan toe bent.",
+      "Een eenmalige website heeft geen abonnement. De beheerde abonnementen zijn na oplevering maandelijks opzegbaar met een opzegtermijn van 30 dagen, tenzij in je voorstel iets anders is afgesproken.",
   },
   {
     id: 7,
@@ -57,7 +57,7 @@ const FAQS = [
     id: 11,
     question: "Hoe word ik beter gevonden in Google?",
     answer:
-      "Je wordt beter gevonden door een duidelijke websitestructuur, lokale zoekwoorden, snelle laadtijd, sterke content, goede metadata en pagina’s die antwoord geven op vragen van klanten. Vedantix neemt deze onderdelen mee in de website en optimalisatie.",
+      "Je wordt beter gevonden met een snelle en duidelijke website, sterke teksten, goede paginatitels en pagina’s die antwoord geven op vragen van klanten. We zorgen ook dat jouw diensten en werkgebied duidelijk naar voren komen.",
   },
   {
     id: 12,
@@ -69,13 +69,13 @@ const FAQS = [
     id: 13,
     question: "Zijn Vedantix websites voorbereid op AI-zoekmachines?",
     answer:
-      "Vedantix bouwt websites met duidelijke contentstructuur, FAQ’s, lokale context en gestructureerde data. Daardoor kunnen zoekmachines en moderne AI-systemen beter begrijpen wat je bedrijf doet.",
+      "Ja. We leggen duidelijk uit wie je bent, wat je aanbiedt, waar je werkt en welke vragen klanten vaak stellen. Daardoor kunnen zoekmachines en AI-tools beter begrijpen wanneer jouw bedrijf relevant is.",
   },
   {
     id: 9,
     question: "Moet ik zelf technisch zijn om met Vedantix te werken?",
     answer:
-      "Nee. Technische kennis is niet nodig. Vedantix regelt de techniek, hosting, beveiliging en het onderhoud. Jij levert vooral de informatie over je bedrijf aan en geeft feedback op het ontwerp.",
+      "Nee. Wij leggen alles in gewone taal uit. Bij een abonnement blijven wij je website verzorgen. Kies je een eenmalige website, dan kun je later losse hulp of een vooruitbetaald Website Online-pakket toevoegen.",
   },
   {
     id: 10,

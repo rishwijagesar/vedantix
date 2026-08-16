@@ -97,12 +97,12 @@ const FAQS = [
   {
     question: "Levert Vedantix ook hosting en technisch onderhoud?",
     answer:
-      "Ja. Hosting, SSL, technisch onderhoud, beveiligingsupdates en ondersteuning zijn onderdeel van de websitepakketten. De precieze inhoud verschilt per pakket.",
+      "Ja. Bij een beheerd abonnement houden wij je website online, veilig en actueel. Bij een eenmalige website kun je Website Online los toevoegen voor één, drie of vijf jaar.",
   },
   {
     question: "Wat kost een website bij Vedantix?",
     answer:
-      "Het Starter-pakket begint bij €999 eenmalige setup en €99 per maand. Growth en Pro bieden meer pagina’s, SEO-opbouw, ondersteuning en maatwerk. De actuele prijzen en pakketvoorwaarden staan op de prijzenpagina.",
+      "Een eenmalige Starter-website begint bij €1.295. Een beheerd Starter-abonnement begint bij €999 voor de bouw en inrichting plus €99 per maand. Growth en Pro bieden meer pagina’s, vindbaarheid, ondersteuning en maatwerk.",
   },
   {
     question: "Hoe maakt Vedantix een website beter vindbaar in AI-tools?",

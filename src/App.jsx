@@ -17,7 +17,6 @@ const VoorWie = lazy(() => import("./pages/VoorWie"));
 const Voorwaarden = lazy(() => import("./pages/Voorwaarden"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const Contact = lazy(() => import("./pages/Contact"));
-const PricingDetails = lazy(() => import("./pages/PricingDetails.jsx"));
 const CustomerPreviewPage = lazy(() => import("./pages/CustomerPreviewPage.jsx"));
 const Base44LoginRedirect = lazy(() => import("./pages/Base44LoginRedirect.jsx"));
 const Resultaten = lazy(() => import("./pages/Resultaten.jsx"));
@@ -62,7 +61,7 @@ function AppRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/planning" element={<Planning />} />
           <Route path="/prijzen" element={<Prijzen />} />
-          <Route path="/pakketvergelijking" element={<PricingDetails />} />
+          <Route path="/pakketvergelijking" element={<Navigate to="/prijzen#vergelijk" replace />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Voorwaarden />} />
           <Route path="/data-deletion" element={<DataDeletion />} />
