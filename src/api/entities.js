@@ -10,22 +10,22 @@ const BACKEND_NOT_CONFIGURED = "Afsprakenbackend is nog niet gekoppeld.";
 
 function readOnlyEmptyEntity() {
   return {
-    async list() {
+    async list(..._args) {
       return [];
     },
-    async filter() {
+    async filter(..._args) {
       return [];
     },
-    async get() {
+    async get(..._args) {
       return null;
     },
-    async create() {
+    async create(..._args) {
       throw new Error(BACKEND_NOT_CONFIGURED);
     },
-    async update() {
+    async update(..._args) {
       throw new Error(BACKEND_NOT_CONFIGURED);
     },
-    async delete() {
+    async delete(..._args) {
       throw new Error(BACKEND_NOT_CONFIGURED);
     },
   };
@@ -42,8 +42,8 @@ export const EmailTemplate = readOnlyEmptyEntity();
 export const EmailLog = readOnlyEmptyEntity();
 
 export const User = {
-  async me() {
+  async me(..._args) {
     return null;
   },
-  async logout() {},
+  async logout(..._args) {},
 };
