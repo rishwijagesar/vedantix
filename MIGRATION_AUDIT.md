@@ -31,9 +31,45 @@ Removed from the migration branch:
 - the `base44/` backend/functions directory.
 - Base44 auth/OAuth pages and helpers.
 - old `/admin`, CRM and customer-portal frontend code.
+- old customer portal navigation/configuration.
 - unused backoffice hooks and API clients.
+- remaining Base44 scaffold files such as `pages.config.js`.
 
 The package lock was regenerated and contains no `@base44` packages.
+A recursive branch file scan also contains no Base44/OAuth/customer-portal files.
+
+## Source/layout parity
+
+A Git comparison against the production base confirms that the migration cleanup did not modify the normal public page components, public shared presentation components or page-specific CSS. Changes are restricted to routing, build/dependency configuration, the temporary planning adapter, documentation and deletion of old backoffice code.
+
+### Browser visual comparison
+
+A temporary GitHub Actions job built `lovable-migration`, served that build locally and captured full-page Chromium screenshots against the live `https://vedantix.nl` production site.
+
+Checked routes:
+
+- `/`
+- `/prijzen`
+- `/resultaten`
+- `/contact`
+- `/faq`
+- `/online-groei-audit`
+- `/ai-vindbaarheid`
+- `/blog`
+
+Checked viewports:
+
+- desktop: 1440x1000
+- mobile: 390x844
+
+Result:
+
+- 15 of 16 production/migration screenshot pairs were pixel-identical.
+- The desktop homepage differed only in a tiny animated/loading detail.
+- The mobile homepage difference was isolated to the external review widget: the production capture showed its loading state while the migration capture had already loaded review content.
+- The Vedantix-owned homepage layout, typography, spacing and surrounding sections were unchanged.
+
+The temporary visual-comparison workflow was removed again after the artifact was captured.
 
 ## Public functionality that must be preserved
 
@@ -67,6 +103,10 @@ For the migration branch, `src/api/entities.js` is now a temporary compatibility
 - the existing planning page markup/layout is unchanged.
 
 The appointment backend must be redesigned/reconnected before planning can accept real bookings after cutover.
+
+## Public API base
+
+The preserved public API client continues to default to `https://api.vedantix.nl` for pricing, Online Growth Audit and customer preview traffic. No public API URL was changed as part of the migration cleanup.
 
 ## Current Lovable mirror
 
