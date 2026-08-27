@@ -1,8 +1,8 @@
 import React, { Suspense, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MetaPixel from "./components/MetaPixel";
 import BigFooter from "./components/BigFooter";
+
 const Home = lazy(() => import("./pages/Home"));
 const Planning = lazy(() => import("./pages/Planning"));
 const Prijzen = lazy(() => import("./pages/Prijzen"));
@@ -18,7 +18,6 @@ const Voorwaarden = lazy(() => import("./pages/Voorwaarden"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const Contact = lazy(() => import("./pages/Contact"));
 const CustomerPreviewPage = lazy(() => import("./pages/CustomerPreviewPage.jsx"));
-const Base44LoginRedirect = lazy(() => import("./pages/Base44LoginRedirect.jsx"));
 const Resultaten = lazy(() => import("./pages/Resultaten.jsx"));
 const IndustryPage = lazy(() => import("./pages/IndustryPage.jsx"));
 const OnlineGrowthAudit = lazy(() => import("./pages/OnlineGrowthAudit.jsx"));
@@ -34,14 +33,6 @@ const WebsiteZZP = lazy(() => import("./pages/WebsiteZZP"));
 
 const Blog = lazy(() => import("./pages/Blog"));
 const BlogPost = lazy(() => import("./pages/blog/BlogPost"));
-
-const KlantenPortaal = lazy(() => import("./pages/KlantenPortaal.jsx"));
-
-const queryClient = new QueryClient();
-
-function PortalApp({ children }) {
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
-}
 
 function PublicLayout() {
   return (
@@ -93,18 +84,11 @@ function AppRoutes() {
 
         <Route path="/voorwaarden" element={<Navigate to="/terms" replace />} />
 
-        <Route path="/login" element={<Base44LoginRedirect />} />
-
-        <Route
-          path="/klantenportaal"
-          element={
-            <PortalApp>
-              <KlantenPortaal />
-            </PortalApp>
-          }
-        />
-        <Route path="/klantenportaal/login" element={<Navigate to="/klantenportaal" replace />} />
-        <Route path="/clientportal/login" element={<Navigate to="/klantenportaal" replace />} />
+        {/* Oude Base44-auth/backoffice routes worden niet meegenomen in de migratie. */}
+        <Route path="/login" element={<Navigate to="/" replace />} />
+        <Route path="/klantenportaal" element={<Navigate to="/" replace />} />
+        <Route path="/klantenportaal/login" element={<Navigate to="/" replace />} />
+        <Route path="/clientportal/login" element={<Navigate to="/" replace />} />
 
         <Route path="/home" element={<Navigate to="/" replace />} />
         <Route path="/Home" element={<Navigate to="/" replace />} />
@@ -122,10 +106,12 @@ function AppRoutes() {
         <Route path="/DataDeletion" element={<Navigate to="/data-deletion" replace />} />
         <Route path="/FAQ" element={<Navigate to="/faq" replace />} />
         <Route path="/Contact" element={<Navigate to="/contact" replace />} />
-        <Route path="/ClientPortal" element={<Navigate to="/klantenportaal" replace />} />
+        <Route path="/ClientPortal" element={<Navigate to="/" replace />} />
 
         <Route path="/admin/*" element={<Navigate to="/" replace />} />
         <Route path="/CRM" element={<Navigate to="/" replace />} />
+
+        {/* Publieke klantpreview blijft behouden: deze gebruikt de publieke Vedantix API, niet de Base44 SDK. */}
         <Route path="/:previewSlug" element={<CustomerPreviewPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
