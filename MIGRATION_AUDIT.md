@@ -3,6 +3,8 @@
 Source of truth: `rishwijagesar/vedantix` / `main`.
 Migration branch: `lovable-migration`.
 Draft validation PR: `#5`.
+Connected Lovable repository: `rishwijagesar/vedantix-frontend-mirror` / `main`.
+Lovable project: `Vedantix Frontend Mirror` (`1a802d37-67b8-4407-98f6-913af6f7a354`).
 
 ## Rules
 
@@ -10,11 +12,11 @@ Draft validation PR: `#5`.
 - `/admin`, CRM, old customer portal and Base44 auth/backoffice are excluded.
 - Production (`main` -> AWS S3/CloudFront) must not be changed by migration work.
 - No new database/Supabase until the backend is redesigned.
-- Do not merge the migration branch until route/function/visual parity is verified.
+- Do not merge the migration branch or change production DNS until route/function/visual parity is verified.
 
 ## Migration status
 
-The migration branch now builds as a regular React/Vite application without Base44 runtime or build dependencies.
+The controlled migration branch builds as a regular React/Vite application without Base44 runtime or build dependencies.
 
 Validated on CI:
 
@@ -36,13 +38,13 @@ Removed from the migration branch:
 - remaining Base44 scaffold files such as `pages.config.js`.
 
 The package lock was regenerated and contains no `@base44` packages.
-A recursive branch file scan also contains no Base44/OAuth/customer-portal files.
+A recursive branch file scan also contains no Base44/OAuth/customer-portal implementation files.
 
 ## Source/layout parity
 
 A Git comparison against the production base confirms that the migration cleanup did not modify the normal public page components, public shared presentation components or page-specific CSS. Changes are restricted to routing, build/dependency configuration, the temporary planning adapter, documentation and deletion of old backoffice code.
 
-### Browser visual comparison
+### Controlled Vite-build browser comparison
 
 A temporary GitHub Actions job built `lovable-migration`, served that build locally and captured full-page Chromium screenshots against the live `https://vedantix.nl` production site.
 
@@ -65,38 +67,63 @@ Checked viewports:
 Result:
 
 - 15 of 16 production/migration screenshot pairs were pixel-identical.
-- The desktop homepage differed only in a tiny animated/loading detail.
-- The mobile homepage difference was isolated to the external review widget: the production capture showed its loading state while the migration capture had already loaded review content.
-- The Vedantix-owned homepage layout, typography, spacing and surrounding sections were unchanged.
+- The remaining homepage difference was isolated to timing/loading state in the external review widget.
+- The Vedantix-owned layout, typography, spacing and surrounding sections were unchanged.
 
 The temporary visual-comparison workflow was removed again after the artifact was captured.
+
+## Connected Lovable mirror
+
+Lovable is now connected to `rishwijagesar/vedantix-frontend-mirror`, branch `main`, using its native TanStack Start stack. Production remains unpublished and unchanged.
+
+The Lovable conversion was checked internally against `https://vedantix.nl` on the same eight core routes at desktop 1440x1000 and mobile 390x844. The check found matching header/navigation, hero, headings, section order, CTA labels, widths, colors and footer links. Page-height variation stayed within 5% and was attributable to lazy/dynamic content.
+
+One real CSS token difference was found after the Tailwind v3 -> v4 conversion: the body fallback font stack. `src/vedantix-base.css` in the Lovable mirror now explicitly uses the same computed production stack:
+
+`ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`
+
+No page markup, layout or page-specific CSS was changed for this correction.
+
+### Lovable route parity corrections
+
+The initial Lovable catch-all redirected unknown paths to `/`, which dropped the public `/:previewSlug` behavior. This has been corrected:
+
+- `src/api/preview.api.js` is present in the Lovable repository and uses the existing public Vedantix API.
+- `src/pages/CustomerPreviewPage.jsx` is present with only TanStack compatibility imports/parameter handling adapted.
+- exactly one unknown URL segment is treated as `previewSlug`;
+- unknown multi-segment paths still redirect to `/`;
+- `/pakketvergelijking` still redirects to `/prijzen#vergelijk`.
+
+A fake preview slug was browser-tested and entered the preview flow instead of redirecting to the homepage, ending in the expected preview error UI when no preview could be loaded.
+
+A later static route audit found one additional collision caused by the single-segment preview fallback. The retired legacy routes `/login`, `/klantenportaal`, `/ClientPortal`, `/CRM` and `/admin` are now explicitly reserved to redirect to `/`, matching the old React Router behavior rather than being interpreted as customer-preview slugs. Multi-segment retired backoffice paths continue to fall through to the homepage wildcard.
 
 ## Public functionality that must be preserved
 
 ### Normal public pages
 
-All public pages/routes from `src/App.jsx`, including home, pricing, results, contact, FAQ, AI visibility, audit, blog and industry/city routes remain in the migration router.
+All public pages/routes from `src/App.jsx`, including home, pricing, results, contact, FAQ, AI visibility, audit, blog and industry/city routes remain represented in the Lovable/TanStack router.
 
-The public page components and their page-specific CSS were deliberately not redesigned during the backend cleanup.
+The public page components and their page-specific CSS were deliberately not redesigned during the backend cleanup or Lovable conversion.
 
 ### Customer preview route
 
-`/:previewSlug` is public functionality and remains available on the migration branch.
-It uses `src/pages/CustomerPreviewPage.jsx` + `src/api/preview.api.js` and the public Vedantix API (`/api/preview/:slug`), not the Base44 SDK.
+`/:previewSlug` remains public functionality.
+It uses `CustomerPreviewPage` + `preview.api.js` and the public Vedantix API (`/api/preview/:slug` and `/api/preview/:slug/html`), not the Base44 SDK.
 
 ### Pricing
 
-Pricing pages use the public Vedantix API through `src/api/client.js` and `src/api/pricing.api.js`. This integration remains present.
+Pricing pages use the public Vedantix API through `src/api/client.js` and `src/api/pricing.api.js`. This integration remains present in the Lovable mirror.
 
 ### Online Growth Audit
 
-The audit page uses the public Vedantix API through `src/api/client.js` and `src/api/onlineGrowthAudit.api.js`. This integration remains present.
+The audit page uses the public Vedantix API through `src/api/client.js` and `src/api/onlineGrowthAudit.api.js`. This integration remains present in the Lovable mirror.
 
 ### Planning
 
 `/planning` was the only confirmed public page that directly used Base44 entities (`Availability` and `Appointment`).
 
-For the migration branch, `src/api/entities.js` is now a temporary compatibility adapter:
+For the migration/Lovable build, `src/api/entities.js` is a temporary compatibility adapter:
 
 - reads return the current effectively-empty state;
 - appointment writes fail closed instead of reconnecting to Base44;
@@ -108,21 +135,24 @@ The appointment backend must be redesigned/reconnected before planning can accep
 
 The preserved public API client continues to default to `https://api.vedantix.nl` for pricing, Online Growth Audit and customer preview traffic. No public API URL was changed as part of the migration cleanup.
 
-## Current Lovable mirror
+## SEO / AI discovery files
 
-The existing Lovable mirror was generated before this GitHub cleanup and is not the current source of truth. In particular, it dropped the public `/:previewSlug` route.
+The connected Lovable repository preserves the production versions of:
 
-Use the `lovable-migration` GitHub branch as the next import/sync source rather than continuing to patch the old Lovable-generated code.
+- `public/robots.txt`;
+- `public/sitemap.xml`;
+- `public/llms.txt`;
+- `public/llms-full.txt`.
 
-## Cutover conditions
+Their Git blob hashes match the controlled migration source. `public/.well-known/llms.txt`, which was omitted by the initial Lovable conversion, has also been restored from the controlled source.
 
-Do not point `vedantix.nl` at a new host until all of the following are verified:
+## Remaining cutover conditions
 
-1. public route and redirect parity;
-2. visual parity at desktop, tablet and mobile sizes;
-3. customer preview functionality;
-4. pricing API functionality;
-5. Online Growth Audit functionality;
-6. intended behavior for `/planning`;
-7. SEO metadata, sitemap, robots and AI discovery files;
-8. a final production-like build/preview test.
+Do not point `vedantix.nl` at Lovable yet. Remaining checks/decisions are:
+
+1. decide whether `/planning` should stay visible but non-bookable at cutover or wait for the redesigned appointment backend;
+2. run a final production-host/browser smoke test once the final Lovable deployment is externally reachable without the private-editor login boundary;
+3. verify real customer preview, pricing and Online Groei Audit calls from that final host, including CORS/cookie behavior;
+4. only then change hosting/domain routing.
+
+The original production `main` branch and AWS deployment remain untouched by this migration work.
