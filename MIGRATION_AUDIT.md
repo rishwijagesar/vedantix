@@ -129,11 +129,34 @@ For the migration/Lovable build, `src/api/entities.js` is a temporary compatibil
 - appointment writes fail closed instead of reconnecting to Base44;
 - the existing planning page markup/layout is unchanged.
 
-The appointment backend must be redesigned/reconnected before planning can accept real bookings after cutover.
+The old Base44 availability data was effectively empty, so this preserves the current practical public behavior: no selectable appointment slots. The redesigned appointment backend can be added later without bringing the old Base44 backoffice back.
 
-## Public API base
+## Lovable same-origin public API proxy
 
-The preserved public API client continues to default to `https://api.vedantix.nl` for pricing, Online Growth Audit and customer preview traffic. No public API URL was changed as part of the migration cleanup.
+The Lovable/TanStack build no longer depends on browser CORS access to `api.vedantix.nl`.
+
+`src/server.ts` in `rishwijagesar/vedantix-frontend-mirror` proxies only these public API families to `https://api.vedantix.nl`:
+
+- `/api/pricing`;
+- `/api/audit` and subpaths;
+- `/api/preview` and subpaths.
+
+The browser-side `src/api/client.js` defaults to the same-origin base (`""`) in Lovable. `VITE_API_BASE_URL` remains available as an explicit development/debug override.
+
+The proxy uses an allow-list of public request headers and does not forward browser cookies, authorization headers or the browser Origin. Upstream `Set-Cookie` and CORS response headers are not reflected to the browser.
+
+### End-to-end proxy smoke test
+
+A temporary GitHub Actions workflow built the actual Lovable/TanStack repository, started its dev server and called the same-origin endpoints through `src/server.ts`.
+
+Results:
+
+- `GET /api/pricing` -> **200**, `application/json; charset=utf-8`, with real Vedantix package data from the upstream API.
+- `GET /api/preview/nonexistent-migration-smoke/html` -> **404**, body `Preview not found`, proving the request reached the upstream preview API rather than the application-router fallback.
+- `OPTIONS /api/audit` -> **204 No Content**, proving the audit proxy family reaches the upstream service without a proxy/runtime error.
+- the TanStack production build and local server both succeeded.
+
+The temporary smoke-test workflow was removed after the successful run.
 
 ## SEO / AI discovery files
 
@@ -146,13 +169,12 @@ The connected Lovable repository preserves the production versions of:
 
 Their Git blob hashes match the controlled migration source. `public/.well-known/llms.txt`, which was omitted by the initial Lovable conversion, has also been restored from the controlled source.
 
-## Remaining cutover conditions
+## Remaining cutover condition
 
-Do not point `vedantix.nl` at Lovable yet. Remaining checks/decisions are:
+Do not point `vedantix.nl` at Lovable yet.
 
-1. decide whether `/planning` should stay visible but non-bookable at cutover or wait for the redesigned appointment backend;
-2. run a final production-host/browser smoke test once the final Lovable deployment is externally reachable without the private-editor login boundary;
-3. verify real customer preview, pricing and Online Groei Audit calls from that final host, including CORS/cookie behavior;
-4. only then change hosting/domain routing.
+The code-level migration, route parity, visual parity, static discovery files and public API proxy have now been validated. `/planning` preserves the current practical no-slots behavior and no longer needs to block the frontend migration.
+
+The remaining cutover step is one final smoke/parity test on an externally reachable Lovable deployment (without the private editor/login boundary). After that succeeds, hosting/domain routing can be changed deliberately.
 
 The original production `main` branch and AWS deployment remain untouched by this migration work.
