@@ -39,17 +39,26 @@ jobs:
           role-to-assume: arn:aws:iam::381492205513:role/github-vedantix-role
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Upload static assets to S3
+      - name: Upload versioned static assets to S3
+        run: |
+          # Hashed Vite assets are immutable and may still be referenced by browsers
+          # that loaded the previous index.html before this deployment. Do NOT use
+          # --delete here: removing old chunks immediately causes dynamic-import
+          # failures for those clients.
+          aws s3 sync dist/assets s3://${{ env.S3_BUCKET }}/assets \
+            --cache-control "public,max-age=31536000,immutable"
+
+      - name: Upload other static files
         run: |
           aws s3 sync dist s3://${{ env.S3_BUCKET }} \
-            --delete \
+            --exclude "assets/*" \
             --exclude "index.html" \
             --exclude "*.html" \
             --exclude "robots.txt" \
             --exclude "sitemap.xml" \
             --exclude "llms*.txt" \
             --exclude ".well-known/llms.txt" \
-            --cache-control "public,max-age=31536000,immutable"
+            --cache-control "public,max-age=3600"
 
       - name: Upload HTML entrypoints without browser cache
         run: |
@@ -90,7 +99,7 @@ jobs:
         run: |
           INVALIDATION_ID=$(aws cloudfront create-invalidation \
             --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*" \
+            --paths "/" "/index.html" "/*.html" "/robots.txt" "/sitemap.xml" "/llms.txt" "/llms-full.txt" "/.well-known/llms.txt" \
             --query "Invalidation.Id" \
             --output text)
 
