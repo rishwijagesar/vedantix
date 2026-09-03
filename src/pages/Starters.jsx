@@ -15,35 +15,20 @@ const SUGGESTIONS = {
 };
 
 const PACKAGES = [
-  { id: "starter", name: "Starter", price: 399, pages: "1 pagina", features: ["1-pagina website", "Mobielvriendelijk", "Contactformulier", "Hosting 1 jaar", "SSL", "48u levering"] },
-  { id: "business", name: "Business", price: 799, pages: "Tot 5 pagina's", features: ["Tot 5 pagina's", "Mobielvriendelijk design", "Contactformulier + Maps", "Hosting 1 jaar", "SSL", "SEO basis", "48u levering", "1x gratis aanpassing"] },
-  { id: "premium", name: "Premium", price: 1499, pages: "Tot 10 pagina's", features: ["Tot 10 pagina's", "Custom design op maat", "Geavanceerde functies", "Hosting 1 jaar", "SSL", "Volledige SEO", "Blog / nieuws", "3x gratis aanpassingen", "48u levering"] },
+  { id: "starter", name: "Starter", price: 399, pages: "1 pagina", features: ["1-pagina website", "Mobielvriendelijk", "Contactformulier", "Technische SEO-basis", "Hosting vanaf €30/jaar", "SSL", "48u levering"] },
+  { id: "business", name: "Growth", price: 599, pages: "Tot 5 pagina's", features: ["Tot 5 pagina's", "Mobielvriendelijk design", "Contactformulier + Maps", "SEO + lokale SEO + AEO-basis", "Hosting vanaf €30/jaar", "SSL", "48u levering", "1x gratis aanpassing"] },
+  { id: "premium", name: "Pro", price: 999, pages: "Tot 10 pagina's", features: ["Tot 10 pagina's", "Custom design op maat", "Geavanceerde functies", "Uitgebreide SEO + AEO + GEO/AIO-basis", "Hosting vanaf €30/jaar", "SSL", "Blog / nieuws", "3x gratis aanpassingen", "48u levering"] },
 ];
-
-// Clean domain input — strip spaces, dots, extensions, special chars
-
-// Ensure mobile viewport
-// if (typeof document !== "undefined") {
-//   let vp = document.querySelector('meta[name="viewport"]');
-//   if (!vp) {
-//     vp = document.createElement("meta");
-//     vp.name = "viewport";
-//     vp.content = "width=device-width, initial-scale=1.0";
-//     document.head.appendChild(vp);
-//   }
-// }
-
 
 function cleanDomain(input) {
   return input
     .toLowerCase()
     .trim()
-    .replace(/\.(nl|com|be|eu|net|org|io)$/gi, "") // strip extension
-    .replace(/^(www\.)/i, "")                        // strip www.
-    .replace(/[^a-z0-9-]/g, "")                      // only valid chars
-    .replace(/^-+|-+$/g, "");                         // strip leading/trailing dashes
+    .replace(/\.(nl|com|be|eu|net|org|io)$/gi, "")
+    .replace(/^(www\.)/i, "")
+    .replace(/[^a-z0-9-]/g, "")
+    .replace(/^-+|-+$/g, "");
 }
-
 
 function WAWidget() {
   const [open, setOpen] = useState(false);
@@ -155,7 +140,6 @@ function WAWidget() {
   );
 }
 
-
 export default function Starters() {
   const urlParams = new URLSearchParams(window.location.search);
   const urlPakket = urlParams.get("pakket");
@@ -180,14 +164,11 @@ export default function Starters() {
     setChecking(true);
     setDomeinStatus(null);
     try {
-      // Check via Google DNS-over-HTTPS: if the domain resolves (has an A or NS record), it's likely registered
       const res = await fetch(`https://dns.google/resolve?name=${cleanedDomain}.nl&type=NS`);
       const data = await res.json();
-      // Status 0 = NOERROR with answers means domain exists / is registered
       const isTaken = data.Status === 0 && data.Answer && data.Answer.length > 0;
       setDomeinStatus(isTaken ? "taken" : "available");
     } catch {
-      // On network error, show as available with a note
       setDomeinStatus("available");
     }
     setChecking(false);
@@ -198,7 +179,7 @@ export default function Starters() {
   };
 
   const totalExtras = selectedFeatures.length * 75;
-  const basePrice = PACKAGES.find(p => p.id === selectedPackage)?.price || 799;
+  const basePrice = PACKAGES.find(p => p.id === selectedPackage)?.price || 599;
   const totalPrice = basePrice + totalExtras;
 
   if (submitted) {
@@ -245,14 +226,11 @@ export default function Starters() {
         textarea{resize:vertical;min-height:100px}
       `}</style>
 
-      {/* Header — fixed spacing */}
       <div style={{ background: "linear-gradient(135deg,#0a1628,#0d2146)", padding: "clamp(28px,5vw,32px) 5% clamp(36px,6vw,52px)" }}>
         <div style={{ maxWidth: 700, margin: "0 auto" }}>
-          {/* Back link separate, left-aligned */}
           <a href="/Home" style={{ color: "rgba(255,255,255,0.55)", textDecoration: "none", fontSize: "0.88rem", display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 36 }}>
             ← Terug naar Vedantix
           </a>
-          {/* Badge + title centered below */}
           <div style={{ textAlign: "center" }}>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "rgba(0,194,255,0.1)", border: "1px solid rgba(0,194,255,0.3)", color: "#00c2ff", padding: "7px 20px", borderRadius: "100px", fontSize: "0.82rem", fontWeight: 700, marginBottom: 24, letterSpacing: 0.3 }}>
               🚀 Starters configurator
@@ -267,7 +245,6 @@ export default function Starters() {
         </div>
       </div>
 
-      {/* Progress bar */}
       <div style={{ background: "#fff", borderBottom: "1px solid #e5e7eb", padding: "0 5%" }}>
         <div style={{ maxWidth: 700, margin: "0 auto", display: "flex" }}>
           {["Domein", "Branche", "Functies & pakket", "Aanvraag"].map((s, i) => (
@@ -281,10 +258,7 @@ export default function Starters() {
         </div>
       </div>
 
-      {/* Step content */}
       <div style={{ maxWidth: 700, margin: "0 auto", padding: "clamp(24px,5vw,48px) 5%" }}>
-
-        {/* STEP 1: DOMEIN */}
         {step === 1 && (
           <div>
             <h2 style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 8 }}>🌐 Check jouw domeinnaam</h2>
@@ -305,7 +279,6 @@ export default function Starters() {
               </div>
             </div>
 
-            {/* Show cleaned preview if input has extras */}
             {domein && cleanedDomain !== domein.toLowerCase().trim() && (
               <p style={{ color: "#6b7280", fontSize: "0.82rem", marginBottom: 12 }}>
                 💡 We checken: <strong>{cleanedDomain}.nl</strong>
@@ -318,7 +291,6 @@ export default function Starters() {
               </button>
             </div>
 
-            {/* Extensions preview */}
             {cleanedDomain && (
               <div style={{ display: "flex", gap: 8, marginBottom: 24, flexWrap: "wrap" }}>
                 {[".nl", ".com", ".be", ".eu"].map(ext => (
@@ -352,7 +324,6 @@ export default function Starters() {
           </div>
         )}
 
-        {/* STEP 2: BRANCHE */}
         {step === 2 && (
           <div>
             <h2 style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 8 }}>🏢 Wat voor bedrijf heb jij?</h2>
@@ -377,7 +348,6 @@ export default function Starters() {
           </div>
         )}
 
-        {/* STEP 3: FUNCTIES & PAKKET */}
         {step === 3 && (
           <div>
             <h2 style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 8 }}>⚡ Kies functies & pakket</h2>
@@ -399,7 +369,8 @@ export default function Starters() {
               </div>
             )}
 
-            <h3 style={{ fontWeight: 700, marginBottom: 16 }}>Kies je basispakket</h3>
+            <h3 style={{ fontWeight: 700, marginBottom: 6 }}>Kies je basispakket</h3>
+            <p style={{ color: "#6b7280", fontSize: "0.85rem", marginBottom: 16 }}>Alle pakketten zijn eenmalig, zonder verplicht maandabonnement. Hosting vanaf €30 per jaar, zakelijke e-mail vanaf €30 per jaar per mailbox. Doorlopende groei is optioneel: Zichtbaarheid Basis €49/maand, Google Groei €99/maand, Google + AI Groei €149/maand.</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 14, marginBottom: 32 }}>
               {PACKAGES.map(pkg => (
                 <div key={pkg.id} className={`pkg-card ${selectedPackage===pkg.id?"selected":""}`} onClick={() => setSelectedPackage(pkg.id)}>
@@ -417,7 +388,6 @@ export default function Starters() {
               ))}
             </div>
 
-            {/* Price summary */}
             <div style={{ background: "#0a1628", borderRadius: 16, padding: 24, marginBottom: 32, color: "#fff" }}>
               <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.85rem", marginBottom: 12 }}>Jouw configuratie:</p>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
@@ -442,7 +412,6 @@ export default function Starters() {
           </div>
         )}
 
-        {/* STEP 4: AANVRAAG */}
         {step === 4 && (
           <div>
             <h2 style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 8 }}>📬 Verstuur jouw aanvraag</h2>
