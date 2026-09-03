@@ -61,7 +61,7 @@ export default function HomePricing() {
           <p className="section-p">
             De bouw van je website betaal je één keer. Om je website online te houden betaal je
             daarna vanaf €30 per jaar voor hosting. SEO, AEO, GEO/AIO en doorlopende groei kun je
-            uitbreiden zonder verplicht groeia­bonnement.
+            uitbreiden zonder verplicht groeiabonnement.
           </p>
         </div>
 
