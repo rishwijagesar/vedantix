@@ -209,7 +209,7 @@ const PRICE_FAQS = [
   {
     question: "Wat kost een website bij Vedantix?",
     answer:
-      "Een professionele website begint bij €399 eenmalig. Growth kost €599 en Pro €999. Er is geen verplicht maandabonnement. Hosting, e-mail en eventuele groeidiensten kies je apart.",
+      "De bouw van een professionele website begint bij €399. Growth kost €599 en Pro €999 voor de websitebouw. Om de website online te houden betaal je daarnaast hosting vanaf €30 per jaar. Er is geen verplicht maandabonnement. Zakelijke e-mail en eventuele groeidiensten kies je apart.",
   },
   {
     question: "Wat is het verschil tussen SEO, AEO, GEO en AIO?",
@@ -275,7 +275,7 @@ export default function Prijzen() {
     <>
       <SEO
         title="Website vanaf €399 | Hosting €30 per jaar | Vedantix"
-        description="Professionele websites vanaf €399 eenmalig. Hosting vanaf €30 per jaar. Kies extra SEO, AEO, GEO/AIO en online groei alleen wanneer je die nodig hebt."
+        description="Websitebouw vanaf €399. Hosting vanaf €30 per jaar om je website online te houden. SEO, AEO, GEO/AIO en online groei zijn optioneel uit te breiden."
         canonical={canonical}
         schemas={[breadcrumbSchema, faqSchema]}
       />
@@ -293,9 +293,9 @@ export default function Prijzen() {
                 </div>
                 <h1 id="pricing-title">Een professionele website vanaf €399.</h1>
                 <p>
-                  Betaal je website één keer. Geen verplicht maandabonnement. Wil je daarna
-                  actiever groeien in Google of AI-platformen? Dan kies je alleen de zichtbaarheid
-                  en ondersteuning die bij jouw bedrijf past.
+                  De bouw van je website betaal je één keer. Om je website online te houden betaal
+                  je daarna hosting vanaf €30 per jaar. Er is geen verplicht maandabonnement.
+                  Extra groei in Google of AI-platformen kies je alleen als je die nodig hebt.
                 </p>
               </header>
 
@@ -319,13 +319,13 @@ export default function Prijzen() {
                     <p className="pricing-card-description">{pkg.description}</p>
 
                     <div className="pricing-cost-box">
-                      <span>Je betaalt één keer</span>
+                      <span>Websitebouw</span>
                       <div className="pricing-main-price">
-                        {currency(pkg.price)} <small>eenmalig</small>
+                        {currency(pkg.price)} <small>voor de bouw</small>
                       </div>
                       <div className="pricing-zero-cost">
                         <CheckCircle2 size={16} aria-hidden="true" />
-                        Daarna €0 verplicht per maand
+                        + hosting vanaf €30 per jaar
                       </div>
                     </div>
 
@@ -457,7 +457,7 @@ export default function Prijzen() {
                       <td>Prijs</td>
                       {WEBSITE_PACKAGES.map((pkg) => (
                         <td key={`price-${pkg.code}`}>
-                          <strong>{currency(pkg.price)} eenmalig</strong>
+                          <strong>{currency(pkg.price)} websitebouw + €30/jaar hosting</strong>
                         </td>
                       ))}
                     </tr>
