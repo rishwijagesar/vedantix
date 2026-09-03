@@ -1,29 +1,12 @@
 import { useMemo, useState } from "react";
 import { Check, Download, Mail, MessageCircle, Minus, Plus, Share2 } from "lucide-react";
-import { jsPDF } from "jspdf";
 import { CONTACT } from "../constants/contact";
 import "../styles/pricing-configurator.css";
 
 const WEBSITE_OPTIONS = [
-  {
-    code: "STARTER",
-    label: "Starter",
-    price: 399,
-    description: "Professionele onepage met technische SEO-basis.",
-  },
-  {
-    code: "GROWTH",
-    label: "Growth",
-    price: 599,
-    description: "Tot 5 pagina's met SEO, lokale SEO en AEO-basis.",
-    featured: true,
-  },
-  {
-    code: "PRO",
-    label: "Pro",
-    price: 999,
-    description: "Tot 10 pagina's met uitgebreidere SEO, AEO en GEO/AIO-basis.",
-  },
+  { code: "STARTER", label: "Starter", price: 399, description: "Professionele onepage met technische SEO-basis." },
+  { code: "GROWTH", label: "Growth", price: 599, description: "Tot 5 pagina's met SEO, lokale SEO en AEO-basis.", featured: true },
+  { code: "PRO", label: "Pro", price: 999, description: "Tot 10 pagina's met uitgebreidere SEO, AEO en GEO/AIO-basis." },
 ];
 
 const HOSTING_OPTIONS = [
@@ -59,9 +42,86 @@ function euro(value) {
 
 function createReference() {
   const now = new Date();
-  const date = [now.getFullYear(), String(now.getMonth() + 1).padStart(2, "0"), String(now.getDate()).padStart(2, "0")].join("");
+  const date = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("");
   const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
   return `VDX-${date}-${suffix}`;
+}
+
+function ascii(value) {
+  return String(value ?? "")
+    .replace(/€/g, "EUR ")
+    .replace(/[–—]/g, "-")
+    .replace(/[‘’]/g, "'")
+    .replace(/[“”]/g, '"')
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\x20-\x7E]/g, "");
+}
+
+function pdfEscape(value) {
+  return ascii(value).replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+}
+
+function createPdfBlob(lines) {
+  const contentLines = [
+    "BT",
+    "/F1 18 Tf",
+    "50 790 Td",
+    `(VEDANTIX) Tj`,
+    "0 -24 Td",
+    "/F1 10 Tf",
+  ];
+
+  lines.slice(0, 42).forEach((line, index) => {
+    if (index === 0) {
+      contentLines.push(`(${pdfEscape(line)}) Tj`);
+    } else {
+      contentLines.push("0 -15 Td");
+      contentLines.push(`(${pdfEscape(line)}) Tj`);
+    }
+  });
+  contentLines.push("ET");
+
+  const stream = contentLines.join("\n");
+  const objects = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>",
+    `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`,
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
+  ];
+
+  let pdf = "%PDF-1.4\n";
+  const offsets = [0];
+  objects.forEach((object, index) => {
+    offsets[index + 1] = pdf.length;
+    pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
+  });
+
+  const xrefOffset = pdf.length;
+  pdf += `xref\n0 ${objects.length + 1}\n`;
+  pdf += "0000000000 65535 f \n";
+  for (let i = 1; i <= objects.length; i += 1) {
+    pdf += `${String(offsets[i]).padStart(10, "0")} 00000 n \n`;
+  }
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+  return new Blob([pdf], { type: "application/pdf" });
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 export default function PricingConfigurator() {
@@ -70,13 +130,7 @@ export default function PricingConfigurator() {
   const [mailboxes, setMailboxes] = useState(0);
   const [oneTimeCodes, setOneTimeCodes] = useState([]);
   const [growthCode, setGrowthCode] = useState("NONE");
-  const [details, setDetails] = useState({
-    name: "",
-    company: "",
-    email: "",
-    phone: "",
-    notes: "",
-  });
+  const [details, setDetails] = useState({ name: "", company: "", email: "", phone: "", notes: "" });
   const [formMessage, setFormMessage] = useState("");
   const [reference] = useState(createReference);
 
@@ -86,14 +140,10 @@ export default function PricingConfigurator() {
   const selectedOneTime = ONE_TIME_OPTIONS.filter((item) => oneTimeCodes.includes(item.code));
 
   const totals = useMemo(() => {
-    const extraOneTime = selectedOneTime.reduce((sum, item) => sum + item.price, 0);
+    const oneTimeExtras = selectedOneTime.reduce((sum, item) => sum + item.price, 0);
     const yearlyEmail = mailboxes * 30;
-
     return {
-      build: website.price,
-      hosting: hosting.price,
-      oneTimeExtras: extraOneTime,
-      start: website.price + hosting.price + extraOneTime + yearlyEmail,
+      start: website.price + hosting.price + oneTimeExtras + yearlyEmail,
       yearly: yearlyEmail + (hostingCode === "YEAR_1" ? hosting.price : 0),
       monthly: growth.price,
     };
@@ -113,31 +163,30 @@ export default function PricingConfigurator() {
   const quoteLines = () => {
     const lines = [
       `Offerte-indicatie ${reference}`,
-      details.company ? `${details.name || "Contactpersoon"} - ${details.company}` : details.name || "Potentiële klant",
+      `Datum: ${new Date().toLocaleDateString("nl-NL")}`,
+      `Naam: ${details.name || "-"}`,
+      `Bedrijf: ${details.company || "-"}`,
+      `E-mail: ${details.email || "-"}`,
+      `Telefoon: ${details.phone || "-"}`,
       "",
       `Website: ${website.label} - ${euro(website.price)} websitebouw`,
       `Hosting: ${hosting.label} - ${euro(hosting.price)}`,
     ];
 
-    if (mailboxes > 0) {
-      lines.push(`Zakelijke e-mail: ${mailboxes} mailbox${mailboxes === 1 ? "" : "en"} - ${euro(mailboxes * 30)}/jaar`);
-    }
-
+    if (mailboxes > 0) lines.push(`Zakelijke e-mail: ${mailboxes} mailbox${mailboxes === 1 ? "" : "en"} - ${euro(mailboxes * 30)}/jaar`);
     selectedOneTime.forEach((item) => lines.push(`${item.label} - ${euro(item.price)}`));
-
-    if (growth.price > 0) {
-      lines.push(`${growth.label} - ${euro(growth.price)}/maand`);
-    }
+    if (growth.price > 0) lines.push(`${growth.label} - ${euro(growth.price)}/maand`);
 
     lines.push(
       "",
       `Bij de start: ${euro(totals.start)}`,
-      `Terugkerend jaarlijks: ${euro(totals.yearly)}/jaar${hostingCode !== "YEAR_1" ? " (mailboxen; hosting is voor gekozen periode vooruitbetaald)" : ""}`,
-      `Optioneel maandelijks: ${euro(totals.monthly)}/maand`,
-      "",
-      "Dit is een vrijblijvende prijsindicatie. Definitieve scope, planning en eventuele externe kosten worden vooraf bevestigd."
+      `Terugkerend jaarlijks: ${euro(totals.yearly)}/jaar`,
+      `Optioneel maandelijks: ${euro(totals.monthly)}/maand`
     );
 
+    if (hostingCode !== "YEAR_1") lines.push(`Hosting voor ${hosting.period} is vooruitbetaald en zit in het startbedrag.`);
+    if (details.notes.trim()) lines.push("", `Opmerking: ${details.notes.trim()}`);
+    lines.push("", "Vrijblijvende prijsindicatie; definitieve scope en planning worden vooraf bevestigd.");
     return lines;
   };
 
@@ -149,140 +198,36 @@ export default function PricingConfigurator() {
     return true;
   };
 
-  const buildPdf = () => {
-    const doc = new jsPDF({ unit: "mm", format: "a4" });
-    const pageWidth = 210;
-    const margin = 18;
-    let y = 20;
+  const filename = () => {
+    const safe = (details.company || details.name || "offerte")
+      .replace(/[^a-z0-9-_]+/gi, "-")
+      .replace(/^-|-$/g, "");
+    return `Vedantix-${reference}-${safe}.pdf`;
+  };
 
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(22);
-    doc.text("VEDANTIX", margin, y);
-
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    doc.text("Website & online groei", margin, y + 7);
-    doc.text(`Referentie: ${reference}`, pageWidth - margin, y, { align: "right" });
-    doc.text(`Datum: ${new Date().toLocaleDateString("nl-NL")}`, pageWidth - margin, y + 7, { align: "right" });
-
-    y += 22;
-    doc.setDrawColor(220);
-    doc.line(margin, y, pageWidth - margin, y);
-    y += 10;
-
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(14);
-    doc.text("Offerte-indicatie", margin, y);
-    y += 9;
-
-    doc.setFontSize(10);
-    doc.setFont("helvetica", "normal");
-    const customerRows = [
-      ["Naam", details.name],
-      ["Bedrijf", details.company || "-"],
-      ["E-mail", details.email],
-      ["Telefoon", details.phone || "-"],
-    ];
-    customerRows.forEach(([label, value]) => {
-      doc.setFont("helvetica", "bold");
-      doc.text(`${label}:`, margin, y);
-      doc.setFont("helvetica", "normal");
-      doc.text(String(value), margin + 28, y);
-      y += 6;
-    });
-
-    y += 6;
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(12);
-    doc.text("Gekozen onderdelen", margin, y);
-    y += 8;
-
-    const items = [
-      [website.label + " website", `${euro(website.price)} websitebouw`],
-      [hosting.label, euro(hosting.price)],
-    ];
-    if (mailboxes > 0) items.push([`${mailboxes} zakelijke mailbox${mailboxes === 1 ? "" : "en"}`, `${euro(mailboxes * 30)}/jaar`]);
-    selectedOneTime.forEach((item) => items.push([item.label, euro(item.price)]));
-    if (growth.price > 0) items.push([growth.label, `${euro(growth.price)}/maand`]);
-
-    doc.setFontSize(10);
-    items.forEach(([label, price]) => {
-      doc.setFont("helvetica", "normal");
-      doc.text(label, margin, y);
-      doc.setFont("helvetica", "bold");
-      doc.text(price, pageWidth - margin, y, { align: "right" });
-      y += 7;
-    });
-
-    y += 4;
-    doc.setDrawColor(220);
-    doc.line(margin, y, pageWidth - margin, y);
-    y += 9;
-
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "bold");
-    doc.text("Bij de start", margin, y);
-    doc.text(euro(totals.start), pageWidth - margin, y, { align: "right" });
-    y += 7;
-    doc.text("Terugkerend jaarlijks", margin, y);
-    doc.text(`${euro(totals.yearly)}/jaar`, pageWidth - margin, y, { align: "right" });
-    y += 7;
-    doc.text("Optioneel maandelijks", margin, y);
-    doc.text(`${euro(totals.monthly)}/maand`, pageWidth - margin, y, { align: "right" });
-
-    if (hostingCode !== "YEAR_1") {
-      y += 8;
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      doc.text(`Hosting is voor ${hosting.period} vooruitbetaald en zit in het startbedrag.`, margin, y);
-    }
-
-    if (details.notes.trim()) {
-      y += 14;
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      doc.text("Opmerking", margin, y);
-      y += 6;
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(9);
-      const noteLines = doc.splitTextToSize(details.notes.trim(), pageWidth - margin * 2);
-      doc.text(noteLines, margin, y);
-      y += noteLines.length * 5;
-    }
-
-    y = Math.max(y + 16, 245);
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(8.5);
-    const disclaimer = "Deze configuratie is een vrijblijvende prijsindicatie en geen definitieve overeenkomst. De definitieve scope, planning, inhoud en eventuele externe kosten worden vooraf met Vedantix afgestemd en bevestigd.";
-    doc.text(doc.splitTextToSize(disclaimer, pageWidth - margin * 2), margin, y);
-    doc.text("Vedantix · vedantix.nl · info@vedantix.nl", margin, 286);
-
-    return doc;
+  const buildPdfFile = () => {
+    const blob = createPdfBlob(quoteLines());
+    return new File([blob], filename(), { type: "application/pdf" });
   };
 
   const downloadPdf = () => {
     if (!validateCustomer()) return;
-    const doc = buildPdf();
-    const safeCompany = (details.company || details.name || "offerte").replace(/[^a-z0-9-_]+/gi, "-").replace(/^-|-$/g, "");
-    doc.save(`Vedantix-${reference}-${safeCompany}.pdf`);
+    const file = buildPdfFile();
+    downloadBlob(file, file.name);
   };
 
   const messageText = () => [
     `Hallo Vedantix, ik wil offerte-indicatie ${reference} graag bespreken.`,
     "",
-    ...quoteLines().slice(3, -2),
-    "",
-    details.notes.trim() ? `Opmerking: ${details.notes.trim()}` : "",
-  ].filter(Boolean).join("\n");
+    ...quoteLines().slice(7),
+  ].join("\n");
 
   const whatsappUrl = `${CONTACT.WHATSAPP_URL}?text=${encodeURIComponent(messageText())}`;
   const emailUrl = `mailto:info@vedantix.nl?subject=${encodeURIComponent(`Offerte-indicatie ${reference} bespreken`)}&body=${encodeURIComponent(messageText())}`;
 
   const shareQuote = async () => {
     if (!validateCustomer()) return;
-    const doc = buildPdf();
-    const blob = doc.output("blob");
-    const file = new File([blob], `Vedantix-${reference}.pdf`, { type: "application/pdf" });
+    const file = buildPdfFile();
 
     if (navigator.share && navigator.canShare?.({ files: [file] })) {
       try {
@@ -297,6 +242,7 @@ export default function PricingConfigurator() {
       }
     }
 
+    downloadBlob(file, file.name);
     window.location.href = emailUrl;
   };
 
@@ -318,12 +264,7 @@ export default function PricingConfigurator() {
               <div className="quote-step-title"><span>1</span><div><h3>Kies je website</h3><p>De bouwprijs betaal je één keer.</p></div></div>
               <div className="quote-choice-grid three">
                 {WEBSITE_OPTIONS.map((option) => (
-                  <button
-                    type="button"
-                    className={`quote-choice ${websiteCode === option.code ? "selected" : ""} ${option.featured ? "featured" : ""}`}
-                    onClick={() => setWebsiteCode(option.code)}
-                    key={option.code}
-                  >
+                  <button type="button" className={`quote-choice ${websiteCode === option.code ? "selected" : ""} ${option.featured ? "featured" : ""}`} onClick={() => setWebsiteCode(option.code)} key={option.code}>
                     {websiteCode === option.code && <span className="quote-selected"><Check size={14} /> Gekozen</span>}
                     <strong>{option.label}</strong>
                     <b>{euro(option.price)}</b>
@@ -338,19 +279,13 @@ export default function PricingConfigurator() {
               <div className="quote-step-title"><span>2</span><div><h3>Hosting & e-mail</h3><p>Hosting is nodig om je website via Vedantix online te houden.</p></div></div>
               <div className="quote-choice-grid three compact">
                 {HOSTING_OPTIONS.map((option) => (
-                  <button
-                    type="button"
-                    className={`quote-choice ${hostingCode === option.code ? "selected" : ""}`}
-                    onClick={() => setHostingCode(option.code)}
-                    key={option.code}
-                  >
+                  <button type="button" className={`quote-choice ${hostingCode === option.code ? "selected" : ""}`} onClick={() => setHostingCode(option.code)} key={option.code}>
                     <strong>{option.period}</strong>
                     <b>{euro(option.price)}</b>
                     <small>hosting</small>
                   </button>
                 ))}
               </div>
-
               <div className="quote-mailbox-row">
                 <div><strong>Zakelijke mailboxen</strong><span>€30 per mailbox per jaar</span></div>
                 <div className="quote-counter">
@@ -404,7 +339,6 @@ export default function PricingConfigurator() {
           <aside className="quote-summary">
             <span className="quote-summary-label">Jouw samenstelling</span>
             <h3>{website.label} website</h3>
-
             <div className="quote-summary-list">
               <div><span>{website.label} websitebouw</span><strong>{euro(website.price)}</strong></div>
               <div><span>{hosting.label}</span><strong>{euro(hosting.price)}</strong></div>
@@ -412,7 +346,6 @@ export default function PricingConfigurator() {
               {selectedOneTime.map((item) => <div key={item.code}><span>{item.label}</span><strong>{euro(item.price)}</strong></div>)}
               {growth.price > 0 && <div><span>{growth.label}</span><strong>{euro(growth.price)}/m</strong></div>}
             </div>
-
             <div className="quote-total-block primary"><span>Bij de start</span><strong>{euro(totals.start)}</strong></div>
             <div className="quote-recurring-grid">
               <div><span>Jaarlijks</span><strong>{euro(totals.yearly)}</strong><small>per jaar</small></div>
@@ -420,7 +353,6 @@ export default function PricingConfigurator() {
             </div>
             {hostingCode !== "YEAR_1" && <p className="quote-summary-note">Hosting voor {hosting.period} is al volledig opgenomen in het startbedrag.</p>}
             <p className="quote-summary-note">Alle bedragen zijn inclusief btw. De definitieve scope wordt voor de start bevestigd.</p>
-
             <div className="quote-actions">
               <button type="button" className="quote-action primary" onClick={downloadPdf}><Download size={17} /> Download offerte PDF</button>
               <button type="button" className="quote-action" onClick={shareQuote}><Share2 size={17} /> Deel offerte</button>
