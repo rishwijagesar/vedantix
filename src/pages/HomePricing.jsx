@@ -59,22 +59,22 @@ export default function HomePricing() {
             Begin betaalbaar. Voeg groei toe wanneer je die nodig hebt.
           </h2>
           <p className="section-p">
-            Je betaalt de website één keer. Hosting kost vanaf €30 per jaar. SEO, AEO,
-            GEO/AIO en doorlopende groei kun je uitbreiden zonder dat iedere klant daarvoor
-            standaard een maandabonnement nodig heeft.
+            De bouw van je website betaal je één keer. Om je website online te houden betaal je
+            daarna vanaf €30 per jaar voor hosting. SEO, AEO, GEO/AIO en doorlopende groei kun je
+            uitbreiden zonder verplicht groeia­bonnement.
           </p>
         </div>
 
         <div className="pricing-payment-choice">
           <div>
             <span>Website laten maken</span>
-            <strong>Vanaf €399 eenmalig</strong>
-            <p>Geen verplicht maandabonnement. Je kiest alleen wat bij jouw bedrijf past.</p>
+            <strong>Vanaf €399 voor de bouw</strong>
+            <p>De bouwprijs betaal je één keer. Er is geen verplicht maandabonnement.</p>
           </div>
           <div>
-            <span>Hosting & zakelijke e-mail</span>
-            <strong>Vanaf €30 per jaar</strong>
-            <p>Hosting en mailboxen staan los van je websitepakket en blijven transparant geprijsd.</p>
+            <span>Jaarlijkse kosten</span>
+            <strong>Hosting vanaf €30 per jaar</strong>
+            <p>Zakelijke e-mail is optioneel en kost vanaf €30 per jaar per mailbox.</p>
           </div>
           <a href="/prijzen">Bekijk alle prijzen en vindbaarheid →</a>
         </div>
@@ -92,11 +92,11 @@ export default function HomePricing() {
                 <div className="p-price">
                   <sup>€</sup>
                   {pkg.price}
-                  <span> eenmalig</span>
+                  <span> websitebouw</span>
                 </div>
               </div>
 
-              <div className="p-setup">Daarna €0 verplicht per maand</div>
+              <div className="p-setup">+ hosting vanaf €30 per jaar</div>
 
               <div className="p-terms">Alle websiteprijzen zijn inclusief btw</div>
               <div className="p-divider" />
