@@ -13,11 +13,6 @@ on:
         required: true
         default: "15"
         type: string
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/online-growth-audit-browser-e2e.yml
 
 permissions:
   contents: read
