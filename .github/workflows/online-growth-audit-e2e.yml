@@ -1,0 +1,200 @@
+name: Online Growth Audit E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      website_url:
+        description: Public website to audit
+        required: true
+        default: https://vedantix.nl
+        type: string
+      timeout_minutes:
+        description: Maximum time to wait for the audit
+        required: true
+        default: "15"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  audit-e2e:
+    name: Run production audit end-to-end
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      API_URL: https://api.vedantix.nl
+      TENANT_ID: default
+      ACTOR_ID: github-online-growth-audit-e2e
+      SOURCE: PUBLIC_SITE
+      WEBSITE_URL: ${{ inputs.website_url }}
+      TIMEOUT_MINUTES: ${{ inputs.timeout_minutes }}
+
+    steps:
+      - name: Start production audit
+        id: start
+        run: |
+          set -euo pipefail
+
+          IDEMPOTENCY_KEY="e2e-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          PAYLOAD=$(jq -nc \
+            --arg name "Vedantix E2E" \
+            --arg company "Vedantix E2E" \
+            --arg email "e2e-audit@vedantix.nl" \
+            --arg website "${WEBSITE_URL}" \
+            '{name:$name,companyName:$company,email:$email,websiteUrl:$website,competitorUrl1:"",competitorUrl2:""}')
+
+          HTTP_STATUS=$(curl --silent --show-error \
+            --output /tmp/audit-start.json \
+            --write-out '%{http_code}' \
+            --request POST "${API_URL}/api/audit" \
+            --header 'Content-Type: application/json' \
+            --header "X-Tenant-Id: ${TENANT_ID}" \
+            --header "X-Actor-Id: ${ACTOR_ID}" \
+            --header "X-Source: ${SOURCE}" \
+            --header "Idempotency-Key: ${IDEMPOTENCY_KEY}" \
+            --data "${PAYLOAD}")
+
+          cat /tmp/audit-start.json
+          test "${HTTP_STATUS}" = "202"
+
+          AUDIT_ID=$(jq -r '.data.auditId // empty' /tmp/audit-start.json)
+          START_STATUS=$(jq -r '.data.status // empty' /tmp/audit-start.json)
+
+          if [ -z "${AUDIT_ID}" ]; then
+            echo "Audit start response did not contain data.auditId"
+            exit 1
+          fi
+
+          case "${START_STATUS}" in
+            PENDING|RUNNING) ;;
+            *)
+              echo "Unexpected start status: ${START_STATUS}"
+              exit 1
+              ;;
+          esac
+
+          echo "audit_id=${AUDIT_ID}" >> "${GITHUB_OUTPUT}"
+          echo "Started audit ${AUDIT_ID} with status ${START_STATUS}"
+
+      - name: Poll until audit completes
+        id: poll
+        env:
+          AUDIT_ID: ${{ steps.start.outputs.audit_id }}
+        run: |
+          set -euo pipefail
+
+          if ! [[ "${TIMEOUT_MINUTES}" =~ ^[0-9]+$ ]] || [ "${TIMEOUT_MINUTES}" -lt 1 ]; then
+            echo "timeout_minutes must be a positive integer"
+            exit 1
+          fi
+
+          DEADLINE=$(( $(date +%s) + TIMEOUT_MINUTES * 60 ))
+          LAST_STATUS=""
+
+          while [ "$(date +%s)" -lt "${DEADLINE}" ]; do
+            HTTP_STATUS=$(curl --silent --show-error \
+              --output /tmp/audit-detail.json \
+              --write-out '%{http_code}' \
+              "${API_URL}/api/audit/${AUDIT_ID}" \
+              --header "X-Tenant-Id: ${TENANT_ID}" \
+              --header "X-Actor-Id: ${ACTOR_ID}" \
+              --header "X-Source: ${SOURCE}")
+
+            if [ "${HTTP_STATUS}" != "200" ]; then
+              echo "Detail endpoint returned HTTP ${HTTP_STATUS}"
+              cat /tmp/audit-detail.json
+              exit 1
+            fi
+
+            STATUS=$(jq -r '.data.status // empty' /tmp/audit-detail.json)
+            if [ "${STATUS}" != "${LAST_STATUS}" ]; then
+              echo "Audit status: ${STATUS}"
+              LAST_STATUS="${STATUS}"
+            fi
+
+            case "${STATUS}" in
+              COMPLETED)
+                cp /tmp/audit-detail.json /tmp/audit-completed.json
+                echo "status=COMPLETED" >> "${GITHUB_OUTPUT}"
+                exit 0
+                ;;
+              FAILED)
+                echo "Audit failed:"
+                jq -r '.data.request.errorMessage // "Unknown audit failure"' /tmp/audit-detail.json
+                exit 1
+                ;;
+              PENDING|RUNNING)
+                sleep 10
+                ;;
+              *)
+                echo "Unexpected audit status: ${STATUS}"
+                cat /tmp/audit-detail.json
+                exit 1
+                ;;
+            esac
+          done
+
+          echo "Audit did not complete within ${TIMEOUT_MINUTES} minutes"
+          exit 1
+
+      - name: Validate completed audit result
+        env:
+          AUDIT_ID: ${{ steps.start.outputs.audit_id }}
+        run: |
+          set -euo pipefail
+
+          jq -e --arg id "${AUDIT_ID}" '
+            .data.status == "COMPLETED" and
+            .data.results.auditRequestId == $id and
+            (.data.results.auditedUrl | type == "string" and length > 0) and
+            (.data.results.finalUrl | type == "string" and length > 0) and
+            (.data.results.pagesAnalyzed | type == "number" and . >= 1) and
+            (.data.results.renderedPages | type == "number" and . >= 0) and
+            (.data.results.auditVersion | type == "string" and length > 0) and
+            (.data.results.overallConfidence | IN("HIGH", "MEDIUM", "LOW")) and
+            (.data.results.measuredWeightPercent | type == "number" and . >= 0 and . <= 100) and
+            (.data.results.scores | type == "array" and length >= 10) and
+            (.data.results.executiveSummary | type == "string" and length > 0) and
+            (.data.results.limitations | type == "array") and
+            (.data.results.priorityMatrix | type == "object")
+          ' /tmp/audit-completed.json > /dev/null
+
+          SCORE=$(jq -r '.data.results.overallScore // "not measured"' /tmp/audit-completed.json)
+          CONFIDENCE=$(jq -r '.data.results.overallConfidence' /tmp/audit-completed.json)
+          PAGES=$(jq -r '.data.results.pagesAnalyzed' /tmp/audit-completed.json)
+          MODULES=$(jq -r '.data.results.scores | length' /tmp/audit-completed.json)
+
+          {
+            echo "## Online Growth Audit E2E"
+            echo ""
+            echo "- Audit ID: \`${AUDIT_ID}\`"
+            echo "- Website: ${WEBSITE_URL}"
+            echo "- Overall score: ${SCORE}"
+            echo "- Confidence: ${CONFIDENCE}"
+            echo "- Pages analyzed: ${PAGES}"
+            echo "- Audit modules: ${MODULES}"
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Validate PDF report
+        env:
+          AUDIT_ID: ${{ steps.start.outputs.audit_id }}
+        run: |
+          set -euo pipefail
+
+          HTTP_STATUS=$(curl --silent --show-error \
+            --output /tmp/audit-report.pdf \
+            --dump-header /tmp/audit-pdf-headers.txt \
+            --write-out '%{http_code}' \
+            "${API_URL}/api/audit/${AUDIT_ID}/pdf" \
+            --header "X-Tenant-Id: ${TENANT_ID}" \
+            --header "X-Actor-Id: ${ACTOR_ID}" \
+            --header "X-Source: ${SOURCE}")
+
+          test "${HTTP_STATUS}" = "200"
+          grep -qi '^content-type: *application/pdf' /tmp/audit-pdf-headers.txt
+          grep -qi '^content-disposition: *attachment;' /tmp/audit-pdf-headers.txt
+          test "$(wc -c < /tmp/audit-report.pdf)" -gt 1000
+          test "$(head -c 4 /tmp/audit-report.pdf)" = "%PDF"
+
+          echo "PDF report is valid ($(wc -c < /tmp/audit-report.pdf) bytes)."
