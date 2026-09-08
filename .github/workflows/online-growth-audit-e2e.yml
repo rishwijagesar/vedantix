@@ -1,6 +1,11 @@
 name: Online Growth Audit E2E
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/online-growth-audit-e2e.yml
   workflow_dispatch:
     inputs:
       website_url:
@@ -27,8 +32,8 @@ jobs:
       TENANT_ID: default
       ACTOR_ID: github-online-growth-audit-e2e
       SOURCE: PUBLIC_SITE
-      WEBSITE_URL: ${{ inputs.website_url }}
-      TIMEOUT_MINUTES: ${{ inputs.timeout_minutes }}
+      WEBSITE_URL: ${{ inputs.website_url || 'https://vedantix.nl' }}
+      TIMEOUT_MINUTES: ${{ inputs.timeout_minutes || '15' }}
 
     steps:
       - name: Start production audit
