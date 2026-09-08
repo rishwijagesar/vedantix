@@ -1,11 +1,6 @@
 name: Online Growth Audit E2E
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/online-growth-audit-e2e.yml
   workflow_dispatch:
     inputs:
       website_url:
