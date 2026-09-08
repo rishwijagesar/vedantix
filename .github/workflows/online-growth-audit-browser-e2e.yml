@@ -1,0 +1,213 @@
+name: Online Growth Audit Browser E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      website_url:
+        description: Public website to audit through the live form
+        required: true
+        default: https://vedantix.nl
+        type: string
+      timeout_minutes:
+        description: Maximum time to wait for the audit result
+        required: true
+        default: "15"
+        type: string
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/online-growth-audit-browser-e2e.yml
+
+permissions:
+  contents: read
+
+jobs:
+  browser-e2e:
+    name: Complete live audit in Chrome
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      SITE_URL: https://vedantix.nl/online-groei-audit
+      WEBSITE_URL: ${{ inputs.website_url || 'https://vedantix.nl' }}
+      TIMEOUT_MINUTES: ${{ inputs.timeout_minutes || '15' }}
+
+    steps:
+      - name: Show browser version
+        run: |
+          google-chrome --version || chromium --version || chromium-browser --version
+
+      - name: Install Selenium
+        run: python -m pip install --disable-pip-version-check selenium==4.35.0
+
+      - name: Run browser end-to-end audit
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          import time
+          from pathlib import Path
+
+          from selenium import webdriver
+          from selenium.common.exceptions import TimeoutException
+          from selenium.webdriver.common.by import By
+          from selenium.webdriver.support import expected_conditions as EC
+          from selenium.webdriver.support.ui import WebDriverWait
+
+          site_url = os.environ["SITE_URL"]
+          website_url = os.environ["WEBSITE_URL"]
+          timeout_minutes = int(os.environ["TIMEOUT_MINUTES"])
+          download_dir = Path("/tmp/vedantix-browser-downloads")
+          download_dir.mkdir(parents=True, exist_ok=True)
+
+          options = webdriver.ChromeOptions()
+          options.add_argument("--headless=new")
+          options.add_argument("--no-sandbox")
+          options.add_argument("--disable-dev-shm-usage")
+          options.add_argument("--window-size=1440,1800")
+          options.add_experimental_option(
+              "prefs",
+              {
+                  "download.default_directory": str(download_dir),
+                  "download.prompt_for_download": False,
+                  "download.directory_upgrade": True,
+                  "safebrowsing.enabled": True,
+              },
+          )
+
+          driver = webdriver.Chrome(options=options)
+          wait = WebDriverWait(driver, 30)
+
+          def input_for(label_text):
+              return wait.until(
+                  EC.visibility_of_element_located(
+                      (
+                          By.XPATH,
+                          f"//label[.//span[normalize-space()='{label_text}']]//input",
+                      )
+                  )
+              )
+
+          try:
+              driver.get(site_url)
+              wait.until(EC.visibility_of_element_located((By.ID, "audit-title")))
+              assert "Ontdek waar jouw website groei laat liggen" in driver.find_element(By.ID, "audit-title").text
+
+              input_for("Naam").send_keys("Vedantix Browser E2E")
+              input_for("Bedrijfsnaam").send_keys("Vedantix Browser E2E")
+              input_for("E-mailadres").send_keys("e2e-browser@vedantix.nl")
+              input_for("Website URL").send_keys(website_url)
+
+              start_button = wait.until(
+                  EC.element_to_be_clickable(
+                      (By.XPATH, "//button[@type='submit' and contains(normalize-space(.), 'Start gratis audit')]")
+                  )
+              )
+              start_button.click()
+
+              status_panel = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".audit-status-panel")))
+              status_text = status_panel.text
+              match = re.search(r"Audit ID:\s*([0-9a-fA-F-]{36})", status_text)
+              if not match:
+                  raise AssertionError(f"No audit ID found in status panel: {status_text}")
+              audit_id = match.group(1)
+              print(f"Browser started audit {audit_id}")
+
+              driver.save_screenshot("/tmp/audit-started.png")
+
+              deadline = time.time() + timeout_minutes * 60
+              last_status = None
+              while time.time() < deadline:
+                  page_text = driver.find_element(By.TAG_NAME, "body").text
+                  if "Audit mislukt" in page_text:
+                      driver.save_screenshot("/tmp/audit-failed.png")
+                      raise AssertionError("Live UI reported that the audit failed")
+                  if "Online Groei Score" in page_text and driver.find_elements(By.CSS_SELECTOR, ".audit-results"):
+                      break
+
+                  current_status = None
+                  for label in (
+                      "Audit staat in de wachtrij",
+                      "Analyse wordt uitgevoerd",
+                      "Audit afgerond",
+                  ):
+                      if label in page_text:
+                          current_status = label
+                          break
+                  if current_status and current_status != last_status:
+                      print(f"UI status: {current_status}")
+                      last_status = current_status
+                  time.sleep(3)
+              else:
+                  driver.save_screenshot("/tmp/audit-timeout.png")
+                  raise TimeoutException(f"Audit UI did not finish within {timeout_minutes} minutes")
+
+              results = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".audit-results")))
+              results_text = results.text
+              required_texts = [
+                  "Online Groei Score",
+                  "Analyse per categorie",
+                  "Prioriteitenmatrix",
+                  "Quick wins",
+                  "Aanbevelingen",
+                  "Wat deze audit wel en niet bewijst",
+              ]
+              missing = [text for text in required_texts if text not in results_text]
+              if missing:
+                  raise AssertionError(f"Completed result UI misses sections: {missing}")
+
+              score_cards = driver.find_elements(By.CSS_SELECTOR, ".audit-score-card")
+              if len(score_cards) < 10:
+                  raise AssertionError(f"Expected at least 10 score cards, got {len(score_cards)}")
+
+              driver.save_screenshot("/tmp/audit-completed.png")
+
+              download_button = wait.until(
+                  EC.element_to_be_clickable(
+                      (By.XPATH, "//button[contains(normalize-space(.), 'Download PDF')]")
+                  )
+              )
+              download_button.click()
+
+              pdf_path = None
+              download_deadline = time.time() + 45
+              while time.time() < download_deadline:
+                  pdfs = sorted(download_dir.glob("*.pdf"), key=lambda p: p.stat().st_mtime, reverse=True)
+                  partials = list(download_dir.glob("*.crdownload"))
+                  if pdfs and not partials:
+                      pdf_path = pdfs[0]
+                      break
+                  time.sleep(1)
+
+              if not pdf_path:
+                  raise AssertionError("Browser did not download a PDF report")
+
+              data = pdf_path.read_bytes()
+              if len(data) <= 1000 or not data.startswith(b"%PDF"):
+                  raise AssertionError(f"Downloaded file is not a valid PDF: {pdf_path} ({len(data)} bytes)")
+
+              print(f"Browser E2E passed for audit {audit_id}; PDF {pdf_path.name} is {len(data)} bytes")
+
+              summary = os.environ.get("GITHUB_STEP_SUMMARY")
+              if summary:
+                  with open(summary, "a", encoding="utf-8") as fh:
+                      fh.write("## Online Growth Audit Browser E2E\n\n")
+                      fh.write(f"- Audit ID: `{audit_id}`\n")
+                      fh.write(f"- Audited website: {website_url}\n")
+                      fh.write(f"- Score cards rendered: {len(score_cards)}\n")
+                      fh.write(f"- PDF downloaded: `{pdf_path.name}` ({len(data)} bytes)\n")
+          finally:
+              driver.quit()
+          PY
+
+      - name: Upload browser evidence on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: online-growth-audit-browser-failure
+          path: |
+            /tmp/audit-started.png
+            /tmp/audit-failed.png
+            /tmp/audit-timeout.png
+          if-no-files-found: ignore
+          retention-days: 7
