@@ -95,7 +95,7 @@ jobs:
             --cache-control "public,max-age=3600" \
             --metadata-directive REPLACE
 
-      - name: Invalidate CloudFront
+      - name: Invalidate CloudFront and wait
         run: |
           INVALIDATION_ID=$(aws cloudfront create-invalidation \
             --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
@@ -104,3 +104,43 @@ jobs:
             --output text)
 
           echo "CloudFront invalidation started: ${INVALIDATION_ID}"
+          aws cloudfront wait invalidation-completed \
+            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --id "${INVALIDATION_ID}"
+          echo "CloudFront invalidation completed: ${INVALIDATION_ID}"
+
+      - name: Production smoke test
+        env:
+          SITE_URL: https://vedantix.nl
+          API_URL: https://api.vedantix.nl
+        run: |
+          set -euo pipefail
+
+          echo "Checking live audit page..."
+          curl --fail --silent --show-error \
+            --retry 5 --retry-delay 3 --retry-all-errors \
+            "${SITE_URL}/online-groei-audit" \
+            -o /tmp/online-groei-audit.html
+          grep -q 'id="root"' /tmp/online-groei-audit.html
+
+          AUDIT_ASSET=$(find dist/assets -maxdepth 1 -type f -name 'OnlineGrowthAudit-*.js' -printf '%f\n' | head -n 1)
+          if [ -z "${AUDIT_ASSET}" ]; then
+            echo "No OnlineGrowthAudit bundle found in build output."
+            exit 1
+          fi
+
+          echo "Checking deployed audit bundle: ${AUDIT_ASSET}"
+          curl --fail --silent --show-error \
+            --retry 5 --retry-delay 3 --retry-all-errors \
+            --head "${SITE_URL}/assets/${AUDIT_ASSET}" \
+            -o /tmp/audit-asset-headers.txt
+          grep -qi '^content-type:.*javascript' /tmp/audit-asset-headers.txt
+
+          echo "Checking backend health..."
+          curl --fail --silent --show-error \
+            --retry 5 --retry-delay 3 --retry-all-errors \
+            "${API_URL}/health" \
+            -o /tmp/api-health.json
+          grep -Eq '"ok"[[:space:]]*:[[:space:]]*true' /tmp/api-health.json
+
+          echo "Production smoke test passed."
