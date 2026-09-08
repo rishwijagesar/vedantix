@@ -23,6 +23,7 @@ const sections = [
           <li>Website usage analytics</li>
           <li>Marketing data</li>
           <li>Lead form submissions</li>
+          <li>Invoer en rapportgegevens van de Online Groei Audit</li>
           <li>Meta Ads conversion data</li>
           <li>Cookies and tracking data</li>
         </ul>
@@ -42,6 +43,7 @@ const sections = [
           <li>Websites leveren en beheren</li>
           <li>Hostingdiensten verzorgen</li>
           <li>AI-diensten leveren</li>
+          <li>Online Groei Audits uitvoeren en rapporten beschikbaar stellen</li>
           <li>Klantrelaties beheren</li>
           <li>Marketing optimaliseren</li>
           <li>Analytics uitvoeren</li>
@@ -95,12 +97,21 @@ const sections = [
     title: "Bewaartermijnen",
     shortTitle: "Bewaren",
     content: (
-      <p>
-        Persoonsgegevens worden alleen bewaard zolang dat nodig is om onze diensten te
-        leveren, klantrelaties te beheren of te voldoen aan wettelijke verplichtingen.
-        Financiële en fiscale administratie kan langer worden bewaard wanneer de wet dat
-        vereist. Gegevens die niet langer nodig zijn, worden verwijderd of geanonimiseerd.
-      </p>
+      <>
+        <p>
+          Persoonsgegevens worden alleen bewaard zolang dat nodig is om onze diensten te
+          leveren, klantrelaties te beheren of te voldoen aan wettelijke verplichtingen.
+          Financiële en fiscale administratie kan langer worden bewaard wanneer de wet dat
+          vereist. Gegevens die niet langer nodig zijn, worden verwijderd of geanonimiseerd.
+        </p>
+        <p>
+          Gegevens en rapporten van een gratis Online Groei Audit worden in beginsel
+          maximaal 90 dagen na het starten van de audit bewaard. Daarna worden de
+          auditgegevens automatisch verwijderd, tenzij verdere bewaring noodzakelijk is
+          vanwege een lopende klantrelatie, een afzonderlijke grondslag of een wettelijke
+          verplichting.
+        </p>
+      </>
     ),
   },
   {
@@ -173,7 +184,7 @@ export default function Privacy() {
       intro="Hoe Vedantix persoonsgegevens verwerkt bij websites, hosting, AI-diensten, marketing, analytics en klantrelaties."
       description="Lees het privacybeleid van Vedantix over persoonsgegevens, cookies, tracking, Meta Ads conversiedata, analytics, bewaartermijnen en AVG-rechten."
       canonical={canonical}
-      updatedAt="1 juni 2026"
+      updatedAt="8 september 2026"
       schemas={[breadcrumbSchema]}
       sections={sections}
     >
