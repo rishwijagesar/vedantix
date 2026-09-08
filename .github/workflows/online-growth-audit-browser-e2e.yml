@@ -13,11 +13,6 @@ on:
         required: true
         default: "15"
         type: string
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/online-growth-audit-browser-e2e.yml
 
 permissions:
   contents: read
@@ -89,7 +84,6 @@ jobs:
               )
 
           try:
-              # Start where a real visitor starts and verify the actual navbar CTA.
               driver.get(home_url)
               audit_cta = wait.until(
                   EC.element_to_be_clickable(
